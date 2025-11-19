@@ -3,42 +3,56 @@
 
 .xcalidraw {
   --theme-filter: none;
+
+  // --- BUTTONS & BASICS ---
   --button-destructive-bg-color: #{$oc-red-1};
   --button-destructive-color: #{$oc-red-9};
   --button-gray-1: #{$oc-gray-2};
   --button-gray-2: #{$oc-gray-4};
   --button-gray-3: #{$oc-gray-5};
-  --mobile-action-button-bg: rgba(255, 255, 255, 0.35);
+
+  // Mobile & Dialogs
+  --mobile-action-button-bg: rgba(255, 255, 255, 0.85);
   --mobile-color-border: var(--default-border-color);
-  --button-special-active-bg-color: #{$oc-green-0};
+  --button-special-active-bg-color: #{$oc-teal-0}; /* Updated to Teal tint */
   --dialog-border-color: var(--color-gray-20);
   --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
-  --focus-highlight-color: #{$oc-blue-2};
+
+  // Highlights & Icons
+  --focus-highlight-color: #{$oc-teal-2}; /* Focus ring is now Teal */
   --icon-fill-color: var(--color-on-surface);
   --icon-green-fill-color: #{$oc-green-9};
-  --default-bg-color: #{$oc-white};
-  --input-bg-color: #{$oc-white};
+
+  // --- BACKGROUNDS (LIGHT MODE) ---
+  --default-bg-color: #f8f9fa; /* Your requested Technical Grey */
+  --input-bg-color: #ffffff;
   --input-border-color: #{$oc-gray-4};
   --input-hover-bg-color: #{$oc-gray-1};
   --input-label-color: #{$oc-gray-7};
-  --island-bg-color: #ffffff;
+  --island-bg-color: #ffffff; /* Keep toolbars white to pop against the grey BG */
+
+  // UI Elements
   --keybinding-color: var(--color-gray-40);
-  --link-color: #{$oc-blue-7};
+  --link-color: #087f5b; /* Links are now Teal */
   --overlay-bg-color: #{transparentize($oc-white, 0.12)};
   --popup-bg-color: var(--island-bg-color);
   --popup-secondary-bg-color: #{$oc-gray-1};
   --popup-text-color: #{$oc-black};
   --popup-text-inverted-color: #{$oc-white};
-  --select-highlight-color: #{$oc-blue-5};
+  --select-highlight-color: #{$oc-teal-5};
+
+  // Shadows
   --shadow-island: 0px 0px 0.9310142993927002px 0px rgba(0, 0, 0, 0.17),
     0px 0px 3.1270833015441895px 0px rgba(0, 0, 0, 0.08),
     0px 7px 14px 0px rgba(0, 0, 0, 0.05);
 
+  // --- INTERACTION COLORS ---
   --button-hover-bg: var(--color-surface-high);
   --button-active-bg: var(--color-surface-high);
   --button-active-border: var(--color-brand-active);
   --default-border-color: var(--color-surface-high);
 
+  // Sizes (Unchanged)
   --default-button-size: 2rem;
   --default-icon-size: 1rem;
   --lg-button-size: 2.25rem;
@@ -59,10 +73,10 @@
 
   --scrollbar-thumb: var(--button-gray-2);
   --scrollbar-thumb-hover: var(--button-gray-3);
-
-  --color-slider-track: hsl(240, 100%, 90%);
+  --color-slider-track: #c3fae8; /* Teal track */
   --color-slider-thumb: var(--color-gray-80);
 
+  // Sidebar & Modals
   --modal-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07),
     0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198),
     0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275),
@@ -85,17 +99,20 @@
   --space-factor: 0.25rem;
   --text-primary-color: var(--color-on-surface);
 
-  --color-selection: #6965db;
+  // --- SELECTION BOX COLOR ---
+  --color-selection: #087f5b; /* Your Primary Teal */
 
   --color-icon-white: #{$oc-white};
 
-  --color-primary: #6965db;
-  --color-primary-darker: #5b57d1;
-  --color-primary-darkest: #4a47b1;
-  --color-primary-light: #e3e2fe;
-  --color-primary-light-darker: #d7d5ff;
-  --color-primary-hover: #5753d0;
+  // --- MAIN BRAND COLORS (TEAL UPDATE) ---
+  --color-primary: #087f5b;
+  --color-primary-darker: #066045; /* Darker Teal */
+  --color-primary-darkest: #044532;
+  --color-primary-light: #e6fcf5; /* Light Teal bg */
+  --color-primary-light-darker: #c3fae8;
+  --color-primary-hover: #099268;
 
+  // Greys
   --color-gray-10: #f5f5f5;
   --color-gray-20: #ebebeb;
   --color-gray-30: #d6d6d6;
@@ -110,6 +127,7 @@
 
   --color-disabled: var(--color-gray-40);
 
+  // Warnings & Errors (Kept Standard)
   --color-warning: #fceeca;
   --color-warning-dark: #f5c354;
   --color-warning-darker: #f3ab2c;
@@ -140,6 +158,7 @@
 
   --color-promo: var(--color-primary);
 
+  // Success Colors
   --color-success: #cafccc;
   --color-success-darker: #bafabc;
   --color-success-darkest: #a5eba8;
@@ -154,18 +173,18 @@
   --border-radius-md: 0.375rem;
   --border-radius-lg: 0.5rem;
 
-  --color-surface-high: #f1f0ff;
-  --color-surface-mid: #f6f6f9;
+  // --- SURFACES (LIGHT MODE) ---
+  --color-surface-high: #f1f3f5; /* Slightly grey surface */
+  --color-surface-mid: #f8f9fa;
   --color-surface-low: #ececf4;
   --color-surface-lowest: #ffffff;
   --color-on-surface: #1b1b1f;
-  --color-brand-hover: #5753d0;
-  --color-on-primary-container: #030064;
-  --color-surface-primary-container: #e0dfff;
-  --color-brand-active: #4440bf;
+  --color-brand-hover: #099268;
+  --color-on-primary-container: #044532;
+  --color-surface-primary-container: #e6fcf5;
+  --color-brand-active: #087f5b;
   --color-border-outline: #767680;
   --color-border-outline-variant: #c5c5d0;
-  --color-surface-primary-container: #e0dfff;
 
   --color-badge: #0b6513;
   --background-color-badge: #d3ffd2;
@@ -176,34 +195,40 @@
     }
   }
 
+  // --- DARK MODE OVERRIDES (DEEP SLATE) ---
   &.theme--dark {
     --theme-filter: invert(93%) hue-rotate(180deg);
+
+    // Dark Mode Buttons
     --button-destructive-bg-color: #5a0000;
     --button-destructive-color: #{$oc-red-3};
+    --button-gray-1: #334155; /* Slate 700 */
+    --button-gray-2: #1e293b; /* Slate 800 */
+    --button-gray-3: #0f172a; /* Slate 900 */
 
-    --button-gray-1: #363636;
-    --button-gray-2: #272727;
-    --button-gray-3: #222;
     --mobile-action-button-bg: var(--island-bg-color);
     --mobile-color-border: rgba(255, 255, 255, 0.85);
-    --button-special-active-bg-color: #204624;
+    --button-special-active-bg-color: #113a2f;
     --dialog-border-color: var(--color-gray-80);
     --dropdown-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292 292"><path fill="%23ced4da" d="M287 197L159 69c-4-3-8-5-13-5s-9 2-13 5L5 197c-3 4-5 8-5 13s2 9 5 13c4 4 8 5 13 5h256c5 0 9-1 13-5s5-8 5-13-1-9-5-13z"/></svg>');
-    --focus-highlight-color: #{$oc-blue-6};
+    --focus-highlight-color: #{$oc-teal-6};
     --icon-green-fill-color: #{$oc-green-4};
-    --default-bg-color: #121212;
-    --input-bg-color: #121212;
-    --input-border-color: #2e2e2e;
-    --input-hover-bg-color: #181818;
+
+    // --- BACKGROUNDS (DARK MODE) ---
+    --default-bg-color: #0f172a; /* Your Deep Slate */
+    --input-bg-color: #0f172a;
+    --input-border-color: #334155;
+    --input-hover-bg-color: #1e293b;
     --input-label-color: #{$oc-gray-2};
-    --island-bg-color: #232329;
+    --island-bg-color: #1e293b; /* Slate 800 for contrast against Slate 900 BG */
+
     --keybinding-color: var(--color-gray-60);
-    --link-color: #{$oc-blue-4};
+    --link-color: #63e6be; /* Light Teal for dark mode */
     --overlay-bg-color: #{transparentize($oc-gray-8, 0.88)};
     --popup-secondary-bg-color: #222;
     --popup-text-color: #{$oc-gray-4};
     --popup-text-inverted-color: #2c2c2c;
-    --select-highlight-color: #{$oc-blue-4};
+    --select-highlight-color: #{$oc-teal-4};
     --shadow-island: 0px 0px 0.9310142993927002px 0px rgba(0, 0, 0, 0.17),
       0px 0px 3.1270833015441895px 0px rgba(0, 0, 0, 0.08),
       0px 7px 14px 0px rgba(0, 0, 0, 0.05);
@@ -219,19 +244,21 @@
     --scrollbar-thumb: #{$oc-gray-8};
     --scrollbar-thumb-hover: #{$oc-gray-7};
 
-    --color-slider-track: hsl(244, 23%, 39%);
+    --color-slider-track: #1e293b;
 
     // will be inverted to a lighter color.
-    --color-selection: #3530c4;
+    --color-selection: #20c997; /* Bright Teal for dark mode */
 
     --color-icon-white: var(--color-gray-90);
 
-    --color-primary: #a8a5ff;
-    --color-primary-darker: #b2aeff;
-    --color-primary-darkest: #beb9ff;
-    --color-primary-light: #4f4d6f;
-    --color-primary-light-darker: #43415e;
-    --color-primary-hover: #bbb8ff;
+    // --- BRAND COLORS (DARK MODE) ---
+    // Needs to be brighter to be visible on dark slate
+    --color-primary: #38d9a9;
+    --color-primary-darker: #63e6be;
+    --color-primary-darkest: #96f2d7;
+    --color-primary-light: #113a2f;
+    --color-primary-light-darker: #0d2f26;
+    --color-primary-hover: #63e6be;
 
     --color-disabled: var(--color-gray-70);
 
@@ -261,17 +288,18 @@
 
     --color-logo-text: #e2dfff;
 
-    --color-surface-high: #2e2d39;
-    --color-surface-low: hsl(240, 8%, 15%);
-    --color-surface-mid: hsl(240 6% 10%);
-    --color-surface-lowest: hsl(0, 0%, 7%);
+    // --- SURFACES (DARK MODE SLATE) ---
+    --color-surface-high: #334155; /* Slate 700 */
+    --color-surface-low: #1e293b; /* Slate 800 */
+    --color-surface-mid: #0f172a; /* Slate 900 */
+    --color-surface-lowest: #020617; /* Slate 950 */
     --color-on-surface: #e3e3e8;
-    --color-brand-hover: #bbb8ff;
-    --color-on-primary-container: #e0dfff;
-    --color-surface-primary-container: #403e6a;
-    --color-brand-active: #d0ccff;
-    --color-border-outline: #8e8d9c;
-    --color-border-outline-variant: #46464f;
-    --color-surface-primary-container: #403e6a;
+    --color-brand-hover: #63e6be;
+    --color-on-primary-container: #e6fcf5;
+    --color-surface-primary-container: #113a2f;
+    --color-brand-active: #20c997;
+    --color-border-outline: #94a3b8;
+    --color-border-outline-variant: #475569;
+    --color-surface-primary-container: #113a2f;
   }
 }

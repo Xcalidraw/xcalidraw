@@ -17,18 +17,25 @@
 
     display: flex;
     align-items: center;
+    gap: 0.125rem;
 
     svg {
       flex: 0 0 auto;
     }
 
+    .logo-text-bigger {
+      font-size: 3.5rem;
+      font-weight: 800;
+    }
+
     .XcalidrawLogo-icon {
       width: auto;
+      height: 100%;
       color: var(--color-logo-icon);
     }
 
     .XcalidrawLogo-text {
-      margin-left: 0.75rem;
+      margin-left: 0;
       width: auto;
       color: var(--color-logo-text);
     }
@@ -40,7 +47,7 @@
 
       .XcalidrawLogo-text {
         height: var(--logo-text--mobile);
-        margin-left: 0.5rem;
+        margin-left: 0;
       }
     }
 
