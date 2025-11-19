@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@xcalidraw/common": ["./common/src/index.ts"],
+      "@xcalidraw/common/*": ["./common/src/*"],
+      "@xcalidraw/element": ["./element/src/index.ts"],
+      "@xcalidraw/element/*": ["./element/src/*"],
+      "@xcalidraw/xcalidraw": ["./xcalidraw/index.tsx"],
+      "@xcalidraw/xcalidraw/*": ["./xcalidraw/*"],
+      "@xcalidraw/math": ["./math/src/index.ts"],
+      "@xcalidraw/math/*": ["./math/src/*"],
+      "@xcalidraw/utils": ["./utils/src/index.ts"],
+      "@xcalidraw/utils/*": ["./utils/src/*"]
+    }
+  }
+}

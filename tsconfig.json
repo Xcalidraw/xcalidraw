@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "rootDir": "./",
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@xcalidraw/common": ["./packages/common/src/index.ts"],
+      "@xcalidraw/common/*": ["./packages/common/src/*"],
+      "@xcalidraw/xcalidraw": ["./packages/xcalidraw/index.tsx"],
+      "@xcalidraw/xcalidraw/*": ["./packages/xcalidraw/*"],
+      "@xcalidraw/element": ["./packages/element/src/index.ts"],
+      "@xcalidraw/element/*": ["./packages/element/src/*"],
+      "@xcalidraw/math": ["./packages/math/src/index.ts"],
+      "@xcalidraw/math/*": ["./packages/math/src/*"],
+      "@xcalidraw/utils": ["./packages/utils/src/index.ts"],
+      "@xcalidraw/utils/*": ["./packages/utils/src/*"],
+      "excalidraw-app/*": ["./xcalidraw-app/*"],
+      "xcalidraw-app/*": ["./xcalidraw-app/*"]
+    }
+  },
+  "include": ["packages", "xcalidraw-app"],
+  "exclude": ["examples", "dist", "types", "tests"]
+}
