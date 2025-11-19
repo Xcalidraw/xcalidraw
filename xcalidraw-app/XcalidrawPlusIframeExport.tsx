@@ -2,14 +2,11 @@ import { base64urlToString } from "@xcalidraw/xcalidraw/data/encode";
 import { XcalidrawError } from "@xcalidraw/xcalidraw/errors";
 import { useLayoutEffect, useRef } from "react";
 
+import type { FileId, OrderedXcalidrawElement } from "@xcalidraw/element/types";
+import type { AppState, BinaryFileData } from "@xcalidraw/xcalidraw/types";
+
 import { STORAGE_KEYS } from "./app_constants";
 import { LocalData } from "./data/LocalData";
-
-import type {
-  FileId,
-  OrderedXcalidrawElement,
-} from "@xcalidraw/element/types";
-import type { AppState, BinaryFileData } from "@xcalidraw/xcalidraw/types";
 
 const EVENT_REQUEST_SCENE = "REQUEST_SCENE";
 
@@ -51,9 +48,7 @@ const parseSceneData = async ({
   }
 
   try {
-    const elements = JSON.parse(
-      rawElementsString,
-    ) as OrderedXcalidrawElement[];
+    const elements = JSON.parse(rawElementsString) as OrderedXcalidrawElement[];
 
     if (!elements.length) {
       throw new XcalidrawError("Scene is empty, nothing to export.");

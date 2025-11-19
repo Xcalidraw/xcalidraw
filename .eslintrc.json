@@ -1,5 +1,5 @@
 {
-  "extends": ["@xcalidraw/eslint-config", "react-app"],
+  "extends": ["@excalidraw/eslint-config", "react-app"],
   "rules": {
     "import/order": [
       "warn",

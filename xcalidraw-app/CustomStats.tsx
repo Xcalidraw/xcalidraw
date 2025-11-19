@@ -9,13 +9,13 @@ import {
 import { t } from "@xcalidraw/xcalidraw/i18n";
 import { useEffect, useState } from "react";
 
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
+import type { UIAppState } from "@xcalidraw/xcalidraw/types";
+
 import {
   getElementsStorageSize,
   getTotalStorageSize,
 } from "./data/localStorage";
-
-import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
-import type { UIAppState } from "@xcalidraw/xcalidraw/types";
 
 type StorageSizes = { scene: number; total: number };
 

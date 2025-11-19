@@ -27,8 +27,6 @@ import { isCurve } from "@xcalidraw/math/curve";
 
 import React from "react";
 
-import { STORAGE_KEYS } from "../app_constants";
-
 import type { Curve } from "@xcalidraw/math";
 import type { DebugElement } from "@xcalidraw/common";
 import type {
@@ -39,6 +37,8 @@ import type {
   OrderedXcalidrawElement,
   PointBinding,
 } from "@xcalidraw/element/types";
+
+import { STORAGE_KEYS } from "../app_constants";
 
 const renderLine = (
   context: CanvasRenderingContext2D,
@@ -232,9 +232,7 @@ const renderBindings = (
           return;
         }
 
-        const arrow = elementsMap.get(
-          boundElement.id,
-        ) as XcalidrawArrowElement;
+        const arrow = elementsMap.get(boundElement.id) as XcalidrawArrowElement;
 
         if (arrow && arrow.startBinding?.elementId === element.id) {
           _renderBindableBinding(

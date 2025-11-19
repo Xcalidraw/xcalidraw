@@ -57,6 +57,23 @@ import {
   useHandleLibrary,
 } from "@xcalidraw/xcalidraw/data/library";
 
+import type { ResolvablePromise } from "@xcalidraw/common/utils";
+import type { ResolutionType } from "@xcalidraw/common/utility-types";
+import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
+import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
+import type {
+  FileId,
+  NonDeletedXcalidrawElement,
+  OrderedXcalidrawElement,
+} from "@xcalidraw/element/types";
+import type {
+  AppState,
+  XcalidrawImperativeAPI,
+  BinaryFiles,
+  XcalidrawInitialDataState,
+  UIAppState,
+} from "@xcalidraw/xcalidraw/types";
+
 import CustomStats from "./CustomStats";
 import {
   Provider,
@@ -71,6 +88,7 @@ import {
   STORAGE_KEYS,
   SYNC_BROWSER_TABS_TIMEOUT,
 } from "./app_constants";
+
 import Collab, {
   collabAPIAtom,
   isCollaboratingAtom,
@@ -123,23 +141,6 @@ import "./index.scss";
 
 import { XcalidrawPlusPromoBanner } from "./components/XcalidrawPlusPromoBanner";
 import { AppSidebar } from "./components/AppSidebar";
-
-import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
-import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
-import type {
-  FileId,
-  NonDeletedXcalidrawElement,
-  OrderedXcalidrawElement,
-} from "@xcalidraw/element/types";
-import type {
-  AppState,
-  XcalidrawImperativeAPI,
-  BinaryFiles,
-  XcalidrawInitialDataState,
-  UIAppState,
-} from "@xcalidraw/xcalidraw/types";
-import type { ResolutionType } from "@xcalidraw/common/utility-types";
-import type { ResolvablePromise } from "@xcalidraw/common/utils";
 
 import type { CollabAPI } from "./collab/Collab";
 

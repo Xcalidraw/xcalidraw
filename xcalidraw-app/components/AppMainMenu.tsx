@@ -8,12 +8,12 @@ import React from "react";
 
 import { isDevEnv } from "@xcalidraw/common";
 
+import type { Theme } from "@xcalidraw/element/types";
+
 import { LanguageList } from "../app-language/LanguageList";
 import { isXcalidrawPlusSignedUser } from "../app_constants";
 
 import { saveDebugState } from "./DebugCanvas";
-
-import type { Theme } from "@xcalidraw/element/types";
 
 const PLUS_LP_URL = import.meta.env.VITE_APP_PLUS_LP;
 const PLUS_APP_URL = import.meta.env.VITE_APP_PLUS_APP;

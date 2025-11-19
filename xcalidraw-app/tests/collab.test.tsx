@@ -10,9 +10,9 @@ import { vi } from "vitest";
 
 import { StoreIncrement } from "@xcalidraw/element";
 
-import XcalidrawApp from "../App";
-
 import type { DurableIncrement, EphemeralIncrement } from "@xcalidraw/element";
+
+import XcalidrawApp from "../App";
 
 const { h } = window;
 

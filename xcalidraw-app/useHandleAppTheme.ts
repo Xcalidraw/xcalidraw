@@ -2,9 +2,9 @@ import { THEME } from "@xcalidraw/xcalidraw";
 import { EVENT, CODES, KEYS } from "@xcalidraw/common";
 import { useEffect, useLayoutEffect, useState } from "react";
 
-import { STORAGE_KEYS } from "./app_constants";
-
 import type { Theme } from "@xcalidraw/element/types";
+
+import { STORAGE_KEYS } from "./app_constants";
 
 const getDarkThemeMediaQuery = (): MediaQueryList | undefined =>
   window.matchMedia?.("(prefers-color-scheme: dark)");

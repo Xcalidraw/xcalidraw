@@ -1,7 +1,7 @@
 import { DEFAULT_EXPORT_PADDING, EDITOR_LS_KEYS } from "@xcalidraw/common";
 
 import type { MermaidConfig } from "@excalidraw/mermaid-to-excalidraw";
-import type { MermaidToXcalidrawResult } from "@excalidraw/mermaid-to-excalidraw/dist/interfaces";
+import type { MermaidToExcalidrawResult } from "@excalidraw/mermaid-to-excalidraw/dist/interfaces";
 
 import { EditorLocalStorage } from "../../data/EditorLocalStorage";
 import { canvasToBlob } from "../../data/blob";
@@ -39,7 +39,7 @@ export interface MermaidToXcalidrawLibProps {
     parseMermaidToExcalidraw: (
       definition: string,
       config?: MermaidConfig,
-    ) => Promise<MermaidToXcalidrawResult>;
+    ) => Promise<MermaidToExcalidrawResult>;
   }>;
 }
 

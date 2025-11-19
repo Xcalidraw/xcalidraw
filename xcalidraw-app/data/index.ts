@@ -11,17 +11,8 @@ import { isInitializedImageElement } from "@xcalidraw/element";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 import { bytesToHexString } from "@xcalidraw/common";
 
-import {
-  DELETED_ELEMENT_TIMEOUT,
-  FILE_UPLOAD_MAX_BYTES,
-  ROOM_ID_BYTES,
-} from "../app_constants";
-
-import { encodeFilesForUpload } from "./FileManager";
-
-import { saveFilesToFirebase } from "./firebase";
-
 import type { UserIdleState } from "@xcalidraw/common";
+import type { MakeBrand } from "@xcalidraw/common/utility-types";
 import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
 import type { SceneBounds } from "@xcalidraw/element";
 import type {
@@ -36,7 +27,16 @@ import type {
   SocketId,
 } from "@xcalidraw/xcalidraw/types";
 
-import type { MakeBrand } from "@xcalidraw/common/utility-types";
+import {
+  DELETED_ELEMENT_TIMEOUT,
+  FILE_UPLOAD_MAX_BYTES,
+  ROOM_ID_BYTES,
+} from "../app_constants";
+
+import { encodeFilesForUpload } from "./FileManager";
+
+import { saveFilesToFirebase } from "./firebase";
+
 import type { WS_SUBTYPES } from "../app_constants";
 
 export type SyncableXcalidrawElement = OrderedXcalidrawElement &

@@ -4,15 +4,15 @@ import { encryptData } from "@xcalidraw/xcalidraw/data/encryption";
 import { newElementWith } from "@xcalidraw/element";
 import throttle from "lodash.throttle";
 
-import { WS_EVENTS, FILE_UPLOAD_TIMEOUT, WS_SUBTYPES } from "../app_constants";
-import { isSyncableElement } from "../data";
-
 import type { UserIdleState } from "@xcalidraw/common";
 import type { OrderedXcalidrawElement } from "@xcalidraw/element/types";
 import type {
   OnUserFollowedPayload,
   SocketId,
 } from "@xcalidraw/xcalidraw/types";
+
+import { WS_EVENTS, FILE_UPLOAD_TIMEOUT, WS_SUBTYPES } from "../app_constants";
+import { isSyncableElement } from "../data";
 
 import type {
   SocketUpdateData,

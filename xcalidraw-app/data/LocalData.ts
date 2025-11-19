@@ -29,12 +29,7 @@ import {
 
 import { appJotaiStore, atom } from "xcalidraw-app/app-jotai";
 
-import { SAVE_TO_LOCAL_STORAGE_TIMEOUT, STORAGE_KEYS } from "../app_constants";
-
-import { FileManager } from "./FileManager";
-import { Locker } from "./Locker";
-import { updateBrowserStateVersion } from "./tabSync";
-
+import type { MaybePromise } from "@xcalidraw/common/utility-types";
 import type { LibraryPersistedData } from "@xcalidraw/xcalidraw/data/library";
 import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
 import type { XcalidrawElement, FileId } from "@xcalidraw/element/types";
@@ -43,7 +38,12 @@ import type {
   BinaryFileData,
   BinaryFiles,
 } from "@xcalidraw/xcalidraw/types";
-import type { MaybePromise } from "@xcalidraw/common/utility-types";
+
+import { SAVE_TO_LOCAL_STORAGE_TIMEOUT, STORAGE_KEYS } from "../app_constants";
+
+import { FileManager } from "./FileManager";
+import { Locker } from "./Locker";
+import { updateBrowserStateVersion } from "./tabSync";
 
 const filesStore = createStore("files-db", "files-store");
 

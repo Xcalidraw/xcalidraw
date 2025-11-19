@@ -22,15 +22,9 @@ type FileVersion = Required<BinaryFileData>["version"];
 export class FileManager {
   /** files being fetched */
   private fetchingFiles = new Map<XcalidrawImageElement["fileId"], true>();
-  private erroredFiles_fetch = new Map<
-    XcalidrawImageElement["fileId"],
-    true
-  >();
+  private erroredFiles_fetch = new Map<XcalidrawImageElement["fileId"], true>();
   /** files being saved */
-  private savingFiles = new Map<
-    XcalidrawImageElement["fileId"],
-    FileVersion
-  >();
+  private savingFiles = new Map<XcalidrawImageElement["fileId"], FileVersion>();
   /* files already saved to persistent storage */
   private savedFiles = new Map<XcalidrawImageElement["fileId"], FileVersion>();
   private erroredFiles_save = new Map<

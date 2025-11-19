@@ -15,10 +15,6 @@ import { serializeAsJSON } from "@xcalidraw/xcalidraw/data/json";
 import { isInitializedImageElement } from "@xcalidraw/element";
 import { useI18n } from "@xcalidraw/xcalidraw/i18n";
 
-import { FILE_UPLOAD_MAX_BYTES } from "../app_constants";
-import { encodeFilesForUpload } from "../data/FileManager";
-import { loadFirebaseStorage, saveFilesToFirebase } from "../data/firebase";
-
 import type {
   FileId,
   NonDeletedXcalidrawElement,
@@ -28,6 +24,10 @@ import type {
   BinaryFileData,
   BinaryFiles,
 } from "@xcalidraw/xcalidraw/types";
+
+import { FILE_UPLOAD_MAX_BYTES } from "../app_constants";
+import { encodeFilesForUpload } from "../data/FileManager";
+import { loadFirebaseStorage, saveFilesToFirebase } from "../data/firebase";
 
 const PLUS_APP_URL = import.meta.env.VITE_APP_PLUS_APP;
 

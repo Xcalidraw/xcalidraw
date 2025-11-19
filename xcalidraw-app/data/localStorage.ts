@@ -4,10 +4,10 @@ import {
 } from "@xcalidraw/xcalidraw/appState";
 import { clearElementsForLocalStorage } from "@xcalidraw/element";
 
-import { STORAGE_KEYS } from "../app_constants";
-
 import type { XcalidrawElement } from "@xcalidraw/element/types";
 import type { AppState } from "@xcalidraw/xcalidraw/types";
+
+import { STORAGE_KEYS } from "../app_constants";
 
 export const saveUsernameToLocalStorage = (username: string) => {
   try {

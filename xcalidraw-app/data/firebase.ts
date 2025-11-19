@@ -14,10 +14,6 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
-import { FILE_CACHE_MAX_AGE_SEC } from "../app_constants";
-
-import { getSyncableElements } from ".";
-
 import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
 import type {
   XcalidrawElement,
@@ -30,6 +26,11 @@ import type {
   BinaryFileMetadata,
   DataURL,
 } from "@xcalidraw/xcalidraw/types";
+
+import { FILE_CACHE_MAX_AGE_SEC } from "../app_constants";
+
+import { getSyncableElements } from ".";
+
 import type { SyncableXcalidrawElement } from ".";
 import type Portal from "../collab/Portal";
 import type { Socket } from "socket.io-client";

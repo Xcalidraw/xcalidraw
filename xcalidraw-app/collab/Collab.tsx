@@ -29,6 +29,26 @@ import { withBatchedUpdates } from "@xcalidraw/xcalidraw/reactUtils";
 import throttle from "lodash.throttle";
 import { PureComponent } from "react";
 
+import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
+import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
+import type {
+  ReconciledXcalidrawElement,
+  RemoteXcalidrawElement,
+} from "@xcalidraw/xcalidraw/data/reconcile";
+import type {
+  XcalidrawElement,
+  FileId,
+  InitializedXcalidrawImageElement,
+  OrderedXcalidrawElement,
+} from "@xcalidraw/element/types";
+import type {
+  BinaryFileData,
+  XcalidrawImperativeAPI,
+  SocketId,
+  Collaborator,
+  Gesture,
+} from "@xcalidraw/xcalidraw/types";
+
 import { appJotaiStore, atom } from "../app-jotai";
 
 import {
@@ -41,6 +61,7 @@ import {
   SYNC_FULL_SCENE_INTERVAL_MS,
   WS_EVENTS,
 } from "../app_constants";
+
 import {
   generateCollaborationLinkData,
   getCollaborationLink,
@@ -68,26 +89,6 @@ import { resetBrowserStateVersions } from "../data/tabSync";
 import Portal from "./Portal";
 
 import { collabErrorIndicatorAtom } from "./CollabError";
-
-import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
-import type {
-  BinaryFileData,
-  XcalidrawImperativeAPI,
-  SocketId,
-  Collaborator,
-  Gesture,
-} from "@xcalidraw/xcalidraw/types";
-import type {
-  XcalidrawElement,
-  FileId,
-  InitializedXcalidrawImageElement,
-  OrderedXcalidrawElement,
-} from "@xcalidraw/element/types";
-import type {
-  ReconciledXcalidrawElement,
-  RemoteXcalidrawElement,
-} from "@xcalidraw/xcalidraw/data/reconcile";
-import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
 
 import type { SocketUpdateDataSource, SyncableXcalidrawElement } from "../data";
 
