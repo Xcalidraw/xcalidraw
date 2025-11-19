@@ -9,6 +9,10 @@ import {
 
 import { clearElementsForExport } from "@xcalidraw/element";
 
+import type { XcalidrawElement, FileId } from "@xcalidraw/element/types";
+
+import type { ValueOf } from "@xcalidraw/common/utility-types";
+
 import { cleanAppStateForExport } from "../appState";
 
 import { CanvasError, ImageSceneDataError } from "../errors";
@@ -19,9 +23,6 @@ import { base64ToString, stringToBase64, toByteString } from "./encode";
 import { nativeFileSystemSupported } from "./filesystem";
 import { isValidXcalidrawData, isValidLibrary } from "./json";
 import { restore, restoreLibraryItems } from "./restore";
-
-import type { XcalidrawElement, FileId } from "@xcalidraw/element/types";
-import type { ValueOf } from "@xcalidraw/common/utility-types";
 
 import type { AppState, DataURL, LibraryItem } from "../types";
 
@@ -509,10 +510,10 @@ export const normalizeFile = async (file: File) => {
 };
 
 export const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
-  if (typeof blob.arrayBuffer === "function") {
+  if ("arrayBuffer" in blob) {
     return blob.arrayBuffer();
   }
-  // Fallback for environments where arrayBuffer() might not be available
+  // Safari
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -521,7 +522,6 @@ export const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
       }
       resolve(event.target.result as ArrayBuffer);
     };
-    reader.onerror = reject;
     reader.readAsArrayBuffer(blob);
   });
 };
