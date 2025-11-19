@@ -357,7 +357,7 @@ import {
   SnapCache,
   isGridModeEnabled,
 } from "../snapping";
-import { convertToExcalidrawElements } from "../data/transform";
+import { convertToXcalidrawElements } from "../data/transform";
 import { Renderer } from "../scene/Renderer";
 import {
   setEraserCursor,
@@ -409,33 +409,33 @@ import { findShapeByKey } from "./shapes";
 import UnlockPopup from "./UnlockPopup";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawFreeDrawElement,
-  ExcalidrawGenericElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawGenericElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
   NonDeleted,
-  InitializedExcalidrawImageElement,
-  ExcalidrawImageElement,
+  InitializedXcalidrawImageElement,
+  XcalidrawImageElement,
   FileId,
-  NonDeletedExcalidrawElement,
-  ExcalidrawTextContainer,
-  ExcalidrawFrameLikeElement,
-  ExcalidrawMagicFrameElement,
-  ExcalidrawIframeLikeElement,
+  NonDeletedXcalidrawElement,
+  XcalidrawTextContainer,
+  XcalidrawFrameLikeElement,
+  XcalidrawMagicFrameElement,
+  XcalidrawIframeLikeElement,
   IframeData,
-  ExcalidrawIframeElement,
-  ExcalidrawEmbeddableElement,
+  XcalidrawIframeElement,
+  XcalidrawEmbeddableElement,
   Ordered,
   MagicGenerationData,
-  ExcalidrawArrowElement,
-  ExcalidrawElbowArrowElement,
+  XcalidrawArrowElement,
+  XcalidrawElbowArrowElement,
   SceneElementsMap,
 } from "@xcalidraw/element/types";
 import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
 import type { LocalPoint, Radians } from "@xcalidraw/math";
 
-import type { ExcalidrawLibraryIds } from "../data/types";
+import type { XcalidrawLibraryIds } from "../data/types";
 
 import type {
   RenderInteractiveSceneCallback,
@@ -446,13 +446,13 @@ import type { ClipboardData, PastedMixedContent } from "../clipboard";
 import type { ExportedElements } from "../data";
 import type { ContextMenuItems } from "./ContextMenu";
 import type { FileSystemHandle } from "../data/filesystem";
-import type { ExcalidrawElementSkeleton } from "../data/transform";
+import type { XcalidrawElementSkeleton } from "../data/transform";
 import type {
   AppClassProperties,
   AppProps,
   AppState,
   BinaryFileData,
-  ExcalidrawImperativeAPI,
+  XcalidrawImperativeAPI,
   BinaryFiles,
   Gesture,
   GestureEvent,
@@ -494,37 +494,35 @@ const EditorInterfaceContext = React.createContext<EditorInterface>(
 );
 EditorInterfaceContext.displayName = "EditorInterfaceContext";
 
-export const ExcalidrawContainerContext = React.createContext<{
+export const XcalidrawContainerContext = React.createContext<{
   container: HTMLDivElement | null;
   id: string | null;
 }>({ container: null, id: null });
-ExcalidrawContainerContext.displayName = "ExcalidrawContainerContext";
+XcalidrawContainerContext.displayName = "XcalidrawContainerContext";
 
-const ExcalidrawElementsContext = React.createContext<
-  readonly NonDeletedExcalidrawElement[]
+const XcalidrawElementsContext = React.createContext<
+  readonly NonDeletedXcalidrawElement[]
 >([]);
-ExcalidrawElementsContext.displayName = "ExcalidrawElementsContext";
+XcalidrawElementsContext.displayName = "XcalidrawElementsContext";
 
-const ExcalidrawAppStateContext = React.createContext<AppState>({
+const XcalidrawAppStateContext = React.createContext<AppState>({
   ...getDefaultAppState(),
   width: 0,
   height: 0,
   offsetLeft: 0,
   offsetTop: 0,
 });
-ExcalidrawAppStateContext.displayName = "ExcalidrawAppStateContext";
+XcalidrawAppStateContext.displayName = "XcalidrawAppStateContext";
 
-const ExcalidrawSetAppStateContext = React.createContext<
+const XcalidrawSetAppStateContext = React.createContext<
   React.Component<any, AppState>["setState"]
 >(() => {
-  console.warn("Uninitialized ExcalidrawSetAppStateContext context!");
+  console.warn("Uninitialized XcalidrawSetAppStateContext context!");
 });
-ExcalidrawSetAppStateContext.displayName = "ExcalidrawSetAppStateContext";
+XcalidrawSetAppStateContext.displayName = "XcalidrawSetAppStateContext";
 
-const ExcalidrawActionManagerContext = React.createContext<ActionManager>(
-  null!,
-);
-ExcalidrawActionManagerContext.displayName = "ExcalidrawActionManagerContext";
+const XcalidrawActionManagerContext = React.createContext<ActionManager>(null!);
+XcalidrawActionManagerContext.displayName = "XcalidrawActionManagerContext";
 
 export const useApp = () => useContext(AppContext);
 export const useAppProps = () => useContext(AppPropsContext);
@@ -532,16 +530,14 @@ export const useEditorInterface = () =>
   useContext<EditorInterface>(EditorInterfaceContext);
 export const useStylesPanelMode = () =>
   deriveStylesPanelMode(useEditorInterface());
-export const useExcalidrawContainer = () =>
-  useContext(ExcalidrawContainerContext);
-export const useExcalidrawElements = () =>
-  useContext(ExcalidrawElementsContext);
-export const useExcalidrawAppState = () =>
-  useContext(ExcalidrawAppStateContext);
-export const useExcalidrawSetAppState = () =>
-  useContext(ExcalidrawSetAppStateContext);
-export const useExcalidrawActionManager = () =>
-  useContext(ExcalidrawActionManagerContext);
+export const useXcalidrawContainer = () =>
+  useContext(XcalidrawContainerContext);
+export const useXcalidrawElements = () => useContext(XcalidrawElementsContext);
+export const useXcalidrawAppState = () => useContext(XcalidrawAppStateContext);
+export const useXcalidrawSetAppState = () =>
+  useContext(XcalidrawSetAppStateContext);
+export const useXcalidrawActionManager = () =>
+  useContext(XcalidrawActionManagerContext);
 
 let didTapTwice: boolean = false;
 let tappedTwiceTimer = 0;
@@ -557,7 +553,7 @@ let invalidateContextMenu = false;
  * Map of youtube embed video states
  */
 const YOUTUBE_VIDEO_STATES = new Map<
-  ExcalidrawElement["id"],
+  XcalidrawElement["id"],
   ValueOf<typeof YOUTUBE_STATES>
 >();
 
@@ -584,12 +580,12 @@ class App extends React.Component<AppProps, AppState> {
     editorInterfaceContextInitialValue,
   );
 
-  private excalidrawContainerRef = React.createRef<HTMLDivElement>();
+  private xcalidrawContainerRef = React.createRef<HTMLDivElement>();
 
   public scene: Scene;
   public fonts: Fonts;
   public renderer: Renderer;
-  public visibleElements: readonly NonDeletedExcalidrawElement[];
+  public visibleElements: readonly NonDeletedXcalidrawElement[];
   private resizeObserver: ResizeObserver | undefined;
   private nearestScrollableContainer: HTMLElement | Document | undefined;
   public library: AppClassProperties["library"];
@@ -597,14 +593,14 @@ class App extends React.Component<AppProps, AppState> {
   public id: string;
   private store: Store;
   private history: History;
-  public excalidrawContainerValue: {
+  public xcalidrawContainerValue: {
     container: HTMLDivElement | null;
     id: string;
   };
 
   public files: BinaryFiles = {};
   public imageCache: AppClassProperties["imageCache"] = new Map();
-  private iFrameRefs = new Map<ExcalidrawElement["id"], HTMLIFrameElement>();
+  private iFrameRefs = new Map<XcalidrawElement["id"], HTMLIFrameElement>();
   /**
    * Indicates whether the embeddable's url has been validated for rendering.
    * If value not set, indicates that the validation is pending.
@@ -614,7 +610,7 @@ class App extends React.Component<AppProps, AppState> {
   private embedsValidationStatus: EmbedsValidationStatus = new Map();
   /** embeds that have been inserted to DOM (as a perf optim, we don't want to
    * insert to DOM before user initially scrolls to them) */
-  private initializedEmbeds = new Set<ExcalidrawIframeLikeElement["id"]>();
+  private initializedEmbeds = new Set<XcalidrawIframeLikeElement["id"]>();
 
   private handleToastClose = () => {
     this.setToast(null);
@@ -625,7 +621,7 @@ class App extends React.Component<AppProps, AppState> {
   public flowChartCreator: FlowChartCreator = new FlowChartCreator();
   private flowChartNavigator: FlowChartNavigator = new FlowChartNavigator();
 
-  hitLinkElement?: NonDeletedExcalidrawElement;
+  hitLinkElement?: NonDeletedXcalidrawElement;
   lastPointerDownEvent: React.PointerEvent<HTMLElement> | null = null;
   lastPointerUpEvent: React.PointerEvent<HTMLElement> | PointerEvent | null =
     null;
@@ -641,7 +637,7 @@ class App extends React.Component<AppProps, AppState> {
 
   onChangeEmitter = new Emitter<
     [
-      elements: readonly ExcalidrawElement[],
+      elements: readonly XcalidrawElement[],
       appState: AppState,
       files: BinaryFiles,
     ]
@@ -676,7 +672,7 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
     const defaultAppState = getDefaultAppState();
     const {
-      excalidrawAPI,
+      xcalidrawAPI,
       viewModeEnabled = false,
       zenModeEnabled = false,
       gridModeEnabled = false,
@@ -719,8 +715,8 @@ class App extends React.Component<AppProps, AppState> {
     this.store = new Store(this);
     this.history = new History(this.store);
 
-    if (excalidrawAPI) {
-      const api: ExcalidrawImperativeAPI = {
+    if (xcalidrawAPI) {
+      const api: XcalidrawImperativeAPI = {
         updateScene: this.updateScene,
         applyDeltas: this.applyDeltas,
         mutateElement: this.mutateElement,
@@ -757,15 +753,15 @@ class App extends React.Component<AppProps, AppState> {
         onScrollChange: (cb) => this.onScrollChangeEmitter.on(cb),
         onUserFollow: (cb) => this.onUserFollowEmitter.on(cb),
       } as const;
-      if (typeof excalidrawAPI === "function") {
-        excalidrawAPI(api);
+      if (typeof xcalidrawAPI === "function") {
+        xcalidrawAPI(api);
       } else {
-        console.error("excalidrawAPI should be a function!");
+        console.error("xcalidrawAPI should be a function!");
       }
     }
 
-    this.excalidrawContainerValue = {
-      container: this.excalidrawContainerRef.current,
+    this.xcalidrawContainerValue = {
+      container: this.xcalidrawContainerRef.current,
       id: this.id,
     };
 
@@ -804,11 +800,11 @@ class App extends React.Component<AppProps, AppState> {
 
     switch (event.origin) {
       case "https://player.vimeo.com":
-        //Allowing for multiple instances of Excalidraw running in the window
+        //Allowing for multiple instances of Xcalidraw running in the window
         if (data.method === "paused") {
           let source: Window | null = null;
           const iframes = document.body.querySelectorAll(
-            "iframe.excalidraw__embeddable",
+            "iframe.xcalidraw__embeddable",
           );
           if (!iframes) {
             break;
@@ -850,7 +846,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private cacheEmbeddableRef(
-    element: ExcalidrawIframeLikeElement,
+    element: XcalidrawIframeLikeElement,
     ref: HTMLIFrameElement | null,
   ) {
     if (ref) {
@@ -869,12 +865,12 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private getHTMLIFrameElement(
-    element: ExcalidrawIframeLikeElement,
+    element: XcalidrawIframeLikeElement,
   ): HTMLIFrameElement | undefined {
     return this.iFrameRefs.get(element.id);
   }
 
-  private handleEmbeddableCenterClick(element: ExcalidrawIframeLikeElement) {
+  private handleEmbeddableCenterClick(element: XcalidrawIframeLikeElement) {
     if (
       this.state.activeEmbeddable?.element === element &&
       this.state.activeEmbeddable?.state === "active"
@@ -954,7 +950,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private isIframeLikeElementCenter(
-    el: ExcalidrawIframeLikeElement | null,
+    el: XcalidrawIframeLikeElement | null,
     event: React.PointerEvent<HTMLElement> | PointerEvent,
     sceneX: number,
     sceneY: number,
@@ -976,7 +972,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private updateEmbedValidationStatus = (
-    element: ExcalidrawEmbeddableElement,
+    element: XcalidrawEmbeddableElement,
     status: boolean,
   ) => {
     this.embedsValidationStatus.set(element.id, status);
@@ -984,7 +980,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private updateEmbeddables = () => {
-    const iframeLikes = new Set<ExcalidrawIframeLikeElement["id"]>();
+    const iframeLikes = new Set<XcalidrawIframeLikeElement["id"]>();
 
     let updated = false;
     this.scene.getNonDeletedElements().filter((element) => {
@@ -1026,7 +1022,7 @@ class App extends React.Component<AppProps, AppState> {
     const embeddableElements = this.scene
       .getNonDeletedElements()
       .filter(
-        (el): el is Ordered<NonDeleted<ExcalidrawIframeLikeElement>> =>
+        (el): el is Ordered<NonDeleted<XcalidrawIframeLikeElement>> =>
           (isEmbeddableElement(el) &&
             this.embedsValidationStatus.get(el.id) === true) ||
           isIframeElement(el),
@@ -1209,7 +1205,7 @@ class App extends React.Component<AppProps, AppState> {
           return (
             <div
               key={el.id}
-              className={clsx("excalidraw__embeddable-container", {
+              className={clsx("xcalidraw__embeddable-container", {
                 "is-hovered": isHovered,
               })}
               style={{
@@ -1235,13 +1231,13 @@ class App extends React.Component<AppProps, AppState> {
               }}
             >
               <div
-                //this is a hack that addresses isse with embedded excalidraw.com embeddable
-                //https://github.com/excalidraw/excalidraw/pull/6691#issuecomment-1607383938
+                //this is a hack that addresses isse with embedded xcalidraw.com embeddable
+                //https://github.com/xcalidraw/xcalidraw/pull/6691#issuecomment-1607383938
                 /*ref={(ref) => {
-                  if (!this.excalidrawContainerRef.current) {
+                  if (!this.xcalidrawContainerRef.current) {
                     return;
                   }
-                  const container = this.excalidrawContainerRef.current;
+                  const container = this.xcalidrawContainerRef.current;
                   const sh = container.scrollHeight;
                   const ch = container.clientHeight;
                   if (sh !== ch) {
@@ -1251,7 +1247,7 @@ class App extends React.Component<AppProps, AppState> {
                     });
                   }
                 }}*/
-                className="excalidraw__embeddable-container__inner"
+                className="xcalidraw__embeddable-container__inner"
                 style={{
                   width: isVisible ? `${el.width}px` : 0,
                   height: isVisible ? `${el.height}px` : 0,
@@ -1262,12 +1258,12 @@ class App extends React.Component<AppProps, AppState> {
                 }}
               >
                 {isHovered && (
-                  <div className="excalidraw__embeddable-hint">
+                  <div className="xcalidraw__embeddable-hint">
                     {t("buttons.embeddableInteractionButton")}
                   </div>
                 )}
                 <div
-                  className="excalidraw__embeddable__outer"
+                  className="xcalidraw__embeddable__outer"
                   style={{
                     padding: `${el.strokeWidth}px`,
                   }}
@@ -1277,7 +1273,7 @@ class App extends React.Component<AppProps, AppState> {
                     : null) ?? (
                     <iframe
                       ref={(ref) => this.cacheEmbeddableRef(el, ref)}
-                      className="excalidraw__embeddable"
+                      className="xcalidraw__embeddable"
                       srcDoc={
                         src?.type === "document"
                           ? src.srcdoc(this.state.theme)
@@ -1289,7 +1285,7 @@ class App extends React.Component<AppProps, AppState> {
                       // https://stackoverflow.com/q/18470015
                       scrolling="no"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title="Excalidraw Embedded Content"
+                      title="Xcalidraw Embedded Content"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen={true}
                       sandbox={`${
@@ -1306,7 +1302,7 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 
-  private getFrameNameDOMId = (frameElement: ExcalidrawElement) => {
+  private getFrameNameDOMId = (frameElement: XcalidrawElement) => {
     return `${this.id}-frame-name-${frameElement.id}`;
   };
 
@@ -1358,7 +1354,7 @@ class App extends React.Component<AppProps, AppState> {
     _cache: new Map(),
   };
 
-  private resetEditingFrame = (frame: ExcalidrawFrameLikeElement | null) => {
+  private resetEditingFrame = (frame: XcalidrawFrameLikeElement | null) => {
     if (frame) {
       this.scene.mutateElement(frame, { name: frame.name?.trim() || null });
     }
@@ -1573,11 +1569,11 @@ class App extends React.Component<AppProps, AppState> {
 
     return (
       <div
-        className={clsx("excalidraw excalidraw-container", {
-          "excalidraw--view-mode":
+        className={clsx("xcalidraw xcalidraw-container", {
+          "xcalidraw--view-mode":
             this.state.viewModeEnabled ||
             this.state.openDialog?.name === "elementLinkSelector",
-          "excalidraw--mobile": this.editorInterface.formFactor === "phone",
+          "xcalidraw--mobile": this.editorInterface.formFactor === "phone",
         })}
         style={{
           ["--ui-pointerEvents" as any]: shouldBlockPointerEvents
@@ -1585,7 +1581,7 @@ class App extends React.Component<AppProps, AppState> {
             : POINTER_EVENTS.enabled,
           ["--right-sidebar-width" as any]: "302px",
         }}
-        ref={this.excalidrawContainerRef}
+        ref={this.xcalidrawContainerRef}
         onDrop={this.handleAppOnDrop}
         tabIndex={0}
         onKeyDown={
@@ -1596,16 +1592,16 @@ class App extends React.Component<AppProps, AppState> {
       >
         <AppContext.Provider value={this}>
           <AppPropsContext.Provider value={this.props}>
-            <ExcalidrawContainerContext.Provider
-              value={this.excalidrawContainerValue}
+            <XcalidrawContainerContext.Provider
+              value={this.xcalidrawContainerValue}
             >
               <EditorInterfaceContext.Provider value={this.editorInterface}>
-                <ExcalidrawSetAppStateContext.Provider value={this.setAppState}>
-                  <ExcalidrawAppStateContext.Provider value={this.state}>
-                    <ExcalidrawElementsContext.Provider
+                <XcalidrawSetAppStateContext.Provider value={this.setAppState}>
+                  <XcalidrawAppStateContext.Provider value={this.state}>
+                    <XcalidrawElementsContext.Provider
                       value={this.scene.getNonDeletedElements()}
                     >
-                      <ExcalidrawActionManagerContext.Provider
+                      <XcalidrawActionManagerContext.Provider
                         value={this.actionManager}
                       >
                         <LayerUI
@@ -1645,9 +1641,9 @@ class App extends React.Component<AppProps, AppState> {
                           {this.props.children}
                         </LayerUI>
 
-                        <div className="excalidraw-textEditorContainer" />
-                        <div className="excalidraw-contextMenuContainer" />
-                        <div className="excalidraw-eye-dropper-container" />
+                        <div className="xcalidraw-textEditorContainer" />
+                        <div className="xcalidraw-contextMenuContainer" />
+                        <div className="xcalidraw-eye-dropper-container" />
                         <SVGLayer
                           trails={[
                             this.laserTrails,
@@ -1813,7 +1809,7 @@ class App extends React.Component<AppProps, AppState> {
                         )}
                         <InteractiveCanvas
                           app={this}
-                          containerRef={this.excalidrawContainerRef}
+                          containerRef={this.xcalidrawContainerRef}
                           canvas={this.interactiveCanvas}
                           elementsMap={elementsMap}
                           visibleElements={visibleElements}
@@ -1859,13 +1855,13 @@ class App extends React.Component<AppProps, AppState> {
                         {showShapeSwitchPanel && (
                           <ConvertElementTypePopup app={this} />
                         )}
-                      </ExcalidrawActionManagerContext.Provider>
+                      </XcalidrawActionManagerContext.Provider>
                       {this.renderEmbeddables()}
-                    </ExcalidrawElementsContext.Provider>
-                  </ExcalidrawAppStateContext.Provider>
-                </ExcalidrawSetAppStateContext.Provider>
+                    </XcalidrawElementsContext.Provider>
+                  </XcalidrawAppStateContext.Provider>
+                </XcalidrawSetAppStateContext.Provider>
               </EditorInterfaceContext.Provider>
-            </ExcalidrawContainerContext.Provider>
+            </XcalidrawContainerContext.Provider>
           </AppPropsContext.Provider>
         </AppContext.Provider>
       </div>
@@ -1873,7 +1869,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   public focusContainer: AppClassProperties["focusContainer"] = () => {
-    this.excalidrawContainerRef.current?.focus();
+    this.xcalidrawContainerRef.current?.focus();
   };
 
   public getSceneElementsIncludingDeleted = () => {
@@ -1888,7 +1884,7 @@ class App extends React.Component<AppProps, AppState> {
     return this.scene.getNonDeletedElements();
   };
 
-  public onInsertElements = (elements: readonly ExcalidrawElement[]) => {
+  public onInsertElements = (elements: readonly XcalidrawElement[]) => {
     this.addElementsFromPasteOrLibrary({
       elements,
       position: "center",
@@ -1899,7 +1895,7 @@ class App extends React.Component<AppProps, AppState> {
   public onExportImage = async (
     type: keyof typeof EXPORT_IMAGE_TYPES,
     elements: ExportedElements,
-    opts: { exportingFrame: ExcalidrawFrameLikeElement | null },
+    opts: { exportingFrame: XcalidrawFrameLikeElement | null },
   ) => {
     trackEvent("export", type, "ui");
     const fileHandle = await exportCanvas(
@@ -1930,7 +1926,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private magicGenerations = new Map<
-    ExcalidrawIframeElement["id"],
+    XcalidrawIframeElement["id"],
     MagicGenerationData
   >();
 
@@ -1938,7 +1934,7 @@ class App extends React.Component<AppProps, AppState> {
     frameElement,
     data,
   }: {
-    frameElement: ExcalidrawIframeElement;
+    frameElement: XcalidrawIframeElement;
     data: MagicGenerationData;
   }) => {
     if (data.status === "pending") {
@@ -1977,7 +1973,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private async onMagicFrameGenerate(
-    magicFrame: ExcalidrawMagicFrameElement,
+    magicFrame: XcalidrawMagicFrameElement,
     source: "button" | "upstream",
   ) {
     const generateDiagramToCode = this.plugins.diagramToCode?.generate;
@@ -2070,7 +2066,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  private onIframeSrcCopy(element: ExcalidrawIframeElement) {
+  private onIframeSrcCopy(element: XcalidrawIframeElement) {
     if (element.customData?.generationData?.status === "done") {
       copyTextToSystemClipboard(element.customData.generationData.html);
       this.setToast({
@@ -2090,7 +2086,7 @@ class App extends React.Component<AppProps, AppState> {
       this.setActiveTool({ type: TOOL_TYPE.magicframe });
       trackEvent("ai", "tool-select (empty-selection)", "d2c");
     } else {
-      const selectedMagicFrame: ExcalidrawMagicFrameElement | false =
+      const selectedMagicFrame: XcalidrawMagicFrameElement | false =
         selectedElements.length === 1 &&
         isMagicFrameElement(selectedElements[0]) &&
         selectedElements[0];
@@ -2108,7 +2104,7 @@ class App extends React.Component<AppProps, AppState> {
 
       trackEvent("ai", "tool-select (existing selection)", "d2c");
 
-      let frame: ExcalidrawMagicFrameElement;
+      let frame: XcalidrawMagicFrameElement;
       if (selectedMagicFrame) {
         // a single magicframe already selected -> use it
         frame = selectedMagicFrame;
@@ -2450,7 +2446,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   public refreshEditorInterface = () => {
-    const container = this.excalidrawContainerRef.current;
+    const container = this.xcalidrawContainerRef.current;
     if (!container) {
       return;
     }
@@ -2522,8 +2518,7 @@ class App extends React.Component<AppProps, AppState> {
 
   public async componentDidMount() {
     this.unmounted = false;
-    this.excalidrawContainerValue.container =
-      this.excalidrawContainerRef.current;
+    this.xcalidrawContainerValue.container = this.xcalidrawContainerRef.current;
 
     if (isTestEnv() || isDevEnv()) {
       const setState = this.setState.bind(this);
@@ -2575,16 +2570,16 @@ class App extends React.Component<AppProps, AppState> {
     this.scene.onUpdate(this.triggerRender);
     this.addEventListeners();
 
-    if (this.props.autoFocus && this.excalidrawContainerRef.current) {
+    if (this.props.autoFocus && this.xcalidrawContainerRef.current) {
       this.focusContainer();
     }
 
-    if (supportsResizeObserver && this.excalidrawContainerRef.current) {
+    if (supportsResizeObserver && this.xcalidrawContainerRef.current) {
       this.resizeObserver = new ResizeObserver(() => {
         this.refreshEditorInterface();
         this.updateDOMRect();
       });
-      this.resizeObserver?.observe(this.excalidrawContainerRef.current);
+      this.resizeObserver?.observe(this.xcalidrawContainerRef.current);
     }
 
     const searchParams = new URLSearchParams(window.location.search.slice(1));
@@ -2673,7 +2668,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this.onRemoveEventListenersEmitter.once(
       addEventListener(
-        this.excalidrawContainerRef.current,
+        this.xcalidrawContainerRef.current,
         EVENT.WHEEL,
         this.handleWheel,
         { passive: false },
@@ -2755,19 +2750,19 @@ class App extends React.Component<AppProps, AppState> {
       addEventListener(window, EVENT.UNLOAD, this.onUnload, false),
       addEventListener(window, EVENT.BLUR, this.onBlur, false),
       addEventListener(
-        this.excalidrawContainerRef.current,
+        this.xcalidrawContainerRef.current,
         EVENT.WHEEL,
         this.handleWheel,
         { passive: false },
       ),
       addEventListener(
-        this.excalidrawContainerRef.current,
+        this.xcalidrawContainerRef.current,
         EVENT.DRAG_OVER,
         this.disableEvent,
         false,
       ),
       addEventListener(
-        this.excalidrawContainerRef.current,
+        this.xcalidrawContainerRef.current,
         EVENT.DROP,
         this.disableEvent,
         false,
@@ -2777,7 +2772,7 @@ class App extends React.Component<AppProps, AppState> {
     if (this.props.detectScroll) {
       this.onRemoveEventListenersEmitter.once(
         addEventListener(
-          getNearestScrollableContainer(this.excalidrawContainerRef.current!),
+          getNearestScrollableContainer(this.xcalidrawContainerRef.current!),
           EVENT.SCROLL,
           this.onScroll,
           { passive: false },
@@ -2895,7 +2890,7 @@ class App extends React.Component<AppProps, AppState> {
       this.setState({ theme: this.props.theme });
     }
 
-    this.excalidrawContainerRef.current?.classList.toggle(
+    this.xcalidrawContainerRef.current?.classList.toggle(
       "theme--dark",
       this.state.theme === THEME.DARK,
     );
@@ -2974,10 +2969,10 @@ class App extends React.Component<AppProps, AppState> {
   // Copy/paste
 
   private onCut = withBatchedUpdates((event: ClipboardEvent) => {
-    const isExcalidrawActive = this.excalidrawContainerRef.current?.contains(
+    const isXcalidrawActive = this.xcalidrawContainerRef.current?.contains(
       document.activeElement,
     );
-    if (!isExcalidrawActive || isWritableElement(event.target)) {
+    if (!isXcalidrawActive || isWritableElement(event.target)) {
       return;
     }
     this.actionManager.executeAction(actionCut, "keyboard", event);
@@ -2986,10 +2981,10 @@ class App extends React.Component<AppProps, AppState> {
   });
 
   private onCopy = withBatchedUpdates((event: ClipboardEvent) => {
-    const isExcalidrawActive = this.excalidrawContainerRef.current?.contains(
+    const isXcalidrawActive = this.xcalidrawContainerRef.current?.contains(
       document.activeElement,
     );
-    if (!isExcalidrawActive || isWritableElement(event.target)) {
+    if (!isXcalidrawActive || isWritableElement(event.target)) {
       return;
     }
     this.actionManager.executeAction(actionCopy, "keyboard", event);
@@ -3140,11 +3135,11 @@ class App extends React.Component<AppProps, AppState> {
     if (data.elements) {
       const elements = (
         data.programmaticAPI
-          ? convertToExcalidrawElements(
-              data.elements as ExcalidrawElementSkeleton[],
+          ? convertToXcalidrawElements(
+              data.elements as XcalidrawElementSkeleton[],
             )
           : data.elements
-      ) as readonly ExcalidrawElement[];
+      ) as readonly XcalidrawElement[];
       // TODO: remove formatting from elements if isPlainPaste
       this.addElementsFromPasteOrLibrary({
         elements,
@@ -3168,7 +3163,7 @@ class App extends React.Component<AppProps, AppState> {
         const { elements: skeletonElements, files } =
           await api.parseMermaidToExcalidraw(data.text);
 
-        const elements = convertToExcalidrawElements(skeletonElements, {
+        const elements = convertToXcalidrawElements(skeletonElements, {
           regenerateIds: true,
         });
 
@@ -3206,9 +3201,9 @@ class App extends React.Component<AppProps, AppState> {
       embbeddableUrls.length > 0 &&
       embbeddableUrls.length === nonEmptyLines.length
     ) {
-      const embeddables: NonDeleted<ExcalidrawEmbeddableElement>[] = [];
+      const embeddables: NonDeleted<XcalidrawEmbeddableElement>[] = [];
       for (const url of embbeddableUrls) {
-        const prevEmbeddable: ExcalidrawEmbeddableElement | undefined =
+        const prevEmbeddable: XcalidrawEmbeddableElement | undefined =
           embeddables[embeddables.length - 1];
         const embeddable = this.insertEmbeddableElement({
           sceneX: prevEmbeddable
@@ -3242,9 +3237,9 @@ class App extends React.Component<AppProps, AppState> {
 
       // #686
       const target = document.activeElement;
-      const isExcalidrawActive =
-        this.excalidrawContainerRef.current?.contains(target);
-      if (event && !isExcalidrawActive) {
+      const isXcalidrawActive =
+        this.xcalidrawContainerRef.current?.contains(target);
+      if (event && !isXcalidrawActive) {
         return;
       }
 
@@ -3290,7 +3285,7 @@ class App extends React.Component<AppProps, AppState> {
   );
 
   addElementsFromPasteOrLibrary = (opts: {
-    elements: readonly ExcalidrawElement[];
+    elements: readonly XcalidrawElement[];
     files: BinaryFiles | null;
     position: { clientX: number; clientY: number } | "cursor" | "center";
     retainSeed?: boolean;
@@ -3410,7 +3405,7 @@ class App extends React.Component<AppProps, AppState> {
           {
             editingGroupId: null,
             selectedElementIds: nextElementsToSelect.reduce(
-              (acc: Record<ExcalidrawElement["id"], true>, element) => {
+              (acc: Record<XcalidrawElement["id"], true>, element) => {
                 if (!isBoundToContainer(element)) {
                   acc[element.id] = true;
                 }
@@ -3533,7 +3528,7 @@ class App extends React.Component<AppProps, AppState> {
 
     const lines = isPlainPaste ? [text] : text.split("\n");
     const textElements = lines.reduce(
-      (acc: ExcalidrawTextElement[], line, idx) => {
+      (acc: XcalidrawTextElement[], line, idx) => {
         const originalText = normalizeText(line).trim();
         if (originalText.length) {
           const topLayerFrame = this.getTopLayerFrameAtSceneCoords({
@@ -3716,12 +3711,12 @@ class App extends React.Component<AppProps, AppState> {
      * target to scroll to
      *
      * - string - id of element or group, or url containing elementLink
-     * - ExcalidrawElement | ExcalidrawElement[] - element(s) objects
+     * - XcalidrawElement | XcalidrawElement[] - element(s) objects
      */
     target:
       | string
-      | ExcalidrawElement
-      | readonly ExcalidrawElement[] = this.scene.getNonDeletedElements(),
+      | XcalidrawElement
+      | readonly XcalidrawElement[] = this.scene.getNonDeletedElements(),
     opts?: (
       | {
           fitToContent?: boolean;
@@ -3776,7 +3771,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this.cancelInProgressAnimation?.();
 
-    // convert provided target into ExcalidrawElement[] if necessary
+    // convert provided target into XcalidrawElement[] if necessary
     const targetElements = Array.isArray(target) ? target : [target];
 
     let zoom = this.state.zoom;
@@ -3899,7 +3894,7 @@ class App extends React.Component<AppProps, AppState> {
    * adds supplied files to existing files in the appState.
    * NOTE if file already exists in editor state, the file data is not updated
    * */
-  public addFiles: ExcalidrawImperativeAPI["addFiles"] = withBatchedUpdates(
+  public addFiles: XcalidrawImperativeAPI["addFiles"] = withBatchedUpdates(
     (files) => {
       const { addedFiles } = this.addMissingFiles(files);
 
@@ -3961,7 +3956,7 @@ class App extends React.Component<AppProps, AppState> {
        *  - `CaptureUpdateAction.NEVER`: Updates never make it to undo/redo stack. Use for remote updates or scene initialization.
        *  - `CaptureUpdateAction.EVENTUALLY`: Updates will be eventually be captured as part of a future increment.
        *
-       * Check [API docs](https://docs.excalidraw.com/docs/@xcalidraw/xcalidraw/api/props/excalidraw-api#captureUpdate) for more details.
+       * Check [API docs](https://docs.xcalidraw.com/docs/@xcalidraw/xcalidraw/api/props/xcalidraw-api#captureUpdate) for more details.
        *
        * @default CaptureUpdateAction.EVENTUALLY
        */
@@ -4020,7 +4015,7 @@ class App extends React.Component<AppProps, AppState> {
     );
   };
 
-  public mutateElement = <TElement extends Mutable<ExcalidrawElement>>(
+  public mutateElement = <TElement extends Mutable<XcalidrawElement>>(
     element: TElement,
     updates: ElementUpdate<TElement>,
     informMutation = true,
@@ -4086,13 +4081,13 @@ class App extends React.Component<AppProps, AppState> {
 
   public getEditorUIOffsets = (): Offsets => {
     const toolbarBottom =
-      this.excalidrawContainerRef?.current
+      this.xcalidrawContainerRef?.current
         ?.querySelector(".App-toolbar")
         ?.getBoundingClientRect()?.bottom ?? 0;
-    const sidebarRect = this.excalidrawContainerRef?.current
+    const sidebarRect = this.xcalidrawContainerRef?.current
       ?.querySelector(".sidebar")
       ?.getBoundingClientRect();
-    const propertiesPanelRect = this.excalidrawContainerRef?.current
+    const propertiesPanelRect = this.xcalidrawContainerRef?.current
       ?.querySelector(".App-menu__left")
       ?.getBoundingClientRect();
 
@@ -4179,7 +4174,7 @@ class App extends React.Component<AppProps, AppState> {
           this.updateEditorAtom(convertElementTypePopupAtom, null);
         } else if (
           event.key === KEYS.TAB &&
-          (document.activeElement === this.excalidrawContainerRef?.current ||
+          (document.activeElement === this.xcalidrawContainerRef?.current ||
             document.activeElement?.classList.contains(
               CLASSES.CONVERT_ELEMENT_TYPE_POPUP,
             ))
@@ -4428,7 +4423,7 @@ class App extends React.Component<AppProps, AppState> {
         });
 
         const elbowArrow = selectedElements.find(isElbowArrow) as
-          | ExcalidrawArrowElement
+          | XcalidrawArrowElement
           | undefined;
 
         const arrowIdsToRemove = new Set<string>();
@@ -4527,7 +4522,7 @@ class App extends React.Component<AppProps, AppState> {
           ) {
             let container;
             if (!isTextElement(selectedElement)) {
-              container = selectedElement as ExcalidrawTextContainer;
+              container = selectedElement as XcalidrawTextContainer;
             }
             const midPoint = getContainerCenter(
               selectedElement,
@@ -4961,7 +4956,7 @@ class App extends React.Component<AppProps, AppState> {
   });
 
   private handleTextWysiwyg(
-    element: ExcalidrawTextElement,
+    element: XcalidrawTextElement,
     {
       isExistingElement = false,
     }: {
@@ -5066,7 +5061,7 @@ class App extends React.Component<AppProps, AppState> {
         this.focusContainer();
       }),
       element,
-      excalidrawContainer: this.excalidrawContainerRef.current,
+      xcalidrawContainer: this.xcalidrawContainerRef.current,
       app: this,
       // when text is selected, it's hard (at least on iOS) to re-position the
       // caret (i.e. deselect). There's not much use for always selecting
@@ -5094,7 +5089,7 @@ class App extends React.Component<AppProps, AppState> {
   private getTextElementAtPosition(
     x: number,
     y: number,
-  ): NonDeleted<ExcalidrawTextElement> | null {
+  ): NonDeleted<XcalidrawTextElement> | null {
     const element = this.getElementAtPosition(x, y, {
       includeBoundTextElement: true,
     });
@@ -5114,13 +5109,13 @@ class App extends React.Component<AppProps, AppState> {
           includeLockedElements?: boolean;
         }
       | {
-          allHitElements: NonDeleted<ExcalidrawElement>[];
+          allHitElements: NonDeleted<XcalidrawElement>[];
         }
     ) & {
       preferSelected?: boolean;
     },
-  ): NonDeleted<ExcalidrawElement> | null {
-    let allHitElements: NonDeleted<ExcalidrawElement>[] = [];
+  ): NonDeleted<XcalidrawElement> | null {
+    let allHitElements: NonDeleted<XcalidrawElement>[] = [];
     if (opts && "allHitElements" in opts) {
       allHitElements = opts?.allHitElements || [];
     } else {
@@ -5172,8 +5167,8 @@ class App extends React.Component<AppProps, AppState> {
       includeBoundTextElement?: boolean;
       includeLockedElements?: boolean;
     },
-  ): NonDeleted<ExcalidrawElement>[] {
-    const iframeLikes: Ordered<ExcalidrawIframeElement>[] = [];
+  ): NonDeleted<XcalidrawElement>[] {
+    const iframeLikes: Ordered<XcalidrawIframeElement>[] = [];
 
     const elementsMap = this.scene.getNonDeletedElementsMap();
 
@@ -5210,12 +5205,12 @@ class App extends React.Component<AppProps, AppState> {
         }
         return true;
       })
-      .concat(iframeLikes) as NonDeleted<ExcalidrawElement>[];
+      .concat(iframeLikes) as NonDeleted<XcalidrawElement>[];
 
     return elements;
   }
 
-  getElementHitThreshold(element: ExcalidrawElement) {
+  getElementHitThreshold(element: XcalidrawElement) {
     return Math.max(
       element.strokeWidth / 2 + 0.1,
       // NOTE: Here be dragons. Do not go under the 0.63 multiplier unless you're
@@ -5228,7 +5223,7 @@ class App extends React.Component<AppProps, AppState> {
   private hitElement(
     x: number,
     y: number,
-    element: ExcalidrawElement,
+    element: XcalidrawElement,
     considerBoundingBox = true,
   ) {
     // if the element is selected, then hit test is done against its bounding box
@@ -5323,7 +5318,7 @@ class App extends React.Component<AppProps, AppState> {
     sceneY: number;
     /** whether to attempt to insert at element center if applicable */
     insertAtParentCenter?: boolean;
-    container?: ExcalidrawTextContainer | null;
+    container?: XcalidrawTextContainer | null;
     autoEdit?: boolean;
   }) => {
     let shouldBindToContainer = false;
@@ -5345,7 +5340,7 @@ class App extends React.Component<AppProps, AppState> {
         shouldBindToContainer = true;
       }
     }
-    let existingTextElement: NonDeleted<ExcalidrawTextElement> | null = null;
+    let existingTextElement: NonDeleted<XcalidrawTextElement> | null = null;
 
     const selectedElements = this.scene.getSelectedElements(this.state);
 
@@ -5472,7 +5467,7 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
-  private startImageCropping = (image: ExcalidrawImageElement) => {
+  private startImageCropping = (image: XcalidrawImageElement) => {
     this.store.scheduleCapture();
     this.setState({
       croppingElementId: image.id,
@@ -5509,8 +5504,7 @@ class App extends React.Component<AppProps, AppState> {
     );
 
     if (selectedElements.length === 1 && isLinearElement(selectedElements[0])) {
-      const selectedLinearElement: ExcalidrawLinearElement =
-        selectedElements[0];
+      const selectedLinearElement: XcalidrawLinearElement = selectedElements[0];
       if (
         ((event[KEYS.CTRL_OR_CMD] && isSimpleArrow(selectedLinearElement)) ||
           isLineElement(selectedLinearElement)) &&
@@ -5680,8 +5674,8 @@ class App extends React.Component<AppProps, AppState> {
 
   private getElementLinkAtPosition = (
     scenePointer: Readonly<{ x: number; y: number }>,
-    hitElementMightBeLocked: NonDeletedExcalidrawElement | null,
-  ): ExcalidrawElement | undefined => {
+    hitElementMightBeLocked: NonDeletedXcalidrawElement | null,
+  ): XcalidrawElement | undefined => {
     if (hitElementMightBeLocked && hitElementMightBeLocked.locked) {
       return undefined;
     }
@@ -5760,7 +5754,7 @@ class App extends React.Component<AppProps, AppState> {
         url = normalizeLink(url);
         let customEvent;
         if (this.props.onLinkOpen) {
-          customEvent = wrapEvent(EVENT.EXCALIDRAW_LINK, event.nativeEvent);
+          customEvent = wrapEvent(EVENT.XCALIDRAW_LINK, event.nativeEvent);
           this.props.onLinkOpen(
             {
               ...this.hitLinkElement,
@@ -5790,7 +5784,7 @@ class App extends React.Component<AppProps, AppState> {
     const frames = this.scene
       .getNonDeletedFramesLikes()
       .filter(
-        (frame): frame is ExcalidrawFrameLikeElement =>
+        (frame): frame is XcalidrawFrameLikeElement =>
           !frame.locked && isCursorInFrame(sceneCoords, frame, elementsMap),
       );
 
@@ -5958,7 +5952,7 @@ class App extends React.Component<AppProps, AppState> {
       ) {
         // Since we are reading from previous state which is not possible with
         // automatic batching in React 18 hence using flush sync to synchronously
-        // update the state. Check https://github.com/excalidraw/excalidraw/pull/5508 for more details.
+        // update the state. Check https://github.com/xcalidraw/xcalidraw/pull/5508 for more details.
         flushSync(() => {
           this.setState({
             selectedLinearElement: editingLinearElement,
@@ -6202,7 +6196,7 @@ class App extends React.Component<AppProps, AppState> {
       },
     );
 
-    let hitElement: ExcalidrawElement | null = null;
+    let hitElement: XcalidrawElement | null = null;
     if (hitElementMightBeLocked && hitElementMightBeLocked.locked) {
       hitElement = null;
     } else {
@@ -6513,7 +6507,7 @@ class App extends React.Component<AppProps, AppState> {
       this.state.newElement &&
       this.state.newElement.type === "freedraw"
     ) {
-      const element = this.state.newElement as ExcalidrawFreeDrawElement;
+      const element = this.state.newElement as XcalidrawFreeDrawElement;
       this.updateScene({
         ...(element.points.length < 10
           ? {
@@ -6721,7 +6715,7 @@ class App extends React.Component<AppProps, AppState> {
             [pointerDownState.hit.element!.id]: true,
           };
 
-          const previouslySelectedElements: ExcalidrawElement[] = [];
+          const previouslySelectedElements: XcalidrawElement[] = [];
 
           Object.keys(prevState.selectedElementIds).forEach((id) => {
             const element = this.scene.getElement(id);
@@ -7018,7 +7012,7 @@ class App extends React.Component<AppProps, AppState> {
 
     // preventing defualt while text editing messes with cursor/focus
     if (!this.state.editingTextElement) {
-      // necessary to prevent browser from scrolling the page if excalidraw
+      // necessary to prevent browser from scrolling the page if xcalidraw
       // not full-page #4489
       //
       // as such, the above is broken when panning canvas while in wysiwyg
@@ -7528,7 +7522,7 @@ class App extends React.Component<AppProps, AppState> {
                   [hitElement.id]: true,
                 };
 
-                const previouslySelectedElements: ExcalidrawElement[] = [];
+                const previouslySelectedElements: XcalidrawElement[] = [];
 
                 Object.keys(prevState.selectedElementIds).forEach((id) => {
                   const element = this.scene.getElement(id);
@@ -7640,13 +7634,13 @@ class App extends React.Component<AppProps, AppState> {
     return false;
   };
 
-  private isASelectedElement(hitElement: ExcalidrawElement | null): boolean {
+  private isASelectedElement(hitElement: XcalidrawElement | null): boolean {
     return hitElement != null && this.state.selectedElementIds[hitElement.id];
   }
 
   private isHittingCommonBoundingBoxOfSelectedElements(
     point: Readonly<{ x: number; y: number }>,
-    selectedElements: readonly ExcalidrawElement[],
+    selectedElements: readonly XcalidrawElement[],
   ): boolean {
     if (selectedElements.length < 2) {
       return false;
@@ -7687,7 +7681,7 @@ class App extends React.Component<AppProps, AppState> {
     let container = this.getTextBindableContainerAtPosition(sceneX, sceneY);
 
     if (hasBoundTextElement(element)) {
-      container = element as ExcalidrawTextContainer;
+      container = element as XcalidrawTextContainer;
       sceneX = element.x + element.width / 2;
       sceneY = element.y + element.height / 2;
     }
@@ -7711,7 +7705,7 @@ class App extends React.Component<AppProps, AppState> {
 
   private handleFreeDrawElementOnPointerDown = (
     event: React.PointerEvent<HTMLElement>,
-    elementType: ExcalidrawFreeDrawElement["type"],
+    elementType: XcalidrawFreeDrawElement["type"],
     pointerDownState: PointerDownState,
   ) => {
     // Begin a mark capture. This does not have to update state yet.
@@ -7918,7 +7912,7 @@ class App extends React.Component<AppProps, AppState> {
 
   private handleLinearElementOnPointerDown = (
     event: React.PointerEvent<HTMLElement>,
-    elementType: ExcalidrawLinearElement["type"],
+    elementType: XcalidrawLinearElement["type"],
     pointerDownState: PointerDownState,
   ): void => {
     if (this.state.multiElement) {
@@ -8103,7 +8097,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   private createGenericElementOnPointerDown = (
-    elementType: ExcalidrawGenericElement["type"] | "embeddable",
+    elementType: XcalidrawGenericElement["type"] | "embeddable",
     pointerDownState: PointerDownState,
   ): void => {
     const [gridX, gridY] = getGridPoint(
@@ -8195,7 +8189,7 @@ class App extends React.Component<AppProps, AppState> {
 
   private maybeCacheReferenceSnapPoints(
     event: KeyboardModifiersObject,
-    selectedElements: ExcalidrawElement[],
+    selectedElements: XcalidrawElement[],
     recomputeAnyways: boolean = false,
   ) {
     if (
@@ -8219,7 +8213,7 @@ class App extends React.Component<AppProps, AppState> {
 
   private maybeCacheVisibleGaps(
     event: KeyboardModifiersObject,
-    selectedElements: ExcalidrawElement[],
+    selectedElements: XcalidrawElement[],
     recomputeAnyways: boolean = false,
   ) {
     if (
@@ -8256,7 +8250,7 @@ class App extends React.Component<AppProps, AppState> {
     pointerDownState: PointerDownState,
   ): (event: KeyboardEvent) => void {
     return withBatchedUpdates((event: KeyboardEvent) => {
-      // Prevents focus from escaping excalidraw tab
+      // Prevents focus from escaping xcalidraw tab
       event.key === KEYS.ALT && event.preventDefault();
       if (this.maybeHandleResize(pointerDownState, event)) {
         return;
@@ -8429,7 +8423,7 @@ class App extends React.Component<AppProps, AppState> {
 
           // Since we are reading from previous state which is not possible with
           // automatic batching in React 18 hence using flush sync to synchronously
-          // update the state. Check https://github.com/excalidraw/excalidraw/pull/5508 for more details.
+          // update the state. Check https://github.com/xcalidraw/xcalidraw/pull/5508 for more details.
 
           flushSync(() => {
             if (this.state.selectedLinearElement) {
@@ -9048,7 +9042,7 @@ class App extends React.Component<AppProps, AppState> {
             const nextSelectedElementIds = {
               ...(shouldReuseSelection && prevState.selectedElementIds),
               ...elementsWithinSelection.reduce(
-                (acc: Record<ExcalidrawElement["id"], true>, element) => {
+                (acc: Record<XcalidrawElement["id"], true>, element) => {
                   acc[element.id] = true;
                   return acc;
                 },
@@ -9275,10 +9269,7 @@ class App extends React.Component<AppProps, AppState> {
             this.scene.getNonDeletedElementsMap(),
           );
           if (element) {
-            this.scene.mutateElement(
-              element as ExcalidrawElbowArrowElement,
-              {},
-            );
+            this.scene.mutateElement(element as XcalidrawElbowArrowElement, {});
           }
         }
 
@@ -9574,7 +9565,7 @@ class App extends React.Component<AppProps, AppState> {
           let nextElements = this.scene.getElementsMapIncludingDeleted();
 
           const updateGroupIdsAfterEditingGroup = (
-            elements: ExcalidrawElement[],
+            elements: XcalidrawElement[],
           ) => {
             if (elements.length > 0) {
               for (const element of elements) {
@@ -9681,7 +9672,7 @@ class App extends React.Component<AppProps, AppState> {
 
         const selectedFrames = this.scene
           .getSelectedElements(this.state)
-          .filter((element): element is ExcalidrawFrameLikeElement =>
+          .filter((element): element is XcalidrawFrameLikeElement =>
             isFrameLikeElement(element),
           );
 
@@ -10106,7 +10097,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private initializeImage = async (
-    placeholderImageElement: ExcalidrawImageElement,
+    placeholderImageElement: XcalidrawImageElement,
     imageFile: File,
   ) => {
     // at this point this should be guaranteed image file, but we do this check
@@ -10120,10 +10111,19 @@ class App extends React.Component<AppProps, AppState> {
 
     if (mimeType === MIME_TYPES.svg) {
       try {
-        imageFile = SVGStringToFile(
-          normalizeSVG(await imageFile.text()),
-          imageFile.name,
-        );
+        let svgText: string;
+        if (typeof imageFile.text === "function") {
+          svgText = await imageFile.text();
+        } else {
+          // Fallback for test environments where File.text() might not be available
+          svgText = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsText(imageFile, "utf8");
+          });
+        }
+        imageFile = SVGStringToFile(normalizeSVG(svgText), imageFile.name);
       } catch (error: any) {
         console.warn(error);
         throw new Error(t("errors.svgImageInsertError"));
@@ -10168,7 +10168,7 @@ class App extends React.Component<AppProps, AppState> {
     const dataURL =
       this.files[fileId]?.dataURL || (await getDataURL(imageFile));
 
-    return new Promise<NonDeleted<InitializedExcalidrawImageElement>>(
+    return new Promise<NonDeleted<InitializedXcalidrawImageElement>>(
       async (resolve, reject) => {
         try {
           let initializedImageElement = this.getLatestInitializedImageElement(
@@ -10233,14 +10233,14 @@ class App extends React.Component<AppProps, AppState> {
    * and when you don't want to loose those modifications
    */
   private getLatestInitializedImageElement = (
-    imagePlaceholder: ExcalidrawImageElement,
+    imagePlaceholder: XcalidrawImageElement,
     fileId: FileId,
   ) => {
     const latestImageElement =
       this.scene.getElement(imagePlaceholder.id) ?? imagePlaceholder;
 
     return newElementWith(
-      latestImageElement as InitializedExcalidrawImageElement,
+      latestImageElement as InitializedXcalidrawImageElement,
       {
         fileId,
       },
@@ -10287,7 +10287,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private getImageNaturalDimensions = (
-    imageElement: ExcalidrawImageElement,
+    imageElement: XcalidrawImageElement,
     imageHTML: HTMLImageElement,
   ) => {
     const minHeight = Math.max(this.state.height - 120, 160);
@@ -10317,7 +10317,7 @@ class App extends React.Component<AppProps, AppState> {
   /** updates image cache, refreshing updated elements and/or setting status
       to error for images that fail during <img> element creation */
   private updateImageCache = async (
-    elements: readonly InitializedExcalidrawImageElement[],
+    elements: readonly InitializedXcalidrawImageElement[],
     files = this.files,
   ) => {
     const { updatedFiles, erroredFiles } = await _updateImageCache({
@@ -10348,7 +10348,7 @@ class App extends React.Component<AppProps, AppState> {
 
   /** adds new images to imageCache and re-renders if needed */
   private addNewImagesToImageCache = async (
-    imageElements: InitializedExcalidrawImageElement[] = getInitializedImageElements(
+    imageElements: InitializedXcalidrawImageElement[] = getInitializedImageElements(
       this.scene.getNonDeletedElements(),
     ),
     files: BinaryFiles = this.files,
@@ -10413,7 +10413,7 @@ class App extends React.Component<AppProps, AppState> {
     });
   };
 
-  private clearSelection(hitElement: ExcalidrawElement | null): void {
+  private clearSelection(hitElement: XcalidrawElement | null): void {
     this.setState((prevState) => ({
       selectedElementIds: makeNextSelectedElementIds({}, prevState),
       activeEmbeddable: null,
@@ -10559,10 +10559,10 @@ class App extends React.Component<AppProps, AppState> {
           });
           return;
         } catch (error: any) {
-          if (error.name !== "EncodingError") {
+          if (!(error instanceof ImageSceneDataError)) {
             throw new Error(t("alerts.couldNotLoadInvalidFile"));
           }
-          // if EncodingError, fall through to insert as regular image
+          // if ImageSceneDataError, fall through to insert as regular image
         }
       }
     }
@@ -10574,26 +10574,26 @@ class App extends React.Component<AppProps, AppState> {
     if (imageFiles.length > 0 && this.isToolSupported("image")) {
       return this.insertImages(imageFiles, sceneX, sceneY);
     }
-    const excalidrawLibrary_ids = dataTransferList.getData(
-      MIME_TYPES.excalidrawlibIds,
+    const xcalidrawLibrary_ids = dataTransferList.getData(
+      MIME_TYPES.xcalidrawlibIds,
     );
-    const excalidrawLibrary_data = dataTransferList.getData(
-      MIME_TYPES.excalidrawlib,
+    const xcalidrawLibrary_data = dataTransferList.getData(
+      MIME_TYPES.xcalidrawlib,
     );
-    if (excalidrawLibrary_ids || excalidrawLibrary_data) {
+    if (xcalidrawLibrary_ids || xcalidrawLibrary_data) {
       try {
         let libraryItems: LibraryItems | null = null;
-        if (excalidrawLibrary_ids) {
+        if (xcalidrawLibrary_ids) {
           const { itemIds } = JSON.parse(
-            excalidrawLibrary_ids,
-          ) as ExcalidrawLibraryIds;
+            xcalidrawLibrary_ids,
+          ) as XcalidrawLibraryIds;
           const allLibraryItems = await this.library.getLatestLibrary();
           libraryItems = allLibraryItems.filter((item) =>
             itemIds.includes(item.id),
           );
           // legacy library dataTransfer format
-        } else if (excalidrawLibrary_data) {
-          libraryItems = parseLibraryJSON(excalidrawLibrary_data);
+        } else if (xcalidrawLibrary_data) {
+          libraryItems = parseLibraryJSON(xcalidrawLibrary_data);
         }
         if (libraryItems?.length) {
           libraryItems = libraryItems.map((item) => ({
@@ -10621,7 +10621,7 @@ class App extends React.Component<AppProps, AppState> {
     if (fileItems.length > 0) {
       const { file, fileHandle } = fileItems[0];
       if (file) {
-        // Attempt to parse an excalidraw/excalidrawlib file
+        // Attempt to parse an xcalidraw/xcalidrawlib file
         await this.loadFileToCanvas(file, fileHandle);
       }
     }
@@ -10689,7 +10689,7 @@ class App extends React.Component<AppProps, AppState> {
         return;
       }
 
-      if (ret.type === MIME_TYPES.excalidraw) {
+      if (ret.type === MIME_TYPES.xcalidraw) {
         // restore the fractional indices by mutating elements
         syncInvalidIndices(elements.concat(ret.data.elements));
 
@@ -10711,7 +10711,7 @@ class App extends React.Component<AppProps, AppState> {
           replaceFiles: true,
           captureUpdate: CaptureUpdateAction.IMMEDIATELY,
         });
-      } else if (ret.type === MIME_TYPES.excalidrawlib) {
+      } else if (ret.type === MIME_TYPES.xcalidrawlib) {
         await this.library
           .updateLibrary({
             libraryItems: file,
@@ -10760,7 +10760,7 @@ class App extends React.Component<AppProps, AppState> {
 
     const type = element || isHittingCommonBoundBox ? "element" : "canvas";
 
-    const container = this.excalidrawContainerRef.current!;
+    const container = this.xcalidrawContainerRef.current!;
     const { top: offsetTop, left: offsetLeft } =
       container.getBoundingClientRect();
     const left = event.clientX - offsetLeft;
@@ -10903,7 +10903,7 @@ class App extends React.Component<AppProps, AppState> {
       this.setState({
         elementsToHighlight: getElementsInResizingFrame(
           this.scene.getNonDeletedElements(),
-          newElement as ExcalidrawFrameLikeElement,
+          newElement as XcalidrawFrameLikeElement,
           this.state,
           this.scene.getNonDeletedElementsMap(),
         ),
@@ -11014,7 +11014,7 @@ class App extends React.Component<AppProps, AppState> {
   ): boolean => {
     const selectedElements = this.scene.getSelectedElements(this.state);
     const selectedFrames = selectedElements.filter(
-      (element): element is ExcalidrawFrameLikeElement =>
+      (element): element is XcalidrawFrameLikeElement =>
         isFrameLikeElement(element),
     );
 
@@ -11126,7 +11126,7 @@ class App extends React.Component<AppProps, AppState> {
         this.state.zoom,
       );
 
-      const elementsToHighlight = new Set<ExcalidrawElement>();
+      const elementsToHighlight = new Set<XcalidrawElement>();
       selectedFrames.forEach((frame) => {
         getElementsInResizingFrame(
           this.scene.getNonDeletedElements(),
@@ -11328,7 +11328,7 @@ class App extends React.Component<AppProps, AppState> {
     x: number,
     y: number,
     appState: AppState,
-    container?: ExcalidrawTextContainer | null,
+    container?: XcalidrawTextContainer | null,
   ) {
     if (container) {
       let elementCenterX = container.x + container.width / 2;
@@ -11392,14 +11392,14 @@ class App extends React.Component<AppProps, AppState> {
   }, 300);
 
   private updateDOMRect = (cb?: () => void) => {
-    if (this.excalidrawContainerRef?.current) {
-      const excalidrawContainer = this.excalidrawContainerRef.current;
+    if (this.xcalidrawContainerRef?.current) {
+      const xcalidrawContainer = this.xcalidrawContainerRef.current;
       const {
         width,
         height,
         left: offsetLeft,
         top: offsetTop,
-      } = excalidrawContainer.getBoundingClientRect();
+      } = xcalidrawContainer.getBoundingClientRect();
       const {
         width: currentWidth,
         height: currentHeight,
@@ -11438,9 +11438,9 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   private getCanvasOffsets(): Pick<AppState, "offsetTop" | "offsetLeft"> {
-    if (this.excalidrawContainerRef?.current) {
-      const excalidrawContainer = this.excalidrawContainerRef.current;
-      const { left, top } = excalidrawContainer.getBoundingClientRect();
+    if (this.xcalidrawContainerRef?.current) {
+      const xcalidrawContainer = this.xcalidrawContainerRef.current;
+      const { left, top } = xcalidrawContainer.getBoundingClientRect();
       return {
         offsetLeft: left,
         offsetTop: top,
@@ -11468,7 +11468,7 @@ declare global {
   interface Window {
     h: {
       scene: Scene;
-      elements: readonly ExcalidrawElement[];
+      elements: readonly XcalidrawElement[];
       state: AppState;
       setState: React.Component<any, AppState>["setState"];
       app: InstanceType<typeof App>;
@@ -11488,7 +11488,7 @@ export const createTestHook = () => {
         get() {
           return this.app?.scene.getElementsIncludingDeleted();
         },
-        set(elements: ExcalidrawElement[]) {
+        set(elements: XcalidrawElement[]) {
           return this.app?.scene.replaceAllElements(
             syncInvalidIndices(elements),
           );

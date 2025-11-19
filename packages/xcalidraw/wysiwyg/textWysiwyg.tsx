@@ -51,10 +51,10 @@ import {
 } from "../actions/actionCanvas";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElementWithContainer,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElementWithContainer,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 import type App from "../components/App";
@@ -90,11 +90,11 @@ export const textWysiwyg = ({
   getViewportCoords,
   element,
   canvas,
-  excalidrawContainer,
+  xcalidrawContainer,
   app,
   autoSelect = true,
 }: {
-  id: ExcalidrawElement["id"];
+  id: XcalidrawElement["id"];
   /**
    * textWysiwyg only deals with `originalText`
    *
@@ -104,14 +104,14 @@ export const textWysiwyg = ({
   onChange?: (nextOriginalText: string) => void;
   onSubmit: (data: { viaKeyboard: boolean; nextOriginalText: string }) => void;
   getViewportCoords: (x: number, y: number) => [number, number];
-  element: ExcalidrawTextElement;
+  element: XcalidrawTextElement;
   canvas: HTMLCanvasElement;
-  excalidrawContainer: HTMLDivElement | null;
+  xcalidrawContainer: HTMLDivElement | null;
   app: App;
   autoSelect?: boolean;
 }): SubmitHandler => {
   const textPropertiesUpdated = (
-    updatedTextElement: ExcalidrawTextElement,
+    updatedTextElement: XcalidrawTextElement,
     editable: HTMLTextAreaElement,
   ) => {
     if (!editable.style.fontFamily || !editable.style.fontSize) {
@@ -132,7 +132,7 @@ export const textWysiwyg = ({
 
   const updateWysiwygStyle = () => {
     const appState = app.state;
-    const updatedTextElement = app.scene.getElement<ExcalidrawTextElement>(id);
+    const updatedTextElement = app.scene.getElement<XcalidrawTextElement>(id);
 
     if (!updatedTextElement) {
       return;
@@ -161,7 +161,7 @@ export const textWysiwyg = ({
           const boundTextCoords =
             LinearElementEditor.getBoundTextElementPosition(
               container,
-              updatedTextElement as ExcalidrawTextElementWithContainer,
+              updatedTextElement as XcalidrawTextElementWithContainer,
               elementsMap,
             );
           coordX = boundTextCoords.x;
@@ -191,7 +191,7 @@ export const textWysiwyg = ({
         maxWidth = getBoundTextMaxWidth(container, updatedTextElement);
         maxHeight = getBoundTextMaxHeight(
           container,
-          updatedTextElement as ExcalidrawTextElementWithContainer,
+          updatedTextElement as XcalidrawTextElementWithContainer,
         );
 
         // autogrow container height if text exceeds
@@ -218,7 +218,7 @@ export const textWysiwyg = ({
         } else {
           const { x, y } = computeBoundTextPosition(
             container,
-            updatedTextElement as ExcalidrawTextElementWithContainer,
+            updatedTextElement as XcalidrawTextElementWithContainer,
             elementsMap,
           );
           coordX = x;
@@ -283,7 +283,7 @@ export const textWysiwyg = ({
   editable.dataset.type = "wysiwyg";
   // prevent line wrapping on Safari
   editable.wrap = "off";
-  editable.classList.add("excalidraw-wysiwyg");
+  editable.classList.add("xcalidraw-wysiwyg");
 
   let whiteSpace = "pre";
   let wordBreak = "normal";
@@ -534,7 +534,7 @@ export const textWysiwyg = ({
     cleanup();
     const updateElement = app.scene.getElement(
       element.id,
-    ) as ExcalidrawTextElement;
+    ) as XcalidrawTextElement;
     if (!updateElement) {
       return;
     }
@@ -562,7 +562,7 @@ export const textWysiwyg = ({
           boundElements: container.boundElements?.filter(
             (ele) =>
               !isTextElement(
-                ele as ExcalidrawTextElement | ExcalidrawLinearElement,
+                ele as XcalidrawTextElement | XcalidrawLinearElement,
               ),
           ),
         });
@@ -738,8 +738,8 @@ export const textWysiwyg = ({
     window.addEventListener("pointerdown", onPointerDown, { capture: true });
   });
   window.addEventListener("beforeunload", handleSubmit);
-  excalidrawContainer
-    ?.querySelector(".excalidraw-textEditorContainer")!
+  xcalidrawContainer
+    ?.querySelector(".xcalidraw-textEditorContainer")!
     .appendChild(editable);
 
   return handleSubmit;

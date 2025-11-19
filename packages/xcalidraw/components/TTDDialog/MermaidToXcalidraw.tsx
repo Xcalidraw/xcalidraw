@@ -14,31 +14,31 @@ import { TTDDialogPanel } from "./TTDDialogPanel";
 import { TTDDialogPanels } from "./TTDDialogPanels";
 import { TTDDialogSubmitShortcut } from "./TTDDialogSubmitShortcut";
 import {
-  convertMermaidToExcalidraw,
+  convertMermaidToXcalidraw,
   insertToEditor,
   saveMermaidDataToStorage,
 } from "./common";
 
-import "./MermaidToExcalidraw.scss";
+import "./MermaidToXcalidraw.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { BinaryFiles } from "../../types";
-import type { MermaidToExcalidrawLibProps } from "./common";
+import type { MermaidToXcalidrawLibProps } from "./common";
 
 const MERMAID_EXAMPLE =
   "flowchart TD\n A[Christmas] -->|Get money| B(Go shopping)\n B --> C{Let me think}\n C -->|One| D[Laptop]\n C -->|Two| E[iPhone]\n C -->|Three| F[Car]";
 
 const debouncedSaveMermaidDefinition = debounce(saveMermaidDataToStorage, 300);
 
-const MermaidToExcalidraw = ({
-  mermaidToExcalidrawLib,
+const MermaidToXcalidraw = ({
+  mermaidToXcalidrawLib,
 }: {
-  mermaidToExcalidrawLib: MermaidToExcalidrawLibProps;
+  mermaidToXcalidrawLib: MermaidToXcalidrawLibProps;
 }) => {
   const [text, setText] = useState(
     () =>
-      EditorLocalStorage.get<string>(EDITOR_LS_KEYS.MERMAID_TO_EXCALIDRAW) ||
+      EditorLocalStorage.get<string>(EDITOR_LS_KEYS.MERMAID_TO_XCALIDRAW) ||
       MERMAID_EXAMPLE,
   );
   const deferredText = useDeferredValue(text.trim());
@@ -46,17 +46,17 @@ const MermaidToExcalidraw = ({
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const data = useRef<{
-    elements: readonly NonDeletedExcalidrawElement[];
+    elements: readonly NonDeletedXcalidrawElement[];
     files: BinaryFiles | null;
   }>({ elements: [], files: null });
 
   const app = useApp();
 
   useEffect(() => {
-    convertMermaidToExcalidraw({
+    convertMermaidToXcalidraw({
       canvasRef,
       data,
-      mermaidToExcalidrawLib,
+      mermaidToXcalidrawLib,
       setError,
       mermaidDefinition: deferredText,
     }).catch((err) => {
@@ -66,7 +66,7 @@ const MermaidToExcalidraw = ({
     });
 
     debouncedSaveMermaidDefinition(deferredText);
-  }, [deferredText, mermaidToExcalidrawLib]);
+  }, [deferredText, mermaidToXcalidrawLib]);
 
   useEffect(
     () => () => {
@@ -126,7 +126,7 @@ const MermaidToExcalidraw = ({
         >
           <TTDDialogOutput
             canvasRef={canvasRef}
-            loaded={mermaidToExcalidrawLib.loaded}
+            loaded={mermaidToXcalidrawLib.loaded}
             error={error}
           />
         </TTDDialogPanel>
@@ -134,4 +134,4 @@ const MermaidToExcalidraw = ({
     </>
   );
 };
-export default MermaidToExcalidraw;
+export default MermaidToXcalidraw;

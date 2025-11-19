@@ -10,7 +10,7 @@ import {
   actionAlignRight,
 } from "@xcalidraw/xcalidraw/actions";
 import { defaultLang, setLanguage } from "@xcalidraw/xcalidraw/i18n";
-import { Excalidraw } from "@xcalidraw/xcalidraw";
+import { Xcalidraw } from "@xcalidraw/xcalidraw";
 
 import { API } from "@xcalidraw/xcalidraw/tests/helpers/api";
 import { UI, Pointer, Keyboard } from "@xcalidraw/xcalidraw/tests/helpers/ui";
@@ -66,7 +66,7 @@ describe("aligning", () => {
     await act(() => {
       return setLanguage(defaultLang);
     });
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
   });
 
   it("aligns two objects correctly to the top", () => {

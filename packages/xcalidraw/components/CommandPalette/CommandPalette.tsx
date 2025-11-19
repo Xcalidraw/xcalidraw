@@ -32,8 +32,8 @@ import { t } from "../../i18n";
 import {
   useApp,
   useAppProps,
-  useExcalidrawActionManager,
-  useExcalidrawSetAppState,
+  useXcalidrawActionManager,
+  useXcalidrawSetAppState,
 } from "../App";
 import { Dialog } from "../Dialog";
 import { InlineIcon } from "../InlineIcon";
@@ -153,7 +153,7 @@ type CommandPaletteProps = {
 export const CommandPalette = Object.assign(
   (props: CommandPaletteProps) => {
     const uiAppState = useUIAppState();
-    const setAppState = useExcalidrawSetAppState();
+    const setAppState = useXcalidrawSetAppState();
 
     useEffect(() => {
       const commandPaletteShortcut = (event: KeyboardEvent) => {
@@ -201,9 +201,9 @@ function CommandPaletteInner({
 }: CommandPaletteProps) {
   const app = useApp();
   const uiAppState = useUIAppState();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const appProps = useAppProps();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   const [lastUsed, setLastUsed] = useAtom(lastUsedPaletteItem);
   const [allCommands, setAllCommands] = useState<
@@ -581,7 +581,7 @@ function CommandPaletteInner({
           },
         },
         {
-          label: `${t("toolBar.mermaidToExcalidraw")}...`,
+          label: `${t("toolBar.mermaidToXcalidraw")}...`,
           category: DEFAULT_CATEGORIES.tools,
           icon: mermaidLogoIcon,
           viewMode: false,
@@ -665,13 +665,13 @@ function CommandPaletteInner({
     if (uiAppState.openDialog?.name === "commandPalette") {
       event.stopPropagation();
       event.preventDefault();
-      document.body.classList.add("excalidraw-animations-disabled");
+      document.body.classList.add("xcalidraw-animations-disabled");
       closeCommandPalette(() => {
         command.perform({ actionManager, event });
         setLastUsed(command);
 
         requestAnimationFrame(() => {
-          document.body.classList.remove("excalidraw-animations-disabled");
+          document.body.classList.remove("xcalidraw-animations-disabled");
         });
       });
     }

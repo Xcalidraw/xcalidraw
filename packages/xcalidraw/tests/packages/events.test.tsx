@@ -3,35 +3,35 @@ import { vi } from "vitest";
 
 import { resolvablePromise } from "@xcalidraw/common";
 
-import { Excalidraw, CaptureUpdateAction } from "../../index";
+import { Xcalidraw, CaptureUpdateAction } from "../../index";
 import { API } from "../helpers/api";
 import { Pointer } from "../helpers/ui";
 import { render } from "../test-utils";
 
-import type { ExcalidrawImperativeAPI } from "../../types";
+import type { XcalidrawImperativeAPI } from "../../types";
 
 describe("event callbacks", () => {
   const h = window.h;
 
-  let excalidrawAPI: ExcalidrawImperativeAPI;
+  let xcalidrawAPI: XcalidrawImperativeAPI;
 
   const mouse = new Pointer("mouse");
 
   beforeEach(async () => {
-    const excalidrawAPIPromise = resolvablePromise<ExcalidrawImperativeAPI>();
+    const xcalidrawAPIPromise = resolvablePromise<XcalidrawImperativeAPI>();
     await render(
-      <Excalidraw
-        excalidrawAPI={(api) => excalidrawAPIPromise.resolve(api as any)}
+      <Xcalidraw
+        xcalidrawAPI={(api) => xcalidrawAPIPromise.resolve(api as any)}
       />,
     );
-    excalidrawAPI = await excalidrawAPIPromise;
+    xcalidrawAPI = await xcalidrawAPIPromise;
   });
 
   it("should trigger onChange on render", async () => {
     const onChange = vi.fn();
 
     const origBackgroundColor = h.state.viewBackgroundColor;
-    excalidrawAPI.onChange(onChange);
+    xcalidrawAPI.onChange(onChange);
     API.updateScene({
       appState: { viewBackgroundColor: "red" },
       captureUpdate: CaptureUpdateAction.IMMEDIATELY,
@@ -55,8 +55,8 @@ describe("event callbacks", () => {
     const onPointerDown = vi.fn();
     const onPointerUp = vi.fn();
 
-    excalidrawAPI.onPointerDown(onPointerDown);
-    excalidrawAPI.onPointerUp(onPointerUp);
+    xcalidrawAPI.onPointerDown(onPointerDown);
+    xcalidrawAPI.onPointerUp(onPointerUp);
 
     mouse.downAt(100);
     expect(onPointerDown).toHaveBeenCalledTimes(1);

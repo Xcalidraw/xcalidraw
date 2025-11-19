@@ -14,11 +14,11 @@ import { getSelectedElements } from "../scene";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppState } from "../types";
 
-const shouldLock = (elements: readonly ExcalidrawElement[]) =>
+const shouldLock = (elements: readonly XcalidrawElement[]) =>
   elements.every((el) => !el.locked);
 
 export const actionToggleElementLock = register({

@@ -19,9 +19,9 @@ import {
 
 import type { Radians } from "@xcalidraw/math";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
-export type ChartElements = readonly NonDeletedExcalidrawElement[];
+export type ChartElements = readonly NonDeletedXcalidrawElement[];
 
 const BAR_WIDTH = 32;
 const BAR_GAP = 12;
@@ -297,7 +297,7 @@ const chartLines = (
   return [xLine, yLine, maxLine];
 };
 
-// For the maths behind it https://excalidraw.com/#json=6320864370884608,O_5xfD-Agh32tytHpRJx1g
+// For the maths behind it https://xcalidraw.com/#json=6320864370884608,O_5xfD-Agh32tytHpRJx1g
 const chartBaseElements = (
   spreadsheet: Spreadsheet,
   x: number,

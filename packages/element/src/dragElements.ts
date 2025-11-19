@@ -17,7 +17,7 @@ import {
   isTextElement,
 } from "./typeChecks";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type {
   AppState,
@@ -29,11 +29,11 @@ import type {
 import type { Scene } from "./Scene";
 
 import type { Bounds } from "./bounds";
-import type { ExcalidrawElement } from "./types";
+import type { XcalidrawElement } from "./types";
 
 export const dragSelectedElements = (
   pointerDownState: PointerDownState,
-  _selectedElements: NonDeletedExcalidrawElement[],
+  _selectedElements: NonDeletedXcalidrawElement[],
   offset: { x: number; y: number },
   scene: Scene,
   snapOffset: {
@@ -68,7 +68,7 @@ export const dragSelectedElements = (
   // we do not want a frame and its elements to be selected at the same time
   // but when it happens (due to some bug), we want to avoid updating element
   // in the frame twice, hence the use of set
-  const elementsToUpdate = new Set<NonDeletedExcalidrawElement>(
+  const elementsToUpdate = new Set<NonDeletedXcalidrawElement>(
     selectedElements,
   );
   const frames = selectedElements
@@ -83,7 +83,7 @@ export const dragSelectedElements = (
     }
   }
 
-  const origElements: ExcalidrawElement[] = [];
+  const origElements: XcalidrawElement[] = [];
 
   for (const element of elementsToUpdate) {
     const origElement = pointerDownState.originalElements.get(element.id);
@@ -158,7 +158,7 @@ const calculateOffset = (
 
 const updateElementCoords = (
   pointerDownState: PointerDownState,
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   scene: Scene,
   dragOffset: { x: number; y: number },
 ) => {
@@ -175,7 +175,7 @@ const updateElementCoords = (
 };
 
 export const getDragOffsetXY = (
-  selectedElements: NonDeletedExcalidrawElement[],
+  selectedElements: NonDeletedXcalidrawElement[],
   x: number,
   y: number,
 ): [number, number] => {
@@ -200,7 +200,7 @@ export const dragNewElement = ({
   originOffset = null,
   informMutation = true,
 }: {
-  newElement: NonDeletedExcalidrawElement;
+  newElement: NonDeletedXcalidrawElement;
   elementType: AppState["activeTool"]["type"];
   originX: number;
   originY: number;

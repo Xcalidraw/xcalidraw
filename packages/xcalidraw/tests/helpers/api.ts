@@ -32,18 +32,18 @@ import { GlobalTestState, createEvent, fireEvent, act } from "../test-utils";
 
 import type { Mutable } from "@xcalidraw/common/utility-types";
 import type {
-  ExcalidrawElement,
-  ExcalidrawGenericElement,
-  ExcalidrawTextElement,
-  ExcalidrawLinearElement,
-  ExcalidrawFreeDrawElement,
-  ExcalidrawImageElement,
+  XcalidrawElement,
+  XcalidrawGenericElement,
+  XcalidrawTextElement,
+  XcalidrawLinearElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawImageElement,
   FileId,
-  ExcalidrawFrameElement,
-  ExcalidrawElementType,
-  ExcalidrawMagicFrameElement,
-  ExcalidrawElbowArrowElement,
-  ExcalidrawArrowElement,
+  XcalidrawFrameElement,
+  XcalidrawElementType,
+  XcalidrawMagicFrameElement,
+  XcalidrawElbowArrowElement,
+  XcalidrawArrowElement,
   FixedSegment,
 } from "@xcalidraw/element/types";
 
@@ -73,13 +73,13 @@ export class API {
     });
   };
 
-  static setElements = (elements: readonly ExcalidrawElement[]) => {
+  static setElements = (elements: readonly XcalidrawElement[]) => {
     act(() => {
       h.elements = elements;
     });
   };
 
-  static setSelectedElements = (elements: ExcalidrawElement[], editingGroupId?: string | null) => {
+  static setSelectedElements = (elements: XcalidrawElement[], editingGroupId?: string | null) => {
     act(() => {
       h.setState({
         ...selectGroupsForSelectedElements(
@@ -88,7 +88,7 @@ export class API {
           selectedElementIds: elements.reduce((acc, element) => {
             acc[element.id] = true;
             return acc;
-          }, {} as Record<ExcalidrawElement["id"], true>),
+          }, {} as Record<XcalidrawElement["id"], true>),
         },
         elements,
         h.state,
@@ -99,7 +99,7 @@ export class API {
   };
 
   // eslint-disable-next-line prettier/prettier
-  static updateElement = <T extends ExcalidrawElement>(
+  static updateElement = <T extends XcalidrawElement>(
     ...args: Parameters<typeof h.app.scene.mutateElement<T>>
   ) => {
     act(() => {
@@ -110,14 +110,14 @@ export class API {
   static getSelectedElements = (
     includeBoundTextElement: boolean = false,
     includeElementsInFrames: boolean = false,
-  ): ExcalidrawElement[] => {
+  ): XcalidrawElement[] => {
     return getSelectedElements(h.elements, h.state, {
       includeBoundTextElement,
       includeElementsInFrames,
     });
   };
 
-  static getSelectedElement = (): ExcalidrawElement => {
+  static getSelectedElement = (): XcalidrawElement => {
     const selectedElements = API.getSelectedElements();
     if (selectedElements.length !== 1) {
       throw new Error(
@@ -149,12 +149,12 @@ export class API {
     expect(API.getSelectedElements().length).toBe(0);
   };
 
-  static getElement = <T extends ExcalidrawElement>(element: T): T => {
+  static getElement = <T extends XcalidrawElement>(element: T): T => {
     return h.app.scene.getElementsMapIncludingDeleted().get(element.id) as T || element;
   }
 
   static createElement = <
-    T extends Exclude<ExcalidrawElementType, "selection"> = "rectangle",
+    T extends Exclude<XcalidrawElementType, "selection"> = "rectangle",
   >({
     // @ts-ignore
     type = "rectangle",
@@ -175,68 +175,68 @@ export class API {
     angle?: number;
     id?: string;
     isDeleted?: boolean;
-    frameId?: ExcalidrawElement["id"] | null;
-    index?: ExcalidrawElement["index"];
-    groupIds?: ExcalidrawElement["groupIds"];
+    frameId?: XcalidrawElement["id"] | null;
+    index?: XcalidrawElement["index"];
+    groupIds?: XcalidrawElement["groupIds"];
     // generic element props
-    strokeColor?: ExcalidrawGenericElement["strokeColor"];
-    backgroundColor?: ExcalidrawGenericElement["backgroundColor"];
-    fillStyle?: ExcalidrawGenericElement["fillStyle"];
-    strokeWidth?: ExcalidrawGenericElement["strokeWidth"];
-    strokeStyle?: ExcalidrawGenericElement["strokeStyle"];
-    roundness?: ExcalidrawGenericElement["roundness"];
-    roughness?: ExcalidrawGenericElement["roughness"];
-    opacity?: ExcalidrawGenericElement["opacity"];
+    strokeColor?: XcalidrawGenericElement["strokeColor"];
+    backgroundColor?: XcalidrawGenericElement["backgroundColor"];
+    fillStyle?: XcalidrawGenericElement["fillStyle"];
+    strokeWidth?: XcalidrawGenericElement["strokeWidth"];
+    strokeStyle?: XcalidrawGenericElement["strokeStyle"];
+    roundness?: XcalidrawGenericElement["roundness"];
+    roughness?: XcalidrawGenericElement["roughness"];
+    opacity?: XcalidrawGenericElement["opacity"];
     // text props
-    text?: T extends "text" ? ExcalidrawTextElement["text"] : never;
-    fontSize?: T extends "text" ? ExcalidrawTextElement["fontSize"] : never;
-    fontFamily?: T extends "text" ? ExcalidrawTextElement["fontFamily"] : never;
-    textAlign?: T extends "text" ? ExcalidrawTextElement["textAlign"] : never;
+    text?: T extends "text" ? XcalidrawTextElement["text"] : never;
+    fontSize?: T extends "text" ? XcalidrawTextElement["fontSize"] : never;
+    fontFamily?: T extends "text" ? XcalidrawTextElement["fontFamily"] : never;
+    textAlign?: T extends "text" ? XcalidrawTextElement["textAlign"] : never;
     verticalAlign?: T extends "text"
-      ? ExcalidrawTextElement["verticalAlign"]
+      ? XcalidrawTextElement["verticalAlign"]
       : never;
-    boundElements?: ExcalidrawGenericElement["boundElements"];
+    boundElements?: XcalidrawGenericElement["boundElements"];
     containerId?: T extends "text"
-      ? ExcalidrawTextElement["containerId"]
+      ? XcalidrawTextElement["containerId"]
       : never;
     points?: T extends "arrow" | "line" | "freedraw" ? readonly LocalPoint[] : never;
     locked?: boolean;
     fileId?: T extends "image" ? string : never;
-    scale?: T extends "image" ? ExcalidrawImageElement["scale"] : never;
-    status?: T extends "image" ? ExcalidrawImageElement["status"] : never;
+    scale?: T extends "image" ? XcalidrawImageElement["scale"] : never;
+    status?: T extends "image" ? XcalidrawImageElement["status"] : never;
     startBinding?: T extends "arrow"
-      ? ExcalidrawArrowElement["startBinding"] | ExcalidrawElbowArrowElement["startBinding"]
+      ? XcalidrawArrowElement["startBinding"] | XcalidrawElbowArrowElement["startBinding"]
       : never;
     endBinding?: T extends "arrow"
-      ? ExcalidrawArrowElement["endBinding"] | ExcalidrawElbowArrowElement["endBinding"]
+      ? XcalidrawArrowElement["endBinding"] | XcalidrawElbowArrowElement["endBinding"]
       : never;
     startArrowhead?: T extends "arrow"
-      ? ExcalidrawArrowElement["startArrowhead"] | ExcalidrawElbowArrowElement["startArrowhead"]
+      ? XcalidrawArrowElement["startArrowhead"] | XcalidrawElbowArrowElement["startArrowhead"]
       : never;
     endArrowhead?: T extends "arrow"
-      ? ExcalidrawArrowElement["endArrowhead"] | ExcalidrawElbowArrowElement["endArrowhead"]
+      ? XcalidrawArrowElement["endArrowhead"] | XcalidrawElbowArrowElement["endArrowhead"]
       : never;
     elbowed?: boolean;
     fixedSegments?: FixedSegment[] | null;
   }): T extends "arrow" | "line"
-    ? ExcalidrawLinearElement
+    ? XcalidrawLinearElement
     : T extends "freedraw"
-    ? ExcalidrawFreeDrawElement
+    ? XcalidrawFreeDrawElement
     : T extends "text"
-    ? ExcalidrawTextElement
+    ? XcalidrawTextElement
     : T extends "image"
-    ? ExcalidrawImageElement
+    ? XcalidrawImageElement
     : T extends "frame"
-    ? ExcalidrawFrameElement
+    ? XcalidrawFrameElement
     : T extends "magicframe"
-    ? ExcalidrawMagicFrameElement
-    : ExcalidrawGenericElement => {
-    let element: Mutable<ExcalidrawElement> = null!;
+    ? XcalidrawMagicFrameElement
+    : XcalidrawGenericElement => {
+    let element: Mutable<XcalidrawElement> = null!;
 
     const appState = h?.state || getDefaultAppState();
 
     const base: Omit<
-      ExcalidrawGenericElement,
+      XcalidrawGenericElement,
       | "id"
       | "type"
       | "version"
@@ -388,12 +388,12 @@ export class API {
   };
 
   static createTextContainer = (opts?: {
-    frameId?: ExcalidrawElement["id"];
-    groupIds?: ExcalidrawElement["groupIds"];
+    frameId?: XcalidrawElement["id"];
+    groupIds?: XcalidrawElement["groupIds"];
     label?: {
       text?: string;
-      frameId?: ExcalidrawElement["id"] | null;
-      groupIds?: ExcalidrawElement["groupIds"];
+      frameId?: XcalidrawElement["id"] | null;
+      groupIds?: XcalidrawElement["groupIds"];
     };
   }) => {
     const rectangle = API.createElement({
@@ -430,10 +430,10 @@ export class API {
   };
 
   static createLabeledArrow = (opts?: {
-    frameId?: ExcalidrawElement["id"];
+    frameId?: XcalidrawElement["id"];
     label?: {
       text?: string;
-      frameId?: ExcalidrawElement["id"] | null;
+      frameId?: XcalidrawElement["id"] | null;
     };
   }) => {
     const arrow = API.createElement({
@@ -512,7 +512,8 @@ export class API {
         }),
         // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/getData
         getData: (type: string) => {
-          return items.find((item) => item.type === "string" && item.type === type) || "";
+          const item = items.find((item) => item.kind === "string" && item.type === type);
+          return item ? (item as {kind: "string", value: string}).value : "";
         },
         // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
         types: Array.from(new Set(items.map((item) => item.kind === "file" ? "Files" : item.type))),

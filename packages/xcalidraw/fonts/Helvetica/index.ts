@@ -1,8 +1,8 @@
 import { LOCAL_FONT_PROTOCOL } from "@xcalidraw/common";
 
-import { type ExcalidrawFontFaceDescriptor } from "../Fonts";
+import { type XcalidrawFontFaceDescriptor } from "../Fonts";
 
-export const HelveticaFontFaces: ExcalidrawFontFaceDescriptor[] = [
+export const HelveticaFontFaces: XcalidrawFontFaceDescriptor[] = [
   {
     uri: LOCAL_FONT_PROTOCOL,
   },

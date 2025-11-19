@@ -22,7 +22,7 @@ import { getSelectedElements } from "../scene";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, AppState, UIAppState } from "../types";
 
@@ -58,7 +58,7 @@ export const actionSelectAllElementsInFrame = register({
           selectedElementIds: elementsInFrame.reduce((acc, element) => {
             acc[element.id] = true;
             return acc;
-          }, {} as Record<ExcalidrawElement["id"], true>),
+          }, {} as Record<XcalidrawElement["id"], true>),
         },
         captureUpdate: CaptureUpdateAction.IMMEDIATELY,
       };

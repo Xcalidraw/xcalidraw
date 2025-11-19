@@ -19,7 +19,7 @@ import "./ElementLinkDialog.scss";
 
 import type { Scene } from "@xcalidraw/element";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppProps, AppState, UIAppState } from "../types";
 const ElementLinkDialog = ({
@@ -29,7 +29,7 @@ const ElementLinkDialog = ({
   scene,
   generateLinkForSelection = defaultGetElementLinkFromSelection,
 }: {
-  sourceElementId: ExcalidrawElement["id"];
+  sourceElementId: XcalidrawElement["id"];
   appState: UIAppState;
   scene: Scene;
   onClose?: () => void;

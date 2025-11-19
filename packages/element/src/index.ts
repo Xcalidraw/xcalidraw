@@ -4,8 +4,8 @@ import { isInvisiblySmallElement } from "./sizeHelpers";
 import { isLinearElementType } from "./typeChecks";
 
 import type {
-  ExcalidrawElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  NonDeletedXcalidrawElement,
   NonDeleted,
   ElementsMapOrArray,
 } from "./types";
@@ -13,7 +13,7 @@ import type {
 /**
  * @deprecated unsafe, use hashElementsVersion instead
  */
-export const getSceneVersion = (elements: readonly ExcalidrawElement[]) =>
+export const getSceneVersion = (elements: readonly XcalidrawElement[]) =>
   elements.reduce((acc, el) => acc + el.version, 0);
 
 /**
@@ -41,23 +41,23 @@ export const hashString = (s: string): number => {
   return hash >>> 0; // Ensure unsigned 32-bit integer
 };
 
-export const getVisibleElements = (elements: readonly ExcalidrawElement[]) =>
+export const getVisibleElements = (elements: readonly XcalidrawElement[]) =>
   elements.filter(
     (el) => !el.isDeleted && !isInvisiblySmallElement(el),
-  ) as readonly NonDeletedExcalidrawElement[];
+  ) as readonly NonDeletedXcalidrawElement[];
 
-export const getNonDeletedElements = <T extends ExcalidrawElement>(
+export const getNonDeletedElements = <T extends XcalidrawElement>(
   elements: readonly T[],
 ) =>
   elements.filter((element) => !element.isDeleted) as readonly NonDeleted<T>[];
 
-export const isNonDeletedElement = <T extends ExcalidrawElement>(
+export const isNonDeletedElement = <T extends XcalidrawElement>(
   element: T,
 ): element is NonDeleted<T> => !element.isDeleted;
 
 const _clearElements = (
-  elements: readonly ExcalidrawElement[],
-): ExcalidrawElement[] =>
+  elements: readonly XcalidrawElement[],
+): XcalidrawElement[] =>
   getNonDeletedElements(elements).map((element) =>
     isLinearElementType(element.type)
       ? { ...element, lastCommittedPoint: null }
@@ -65,15 +65,15 @@ const _clearElements = (
   );
 
 export const clearElementsForDatabase = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ) => _clearElements(elements);
 
 export const clearElementsForExport = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ) => _clearElements(elements);
 
 export const clearElementsForLocalStorage = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ) => _clearElements(elements);
 
 export * from "./align";

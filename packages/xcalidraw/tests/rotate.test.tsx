@@ -3,7 +3,7 @@ import { expect } from "vitest";
 
 import { reseed } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { UI } from "./helpers/ui";
 import { render, unmountComponent } from "./test-utils";
@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 test("unselected bound arrow updates when rotating its target element", async () => {
-  await render(<Excalidraw />);
+  await render(<Xcalidraw />);
   const rectangle = UI.createElement("rectangle", {
     width: 200,
     height: 100,
@@ -40,7 +40,7 @@ test("unselected bound arrow updates when rotating its target element", async ()
 });
 
 test("unselected bound arrows update when rotating their target elements", async () => {
-  await render(<Excalidraw />);
+  await render(<Xcalidraw />);
   const ellipse = UI.createElement("ellipse", {
     x: 0,
     y: 80,

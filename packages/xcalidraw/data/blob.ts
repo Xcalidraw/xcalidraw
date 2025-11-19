@@ -17,10 +17,10 @@ import { decodeSvgBase64Payload } from "../scene/export";
 
 import { base64ToString, stringToBase64, toByteString } from "./encode";
 import { nativeFileSystemSupported } from "./filesystem";
-import { isValidExcalidrawData, isValidLibrary } from "./json";
+import { isValidXcalidrawData, isValidLibrary } from "./json";
 import { restore, restoreLibraryItems } from "./restore";
 
-import type { ExcalidrawElement, FileId } from "@xcalidraw/element/types";
+import type { XcalidrawElement, FileId } from "@xcalidraw/element/types";
 import type { ValueOf } from "@xcalidraw/common/utility-types";
 
 import type { AppState, DataURL, LibraryItem } from "../types";
@@ -88,7 +88,7 @@ export const getMimeType = (blob: Blob | string): string => {
     }
     name = blob.name || "";
   }
-  if (/\.(excalidraw|json)$/.test(name)) {
+  if (/\.(xcalidraw|json)$/.test(name)) {
     return MIME_TYPES.json;
   } else if (/\.png$/.test(name)) {
     return MIME_TYPES.png;
@@ -96,8 +96,8 @@ export const getMimeType = (blob: Blob | string): string => {
     return MIME_TYPES.jpg;
   } else if (/\.svg$/.test(name)) {
     return MIME_TYPES.svg;
-  } else if (/\.excalidrawlib$/.test(name)) {
-    return MIME_TYPES.excalidrawlib;
+  } else if (/\.xcalidrawlib$/.test(name)) {
+    return MIME_TYPES.xcalidrawlib;
   }
   return "";
 };
@@ -107,7 +107,7 @@ export const getFileHandleType = (handle: FileSystemHandle | null) => {
     return null;
   }
 
-  return handle.name.match(/\.(json|excalidraw|png|svg)$/)?.[1] || null;
+  return handle.name.match(/\.(json|xcalidraw|png|svg)$/)?.[1] || null;
 };
 
 export const isImageFileHandleType = (
@@ -136,7 +136,7 @@ export const loadSceneOrLibraryFromBlob = async (
   blob: Blob | File,
   /** @see restore.localAppState */
   localAppState: AppState | null,
-  localElements: readonly ExcalidrawElement[] | null,
+  localElements: readonly XcalidrawElement[] | null,
   /** FileSystemHandle. Defaults to `blob.handle` if defined, otherwise null. */
   fileHandle?: FileSystemHandle | null,
 ) => {
@@ -154,9 +154,9 @@ export const loadSceneOrLibraryFromBlob = async (
       }
       throw error;
     }
-    if (isValidExcalidrawData(data)) {
+    if (isValidXcalidrawData(data)) {
       return {
-        type: MIME_TYPES.excalidraw,
+        type: MIME_TYPES.xcalidraw,
         data: restore(
           {
             elements: clearElementsForExport(data.elements || []),
@@ -181,7 +181,7 @@ export const loadSceneOrLibraryFromBlob = async (
       };
     } else if (isValidLibrary(data)) {
       return {
-        type: MIME_TYPES.excalidrawlib,
+        type: MIME_TYPES.xcalidrawlib,
         data,
       };
     }
@@ -198,20 +198,39 @@ export const loadFromBlob = async (
   blob: Blob,
   /** @see restore.localAppState */
   localAppState: AppState | null,
-  localElements: readonly ExcalidrawElement[] | null,
+  localElements: readonly XcalidrawElement[] | null,
   /** FileSystemHandle. Defaults to `blob.handle` if defined, otherwise null. */
   fileHandle?: FileSystemHandle | null,
 ) => {
-  const ret = await loadSceneOrLibraryFromBlob(
-    blob,
-    localAppState,
-    localElements,
-    fileHandle,
-  );
-  if (ret.type !== MIME_TYPES.excalidraw) {
-    throw new Error("Error: invalid file");
+  try {
+    const ret = await loadSceneOrLibraryFromBlob(
+      blob,
+      localAppState,
+      localElements,
+      fileHandle,
+    );
+    if (ret.type !== MIME_TYPES.xcalidraw) {
+      if (isSupportedImageFile(blob)) {
+        throw new ImageSceneDataError(
+          "Image doesn't contain scene",
+          "IMAGE_NOT_CONTAINS_SCENE_DATA",
+        );
+      }
+      throw new Error("Error: invalid file");
+    }
+    return ret.data;
+  } catch (error: any) {
+    if (error instanceof ImageSceneDataError) {
+      throw error;
+    }
+    if (isSupportedImageFile(blob)) {
+      throw new ImageSceneDataError(
+        "Image doesn't contain scene",
+        "IMAGE_NOT_CONTAINS_SCENE_DATA",
+      );
+    }
+    throw error;
   }
-  return ret.data;
 };
 
 export const parseLibraryJSON = (
@@ -463,17 +482,17 @@ const normalizedFileSymbol = Symbol("fileNormalized");
 
 /** attempts to detect correct mimeType if none is set, or if an image
  * has an incorrect extension.
- * Note: doesn't handle missing .excalidraw/.excalidrawlib extension  */
+ * Note: doesn't handle missing .xcalidraw/.xcalidrawlib extension  */
 export const normalizeFile = async (file: File) => {
   // to prevent double normalization (perf optim)
   if ((file as any)[normalizedFileSymbol]) {
     return file;
   }
 
-  if (file?.name?.endsWith(".excalidrawlib")) {
-    file = createFile(file, MIME_TYPES.excalidrawlib, file.name);
-  } else if (file?.name?.endsWith(".excalidraw")) {
-    file = createFile(file, MIME_TYPES.excalidraw, file.name);
+  if (file?.name?.endsWith(".xcalidrawlib")) {
+    file = createFile(file, MIME_TYPES.xcalidrawlib, file.name);
+  } else if (file?.name?.endsWith(".xcalidraw")) {
+    file = createFile(file, MIME_TYPES.xcalidraw, file.name);
   } else if (!file.type || file.type?.startsWith("image/")) {
     // when the file is an image, make sure the extension corresponds to the
     // actual mimeType (this is an edge case, but happens - especially
@@ -490,10 +509,10 @@ export const normalizeFile = async (file: File) => {
 };
 
 export const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
-  if ("arrayBuffer" in blob) {
+  if (typeof blob.arrayBuffer === "function") {
     return blob.arrayBuffer();
   }
-  // Safari
+  // Fallback for environments where arrayBuffer() might not be available
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -502,6 +521,7 @@ export const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
       }
       resolve(event.target.result as ArrayBuffer);
     };
+    reader.onerror = reject;
     reader.readAsArrayBuffer(blob);
   });
 };

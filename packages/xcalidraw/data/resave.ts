@@ -2,12 +2,12 @@ import { getFileHandleType, isImageFileHandleType } from "./blob";
 
 import { exportCanvas, prepareElementsForExport } from ".";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppState, BinaryFiles } from "../types";
 
 export const resaveAsImageWithScene = async (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
   files: BinaryFiles,
   name: string,

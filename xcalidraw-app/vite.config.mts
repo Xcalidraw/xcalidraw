@@ -76,10 +76,6 @@ export default defineConfig(({ mode }) => {
           replacement: path.resolve(__dirname, "../packages/utils/src/$1"),
         },
         {
-          find: /^excalidraw-app\/(.*?)/,
-          replacement: path.resolve(__dirname, "./$1"),
-        },
-        {
           find: /^xcalidraw-app\/(.*?)/,
           replacement: path.resolve(__dirname, "./$1"),
         },
@@ -119,7 +115,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       Sitemap({
-        hostname: "https://excalidraw.com",
+        hostname: "https://xcalidraw.com",
         outDir: "build",
         changefreq: "monthly",
         // its static in public folder
@@ -206,10 +202,10 @@ export default defineConfig(({ mode }) => {
           ],
         },
         manifest: {
-          short_name: "Excalidraw",
-          name: "Excalidraw",
+          short_name: "Xcalidraw",
+          name: "Xcalidraw",
           description:
-            "Excalidraw is a whiteboard tool that lets you easily sketch diagrams that have a hand-drawn feel to them.",
+            "Xcalidraw is a whiteboard tool that lets you easily sketch diagrams that have a hand-drawn feel to them.",
           icons: [
             {
               src: "android-chrome-192x192.png",
@@ -233,7 +229,7 @@ export default defineConfig(({ mode }) => {
             },
           ],
           start_url: "/",
-          id: "excalidraw",
+          id: "xcalidraw",
           display: "standalone",
           theme_color: "#121212",
           background_color: "#ffffff",
@@ -241,7 +237,7 @@ export default defineConfig(({ mode }) => {
             {
               action: "/",
               accept: {
-                "application/vnd.excalidraw+json": [".excalidraw"],
+                "application/vnd.xcalidraw+json": [".xcalidraw"],
               },
             },
           ],
@@ -254,9 +250,9 @@ export default defineConfig(({ mode }) => {
                 {
                   name: "file",
                   accept: [
-                    "application/vnd.excalidraw+json",
+                    "application/vnd.xcalidraw+json",
                     "application/json",
-                    ".excalidraw",
+                    ".xcalidraw",
                   ],
                 },
               ],

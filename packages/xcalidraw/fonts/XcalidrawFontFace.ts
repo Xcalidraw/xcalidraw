@@ -4,7 +4,7 @@ import { subsetWoff2GlyphsByCodepoints } from "../subset/subset-main";
 
 type DataURL = string;
 
-export class ExcalidrawFontFace {
+export class XcalidrawFontFace {
   public readonly urls: URL[] | DataURL[];
   public readonly fontFace: FontFace;
 
@@ -15,10 +15,10 @@ export class ExcalidrawFontFace {
   }/dist/prod/`;
 
   constructor(family: string, uri: string, descriptors?: FontFaceDescriptors) {
-    this.urls = ExcalidrawFontFace.createUrls(uri);
+    this.urls = XcalidrawFontFace.createUrls(uri);
 
     const sources = this.urls
-      .map((url) => `url(${url}) ${ExcalidrawFontFace.getFormat(url)}`)
+      .map((url) => `url(${url}) ${XcalidrawFontFace.getFormat(url)}`)
       .join(", ");
 
     this.fontFace = new FontFace(family, sources, {
@@ -146,25 +146,25 @@ export class ExcalidrawFontFace {
       return [new URL(uri)];
     }
 
-    // absolute assets paths, which are found in tests and excalidraw-app build, won't work with base url, so we are stripping initial slash away
+    // absolute assets paths, which are found in tests and xcalidraw-app build, won't work with base url, so we are stripping initial slash away
     const assetUrl: string = uri.replace(/^\/+/, "");
     const urls: URL[] = [];
 
-    if (typeof window.EXCALIDRAW_ASSET_PATH === "string") {
+    if (typeof window.XCALIDRAW_ASSET_PATH === "string") {
       const normalizedBaseUrl = this.normalizeBaseUrl(
-        window.EXCALIDRAW_ASSET_PATH,
+        window.XCALIDRAW_ASSET_PATH,
       );
 
       urls.push(new URL(assetUrl, normalizedBaseUrl));
-    } else if (Array.isArray(window.EXCALIDRAW_ASSET_PATH)) {
-      window.EXCALIDRAW_ASSET_PATH.forEach((path) => {
+    } else if (Array.isArray(window.XCALIDRAW_ASSET_PATH)) {
+      window.XCALIDRAW_ASSET_PATH.forEach((path) => {
         const normalizedBaseUrl = this.normalizeBaseUrl(path);
         urls.push(new URL(assetUrl, normalizedBaseUrl));
       });
     }
 
     // fallback url for bundled fonts
-    urls.push(new URL(assetUrl, ExcalidrawFontFace.ASSETS_FALLBACK_URL));
+    urls.push(new URL(assetUrl, XcalidrawFontFace.ASSETS_FALLBACK_URL));
 
     return urls;
   }

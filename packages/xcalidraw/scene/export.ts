@@ -49,10 +49,10 @@ import { renderStaticScene } from "../renderer/staticScene";
 import { renderSceneToSvg } from "../renderer/staticSvgScene";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawFrameLikeElement,
-  ExcalidrawTextElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  XcalidrawFrameLikeElement,
+  XcalidrawTextElement,
+  NonDeletedXcalidrawElement,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
 
@@ -62,7 +62,7 @@ import type { RenderableElementsMap } from "./types";
 
 import type { AppState, BinaryFiles } from "../types";
 
-const truncateText = (element: ExcalidrawTextElement, maxWidth: number) => {
+const truncateText = (element: XcalidrawTextElement, maxWidth: number) => {
   if (element.width <= maxWidth) {
     return element;
   }
@@ -100,19 +100,19 @@ const truncateText = (element: ExcalidrawTextElement, maxWidth: number) => {
  * proper canvas rendering, even within editor (instead of DOM).
  */
 const addFrameLabelsAsTextElements = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   opts: Pick<AppState, "exportWithDarkMode">,
 ) => {
-  const nextElements: NonDeletedExcalidrawElement[] = [];
+  const nextElements: NonDeletedXcalidrawElement[] = [];
   for (const element of elements) {
     if (isFrameLikeElement(element)) {
-      let textElement: Mutable<ExcalidrawTextElement> = newTextElement({
+      let textElement: Mutable<XcalidrawTextElement> = newTextElement({
         x: element.x,
         y: element.y - FRAME_STYLE.nameOffsetY,
         fontFamily: FONT_FAMILY.Helvetica,
         fontSize: FRAME_STYLE.nameFontSize,
         lineHeight:
-          FRAME_STYLE.nameLineHeight as ExcalidrawTextElement["lineHeight"],
+          FRAME_STYLE.nameLineHeight as XcalidrawTextElement["lineHeight"],
         strokeColor: opts.exportWithDarkMode
           ? FRAME_STYLE.nameColorDarkTheme
           : FRAME_STYLE.nameColorLightTheme,
@@ -131,7 +131,7 @@ const addFrameLabelsAsTextElements = (
 };
 
 const getFrameRenderingConfig = (
-  exportingFrame: ExcalidrawFrameLikeElement | null,
+  exportingFrame: XcalidrawFrameLikeElement | null,
   frameRendering: AppState["frameRendering"] | null,
 ): AppState["frameRendering"] => {
   frameRendering = frameRendering || getDefaultAppState().frameRendering;
@@ -149,12 +149,12 @@ const prepareElementsForRender = ({
   frameRendering,
   exportWithDarkMode,
 }: {
-  elements: readonly ExcalidrawElement[];
-  exportingFrame: ExcalidrawFrameLikeElement | null | undefined;
+  elements: readonly XcalidrawElement[];
+  exportingFrame: XcalidrawFrameLikeElement | null | undefined;
   frameRendering: AppState["frameRendering"];
   exportWithDarkMode: AppState["exportWithDarkMode"];
 }) => {
-  let nextElements: readonly ExcalidrawElement[];
+  let nextElements: readonly XcalidrawElement[];
 
   if (exportingFrame) {
     nextElements = getElementsOverlappingFrame(elements, exportingFrame);
@@ -170,7 +170,7 @@ const prepareElementsForRender = ({
 };
 
 export const exportToCanvas = async (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   appState: AppState,
   files: BinaryFiles,
   {
@@ -182,7 +182,7 @@ export const exportToCanvas = async (
     exportBackground: boolean;
     exportPadding?: number;
     viewBackgroundColor: string;
-    exportingFrame?: ExcalidrawFrameLikeElement | null;
+    exportingFrame?: XcalidrawFrameLikeElement | null;
   },
   createCanvas: (
     width: number,
@@ -282,7 +282,7 @@ const createHTMLComment = (text: string) => {
 };
 
 export const exportToSvg = async (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   appState: {
     exportBackground: boolean;
     exportPadding?: number;
@@ -298,7 +298,7 @@ export const exportToSvg = async (
      * if true, all embeddables passed in will be rendered when possible.
      */
     renderEmbeddables?: boolean;
-    exportingFrame?: ExcalidrawFrameLikeElement | null;
+    exportingFrame?: XcalidrawFrameLikeElement | null;
     skipInliningFonts?: true;
     reuseImages?: boolean;
   },
@@ -359,7 +359,7 @@ export const exportToSvg = async (
     "metadata",
   );
 
-  svgRoot.appendChild(createHTMLComment("svg-source:excalidraw"));
+  svgRoot.appendChild(createHTMLComment("svg-source:xcalidraw"));
   svgRoot.appendChild(metadataElement);
   svgRoot.appendChild(defsElement);
 
@@ -510,7 +510,7 @@ export const encodeSvgBase64Payload = ({
   );
 
   metadataElement.appendChild(
-    createHTMLComment(`payload-type:${MIME_TYPES.excalidraw}`),
+    createHTMLComment(`payload-type:${MIME_TYPES.xcalidraw}`),
   );
   metadataElement.appendChild(createHTMLComment("payload-version:2"));
   metadataElement.appendChild(createHTMLComment("payload-start"));
@@ -519,7 +519,7 @@ export const encodeSvgBase64Payload = ({
 };
 
 export const decodeSvgBase64Payload = ({ svg }: { svg: string }) => {
-  if (svg.includes(`payload-type:${MIME_TYPES.excalidraw}`)) {
+  if (svg.includes(`payload-type:${MIME_TYPES.xcalidraw}`)) {
     const match = svg.match(
       /<!-- payload-start -->\s*(.+?)\s*<!-- payload-end -->/,
     );
@@ -537,7 +537,7 @@ export const decodeSvgBase64Payload = ({ svg }: { svg: string }) => {
         // legacy, un-encoded scene JSON
         if (
           "type" in encodedData &&
-          encodedData.type === EXPORT_DATA_TYPES.excalidraw
+          encodedData.type === EXPORT_DATA_TYPES.xcalidraw
         ) {
           return json;
         }
@@ -554,7 +554,7 @@ export const decodeSvgBase64Payload = ({ svg }: { svg: string }) => {
 
 // calculate smallest area to fit the contents in
 const getCanvasSize = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   exportPadding: number,
 ): Bounds => {
   const [minX, minY, maxX, maxY] = getCommonBounds(elements);
@@ -565,7 +565,7 @@ const getCanvasSize = (
 };
 
 export const getExportSize = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   exportPadding: number,
   scale: number,
 ): [number, number] => {

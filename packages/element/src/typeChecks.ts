@@ -8,85 +8,85 @@ import type { MarkNonNullable } from "@xcalidraw/common/utility-types";
 
 import type { Bounds } from "./bounds";
 import type {
-  ExcalidrawElement,
-  ExcalidrawTextElement,
-  ExcalidrawEmbeddableElement,
-  ExcalidrawLinearElement,
-  ExcalidrawBindableElement,
-  ExcalidrawFreeDrawElement,
-  InitializedExcalidrawImageElement,
-  ExcalidrawImageElement,
-  ExcalidrawTextElementWithContainer,
-  ExcalidrawTextContainer,
-  ExcalidrawFrameElement,
+  XcalidrawElement,
+  XcalidrawTextElement,
+  XcalidrawEmbeddableElement,
+  XcalidrawLinearElement,
+  XcalidrawBindableElement,
+  XcalidrawFreeDrawElement,
+  InitializedXcalidrawImageElement,
+  XcalidrawImageElement,
+  XcalidrawTextElementWithContainer,
+  XcalidrawTextContainer,
+  XcalidrawFrameElement,
   RoundnessType,
-  ExcalidrawFrameLikeElement,
-  ExcalidrawElementType,
-  ExcalidrawIframeElement,
-  ExcalidrawIframeLikeElement,
-  ExcalidrawMagicFrameElement,
-  ExcalidrawArrowElement,
-  ExcalidrawElbowArrowElement,
-  ExcalidrawLineElement,
+  XcalidrawFrameLikeElement,
+  XcalidrawElementType,
+  XcalidrawIframeElement,
+  XcalidrawIframeLikeElement,
+  XcalidrawMagicFrameElement,
+  XcalidrawArrowElement,
+  XcalidrawElbowArrowElement,
+  XcalidrawLineElement,
   PointBinding,
   FixedPointBinding,
-  ExcalidrawFlowchartNodeElement,
-  ExcalidrawLinearElementSubType,
+  XcalidrawFlowchartNodeElement,
+  XcalidrawLinearElementSubType,
 } from "./types";
 
 export const isInitializedImageElement = (
-  element: ExcalidrawElement | null,
-): element is InitializedExcalidrawImageElement => {
+  element: XcalidrawElement | null,
+): element is InitializedXcalidrawImageElement => {
   return !!element && element.type === "image" && !!element.fileId;
 };
 
 export const isImageElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawImageElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawImageElement => {
   return !!element && element.type === "image";
 };
 
 export const isEmbeddableElement = (
-  element: ExcalidrawElement | null | undefined,
-): element is ExcalidrawEmbeddableElement => {
+  element: XcalidrawElement | null | undefined,
+): element is XcalidrawEmbeddableElement => {
   return !!element && element.type === "embeddable";
 };
 
 export const isIframeElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawIframeElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawIframeElement => {
   return !!element && element.type === "iframe";
 };
 
 export const isIframeLikeElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawIframeLikeElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawIframeLikeElement => {
   return (
     !!element && (element.type === "iframe" || element.type === "embeddable")
   );
 };
 
 export const isTextElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawTextElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawTextElement => {
   return element != null && element.type === "text";
 };
 
 export const isFrameElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawFrameElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawFrameElement => {
   return element != null && element.type === "frame";
 };
 
 export const isMagicFrameElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawMagicFrameElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawMagicFrameElement => {
   return element != null && element.type === "magicframe";
 };
 
 export const isFrameLikeElement = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawFrameLikeElement => {
+  element: XcalidrawElement | null,
+): element is XcalidrawFrameLikeElement => {
   return (
     element != null &&
     (element.type === "frame" || element.type === "magicframe")
@@ -94,38 +94,38 @@ export const isFrameLikeElement = (
 };
 
 export const isFreeDrawElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawFreeDrawElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawFreeDrawElement => {
   return element != null && isFreeDrawElementType(element.type);
 };
 
 export const isFreeDrawElementType = (
-  elementType: ExcalidrawElementType,
+  elementType: XcalidrawElementType,
 ): boolean => {
   return elementType === "freedraw";
 };
 
 export const isLinearElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawLinearElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawLinearElement => {
   return element != null && isLinearElementType(element.type);
 };
 
 export const isLineElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawLineElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawLineElement => {
   return element != null && element.type === "line";
 };
 
 export const isArrowElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawArrowElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawArrowElement => {
   return element != null && element.type === "arrow";
 };
 
 export const isElbowArrow = (
-  element?: ExcalidrawElement,
-): element is ExcalidrawElbowArrowElement => {
+  element?: XcalidrawElement,
+): element is XcalidrawElbowArrowElement => {
   return isArrowElement(element) && element.elbowed;
 };
 
@@ -133,20 +133,20 @@ export const isElbowArrow = (
  * sharp or curved arrow, but not elbow
  */
 export const isSimpleArrow = (
-  element?: ExcalidrawElement,
-): element is ExcalidrawArrowElement => {
+  element?: XcalidrawElement,
+): element is XcalidrawArrowElement => {
   return isArrowElement(element) && !element.elbowed;
 };
 
 export const isSharpArrow = (
-  element?: ExcalidrawElement,
-): element is ExcalidrawArrowElement => {
+  element?: XcalidrawElement,
+): element is XcalidrawArrowElement => {
   return isArrowElement(element) && !element.elbowed && !element.roundness;
 };
 
 export const isCurvedArrow = (
-  element?: ExcalidrawElement,
-): element is ExcalidrawArrowElement => {
+  element?: XcalidrawElement,
+): element is XcalidrawArrowElement => {
   return (
     isArrowElement(element) && !element.elbowed && element.roundness !== null
   );
@@ -161,9 +161,9 @@ export const isLinearElementType = (
 };
 
 export const isBindingElement = (
-  element?: ExcalidrawElement | null,
+  element?: XcalidrawElement | null,
   includeLocked = true,
-): element is ExcalidrawLinearElement => {
+): element is XcalidrawLinearElement => {
   return (
     element != null &&
     (!element.locked || includeLocked === true) &&
@@ -178,9 +178,9 @@ export const isBindingElementType = (
 };
 
 export const isBindableElement = (
-  element: ExcalidrawElement | null | undefined,
+  element: XcalidrawElement | null | undefined,
   includeLocked = true,
-): element is ExcalidrawBindableElement => {
+): element is XcalidrawBindableElement => {
   return (
     element != null &&
     (!element.locked || includeLocked === true) &&
@@ -197,8 +197,8 @@ export const isBindableElement = (
 };
 
 export const isRectanguloidElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawBindableElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawBindableElement => {
   return (
     element != null &&
     (element.type === "rectangle" ||
@@ -215,8 +215,8 @@ export const isRectanguloidElement = (
 // TODO: Remove this when proper distance calculation is introduced
 // @see binding.ts:distanceToBindableElement()
 export const isRectangularElement = (
-  element?: ExcalidrawElement | null,
-): element is ExcalidrawBindableElement => {
+  element?: XcalidrawElement | null,
+): element is XcalidrawBindableElement => {
   return (
     element != null &&
     (element.type === "rectangle" ||
@@ -231,9 +231,9 @@ export const isRectangularElement = (
 };
 
 export const isTextBindableContainer = (
-  element: ExcalidrawElement | null,
+  element: XcalidrawElement | null,
   includeLocked = true,
-): element is ExcalidrawTextContainer => {
+): element is XcalidrawTextContainer => {
   return (
     element != null &&
     (!element.locked || includeLocked === true) &&
@@ -244,10 +244,10 @@ export const isTextBindableContainer = (
   );
 };
 
-export const isExcalidrawElement = (
+export const isXcalidrawElement = (
   element: any,
-): element is ExcalidrawElement => {
-  const type: ExcalidrawElementType | undefined = element?.type;
+): element is XcalidrawElement => {
+  const type: XcalidrawElementType | undefined = element?.type;
   if (!type) {
     return false;
   }
@@ -275,8 +275,8 @@ export const isExcalidrawElement = (
 };
 
 export const isFlowchartNodeElement = (
-  element: ExcalidrawElement,
-): element is ExcalidrawFlowchartNodeElement => {
+  element: XcalidrawElement,
+): element is XcalidrawFlowchartNodeElement => {
   return (
     element.type === "rectangle" ||
     element.type === "ellipse" ||
@@ -285,8 +285,8 @@ export const isFlowchartNodeElement = (
 };
 
 export const hasBoundTextElement = (
-  element: ExcalidrawElement | null,
-): element is MarkNonNullable<ExcalidrawBindableElement, "boundElements"> => {
+  element: XcalidrawElement | null,
+): element is MarkNonNullable<XcalidrawBindableElement, "boundElements"> => {
   return (
     isTextBindableContainer(element) &&
     !!element.boundElements?.some(({ type }) => type === "text")
@@ -294,8 +294,8 @@ export const hasBoundTextElement = (
 };
 
 export const isBoundToContainer = (
-  element: ExcalidrawElement | null,
-): element is ExcalidrawTextElementWithContainer => {
+  element: XcalidrawElement | null,
+): element is XcalidrawTextElementWithContainer => {
   return (
     element !== null &&
     "containerId" in element &&
@@ -304,7 +304,7 @@ export const isBoundToContainer = (
   );
 };
 
-export const isArrowBoundToElement = (element: ExcalidrawArrowElement) => {
+export const isArrowBoundToElement = (element: XcalidrawArrowElement) => {
   return !!element.startBinding || !!element.endBinding;
 };
 
@@ -319,7 +319,7 @@ export const isUsingProportionalRadius = (type: string) =>
 
 export const canApplyRoundnessTypeToElement = (
   roundnessType: RoundnessType,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
 ) => {
   if (
     (roundnessType === ROUNDNESS.ADAPTIVE_RADIUS ||
@@ -341,7 +341,7 @@ export const canApplyRoundnessTypeToElement = (
 };
 
 export const getDefaultRoundnessTypeForElement = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
 ) => {
   if (isUsingProportionalRadius(element.type)) {
     return {
@@ -377,8 +377,8 @@ export const isBounds = (box: unknown): box is Bounds =>
   typeof box[3] === "number";
 
 export const getLinearElementSubType = (
-  element: ExcalidrawLinearElement,
-): ExcalidrawLinearElementSubType => {
+  element: XcalidrawLinearElement,
+): XcalidrawLinearElementSubType => {
   if (isSharpArrow(element)) {
     return "sharpArrow";
   }
@@ -399,13 +399,13 @@ export const getLinearElementSubType = (
  *  canBecomePolygon(points).
  */
 export const isValidPolygon = (
-  points: ExcalidrawLineElement["points"],
+  points: XcalidrawLineElement["points"],
 ): boolean => {
   return points.length > 3 && pointsEqual(points[0], points[points.length - 1]);
 };
 
 export const canBecomePolygon = (
-  points: ExcalidrawLineElement["points"],
+  points: XcalidrawLineElement["points"],
 ): boolean => {
   return (
     points.length > 3 ||

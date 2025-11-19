@@ -5,13 +5,14 @@ import { randomInteger, cloneJSON } from "@xcalidraw/common";
 import { reconcileElements } from "../../data/reconcile";
 
 import type {
-  ExcalidrawElement,
-  OrderedExcalidrawElement,
+  XcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
-import type { RemoteExcalidrawElement } from "../../data/reconcile";
+import type { RemoteXcalidrawElement } from "../../data/reconcile";
 
 import type { AppState } from "../../types";
+import { assert } from "vitest";
 
 type Id = string;
 type ElementLike = {
@@ -21,7 +22,7 @@ type ElementLike = {
   index: string;
 };
 
-type Cache = Record<string, ExcalidrawElement | undefined>;
+type Cache = Record<string, XcalidrawElement | undefined>;
 
 const createElement = (opts: { uid: string } | ElementLike) => {
   let uid: string;
@@ -57,12 +58,12 @@ const idsToElements = (ids: (Id | ElementLike)[], cache: Cache = {}) => {
         version: version ?? 0,
         versionNonce,
         ...cached,
-      } as ExcalidrawElement;
+      } as XcalidrawElement;
       // @ts-ignore
       cache[uid] = elem;
       acc.push(elem);
       return acc;
-    }, [] as ExcalidrawElement[]),
+    }, [] as XcalidrawElement[]),
   );
 };
 
@@ -77,7 +78,7 @@ const test = <U extends `${string}:${"L" | "R"}`>(
 
   const reconciled = reconcileElements(
     cloneJSON(_local),
-    cloneJSON(_remote) as RemoteExcalidrawElement[],
+    cloneJSON(_remote) as RemoteXcalidrawElement[],
     {} as AppState,
   );
 
@@ -106,7 +107,7 @@ const test = <U extends `${string}:${"L" | "R"}`>(
     assert.deepEqual(
       reconcileElements(
         cloneJSON(_remote),
-        cloneJSON(_local as RemoteExcalidrawElement[]),
+        cloneJSON(_local as RemoteXcalidrawElement[]),
         {} as AppState,
       ).map((x) => x.id),
       reconciledIds,
@@ -123,7 +124,7 @@ const test = <U extends `${string}:${"L" | "R"}`>(
     assert.deepEqual(
       reconcileElements(
         cloneJSON(_remote),
-        cloneJSON(reconciled as unknown as RemoteExcalidrawElement[]),
+        cloneJSON(reconciled as unknown as RemoteXcalidrawElement[]),
         {} as AppState,
       ).map((x) => x.id),
       reconciledIds,
@@ -311,8 +312,8 @@ describe("elements reconciliation", () => {
       expected: Id[],
     ) => {
       const ret = reconcileElements(
-        local as unknown as OrderedExcalidrawElement[],
-        remote as unknown as RemoteExcalidrawElement[],
+        local as unknown as OrderedXcalidrawElement[],
+        remote as unknown as RemoteXcalidrawElement[],
         {} as AppState,
       );
 

@@ -27,8 +27,8 @@ import { bootstrapCanvas, getNormalizedCanvasDimensions } from "./helpers";
 
 import type {
   ElementsMap,
-  ExcalidrawFrameLikeElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawFrameLikeElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type {
@@ -114,7 +114,7 @@ const strokeGrid = (
 };
 
 export const frameClip = (
-  frame: ExcalidrawFrameLikeElement,
+  frame: XcalidrawFrameLikeElement,
   context: CanvasRenderingContext2D,
   renderConfig: StaticCanvasRenderConfig,
   appState: StaticCanvasAppState,
@@ -150,7 +150,7 @@ const linkIconCanvasCache: {
 };
 
 const renderLinkIcon = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   context: CanvasRenderingContext2D,
   appState: StaticCanvasAppState,
   elementsMap: ElementsMap,

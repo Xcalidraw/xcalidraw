@@ -24,7 +24,7 @@ import {
 
 import { getElementLineSegments } from "@xcalidraw/element";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { getSelectedElements } from "../scene";
 
@@ -32,13 +32,13 @@ import { getLassoSelectedElementIds } from "../lasso/utils";
 
 import { act, render } from "./test-utils";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 const { h } = window;
 
 beforeEach(async () => {
   localStorage.clear();
-  await render(<Excalidraw handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw handleKeyboardGlobally={true} />);
   h.state.width = 1000;
   h.state.height = 1000;
 });
@@ -86,7 +86,7 @@ const updatePath = (startPoint: GlobalPoint, points: LocalPoint[]) => {
 
 describe("Basic lasso selection tests", () => {
   beforeEach(() => {
-    const elements: ExcalidrawElement[] = [
+    const elements: XcalidrawElement[] = [
       {
         id: "FLZN67ISZbMV-RH8SzS9W",
         type: "rectangle",
@@ -362,7 +362,7 @@ describe("Basic lasso selection tests", () => {
           ...e,
           angle: e.angle as Radians,
           index: null,
-        } as ExcalidrawElement),
+        } as XcalidrawElement),
     );
 
     act(() => {
@@ -1047,7 +1047,7 @@ describe("Special cases", () => {
         ...e,
         index: null,
         angle: e.angle as Radians,
-      })) as ExcalidrawElement[];
+      })) as XcalidrawElement[];
 
       h.elements = elements;
     });
@@ -1772,7 +1772,7 @@ describe("Special cases", () => {
         ...e,
         index: null,
         angle: e.angle as Radians,
-      })) as ExcalidrawElement[];
+      })) as XcalidrawElement[];
 
       h.elements = elements;
     });

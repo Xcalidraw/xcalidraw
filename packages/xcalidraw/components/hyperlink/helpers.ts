@@ -9,7 +9,7 @@ import type { GlobalPoint, Radians } from "@xcalidraw/math";
 import type { Bounds } from "@xcalidraw/element";
 import type {
   ElementsMap,
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { AppState, UIAppState } from "../../types";
@@ -59,7 +59,7 @@ export const getLinkHandleFromCoords = (
 };
 
 export const isPointHittingLinkIcon = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   elementsMap: ElementsMap,
   appState: AppState,
   [x, y]: GlobalPoint,
@@ -80,7 +80,7 @@ export const isPointHittingLinkIcon = (
 };
 
 export const isPointHittingLink = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   elementsMap: ElementsMap,
   appState: AppState,
   [x, y]: GlobalPoint,

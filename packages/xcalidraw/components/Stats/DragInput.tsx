@@ -7,7 +7,7 @@ import { deepCopyElement } from "@xcalidraw/element";
 
 import { CaptureUpdateAction } from "@xcalidraw/element";
 
-import { useApp, useExcalidrawSetAppState } from "../App";
+import { useApp, useXcalidrawSetAppState } from "../App";
 import { InlineIcon } from "../InlineIcon";
 
 import { SMALLEST_DELTA } from "./utils";
@@ -15,14 +15,14 @@ import { SMALLEST_DELTA } from "./utils";
 import "./DragInput.scss";
 
 import type { Scene } from "@xcalidraw/element";
-import type { ElementsMap, ExcalidrawElement } from "@xcalidraw/element/types";
+import type { ElementsMap, XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { StatsInputProperty } from "./utils";
 import type { AppState } from "../../types";
 
 export type DragInputCallbackType<
   P extends StatsInputProperty,
-  E = ExcalidrawElement,
+  E = XcalidrawElement,
 > = (props: {
   accumulatedChange: number;
   instantChange: number;
@@ -36,19 +36,19 @@ export type DragInputCallbackType<
   originalAppState: AppState;
   setInputValue: (value: number) => void;
   app: ReturnType<typeof useApp>;
-  setAppState: ReturnType<typeof useExcalidrawSetAppState>;
+  setAppState: ReturnType<typeof useXcalidrawSetAppState>;
 }) => void;
 
-export type DragFinishedCallbackType<E = ExcalidrawElement> = (props: {
+export type DragFinishedCallbackType<E = XcalidrawElement> = (props: {
   app: ReturnType<typeof useApp>;
-  setAppState: ReturnType<typeof useExcalidrawSetAppState>;
+  setAppState: ReturnType<typeof useXcalidrawSetAppState>;
   originalElements: readonly E[] | null;
   originalAppState: AppState;
 }) => void;
 
 interface StatsDragInputProps<
   T extends StatsInputProperty,
-  E = ExcalidrawElement,
+  E = XcalidrawElement,
 > {
   label: string | React.ReactNode;
   icon?: React.ReactNode;
@@ -67,7 +67,7 @@ interface StatsDragInputProps<
 
 const StatsDragInput = <
   T extends StatsInputProperty,
-  E extends ExcalidrawElement = ExcalidrawElement,
+  E extends XcalidrawElement = XcalidrawElement,
 >({
   label,
   icon,
@@ -83,7 +83,7 @@ const StatsDragInput = <
   dragFinishedCallback,
 }: StatsDragInputProps<T, E>) => {
   const app = useApp();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const inputRef = useRef<HTMLInputElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
 
@@ -219,7 +219,7 @@ const StatsDragInput = <
         ref={labelRef}
         onPointerDown={(event) => {
           if (inputRef.current && editable) {
-            document.body.classList.add("excalidraw-cursor-resize");
+            document.body.classList.add("xcalidraw-cursor-resize");
 
             let startValue = Number(inputRef.current.value);
             if (isNaN(startValue)) {
@@ -316,7 +316,7 @@ const StatsDragInput = <
               originalElements = null;
               originalElementsMap = null;
 
-              document.body.classList.remove("excalidraw-cursor-resize");
+              document.body.classList.remove("xcalidraw-cursor-resize");
 
               window.removeEventListener(EVENT.POINTER_UP, onPointerUp, false);
             };

@@ -15,7 +15,7 @@ import {
   getDefaultRoundnessTypeForElement,
   isFrameLikeElement,
   isArrowElement,
-  isExcalidrawElement,
+  isXcalidrawElement,
   isTextElement,
 } from "@xcalidraw/element";
 
@@ -30,7 +30,7 @@ import { getSelectedElements } from "../scene";
 
 import { register } from "./register";
 
-import type { ExcalidrawTextElement } from "@xcalidraw/element/types";
+import type { XcalidrawTextElement } from "@xcalidraw/element/types";
 
 // `copiedStyles` is exported only for tests.
 export let copiedStyles: string = "{}";
@@ -75,7 +75,7 @@ export const actionPasteStyles = register({
     const elementsCopied = JSON.parse(copiedStyles);
     const pastedElement = elementsCopied[0];
     const boundTextElement = elementsCopied[1];
-    if (!isExcalidrawElement(pastedElement)) {
+    if (!isXcalidrawElement(pastedElement)) {
       return { elements, captureUpdate: CaptureUpdateAction.EVENTUALLY };
     }
 
@@ -113,19 +113,19 @@ export const actionPasteStyles = register({
 
           if (isTextElement(newElement)) {
             const fontSize =
-              (elementStylesToCopyFrom as ExcalidrawTextElement).fontSize ||
+              (elementStylesToCopyFrom as XcalidrawTextElement).fontSize ||
               DEFAULT_FONT_SIZE;
             const fontFamily =
-              (elementStylesToCopyFrom as ExcalidrawTextElement).fontFamily ||
+              (elementStylesToCopyFrom as XcalidrawTextElement).fontFamily ||
               DEFAULT_FONT_FAMILY;
             newElement = newElementWith(newElement, {
               fontSize,
               fontFamily,
               textAlign:
-                (elementStylesToCopyFrom as ExcalidrawTextElement).textAlign ||
+                (elementStylesToCopyFrom as XcalidrawTextElement).textAlign ||
                 DEFAULT_TEXT_ALIGN,
               lineHeight:
-                (elementStylesToCopyFrom as ExcalidrawTextElement).lineHeight ||
+                (elementStylesToCopyFrom as XcalidrawTextElement).lineHeight ||
                 getLineHeight(fontFamily),
             });
             let container = null;

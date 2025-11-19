@@ -15,7 +15,7 @@ import DragInput from "./DragInput";
 
 import { getStepSizedValue, isPropertyEditable } from "./utils";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { Scene } from "@xcalidraw/element";
 
@@ -27,13 +27,13 @@ import type { AppState } from "../../types";
 
 interface DimensionDragInputProps {
   property: "width" | "height";
-  element: ExcalidrawElement;
+  element: XcalidrawElement;
   scene: Scene;
   appState: AppState;
 }
 
 const STEP_SIZE = 10;
-const _shouldKeepAspectRatio = (element: ExcalidrawElement) => {
+const _shouldKeepAspectRatio = (element: XcalidrawElement) => {
   return element.type === "image";
 };
 

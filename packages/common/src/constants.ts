@@ -1,7 +1,7 @@
 import { COLOR_PALETTE } from "./colors";
 
 import type {
-  ExcalidrawElement,
+  XcalidrawElement,
   FontFamilyValues,
 } from "@xcalidraw/element/types";
 import type { AppProps, AppState } from "@xcalidraw/xcalidraw/types";
@@ -9,7 +9,7 @@ import type { AppProps, AppState } from "@xcalidraw/xcalidraw/types";
 export const supportsResizeObserver =
   typeof window !== "undefined" && "ResizeObserver" in window;
 
-export const APP_NAME = "Excalidraw";
+export const APP_NAME = "Xcalidraw";
 
 // distance when creating text before it's considered `autoResize: false`
 // we're using higher threshold so that clicks that end up being drags
@@ -77,7 +77,7 @@ export enum EVENT {
   VISIBILITY_CHANGE = "visibilitychange",
   SCROLL = "scroll",
   // custom events
-  EXCALIDRAW_LINK = "excalidraw-link",
+  XCALIDRAW_LINK = "xcalidraw-link",
   MENU_ITEM_SELECT = "menu.itemSelect",
   MESSAGE = "message",
   FULLSCREENCHANGE = "fullscreenchange",
@@ -184,13 +184,13 @@ export const THEME = {
 } as const;
 
 export const FRAME_STYLE = {
-  strokeColor: "#bbb" as ExcalidrawElement["strokeColor"],
-  strokeWidth: 2 as ExcalidrawElement["strokeWidth"],
-  strokeStyle: "solid" as ExcalidrawElement["strokeStyle"],
-  fillStyle: "solid" as ExcalidrawElement["fillStyle"],
-  roughness: 0 as ExcalidrawElement["roughness"],
-  roundness: null as ExcalidrawElement["roundness"],
-  backgroundColor: "transparent" as ExcalidrawElement["backgroundColor"],
+  strokeColor: "#bbb" as XcalidrawElement["strokeColor"],
+  strokeWidth: 2 as XcalidrawElement["strokeWidth"],
+  strokeStyle: "solid" as XcalidrawElement["strokeStyle"],
+  fillStyle: "solid" as XcalidrawElement["fillStyle"],
+  roughness: 0 as XcalidrawElement["roughness"],
+  roundness: null as XcalidrawElement["roundness"],
+  backgroundColor: "transparent" as XcalidrawElement["backgroundColor"],
   radius: 8,
   nameOffsetY: 3,
   nameColorLightTheme: "#999999",
@@ -240,19 +240,19 @@ export const STRING_MIME_TYPES = {
   text: "text/plain",
   html: "text/html",
   json: "application/json",
-  // excalidraw data
-  excalidraw: "application/vnd.excalidraw+json",
+  // xcalidraw data
+  xcalidraw: "application/vnd.xcalidraw+json",
   // LEGACY: fully-qualified library JSON data
-  excalidrawlib: "application/vnd.excalidrawlib+json",
-  // list of excalidraw library item ids
-  excalidrawlibIds: "application/vnd.excalidrawlib.ids+json",
+  xcalidrawlib: "application/vnd.xcalidrawlib+json",
+  // list of xcalidraw library item ids
+  xcalidrawlibIds: "application/vnd.xcalidrawlib.ids+json",
 } as const;
 
 export const MIME_TYPES = {
   ...STRING_MIME_TYPES,
-  // image-encoded excalidraw data
-  "excalidraw.svg": "image/svg+xml",
-  "excalidraw.png": "image/png",
+  // image-encoded xcalidraw data
+  "xcalidraw.svg": "image/svg+xml",
+  "xcalidraw.png": "image/png",
   // binary
   binary: "application/octet-stream",
   // image
@@ -272,14 +272,14 @@ export const EXPORT_IMAGE_TYPES = {
 } as const;
 
 export const EXPORT_DATA_TYPES = {
-  excalidraw: "excalidraw",
-  excalidrawClipboard: "excalidraw/clipboard",
-  excalidrawLibrary: "excalidrawlib",
-  excalidrawClipboardWithAPI: "excalidraw-api/clipboard",
+  xcalidraw: "xcalidraw",
+  xcalidrawClipboard: "xcalidraw/clipboard",
+  xcalidrawLibrary: "xcalidrawlib",
+  xcalidrawClipboardWithAPI: "xcalidraw-api/clipboard",
 } as const;
 
 export const getExportSource = () =>
-  window.EXCALIDRAW_EXPORT_SOURCE || window.location.origin;
+  window.XCALIDRAW_EXPORT_SOURCE || window.location.origin;
 
 // time in milliseconds
 export const IMAGE_RENDER_TIMEOUT = 500;
@@ -341,8 +341,8 @@ export const SVG_DOCUMENT_PREAMBLE = `<?xml version="1.0" standalone="no"?>
 export const ENCRYPTION_KEY_BITS = 128;
 
 export const VERSIONS = {
-  excalidraw: 2,
-  excalidrawLibrary: 2,
+  xcalidraw: 2,
+  xcalidrawLibrary: 2,
 } as const;
 
 export const BOUND_TEXT_PADDING = 5;
@@ -402,14 +402,14 @@ export const STROKE_WIDTH = {
 } as const;
 
 export const DEFAULT_ELEMENT_PROPS: {
-  strokeColor: ExcalidrawElement["strokeColor"];
-  backgroundColor: ExcalidrawElement["backgroundColor"];
-  fillStyle: ExcalidrawElement["fillStyle"];
-  strokeWidth: ExcalidrawElement["strokeWidth"];
-  strokeStyle: ExcalidrawElement["strokeStyle"];
-  roughness: ExcalidrawElement["roughness"];
-  opacity: ExcalidrawElement["opacity"];
-  locked: ExcalidrawElement["locked"];
+  strokeColor: XcalidrawElement["strokeColor"];
+  backgroundColor: XcalidrawElement["backgroundColor"];
+  fillStyle: XcalidrawElement["fillStyle"];
+  strokeWidth: XcalidrawElement["strokeWidth"];
+  strokeStyle: XcalidrawElement["strokeStyle"];
+  roughness: XcalidrawElement["roughness"];
+  opacity: XcalidrawElement["opacity"];
+  locked: XcalidrawElement["locked"];
 } = {
   strokeColor: COLOR_PALETTE.black,
   backgroundColor: COLOR_PALETTE.transparent,
@@ -456,9 +456,9 @@ export const TOOL_TYPE = {
 } as const;
 
 export const EDITOR_LS_KEYS = {
-  OAI_API_KEY: "excalidraw-oai-api-key",
+  OAI_API_KEY: "xcalidraw-oai-api-key",
   // legacy naming (non)scheme
-  MERMAID_TO_EXCALIDRAW: "mermaid-to-excalidraw",
+  MERMAID_TO_XCALIDRAW: "mermaid-to-xcalidraw",
   PUBLISH_LIBRARY: "publish-library-data",
 } as const;
 

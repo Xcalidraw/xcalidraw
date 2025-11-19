@@ -7,11 +7,11 @@ import {
   render,
 } from "@xcalidraw/xcalidraw/tests/test-utils";
 
-import ExcalidrawApp from "../App";
+import XcalidrawApp from "../App";
 
 describe("Test LanguageList", () => {
   it("rerenders UI on language change", async () => {
-    await render(<ExcalidrawApp />);
+    await render(<XcalidrawApp />);
 
     // select rectangle tool to show properties menu
     UI.clickTool("rectangle");

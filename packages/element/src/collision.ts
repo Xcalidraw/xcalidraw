@@ -53,15 +53,15 @@ import type { Curve, GlobalPoint, LineSegment, Radians } from "@xcalidraw/math";
 
 import type {
   ElementsMap,
-  ExcalidrawDiamondElement,
-  ExcalidrawElement,
-  ExcalidrawEllipseElement,
-  ExcalidrawFreeDrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawRectanguloidElement,
+  XcalidrawDiamondElement,
+  XcalidrawElement,
+  XcalidrawEllipseElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawLinearElement,
+  XcalidrawRectanguloidElement,
 } from "./types";
 
-export const shouldTestInside = (element: ExcalidrawElement) => {
+export const shouldTestInside = (element: XcalidrawElement) => {
   if (element.type === "arrow") {
     return false;
   }
@@ -85,7 +85,7 @@ export const shouldTestInside = (element: ExcalidrawElement) => {
 
 export type HitTestArgs = {
   point: GlobalPoint;
-  element: ExcalidrawElement;
+  element: XcalidrawElement;
   threshold: number;
   elementsMap: ElementsMap;
   frameNameBound?: FrameNameBounds | null;
@@ -141,7 +141,7 @@ export const hitElementItself = ({
 
 export const hitElementBoundingBox = (
   point: GlobalPoint,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
   tolerance = 0,
 ) => {
@@ -164,7 +164,7 @@ export const hitElementBoundingBoxOnly = (
 
 export const hitElementBoundText = (
   point: GlobalPoint,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
 ): boolean => {
   const boundTextElementCandidate = getBoundTextElement(element, elementsMap);
@@ -197,7 +197,7 @@ export const hitElementBoundText = (
  * @returns
  */
 export const intersectElementWithLineSegment = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
   line: LineSegment<GlobalPoint>,
   offset: number = 0,
@@ -317,7 +317,7 @@ const lineIntersections = (
 };
 
 const intersectLinearOrFreeDrawWithLineSegment = (
-  element: ExcalidrawLinearElement | ExcalidrawFreeDrawElement,
+  element: XcalidrawLinearElement | XcalidrawFreeDrawElement,
   segment: LineSegment<GlobalPoint>,
   onlyFirst = false,
 ): GlobalPoint[] => {
@@ -366,7 +366,7 @@ const intersectLinearOrFreeDrawWithLineSegment = (
 };
 
 const intersectRectanguloidWithLineSegment = (
-  element: ExcalidrawRectanguloidElement,
+  element: XcalidrawRectanguloidElement,
   elementsMap: ElementsMap,
   segment: LineSegment<GlobalPoint>,
   offset: number = 0,
@@ -425,7 +425,7 @@ const intersectRectanguloidWithLineSegment = (
  * @returns
  */
 const intersectDiamondWithLineSegment = (
-  element: ExcalidrawDiamondElement,
+  element: XcalidrawDiamondElement,
   elementsMap: ElementsMap,
   l: LineSegment<GlobalPoint>,
   offset: number = 0,
@@ -475,7 +475,7 @@ const intersectDiamondWithLineSegment = (
  * @returns
  */
 const intersectEllipseWithLineSegment = (
-  element: ExcalidrawEllipseElement,
+  element: XcalidrawEllipseElement,
   elementsMap: ElementsMap,
   l: LineSegment<GlobalPoint>,
   offset: number = 0,
@@ -501,7 +501,7 @@ const intersectEllipseWithLineSegment = (
  */
 const isPointOnElementOutline = (
   point: GlobalPoint,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
   tolerance = 1,
 ) => distanceToElement(element, elementsMap, point) <= tolerance;
@@ -515,7 +515,7 @@ const isPointOnElementOutline = (
  */
 export const isPointInElement = (
   point: GlobalPoint,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
 ) => {
   if (

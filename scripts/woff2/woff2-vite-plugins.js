@@ -1,9 +1,9 @@
-// define `EXCALIDRAW_ASSET_PATH` as a SSOT
-const OSS_FONTS_CDN = "https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/";
+// define `XCALIDRAW_ASSET_PATH` as a SSOT
+const OSS_FONTS_CDN = "https://xcalidraw.nyc3.cdn.digitaloceanspaces.com/oss/";
 const OSS_FONTS_FALLBACK = "/";
 
 /**
- * Custom vite plugin for auto-prefixing `EXCALIDRAW_ASSET_PATH` woff2 fonts in `xcalidraw-app`.
+ * Custom vite plugin for auto-prefixing `XCALIDRAW_ASSET_PATH` woff2 fonts in `xcalidraw-app`.
  *
  * @returns {import("vite").PluginOption}
  */
@@ -18,7 +18,7 @@ module.exports.woff2BrowserPlugin = () => {
     },
     transform(code, id) {
       // using copy / replace as fonts defined in the `.css` don't have to be manually copied over (vite/rollup does this automatically),
-      // but at the same time can't be easily prefixed with the `EXCALIDRAW_ASSET_PATH` only for the `xcalidraw-app`
+      // but at the same time can't be easily prefixed with the `XCALIDRAW_ASSET_PATH` only for the `xcalidraw-app`
       if (!isDev && id.endsWith("/xcalidraw/fonts/fonts.css")) {
         return `/* WARN: The following content is generated during xcalidraw-app build */
 
@@ -65,10 +65,10 @@ module.exports.woff2BrowserPlugin = () => {
 
       if (!isDev && id.endsWith("xcalidraw-app/index.html")) {
         return code.replace(
-          "<!-- PLACEHOLDER:EXCALIDRAW_APP_FONTS -->",
+          "<!-- PLACEHOLDER:XCALIDRAW_APP_FONTS -->",
           `<script>
-        // point into our CDN in prod, fallback to root (excalidraw.com) domain in case of issues
-        window.EXCALIDRAW_ASSET_PATH = [
+        // point into our CDN in prod, fallback to root (xcalidraw.com) domain in case of issues
+        window.XCALIDRAW_ASSET_PATH = [
           "${OSS_FONTS_CDN}",
           "${OSS_FONTS_FALLBACK}",
         ];

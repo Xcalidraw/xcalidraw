@@ -8,7 +8,7 @@ import { WS_EVENTS, FILE_UPLOAD_TIMEOUT, WS_SUBTYPES } from "../app_constants";
 import { isSyncableElement } from "../data";
 
 import type { UserIdleState } from "@xcalidraw/common";
-import type { OrderedExcalidrawElement } from "@xcalidraw/element/types";
+import type { OrderedXcalidrawElement } from "@xcalidraw/element/types";
 import type {
   OnUserFollowedPayload,
   SocketId,
@@ -17,7 +17,7 @@ import type {
 import type {
   SocketUpdateData,
   SocketUpdateDataSource,
-  SyncableExcalidrawElement,
+  SyncableXcalidrawElement,
 } from "../data";
 import type { TCollabClass } from "./Collab";
 import type { Socket } from "socket.io-client";
@@ -104,12 +104,12 @@ class Portal {
   queueFileUpload = throttle(async () => {
     try {
       await this.collab.fileManager.saveFiles({
-        elements: this.collab.excalidrawAPI.getSceneElementsIncludingDeleted(),
-        files: this.collab.excalidrawAPI.getFiles(),
+        elements: this.collab.xcalidrawAPI.getSceneElementsIncludingDeleted(),
+        files: this.collab.xcalidrawAPI.getFiles(),
       });
     } catch (error: any) {
       if (error.name !== "AbortError") {
-        this.collab.excalidrawAPI.updateScene({
+        this.collab.xcalidrawAPI.updateScene({
           appState: {
             errorMessage: error.message,
           },
@@ -118,7 +118,7 @@ class Portal {
     }
 
     let isChanged = false;
-    const newElements = this.collab.excalidrawAPI
+    const newElements = this.collab.xcalidrawAPI
       .getSceneElementsIncludingDeleted()
       .map((element) => {
         if (this.collab.fileManager.shouldUpdateImageElementStatus(element)) {
@@ -132,7 +132,7 @@ class Portal {
       });
 
     if (isChanged) {
-      this.collab.excalidrawAPI.updateScene({
+      this.collab.xcalidrawAPI.updateScene({
         elements: newElements,
         captureUpdate: CaptureUpdateAction.NEVER,
       });
@@ -141,7 +141,7 @@ class Portal {
 
   broadcastScene = async (
     updateType: WS_SUBTYPES.INIT | WS_SUBTYPES.UPDATE,
-    elements: readonly OrderedExcalidrawElement[],
+    elements: readonly OrderedXcalidrawElement[],
     syncAll: boolean,
   ) => {
     if (updateType === WS_SUBTYPES.INIT && !syncAll) {
@@ -161,7 +161,7 @@ class Portal {
         acc.push(element);
       }
       return acc;
-    }, [] as SyncableExcalidrawElement[]);
+    }, [] as SyncableXcalidrawElement[]);
 
     const data: SocketUpdateDataSource[typeof updateType] = {
       type: updateType,
@@ -211,7 +211,7 @@ class Portal {
           pointer: payload.pointer,
           button: payload.button || "up",
           selectedElementIds:
-            this.collab.excalidrawAPI.getAppState().selectedElementIds,
+            this.collab.xcalidrawAPI.getAppState().selectedElementIds,
           username: this.collab.state.username,
         },
       };

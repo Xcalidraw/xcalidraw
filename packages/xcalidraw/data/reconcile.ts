@@ -8,22 +8,22 @@ import {
   validateFractionalIndices,
 } from "@xcalidraw/element";
 
-import type { OrderedExcalidrawElement } from "@xcalidraw/element/types";
+import type { OrderedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { MakeBrand } from "@xcalidraw/common/utility-types";
 
 import type { AppState } from "../types";
 
-export type ReconciledExcalidrawElement = OrderedExcalidrawElement &
+export type ReconciledXcalidrawElement = OrderedXcalidrawElement &
   MakeBrand<"ReconciledElement">;
 
-export type RemoteExcalidrawElement = OrderedExcalidrawElement &
-  MakeBrand<"RemoteExcalidrawElement">;
+export type RemoteXcalidrawElement = OrderedXcalidrawElement &
+  MakeBrand<"RemoteXcalidrawElement">;
 
 export const shouldDiscardRemoteElement = (
   localAppState: AppState,
-  local: OrderedExcalidrawElement | undefined,
-  remote: RemoteExcalidrawElement,
+  local: OrderedXcalidrawElement | undefined,
+  remote: RemoteXcalidrawElement,
 ): boolean => {
   if (
     local &&
@@ -45,9 +45,9 @@ export const shouldDiscardRemoteElement = (
 
 const validateIndicesThrottled = throttle(
   (
-    orderedElements: readonly OrderedExcalidrawElement[],
-    localElements: readonly OrderedExcalidrawElement[],
-    remoteElements: readonly RemoteExcalidrawElement[],
+    orderedElements: readonly OrderedXcalidrawElement[],
+    localElements: readonly OrderedXcalidrawElement[],
+    remoteElements: readonly RemoteXcalidrawElement[],
   ) => {
     if (isDevEnv() || isTestEnv() || window?.DEBUG_FRACTIONAL_INDICES) {
       // create new instances due to the mutation
@@ -71,12 +71,12 @@ const validateIndicesThrottled = throttle(
 );
 
 export const reconcileElements = (
-  localElements: readonly OrderedExcalidrawElement[],
-  remoteElements: readonly RemoteExcalidrawElement[],
+  localElements: readonly OrderedXcalidrawElement[],
+  remoteElements: readonly RemoteXcalidrawElement[],
   localAppState: AppState,
-): ReconciledExcalidrawElement[] => {
+): ReconciledXcalidrawElement[] => {
   const localElementsMap = arrayToMap(localElements);
-  const reconciledElements: OrderedExcalidrawElement[] = [];
+  const reconciledElements: OrderedXcalidrawElement[] = [];
   const added = new Set<string>();
 
   // process remote elements
@@ -114,5 +114,5 @@ export const reconcileElements = (
   // de-duplicate indices
   syncInvalidIndices(orderedElements);
 
-  return orderedElements as ReconciledExcalidrawElement[];
+  return orderedElements as ReconciledXcalidrawElement[];
 };

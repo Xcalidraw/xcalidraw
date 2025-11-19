@@ -1,6 +1,6 @@
 import { KEYS, reseed } from "@xcalidraw/common";
 
-import { Excalidraw } from "@xcalidraw/xcalidraw";
+import { Xcalidraw } from "@xcalidraw/xcalidraw";
 
 import { API } from "@xcalidraw/xcalidraw/tests/helpers/api";
 import { UI, Keyboard, Pointer } from "@xcalidraw/xcalidraw/tests/helpers/ui";
@@ -19,7 +19,7 @@ beforeEach(async () => {
   reseed(7);
   mouse.reset();
 
-  await render(<Excalidraw handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw handleKeyboardGlobally={true} />);
   h.state.width = 1000;
   h.state.height = 1000;
 

@@ -6,11 +6,11 @@ import { DefaultSidebar } from "../index";
 import {
   fireEvent,
   waitFor,
-  withExcalidrawDimensions,
+  withXcalidrawDimensions,
 } from "../tests/test-utils";
 
 import {
-  assertExcalidrawWithSidebar,
+  assertXcalidrawWithSidebar,
   assertSidebarDockButton,
 } from "./Sidebar/siderbar.test.helpers";
 
@@ -18,7 +18,7 @@ const { h } = window;
 
 describe("DefaultSidebar", () => {
   it("when `docked={undefined}` & `onDock={undefined}`, should allow docking", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar />,
       DEFAULT_SIDEBAR.name,
       async () => {
@@ -42,7 +42,7 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `docked={undefined}` & `onDock`, should allow docking", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar onDock={() => {}} />,
       DEFAULT_SIDEBAR.name,
       async () => {
@@ -66,7 +66,7 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `docked={true}` & `onDock`, should allow docking", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar onDock={() => {}} />,
       DEFAULT_SIDEBAR.name,
       async () => {
@@ -90,11 +90,11 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `onDock={false}`, should disable docking", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar onDock={false} />,
       DEFAULT_SIDEBAR.name,
       async () => {
-        await withExcalidrawDimensions(
+        await withXcalidrawDimensions(
           { width: 1920, height: 1080 },
           async () => {
             expect(h.state.defaultSidebarDockedPreference).toBe(false);
@@ -107,7 +107,7 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `docked={true}` & `onDock={false}`, should force-dock sidebar", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar docked onDock={false} />,
       DEFAULT_SIDEBAR.name,
       async () => {
@@ -120,7 +120,7 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `docked={true}` & `onDock={undefined}`, should force-dock sidebar", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar docked />,
       DEFAULT_SIDEBAR.name,
       async () => {
@@ -133,7 +133,7 @@ describe("DefaultSidebar", () => {
   });
 
   it("when `docked={false}` & `onDock={undefined}`, should force-undock sidebar", async () => {
-    await assertExcalidrawWithSidebar(
+    await assertXcalidrawWithSidebar(
       <DefaultSidebar docked={false} />,
       DEFAULT_SIDEBAR.name,
       async () => {

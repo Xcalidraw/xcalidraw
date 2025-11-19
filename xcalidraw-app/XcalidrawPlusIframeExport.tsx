@@ -1,5 +1,5 @@
 import { base64urlToString } from "@xcalidraw/xcalidraw/data/encode";
-import { ExcalidrawError } from "@xcalidraw/xcalidraw/errors";
+import { XcalidrawError } from "@xcalidraw/xcalidraw/errors";
 import { useLayoutEffect, useRef } from "react";
 
 import { STORAGE_KEYS } from "./app_constants";
@@ -7,13 +7,13 @@ import { LocalData } from "./data/LocalData";
 
 import type {
   FileId,
-  OrderedExcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type { AppState, BinaryFileData } from "@xcalidraw/xcalidraw/types";
 
 const EVENT_REQUEST_SCENE = "REQUEST_SCENE";
 
-const EXCALIDRAW_PLUS_ORIGIN = import.meta.env.VITE_APP_PLUS_APP;
+const XCALIDRAW_PLUS_ORIGIN = import.meta.env.VITE_APP_PLUS_APP;
 
 // -----------------------------------------------------------------------------
 // outgoing message
@@ -31,7 +31,7 @@ type MESSAGE_READY = { type: "READY" };
 type MESSAGE_ERROR = { type: "ERROR"; message: string };
 type MESSAGE_SCENE_DATA = {
   type: "SCENE_DATA";
-  elements: OrderedExcalidrawElement[];
+  elements: OrderedXcalidrawElement[];
   appState: Pick<AppState, "viewBackgroundColor">;
   files: { loadedFiles: BinaryFileData[]; erroredFiles: Map<FileId, true> };
 };
@@ -47,16 +47,16 @@ const parseSceneData = async ({
   rawAppStateString: string | null;
 }): Promise<MESSAGE_SCENE_DATA> => {
   if (!rawElementsString || !rawAppStateString) {
-    throw new ExcalidrawError("Elements or appstate is missing.");
+    throw new XcalidrawError("Elements or appstate is missing.");
   }
 
   try {
     const elements = JSON.parse(
       rawElementsString,
-    ) as OrderedExcalidrawElement[];
+    ) as OrderedXcalidrawElement[];
 
     if (!elements.length) {
-      throw new ExcalidrawError("Scene is empty, nothing to export.");
+      throw new XcalidrawError("Scene is empty, nothing to export.");
     }
 
     const appState = JSON.parse(rawAppStateString) as Pick<
@@ -80,9 +80,9 @@ const parseSceneData = async ({
       files,
     };
   } catch (error: any) {
-    throw error instanceof ExcalidrawError
+    throw error instanceof XcalidrawError
       ? error
-      : new ExcalidrawError("Failed to parse scene data.");
+      : new XcalidrawError("Failed to parse scene data.");
   }
 };
 
@@ -95,13 +95,13 @@ const verifyJWT = async ({
 }) => {
   try {
     if (!publicKey) {
-      throw new ExcalidrawError("Public key is undefined");
+      throw new XcalidrawError("Public key is undefined");
     }
 
     const [header, payload, signature] = token.split(".");
 
     if (!header || !payload || !signature) {
-      throw new ExcalidrawError("Invalid JWT format");
+      throw new XcalidrawError("Invalid JWT format");
     }
 
     // JWT is using Base64URL encoding
@@ -150,18 +150,18 @@ const verifyJWT = async ({
   }
 };
 
-export const ExcalidrawPlusIframeExport = () => {
+export const XcalidrawPlusIframeExport = () => {
   const readyRef = useRef(false);
 
   useLayoutEffect(() => {
     const handleMessage = async (event: MessageEvent<MESSAGE_FROM_PLUS>) => {
-      if (event.origin !== EXCALIDRAW_PLUS_ORIGIN) {
-        throw new ExcalidrawError("Invalid origin");
+      if (event.origin !== XCALIDRAW_PLUS_ORIGIN) {
+        throw new XcalidrawError("Invalid origin");
       }
 
       if (event.data.type === EVENT_REQUEST_SCENE) {
         if (!event.data.jwt) {
-          throw new ExcalidrawError("JWT is missing");
+          throw new XcalidrawError("JWT is missing");
         }
 
         try {
@@ -172,7 +172,7 @@ export const ExcalidrawPlusIframeExport = () => {
             });
           } catch (error: any) {
             console.error(`Failed to verify JWT: ${error.message}`);
-            throw new ExcalidrawError("Failed to verify JWT");
+            throw new XcalidrawError("Failed to verify JWT");
           }
 
           const parsedSceneData: MESSAGE_SCENE_DATA = await parseSceneData({
@@ -185,18 +185,18 @@ export const ExcalidrawPlusIframeExport = () => {
           });
 
           event.source!.postMessage(parsedSceneData, {
-            targetOrigin: EXCALIDRAW_PLUS_ORIGIN,
+            targetOrigin: XCALIDRAW_PLUS_ORIGIN,
           });
         } catch (error) {
           const responseData: MESSAGE_ERROR = {
             type: "ERROR",
             message:
-              error instanceof ExcalidrawError
+              error instanceof XcalidrawError
                 ? error.message
                 : "Failed to export scene data",
           };
           event.source!.postMessage(responseData, {
-            targetOrigin: EXCALIDRAW_PLUS_ORIGIN,
+            targetOrigin: XCALIDRAW_PLUS_ORIGIN,
           });
         }
       }
@@ -208,7 +208,7 @@ export const ExcalidrawPlusIframeExport = () => {
     if (!readyRef.current) {
       readyRef.current = true;
       const message: MESSAGE_FROM_EDITOR = { type: "READY" };
-      window.parent.postMessage(message, EXCALIDRAW_PLUS_ORIGIN);
+      window.parent.postMessage(message, XCALIDRAW_PLUS_ORIGIN);
     }
 
     return () => {

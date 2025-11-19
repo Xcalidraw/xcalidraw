@@ -10,7 +10,7 @@ import { vi } from "vitest";
 
 import { StoreIncrement } from "@xcalidraw/element";
 
-import ExcalidrawApp from "../App";
+import XcalidrawApp from "../App";
 
 import type { DurableIncrement, EphemeralIncrement } from "@xcalidraw/element";
 
@@ -73,7 +73,7 @@ describe("collaboration", () => {
     const durableIncrements: DurableIncrement[] = [];
     const ephemeralIncrements: EphemeralIncrement[] = [];
 
-    await render(<ExcalidrawApp />);
+    await render(<XcalidrawApp />);
 
     h.store.onStoreIncrementEmitter.on((increment) => {
       if (StoreIncrement.isDurable(increment)) {
@@ -143,7 +143,7 @@ describe("collaboration", () => {
   });
 
   it("should allow to undo / redo even on force-deleted elements", async () => {
-    await render(<ExcalidrawApp />);
+    await render(<XcalidrawApp />);
     const rect1Props = {
       type: "rectangle",
       id: "A",

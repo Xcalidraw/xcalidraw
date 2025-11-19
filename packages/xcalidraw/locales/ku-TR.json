@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "",
     "fontSize": "قەبارەی فۆنت",
     "fontFamily": "خێزانی فۆنت",
-    "addWatermark": "زیادبکە \"Made with Excalidraw\"",
+    "addWatermark": "زیادبکە \"Made with Xcalidraw\"",
     "handDrawn": "دەست کێشراو",
     "normal": "ئاسایی",
     "code": "کۆد",
@@ -91,7 +91,7 @@
     "untitled": "بێ ناونیشان",
     "name": "ناو",
     "yourName": "ناوەکەت",
-    "madeWithExcalidraw": "دروستکراوە بە Excalidraw",
+    "madeWithXcalidraw": "دروستکراوە بە Xcalidraw",
     "group": "دیاریکردنی گروپ",
     "ungroup": "گروپی دیاریکراوەکان لابەرە",
     "collaborators": "هاوکارەکان",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "کتێبخانەی کەسی",
-    "excalidrawLib": "کتێبخانەی Excalidraw",
+    "xcalidrawLib": "کتێبخانەی Xcalidraw",
     "decreaseFontSize": "کەمکردنەوەی قەبارەی فۆنت",
     "increaseFontSize": "زایدکردنی قەبارەی فۆنت",
     "unbindText": "دەقەکە جیابکەرەوە",
@@ -248,7 +248,7 @@
     "cannotExportEmptyCanvas": "ناتوانرێت تابلۆی بەتاڵ هەناردەبکرێت.",
     "couldNotCopyToClipboard": "ناتوانرا لەبەربگیرێتەوە بۆ تەختەنوس",
     "decryptFailed": "ناتوانرا داتاکان شیبکرێتەوە",
-    "uploadedSecurly": "بارکردنەکە بە کۆدکردنی کۆتایی بۆ کۆتایی پارێزراوە، ئەمەش واتە سێرڤەری Excalidraw و لایەنی سێیەم ناتوانن ناوەڕۆکەکە بخوێننەوە.",
+    "uploadedSecurly": "بارکردنەکە بە کۆدکردنی کۆتایی بۆ کۆتایی پارێزراوە، ئەمەش واتە سێرڤەری Xcalidraw و لایەنی سێیەم ناتوانن ناوەڕۆکەکە بخوێننەوە.",
     "loadSceneOverridePrompt": "بارکردنی وێنەکێشانی دەرەکی جێگەی ناوەڕۆکی بەردەستت دەگرێتەوە. دەتەوێت بەردەوام بیت؟",
     "collabStopOverridePrompt": "وەستاندنی دانیشتنەکە وێنەکێشانی پێشووت دەنووسێتەوە کە لە ناوخۆدا هەڵگیراوە. ئایا دڵنیایت?\n\n(ئەگەر دەتەوێت وێنەکێشانی ناوخۆیی خۆت بهێڵیتەوە، لەبری ئەوە تەنها تابی وێبگەڕەکە دابخە).",
     "errorAddingToLibrary": "نەیتوانی بڕگە زیاد بکات بۆ کتێبخانە",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "دەست (ئامرازی پانکردن)",
     "extraTools": "ئامرازی زیاتر",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "بەستەری هاوبەشیپێکردن",
     "link_details": "ناردن وەک بەستەری تەنها-خوێندنەوە.",
     "link_button": "هەناردەکردن بۆ بەستەر",
-    "excalidrawplus_description": "دیمەنەکە لە شوێنی کارکردنی Excalidraw+ هەڵبگرە.",
-    "excalidrawplus_button": "هەناردەکردن",
-    "excalidrawplus_exportError": "لەم ساتەدا نەتوانرا هەناردە بکرێت بۆ Excalidrow+..."
+    "xcalidrawplus_description": "دیمەنەکە لە شوێنی کارکردنی Xcalidraw+ هەڵبگرە.",
+    "xcalidrawplus_button": "هەناردەکردن",
+    "xcalidrawplus_exportError": "لەم ساتەدا نەتوانرا هەناردە بکرێت بۆ Excalidrow+..."
   },
   "helpDialog": {
     "blog": "بلۆگەکەمان بخوێنەوە",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "هەموو داتاکانت لە ناوخۆی وێنگەڕەکەتدا پاشەکەوت کراوە.",
-      "center_heading_plus": "ویستت بڕۆیت بۆ Excalidraw+?",
+      "center_heading_plus": "ویستت بڕۆیت بۆ Xcalidraw+?",
       "menuHint": "هەناردەکردن، ڕێکخستنەکان، زمانەکان، ..."
     },
     "defaults": {
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

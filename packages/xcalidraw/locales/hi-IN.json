@@ -91,7 +91,7 @@
     "untitled": "अशीर्षित",
     "name": "नाम",
     "yourName": "आपका नाम",
-    "madeWithExcalidraw": "एक्स काली ड्रॉ द्वारा बनाया हुवा",
+    "madeWithXcalidraw": "एक्स काली ड्रॉ द्वारा बनाया हुवा",
     "group": "समूह चयन",
     "ungroup": "समूह चयन असमूहीकृत करें",
     "collaborators": "सहयोगी",
@@ -121,7 +121,7 @@
     "toggleTheme": "अंधेरी/उजेलि संरचना पलटे",
     "theme": "संरचना पद्धति",
     "personalLib": "वैयक्तिक समूहकोष",
-    "excalidrawLib": "एक्सकेलीड्रॉ समूहकोष",
+    "xcalidrawLib": "एक्सकेलीड्रॉ समूहकोष",
     "decreaseFontSize": "अक्षर आकार घटायें",
     "increaseFontSize": "अक्षर आकार बढ़ायें",
     "unbindText": "लिपि को बंधमुक्त करें",
@@ -312,7 +312,7 @@
     "laser": "लेसर टॉर्च",
     "hand": "हाथ ( खिसका के देखने का औज़ार)",
     "extraTools": "अधिक उपकरण",
-    "mermaidToExcalidraw": "मर्मेड से एक्सकाली में",
+    "mermaidToXcalidraw": "मर्मेड से एक्सकाली में",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "साझा करने योग्य कड़ी",
     "link_details": "केवल पढ़ी जा सके ऐसी कड़ी में निर्यात करें",
     "link_button": "कड़ी स्वरूप में निर्यात करे",
-    "excalidrawplus_description": "दृश्य को एक्सकालीड्रॉप्लस कार्यस्थल में सुरक्षित रखें",
-    "excalidrawplus_button": "निर्यात",
-    "excalidrawplus_exportError": "इस वक्त एक्सकालीड्रॉप्लस में निर्यात नहीं किया जा सका..."
+    "xcalidrawplus_description": "दृश्य को एक्सकालीड्रॉप्लस कार्यस्थल में सुरक्षित रखें",
+    "xcalidrawplus_button": "निर्यात",
+    "xcalidrawplus_exportError": "इस वक्त एक्सकालीड्रॉप्लस में निर्यात नहीं किया जा सका..."
   },
   "helpDialog": {
     "blog": "हमारा ब्लॉग पढे",
@@ -587,7 +587,7 @@
         "button": "डिस्क में सम्हाले",
         "description": "दृष्य डेटा बाहरी फ़ाइल में निर्यात करे, जहाँसे आप उसे पुनः आयात कर सकते हो"
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "एक्स-काली-ड्रॉ-प्लस",
         "button": "एकस-काल-ड्रॉ-प्लस में निर्यात करे",
         "description": "दृष्य को आपके एक्स-काली-ड्रॉ-प्लस के कर्यस्थल में सम्हाले"

@@ -7,7 +7,7 @@ import { KEYS, reseed } from "@xcalidraw/common";
 
 import "@xcalidraw/utils/test-utils";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import * as InteractiveCanvas from "../renderer/interactiveScene";
 import * as StaticScene from "../renderer/staticScene";
 
@@ -15,9 +15,9 @@ import { UI, Pointer, Keyboard } from "./helpers/ui";
 import { render, fireEvent, act, unmountComponent } from "./test-utils";
 
 import type {
-  ExcalidrawLinearElement,
+  XcalidrawLinearElement,
   NonDeleted,
-  ExcalidrawRectangleElement,
+  XcalidrawRectangleElement,
 } from "@xcalidraw/element/types";
 
 unmountComponent();
@@ -39,7 +39,7 @@ const { h } = window;
 
 describe("move element", () => {
   it("rectangle", async () => {
-    const { getByToolName, container } = await render(<Excalidraw />);
+    const { getByToolName, container } = await render(<Xcalidraw />);
     const canvas = container.querySelector("canvas.interactive")!;
 
     {
@@ -77,7 +77,7 @@ describe("move element", () => {
   });
 
   it("rectangles with binding arrow", async () => {
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     // create elements
     const rectA = UI.createElement("rectangle", { size: 100 });
@@ -86,9 +86,9 @@ describe("move element", () => {
     act(() => {
       // bind line to two rectangles
       bindOrUnbindLinearElement(
-        arrow.get() as NonDeleted<ExcalidrawLinearElement>,
-        rectA.get() as ExcalidrawRectangleElement,
-        rectB.get() as ExcalidrawRectangleElement,
+        arrow.get() as NonDeleted<XcalidrawLinearElement>,
+        rectA.get() as XcalidrawRectangleElement,
+        rectB.get() as XcalidrawRectangleElement,
         h.app.scene,
       );
     });
@@ -133,7 +133,7 @@ describe("move element", () => {
 
 describe("duplicate element on move when ALT is clicked", () => {
   it("rectangle", async () => {
-    const { getByToolName, container } = await render(<Excalidraw />);
+    const { getByToolName, container } = await render(<Xcalidraw />);
     const canvas = container.querySelector("canvas.interactive")!;
 
     {

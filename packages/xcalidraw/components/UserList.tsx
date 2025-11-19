@@ -6,7 +6,7 @@ import { supportsResizeObserver, isShallowEqual } from "@xcalidraw/common";
 
 import { t } from "../i18n";
 
-import { useExcalidrawActionManager } from "./App";
+import { useXcalidrawActionManager } from "./App";
 import { Island } from "./Island";
 import { QuickSearch } from "./QuickSearch";
 import { ScrollableList } from "./ScrollableList";
@@ -111,7 +111,7 @@ const collaboratorComparatorKeys = [
 
 export const UserList = React.memo(
   ({ className, mobile, collaborators, userToFollow }: UserListProps) => {
-    const actionManager = useExcalidrawActionManager();
+    const actionManager = useXcalidrawActionManager();
 
     const uniqueCollaboratorsMap = new Map<
       ClientId,

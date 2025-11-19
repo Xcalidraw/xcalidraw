@@ -2,12 +2,12 @@ const fs = require("fs");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
-const excalidrawDir = `${__dirname}/../packages/xcalidraw`;
-const excalidrawPackage = `${excalidrawDir}/package.json`;
-const pkg = require(excalidrawPackage);
+const xcalidrawDir = `${__dirname}/../packages/xcalidraw`;
+const xcalidrawPackage = `${xcalidrawDir}/package.json`;
+const pkg = require(xcalidrawPackage);
 const lastVersion = pkg.version;
 const existingChangeLog = fs.readFileSync(
-  `${excalidrawDir}/CHANGELOG.md`,
+  `${xcalidrawDir}/CHANGELOG.md`,
   "utf8",
 );
 
@@ -63,7 +63,7 @@ const getLibraryCommitsSinceLastRelease = async () => {
       if (existingChangeLog.includes(prNumber)) {
         return;
       }
-      const prMarkdown = `[#${prNumber}](https://github.com/excalidraw/excalidraw/pull/${prNumber})`;
+      const prMarkdown = `[#${prNumber}](https://github.com/xcalidraw/xcalidraw/pull/${prNumber})`;
       const messageWithPRLink = messageWithCapitalizeFirst.replace(
         /\(#[0-9]*\)/,
         prMarkdown,
@@ -81,7 +81,7 @@ const getLibraryCommitsSinceLastRelease = async () => {
 const updateChangelog = async (nextVersion) => {
   const commitList = await getLibraryCommitsSinceLastRelease();
   let changelogForLibrary =
-    "## Excalidraw Library\n\n**_This section lists the updates made to the excalidraw library and will not affect the integration._**\n\n";
+    "## Xcalidraw Library\n\n**_This section lists the updates made to the xcalidraw library and will not affect the integration._**\n\n";
   supportedTypes.forEach((type) => {
     if (commitList[type].length) {
       changelogForLibrary += `### ${headerForType[type]}\n\n`;
@@ -100,7 +100,7 @@ const updateChangelog = async (nextVersion) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const newVersion = `## ${nextVersion} (${currentDate})`;
   updatedContent = updatedContent.replace(`## Unreleased`, newVersion);
-  fs.writeFileSync(`${excalidrawDir}/CHANGELOG.md`, updatedContent, "utf8");
+  fs.writeFileSync(`${xcalidrawDir}/CHANGELOG.md`, updatedContent, "utf8");
 };
 
 module.exports = updateChangelog;

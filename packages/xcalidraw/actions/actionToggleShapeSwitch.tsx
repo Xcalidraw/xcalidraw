@@ -8,7 +8,7 @@ import { editorJotaiStore } from "../editor-jotai";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 export const actionToggleShapeSwitch = register({
   name: "toggleShapeSwitch",
@@ -31,5 +31,5 @@ export const actionToggleShapeSwitch = register({
   },
   checked: (appState) => appState.gridModeEnabled,
   predicate: (elements, appState, props) =>
-    getConversionTypeFromElements(elements as ExcalidrawElement[]) !== null,
+    getConversionTypeFromElements(elements as XcalidrawElement[]) !== null,
 });

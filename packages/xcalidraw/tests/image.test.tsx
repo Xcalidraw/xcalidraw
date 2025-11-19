@@ -2,7 +2,7 @@ import { randomId, reseed } from "@xcalidraw/common";
 
 import * as blobModule from "../data/blob";
 import * as filesystemModule from "../data/filesystem";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import { createPasteEvent } from "../clipboard";
 
 import { API } from "./helpers/api";
@@ -16,13 +16,14 @@ import {
 import { INITIALIZED_IMAGE_PROPS } from "./helpers/constants";
 
 import type { FileId } from "@xcalidraw/element/types";
+import { vi } from "vitest";
 
 const { h } = window;
 
 export const setupImageTest = async (
   sizes: { width: number; height: number }[],
 ) => {
-  await render(<Excalidraw autoFocus={true} handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw autoFocus={true} handleKeyboardGlobally={true} />);
 
   h.state.height = 1000;
 

@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "",
     "fontSize": "Tamaño da fonte",
     "fontFamily": "Tipo de fonte",
-    "addWatermark": "Engadir \"Feito con Excalidraw\"",
+    "addWatermark": "Engadir \"Feito con Xcalidraw\"",
     "handDrawn": "Debuxado a man",
     "normal": "Normal",
     "code": "Código",
@@ -91,7 +91,7 @@
     "untitled": "Sen título",
     "name": "Nome",
     "yourName": "O teu nome",
-    "madeWithExcalidraw": "Feito con Excalidraw",
+    "madeWithXcalidraw": "Feito con Xcalidraw",
     "group": "Agrupar selección",
     "ungroup": "Desagrupar selección",
     "collaborators": "Colaboradores",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "Biblioteca Persoal",
-    "excalidrawLib": "Biblioteca Excalidraw",
+    "xcalidrawLib": "Biblioteca Xcalidraw",
     "decreaseFontSize": "Diminuír tamaño da fonte",
     "increaseFontSize": "Aumentar o tamaño da fonte",
     "unbindText": "Desvincular texto",
@@ -248,7 +248,7 @@
     "cannotExportEmptyCanvas": "Non se pode exportar un lenzo baleiro.",
     "couldNotCopyToClipboard": "Non se puido copiar ao portapapeis.",
     "decryptFailed": "Non se poideron descifrar os datos.",
-    "uploadedSecurly": "A carga foi asegurada con cifrado de extremo a extremo, o que significa que o servidor de Excalidraw e terceiros non poden ler o contido.",
+    "uploadedSecurly": "A carga foi asegurada con cifrado de extremo a extremo, o que significa que o servidor de Xcalidraw e terceiros non poden ler o contido.",
     "loadSceneOverridePrompt": "A carga dun debuxo externo substituirá o contido existente. Desexa continuar?",
     "collabStopOverridePrompt": "Deter a sesión, sobrescribirá o seu debuxo local previamente almacenado. Está seguro?\n\n(Se quere manter o seu debuxo local, simplemente peche a lapela do navegador.)",
     "errorAddingToLibrary": "Non se puido engadir o elemento á biblioteca",
@@ -256,7 +256,7 @@
     "confirmAddLibrary": "Isto engadirá {{numShapes}} forma(s) a túa biblioteca. Estás seguro?",
     "imageDoesNotContainScene": "Esta imaxe non parece conter ningún dato da escena. Activou a inserción de escenas durante a exportación?",
     "cannotRestoreFromImage": "Non se puido restaurar a escena dende este arquivo de imaxe",
-    "invalidSceneUrl": "Non se puido importar a escena dende a URL proporcionada. Ou ben está malformada ou non contén un JSON con información válida para Excalidraw.",
+    "invalidSceneUrl": "Non se puido importar a escena dende a URL proporcionada. Ou ben está malformada ou non contén un JSON con información válida para Xcalidraw.",
     "resetLibrary": "Isto limpará a súa biblioteca. Está seguro?",
     "removeItemsFromsLibrary": "Eliminar {{count}} elemento(s) da biblioteca?",
     "invalidEncryptionKey": "A clave de cifrado debe ter 22 caracteres. A colaboración en directo está desactivada.",
@@ -312,7 +312,7 @@
     "laser": "Punteiro láser",
     "hand": "Man (ferramenta de desprazamento)",
     "extraTools": "Máis ferramentas",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -389,7 +389,7 @@
     "desc_inProgressIntro": "A sesión de colaboración en directo está agora en progreso.",
     "desc_shareLink": "Comparte esta ligazón con calquera que queiras colaborar:",
     "desc_exitSession": "Deter a sesión desconectarao da sala, pero poderá seguir traballando coa escena de maneira local. Teña en conta que isto non afectará a outras persoas, que poderán seguir colaborando na súa versión.",
-    "shareTitle": "Únase a unha sesión de colaboración en directo en Excalidraw"
+    "shareTitle": "Únase a unha sesión de colaboración en directo en Xcalidraw"
   },
   "errorDialog": {
     "title": "Erro"
@@ -401,9 +401,9 @@
     "link_title": "Ligazón para compartir",
     "link_details": "Exportar como unha ligazón de só lectura.",
     "link_button": "Exportar a unha ligazón",
-    "excalidrawplus_description": "Garde a escena no seu espazo de traballo en Excalidraw+.",
-    "excalidrawplus_button": "Exportar",
-    "excalidrawplus_exportError": "Non se puido exportar a Excalidraw+ neste momento..."
+    "xcalidrawplus_description": "Garde a escena no seu espazo de traballo en Xcalidraw+.",
+    "xcalidrawplus_button": "Exportar",
+    "xcalidrawplus_exportError": "Non se puido exportar a Xcalidraw+ neste momento..."
   },
   "helpDialog": {
     "blog": "Le o noso blog",
@@ -502,8 +502,8 @@
     }
   },
   "encrypted": {
-    "tooltip": "Os teus debuxos están cifrados de punto a punto, polo que os servidores de Excalidraw nunca os verán.",
-    "link": "Entrada do blog acerca do cifrado de punto a punto en Excalidraw"
+    "tooltip": "Os teus debuxos están cifrados de punto a punto, polo que os servidores de Xcalidraw nunca os verán.",
+    "link": "Entrada do blog acerca do cifrado de punto a punto en Xcalidraw"
   },
   "stats": {
     "angle": "Ángulo",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "Toda a información é gardada de maneira local no seu navegador.",
-      "center_heading_plus": "Queres ir a Excalidraw+ no seu lugar?",
+      "center_heading_plus": "Queres ir a Xcalidraw+ no seu lugar?",
       "menuHint": "Exportar, preferencias, idiomas, ..."
     },
     "defaults": {
@@ -587,9 +587,9 @@
         "button": "Gardar no disco",
         "description": ""
       },
-      "excalidrawPlus": {
-        "title": "Excalidraw+",
-        "button": "Exportar a Excalidraw+",
+      "xcalidrawPlus": {
+        "title": "Xcalidraw+",
+        "button": "Exportar a Xcalidraw+",
         "description": ""
       }
     },

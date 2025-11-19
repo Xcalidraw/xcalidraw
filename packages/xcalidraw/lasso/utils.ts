@@ -16,15 +16,15 @@ import {
 } from "@xcalidraw/element";
 
 import type { ElementsSegmentsMap, GlobalPoint } from "@xcalidraw/math/types";
-import type { ElementsMap, ExcalidrawElement } from "@xcalidraw/element/types";
+import type { ElementsMap, XcalidrawElement } from "@xcalidraw/element/types";
 
 export const getLassoSelectedElementIds = (input: {
   lassoPath: GlobalPoint[];
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   elementsMap: ElementsMap;
   elementsSegments: ElementsSegmentsMap;
-  intersectedElements: Set<ExcalidrawElement["id"]>;
-  enclosedElements: Set<ExcalidrawElement["id"]>;
+  intersectedElements: Set<XcalidrawElement["id"]>;
+  enclosedElements: Set<XcalidrawElement["id"]>;
   simplifyDistance?: number;
 }): {
   selectedElementIds: string[];
@@ -90,7 +90,7 @@ export const getLassoSelectedElementIds = (input: {
 
 const enclosureTest = (
   lassoPath: GlobalPoint[],
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsSegments: ElementsSegmentsMap,
 ): boolean => {
   const lassoPolygon = polygonFromPoints(lassoPath);
@@ -108,7 +108,7 @@ const enclosureTest = (
 
 const intersectionTest = (
   lassoPath: GlobalPoint[],
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
 ): boolean => {
   const lassoSegments = lassoPath

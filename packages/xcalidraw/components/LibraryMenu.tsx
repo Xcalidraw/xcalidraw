@@ -32,8 +32,8 @@ import { getSelectedElements } from "../scene";
 import {
   useApp,
   useAppProps,
-  useExcalidrawElements,
-  useExcalidrawSetAppState,
+  useXcalidrawElements,
+  useXcalidrawSetAppState,
 } from "./App";
 import { LibraryMenuControlButtons } from "./LibraryMenuControlButtons";
 import LibraryMenuItems from "./LibraryMenuItems";
@@ -42,14 +42,14 @@ import Spinner from "./Spinner";
 import "./LibraryMenu.scss";
 
 import type {
-  ExcalidrawElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type {
   LibraryItems,
   LibraryItem,
-  ExcalidrawProps,
+  XcalidrawProps,
   UIAppState,
   AppClassProperties,
 } from "../types";
@@ -78,7 +78,7 @@ const LibraryMenuContent = memo(
     onInsertLibraryItems: (libraryItems: LibraryItems) => void;
     onAddToLibrary: () => void;
     setAppState: React.Component<any, UIAppState>["setState"];
-    libraryReturnUrl: ExcalidrawProps["libraryReturnUrl"];
+    libraryReturnUrl: XcalidrawProps["libraryReturnUrl"];
     library: Library;
     id: string;
     theme: UIAppState["theme"];
@@ -173,7 +173,7 @@ const LibraryMenuContent = memo(
 );
 
 const getPendingElements = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   selectedElementIds: UIAppState["selectedElementIds"],
 ) => ({
   elements,
@@ -192,13 +192,13 @@ const usePendingElementsMemo = (
   appState: UIAppState,
   app: AppClassProperties,
 ) => {
-  const elements = useExcalidrawElements();
+  const elements = useXcalidrawElements();
   const [state, setState] = useState(() =>
     getPendingElements(elements, appState.selectedElementIds),
   );
 
   const selectedElementVersions = useRef(
-    new Map<ExcalidrawElement["id"], ExcalidrawElement["version"]>(),
+    new Map<XcalidrawElement["id"], XcalidrawElement["version"]>(),
   );
 
   useEffect(() => {
@@ -266,7 +266,7 @@ export const LibraryMenu = memo(() => {
   const { onInsertElements } = app;
   const appProps = useAppProps();
   const appState = useUIAppState();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const [selectedItems, setSelectedItems] = useState<LibraryItem["id"][]>([]);
   const memoizedLibrary = useMemo(() => app.library, [app.library]);
   const pendingElements = usePendingElementsMemo(appState, app);

@@ -2,7 +2,7 @@ import { KEYS } from "@xcalidraw/common";
 
 import { actionSelectAll } from "../actions";
 import { t } from "../i18n";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "../tests/helpers/api";
 import { Keyboard, Pointer, UI } from "../tests/helpers/ui";
@@ -17,7 +17,7 @@ const h = window.h;
 
 describe("element locking", () => {
   beforeEach(async () => {
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
     API.setElements([]);
   });
 

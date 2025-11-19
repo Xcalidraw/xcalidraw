@@ -10,7 +10,7 @@ import StatsDragInput from "./DragInput";
 
 import { getStepSizedValue, moveElement, STEP_SIZE } from "./utils";
 
-import type { ElementsMap, ExcalidrawElement } from "@xcalidraw/element/types";
+import type { ElementsMap, XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { Scene } from "@xcalidraw/element";
 
@@ -19,7 +19,7 @@ import type { AppState } from "../../types";
 
 interface PositionProps {
   property: "x" | "y";
-  element: ExcalidrawElement;
+  element: XcalidrawElement;
   elementsMap: ElementsMap;
   scene: Scene;
   appState: AppState;

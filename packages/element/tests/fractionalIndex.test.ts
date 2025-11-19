@@ -17,7 +17,7 @@ import { InvalidFractionalIndexError } from "../src/fractionalIndex";
 
 import type {
   ElementsMap,
-  ExcalidrawElement,
+  XcalidrawElement,
   FractionalIndex,
 } from "@xcalidraw/element/types";
 
@@ -750,7 +750,7 @@ function testInvalidIndicesSync(args: {
 function prepareArguments(
   elementsLike: { id: string; index?: string }[],
   movedElementsIds?: string[],
-): [ExcalidrawElement[], ElementsMap | undefined] {
+): [XcalidrawElement[], ElementsMap | undefined] {
   const elements = elementsLike.map((x) =>
     API.createElement({ id: x.id, index: x.index as FractionalIndex }),
   );
@@ -764,7 +764,7 @@ function prepareArguments(
 
 function test(
   name: string,
-  elements: ExcalidrawElement[],
+  elements: XcalidrawElement[],
   movedElements: ElementsMap | undefined,
   expectUnchangedElements: Map<string, { id: string }>,
   expectValidInput?: boolean,

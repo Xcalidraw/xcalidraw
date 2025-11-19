@@ -1,17 +1,17 @@
 import { arrayToMapWithIndex } from "@xcalidraw/common";
 
-import type { ExcalidrawElement } from "./types";
+import type { XcalidrawElement } from "./types";
 
-const normalizeGroupElementOrder = (elements: readonly ExcalidrawElement[]) => {
-  const origElements: ExcalidrawElement[] = elements.slice();
-  const sortedElements = new Set<ExcalidrawElement>();
+const normalizeGroupElementOrder = (elements: readonly XcalidrawElement[]) => {
+  const origElements: XcalidrawElement[] = elements.slice();
+  const sortedElements = new Set<XcalidrawElement>();
 
   const orderInnerGroups = (
-    elements: readonly ExcalidrawElement[],
-  ): ExcalidrawElement[] => {
+    elements: readonly XcalidrawElement[],
+  ): XcalidrawElement[] => {
     const firstGroupSig = elements[0]?.groupIds?.join("");
-    const aGroup: ExcalidrawElement[] = [elements[0]];
-    const bGroup: ExcalidrawElement[] = [];
+    const aGroup: XcalidrawElement[] = [elements[0]];
+    const bGroup: XcalidrawElement[] = [];
     for (const element of elements.slice(1)) {
       if (element.groupIds?.join("") === firstGroupSig) {
         aGroup.push(element);
@@ -66,12 +66,12 @@ const normalizeGroupElementOrder = (elements: readonly ExcalidrawElement[]) => {
  * containers).
  */
 const normalizeBoundElementsOrder = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ) => {
   const elementsMap = arrayToMapWithIndex(elements);
 
-  const origElements: (ExcalidrawElement | null)[] = elements.slice();
-  const sortedElements = new Set<ExcalidrawElement>();
+  const origElements: (XcalidrawElement | null)[] = elements.slice();
+  const sortedElements = new Set<XcalidrawElement>();
 
   origElements.forEach((element, idx) => {
     if (!element) {
@@ -115,7 +115,7 @@ const normalizeBoundElementsOrder = (
 };
 
 export const normalizeElementOrder = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ) => {
   return normalizeBoundElementsOrder(normalizeGroupElementOrder(elements));
 };

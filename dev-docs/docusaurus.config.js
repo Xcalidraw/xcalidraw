@@ -1,23 +1,23 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-// Set the env variable to false so the excalidraw npm package doesn't throw
+// Set the env variable to false so the xcalidraw npm package doesn't throw
 // process undefined as docusaurus doesn't expose env variables by default
 
 process.env.IS_PREACT = "false";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Excalidraw developer docs",
+  title: "Xcalidraw developer docs",
   tagline:
-    "For Excalidraw contributors or those integrating the Excalidraw editor",
-  url: "https://docs.excalidraw.com",
+    "For Xcalidraw contributors or those integrating the Xcalidraw editor",
+  url: "https://docs.xcalidraw.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
-  organizationName: "Excalidraw", // Usually your GitHub org/user name.
-  projectName: "excalidraw", // Usually your repo name.
+  organizationName: "Xcalidraw", // Usually your GitHub org/user name.
+  projectName: "xcalidraw", // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -36,7 +36,7 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl:
-            "https://github.com/excalidraw/excalidraw/tree/master/dev-docs/",
+            "https://github.com/xcalidraw/xcalidraw/tree/master/dev-docs/",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
@@ -54,9 +54,9 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: "Excalidraw",
+        title: "Xcalidraw",
         logo: {
-          alt: "Excalidraw Logo",
+          alt: "Xcalidraw Logo",
           src: "img/logo.svg",
         },
         items: [
@@ -66,12 +66,12 @@ const config = {
             label: "Docs",
           },
           {
-            to: "https://plus.excalidraw.com/blog",
+            to: "https://plus.xcalidraw.com/blog",
             label: "Blog",
             position: "left",
           },
           {
-            to: "https://github.com/excalidraw/excalidraw",
+            to: "https://github.com/xcalidraw/xcalidraw",
             label: "GitHub",
             position: "right",
           },
@@ -98,11 +98,11 @@ const config = {
               },
               {
                 label: "Twitter",
-                href: "https://twitter.com/excalidraw",
+                href: "https://twitter.com/xcalidraw",
               },
               {
                 label: "Linkedin",
-                href: "https://www.linkedin.com/company/excalidraw",
+                href: "https://www.linkedin.com/company/xcalidraw",
               },
             ],
           },
@@ -111,16 +111,16 @@ const config = {
             items: [
               {
                 label: "Blog",
-                to: "https://plus.excalidraw.com/blog",
+                to: "https://plus.xcalidraw.com/blog",
               },
               {
                 label: "GitHub",
-                to: "https://github.com/excalidraw/excalidraw",
+                to: "https://github.com/xcalidraw/xcalidraw",
               },
             ],
           },
         ],
-        copyright: `Copyright © 2023 Excalidraw community. Built with Docusaurus ❤️`,
+        copyright: `Copyright © 2023 Xcalidraw community. Built with Docusaurus ❤️`,
       },
       prism: {
         theme: require("prism-react-renderer/themes/dracula"),
@@ -137,7 +137,7 @@ const config = {
       algolia: {
         appId: "8FEAOD28DI",
         apiKey: "4b07cca33ff2d2919bc95ff98f148e9e",
-        indexName: "excalidraw",
+        indexName: "xcalidraw",
       },
     }),
   themes: ["@docusaurus/theme-live-codeblock"],

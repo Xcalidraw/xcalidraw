@@ -33,15 +33,15 @@ import { AnimatedTrail } from "../animated-trail";
 import type { Bounds } from "@xcalidraw/element";
 
 import type { GlobalPoint, LineSegment } from "@xcalidraw/math/types";
-import type { ElementsMap, ExcalidrawElement } from "@xcalidraw/element/types";
+import type { ElementsMap, XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AnimationFrameHandler } from "../animation-frame-handler";
 
 import type App from "../components/App";
 
 export class EraserTrail extends AnimatedTrail {
-  private elementsToErase: Set<ExcalidrawElement["id"]> = new Set();
-  private groupsToErase: Set<ExcalidrawElement["id"]> = new Set();
+  private elementsToErase: Set<XcalidrawElement["id"]> = new Set();
+  private groupsToErase: Set<XcalidrawElement["id"]> = new Set();
 
   constructor(animationFrameHandler: AnimationFrameHandler, app: App) {
     super(animationFrameHandler, app, {
@@ -197,7 +197,7 @@ export class EraserTrail extends AnimatedTrail {
 
 const eraserTest = (
   pathSegment: LineSegment<GlobalPoint>,
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
   zoom: number,
 ): boolean => {

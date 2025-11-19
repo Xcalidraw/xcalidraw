@@ -6,7 +6,7 @@ import { t } from "../../i18n";
 import { ButtonIcon } from "../ButtonIcon";
 import { TextIcon } from "../icons";
 
-import { useExcalidrawSetAppState } from "../App";
+import { useXcalidrawSetAppState } from "../App";
 
 import type { FontFamilyValues } from "@xcalidraw/element/types";
 
@@ -21,7 +21,7 @@ export const FontPickerTrigger = ({
   isOpened = false,
   compactMode = false,
 }: FontPickerTriggerProps) => {
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
 
   const compactStyle = compactMode
     ? {

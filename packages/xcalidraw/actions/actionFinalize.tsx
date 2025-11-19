@@ -38,8 +38,8 @@ import { ToolButton } from "../components/ToolButton";
 import { register } from "./register";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
   NonDeleted,
 } from "@xcalidraw/element/types";
 import type { LocalPoint } from "@xcalidraw/math";
@@ -155,7 +155,7 @@ export const actionFinalize = register({
       focusContainer();
     }
 
-    let element: NonDeleted<ExcalidrawElement> | null = null;
+    let element: NonDeleted<XcalidrawElement> | null = null;
     if (appState.multiElement) {
       element = appState.multiElement;
     } else if (
@@ -166,7 +166,7 @@ export const actionFinalize = register({
     } else if (Object.keys(appState.selectedElementIds).length === 1) {
       const candidate = elementsMap.get(
         Object.keys(appState.selectedElementIds)[0],
-      ) as NonDeleted<ExcalidrawLinearElement> | undefined;
+      ) as NonDeleted<XcalidrawLinearElement> | undefined;
       if (candidate) {
         element = candidate;
       }

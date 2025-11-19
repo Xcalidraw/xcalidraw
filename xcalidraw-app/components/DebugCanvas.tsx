@@ -33,10 +33,10 @@ import type { Curve } from "@xcalidraw/math";
 import type { DebugElement } from "@xcalidraw/common";
 import type {
   ElementsMap,
-  ExcalidrawArrowElement,
-  ExcalidrawBindableElement,
+  XcalidrawArrowElement,
+  XcalidrawBindableElement,
   FixedPointBinding,
-  OrderedExcalidrawElement,
+  OrderedXcalidrawElement,
   PointBinding,
 } from "@xcalidraw/element/types";
 
@@ -106,7 +106,7 @@ const _renderBinding = (
 
     const bindable = elementsMap.get(
       binding.elementId,
-    ) as ExcalidrawBindableElement;
+    ) as XcalidrawBindableElement;
     const [x, y] = getGlobalFixedPointForBindableElement(
       binding.fixedPoint,
       bindable,
@@ -143,7 +143,7 @@ const _renderBindableBinding = (
   if (isFixedPointBinding(binding)) {
     const bindable = elementsMap.get(
       binding.elementId,
-    ) as ExcalidrawBindableElement;
+    ) as XcalidrawBindableElement;
     if (!binding.fixedPoint) {
       console.warn("Binding must have a fixedPoint");
       return;
@@ -175,7 +175,7 @@ const _renderBindableBinding = (
 
 const renderBindings = (
   context: CanvasRenderingContext2D,
-  elements: readonly OrderedExcalidrawElement[],
+  elements: readonly OrderedXcalidrawElement[],
   zoom: number,
 ) => {
   const elementsMap = arrayToMap(elements);
@@ -234,7 +234,7 @@ const renderBindings = (
 
         const arrow = elementsMap.get(
           boundElement.id,
-        ) as ExcalidrawArrowElement;
+        ) as XcalidrawArrowElement;
 
         if (arrow && arrow.startBinding?.elementId === element.id) {
           _renderBindableBinding(
@@ -295,7 +295,7 @@ const render = (
 const _debugRenderer = (
   canvas: HTMLCanvasElement,
   appState: AppState,
-  elements: readonly OrderedExcalidrawElement[],
+  elements: readonly OrderedXcalidrawElement[],
   scale: number,
 ) => {
   const [normalizedWidth, normalizedHeight] = getNormalizedCanvasDimensions(
@@ -371,7 +371,7 @@ export const debugRenderer = throttleRAF(
   (
     canvas: HTMLCanvasElement,
     appState: AppState,
-    elements: readonly OrderedExcalidrawElement[],
+    elements: readonly OrderedXcalidrawElement[],
     scale: number,
   ) => {
     _debugRenderer(canvas, appState, elements, scale);

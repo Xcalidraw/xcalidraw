@@ -1,30 +1,30 @@
 # JSON Schema
 
-The Excalidraw data format uses plaintext JSON.
+The Xcalidraw data format uses plaintext JSON.
 
-## Excalidraw files
+## Xcalidraw files
 
-When saving an Excalidraw scene locally to a file, the JSON file (`.excalidraw`) is using the below format.
+When saving an Xcalidraw scene locally to a file, the JSON file (`.xcalidraw`) is using the below format.
 
 ### Attributes
 
 | Attribute | Description | Value |
 | --- | --- | --- |
-| `type` | The type of the Excalidraw schema | `"excalidraw"` |
-| `version` | The version of the Excalidraw schema | number |
-| `source` | The source URL of the Excalidraw application | `"https://excalidraw.com"` |
-| `elements` | An array of objects representing excalidraw elements on canvas | Array containing excalidraw element objects |
+| `type` | The type of the Xcalidraw schema | `"xcalidraw"` |
+| `version` | The version of the Xcalidraw schema | number |
+| `source` | The source URL of the Xcalidraw application | `"https://xcalidraw.com"` |
+| `elements` | An array of objects representing xcalidraw elements on canvas | Array containing xcalidraw element objects |
 | `appState` | Additional application state/configuration | Object containing application state properties |
-| `files` | Data for excalidraw `image` elements | Object containing image data |
+| `files` | Data for xcalidraw `image` elements | Object containing image data |
 
 ### JSON Schema example
 
 ```json
 {
   // schema information
-  "type": "excalidraw",
+  "type": "xcalidraw",
   "version": 2,
-  "source": "https://excalidraw.com",
+  "source": "https://xcalidraw.com",
 
   // elements on canvas
   "elements": [
@@ -62,14 +62,14 @@ When saving an Excalidraw scene locally to a file, the JSON file (`.excalidraw`)
 }
 ```
 
-## Excalidraw clipboard format
+## Xcalidraw clipboard format
 
-When copying selected excalidraw elements to clipboard, the JSON schema is similar to `.excalidraw` format, except it differs in attributes.
+When copying selected xcalidraw elements to clipboard, the JSON schema is similar to `.xcalidraw` format, except it differs in attributes.
 
 ### Attributes
 
 | Attribute | Description | Example Value |
 | --- | --- | --- |
-| `type` | The type of the Excalidraw document. | "excalidraw/clipboard" |
-| `elements` | An array of objects representing excalidraw elements on canvas. | Array containing excalidraw element objects (see example below) |
-| `files` | Data for excalidraw `image` elements. | Object containing image data |
+| `type` | The type of the Xcalidraw document. | "xcalidraw/clipboard" |
+| `elements` | An array of objects representing xcalidraw elements on canvas. | Array containing xcalidraw element objects (see example below) |
+| `files` | Data for xcalidraw `image` elements. | Object containing image data |

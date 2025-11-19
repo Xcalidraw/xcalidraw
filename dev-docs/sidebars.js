@@ -53,7 +53,7 @@ const sidebars = {
               },
               items: [
                 "@xcalidraw/xcalidraw/api/props/initialdata",
-                "@xcalidraw/xcalidraw/api/props/excalidraw-api",
+                "@xcalidraw/xcalidraw/api/props/xcalidraw-api",
                 "@xcalidraw/xcalidraw/api/props/render-props",
                 "@xcalidraw/xcalidraw/api/props/ui-options",
               ],
@@ -86,7 +86,7 @@ const sidebars = {
               ],
             },
             "@xcalidraw/xcalidraw/api/constants",
-            "@xcalidraw/xcalidraw/api/excalidraw-element-skeleton",
+            "@xcalidraw/xcalidraw/api/xcalidraw-element-skeleton",
           ],
         },
         "@xcalidraw/xcalidraw/faq",
@@ -95,20 +95,20 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "@excalidraw/mermaid-to-excalidraw",
+      label: "@xcalidraw/mermaid-to-xcalidraw",
       link: {
         type: "doc",
-        id: "@excalidraw/mermaid-to-excalidraw/installation",
+        id: "@xcalidraw/mermaid-to-xcalidraw/installation",
       },
       items: [
-        "@excalidraw/mermaid-to-excalidraw/api",
-        "@excalidraw/mermaid-to-excalidraw/development",
+        "@xcalidraw/mermaid-to-xcalidraw/api",
+        "@xcalidraw/mermaid-to-xcalidraw/development",
         {
           type: "category",
           label: "Codebase",
           link: {
             type: "doc",
-            id: "@excalidraw/mermaid-to-excalidraw/codebase/codebase",
+            id: "@xcalidraw/mermaid-to-xcalidraw/codebase/codebase",
           },
           items: [
             {
@@ -116,13 +116,13 @@ const sidebars = {
               label: "How Parser works under the hood?",
               link: {
                 type: "doc",
-                id: "@excalidraw/mermaid-to-excalidraw/codebase/parser/parser",
+                id: "@xcalidraw/mermaid-to-xcalidraw/codebase/parser/parser",
               },
               items: [
-                "@excalidraw/mermaid-to-excalidraw/codebase/parser/flowchart",
+                "@xcalidraw/mermaid-to-xcalidraw/codebase/parser/flowchart",
               ],
             },
-            "@excalidraw/mermaid-to-excalidraw/codebase/new-diagram-type",
+            "@xcalidraw/mermaid-to-xcalidraw/codebase/new-diagram-type",
           ],
         },
       ],

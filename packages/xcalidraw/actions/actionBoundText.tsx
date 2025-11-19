@@ -39,10 +39,10 @@ import { CaptureUpdateAction } from "@xcalidraw/element";
 import { register } from "./register";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextContainer,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextContainer,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 import type { Mutable } from "@xcalidraw/common/utility-types";
@@ -80,7 +80,7 @@ export const actionUnbindText = register({
           boundTextElement,
           elementsMap,
         );
-        app.scene.mutateElement(boundTextElement as ExcalidrawTextElement, {
+        app.scene.mutateElement(boundTextElement as XcalidrawTextElement, {
           containerId: null,
           width,
           height,
@@ -140,8 +140,8 @@ export const actionBindText = register({
   perform: (elements, appState, _, app) => {
     const selectedElements = app.scene.getSelectedElements(appState);
 
-    let textElement: ExcalidrawTextElement;
-    let container: ExcalidrawTextContainer;
+    let textElement: XcalidrawTextElement;
+    let container: XcalidrawTextContainer;
 
     if (
       isTextElement(selectedElements[0]) &&
@@ -150,8 +150,8 @@ export const actionBindText = register({
       textElement = selectedElements[0];
       container = selectedElements[1];
     } else {
-      textElement = selectedElements[1] as ExcalidrawTextElement;
-      container = selectedElements[0] as ExcalidrawTextContainer;
+      textElement = selectedElements[1] as XcalidrawTextElement;
+      container = selectedElements[0] as XcalidrawTextContainer;
     }
     app.scene.mutateElement(textElement, {
       containerId: container.id,
@@ -181,9 +181,9 @@ export const actionBindText = register({
 });
 
 const pushTextAboveContainer = (
-  elements: readonly ExcalidrawElement[],
-  container: ExcalidrawElement,
-  textElement: ExcalidrawTextElement,
+  elements: readonly XcalidrawElement[],
+  container: XcalidrawElement,
+  textElement: XcalidrawTextElement,
 ) => {
   const updatedElements = elements.slice();
   const textElementIndex = updatedElements.findIndex(
@@ -201,9 +201,9 @@ const pushTextAboveContainer = (
 };
 
 const pushContainerBelowText = (
-  elements: readonly ExcalidrawElement[],
-  container: ExcalidrawElement,
-  textElement: ExcalidrawTextElement,
+  elements: readonly XcalidrawElement[],
+  container: XcalidrawElement,
+  textElement: XcalidrawTextElement,
 ) => {
   const updatedElements = elements.slice();
   const containerIndex = updatedElements.findIndex(
@@ -233,7 +233,7 @@ export const actionWrapTextInContainer = register({
   },
   perform: (elements, appState, _, app) => {
     const selectedElements = app.scene.getSelectedElements(appState);
-    let updatedElements: readonly ExcalidrawElement[] = elements.slice();
+    let updatedElements: readonly XcalidrawElement[] = elements.slice();
     const containerIds: Mutable<AppState["selectedElementIds"]> = {};
 
     for (const textElement of selectedElements) {
@@ -282,7 +282,7 @@ export const actionWrapTextInContainer = register({
             .map((el) => el.id);
           const linearElements = updatedElements.filter((ele) =>
             linearElementIds.includes(ele.id),
-          ) as ExcalidrawLinearElement[];
+          ) as XcalidrawLinearElement[];
           linearElements.forEach((ele) => {
             let startBinding = ele.startBinding;
             let endBinding = ele.endBinding;

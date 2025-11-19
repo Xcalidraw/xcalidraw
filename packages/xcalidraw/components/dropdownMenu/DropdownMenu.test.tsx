@@ -2,7 +2,7 @@ import React from "react";
 
 import { KEYS } from "@xcalidraw/common";
 
-import { Excalidraw } from "../../index";
+import { Xcalidraw } from "../../index";
 import { Keyboard } from "../../tests/helpers/ui";
 import {
   render,
@@ -13,7 +13,7 @@ import {
 
 describe("Test <DropdownMenu/>", () => {
   it("should", async () => {
-    const { container } = await render(<Excalidraw />);
+    const { container } = await render(<Xcalidraw />);
 
     expect(window.h.state.openMenu).toBe(null);
 

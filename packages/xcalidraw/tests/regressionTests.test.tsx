@@ -11,7 +11,7 @@ import {
 
 import { setDateTimeForTests } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import * as StaticScene from "../renderer/staticScene";
 
 import { API } from "./helpers/api";
@@ -26,7 +26,7 @@ import {
   unmountComponent,
 } from "./test-utils";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 const { h } = window;
 
@@ -65,7 +65,7 @@ beforeEach(async () => {
   finger1.reset();
   finger2.reset();
 
-  await render(<Excalidraw handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw handleKeyboardGlobally={true} />);
   API.setAppState({ height: 768, width: MQ_MIN_WIDTH_DESKTOP });
 });
 
@@ -148,7 +148,7 @@ describe("regression tests", () => {
     [`5${KEYS.A}`, "arrow", true],
     [`6${KEYS.L}`, "line", true],
     [`7${KEYS.P}`, "freedraw", false],
-  ] as [string, ExcalidrawElement["type"], boolean][]) {
+  ] as [string, XcalidrawElement["type"], boolean][]) {
     for (const key of keys) {
       it(`key ${key} selects ${shape} tool`, () => {
         Keyboard.keyPress(key);

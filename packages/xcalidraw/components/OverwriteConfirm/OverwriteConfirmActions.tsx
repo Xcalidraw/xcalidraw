@@ -3,7 +3,7 @@ import React from "react";
 import { actionSaveFileToDisk } from "../../actions";
 import { actionChangeExportEmbedScene } from "../../actions/actionExport";
 import { useI18n } from "../../i18n";
-import { useExcalidrawActionManager, useExcalidrawSetAppState } from "../App";
+import { useXcalidrawActionManager, useXcalidrawSetAppState } from "../App";
 import { FilledButton } from "../FilledButton";
 
 export type ActionProps = {
@@ -39,8 +39,8 @@ export const Action = ({
 
 export const ExportToImage = () => {
   const { t } = useI18n();
-  const actionManager = useExcalidrawActionManager();
-  const setAppState = useExcalidrawSetAppState();
+  const actionManager = useXcalidrawActionManager();
+  const setAppState = useXcalidrawSetAppState();
 
   return (
     <Action
@@ -58,7 +58,7 @@ export const ExportToImage = () => {
 
 export const SaveToDisk = () => {
   const { t } = useI18n();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   return (
     <Action

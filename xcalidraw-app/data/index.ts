@@ -25,9 +25,9 @@ import type { UserIdleState } from "@xcalidraw/common";
 import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
 import type { SceneBounds } from "@xcalidraw/element";
 import type {
-  ExcalidrawElement,
+  XcalidrawElement,
   FileId,
-  OrderedExcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type {
   AppState,
@@ -39,12 +39,12 @@ import type {
 import type { MakeBrand } from "@xcalidraw/common/utility-types";
 import type { WS_SUBTYPES } from "../app_constants";
 
-export type SyncableExcalidrawElement = OrderedExcalidrawElement &
-  MakeBrand<"SyncableExcalidrawElement">;
+export type SyncableXcalidrawElement = OrderedXcalidrawElement &
+  MakeBrand<"SyncableXcalidrawElement">;
 
 export const isSyncableElement = (
-  element: OrderedExcalidrawElement,
-): element is SyncableExcalidrawElement => {
+  element: OrderedXcalidrawElement,
+): element is SyncableXcalidrawElement => {
   if (element.isDeleted) {
     if (element.updated > Date.now() - DELETED_ELEMENT_TIMEOUT) {
       return true;
@@ -55,11 +55,11 @@ export const isSyncableElement = (
 };
 
 export const getSyncableElements = (
-  elements: readonly OrderedExcalidrawElement[],
+  elements: readonly OrderedXcalidrawElement[],
 ) =>
   elements.filter((element) =>
     isSyncableElement(element),
-  ) as SyncableExcalidrawElement[];
+  ) as SyncableXcalidrawElement[];
 
 const BACKEND_V2_GET = import.meta.env.VITE_APP_BACKEND_V2_GET_URL;
 const BACKEND_V2_POST = import.meta.env.VITE_APP_BACKEND_V2_POST_URL;
@@ -82,13 +82,13 @@ export type SocketUpdateDataSource = {
   SCENE_INIT: {
     type: WS_SUBTYPES.INIT;
     payload: {
-      elements: readonly ExcalidrawElement[];
+      elements: readonly XcalidrawElement[];
     };
   };
   SCENE_UPDATE: {
     type: WS_SUBTYPES.UPDATE;
     payload: {
-      elements: readonly ExcalidrawElement[];
+      elements: readonly XcalidrawElement[];
     };
   };
   MOUSE_LOCATION: {
@@ -284,7 +284,7 @@ type ExportToBackendResult =
   | { url: string; errorMessage: null };
 
 export const exportToBackend = async (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: Partial<AppState>,
   files: BinaryFiles,
 ): Promise<ExportToBackendResult> => {

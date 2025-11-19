@@ -28,7 +28,7 @@ import { register } from "./register";
 
 import type { Distribution } from "@xcalidraw/element";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, AppState } from "../types";
 
@@ -46,7 +46,7 @@ const enableActionGroup = (appState: AppState, app: AppClassProperties) => {
 };
 
 const distributeSelectedElements = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: Readonly<AppState>,
   app: AppClassProperties,
   distribution: Distribution,

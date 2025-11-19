@@ -12,7 +12,7 @@ import { useUIAppState } from "../context/ui-appState";
 
 import "../components/dropdownMenu/DropdownMenu.scss";
 
-import { useExcalidrawSetAppState } from "./App";
+import { useXcalidrawSetAppState } from "./App";
 import { LibraryMenu } from "./LibraryMenu";
 import { SearchMenu } from "./SearchMenu";
 import { Sidebar } from "./Sidebar/Sidebar";
@@ -70,7 +70,7 @@ export const DefaultSidebar = Object.assign(
       }
     >) => {
       const appState = useUIAppState();
-      const setAppState = useExcalidrawSetAppState();
+      const setAppState = useXcalidrawSetAppState();
 
       const { DefaultSidebarTabTriggersTunnel } = useTunnels();
 

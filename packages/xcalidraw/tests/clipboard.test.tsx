@@ -9,10 +9,10 @@ import { getElementBounds } from "@xcalidraw/element";
 
 import { createPasteEvent, serializeAsClipboardJSON } from "../clipboard";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
-import { mockMermaidToExcalidraw } from "./helpers/mocks";
+import { mockMermaidToXcalidraw } from "./helpers/mocks";
 import { Pointer, Keyboard } from "./helpers/ui";
 import {
   render,
@@ -79,7 +79,7 @@ beforeEach(async () => {
   mouse.reset();
 
   await render(
-    <Excalidraw
+    <Xcalidraw
       autoFocus={true}
       handleKeyboardGlobally={true}
       initialData={{ appState: { zoom: { value: 1 as NormalizedZoomValue } } }}
@@ -230,18 +230,18 @@ describe("Paste bound text container", () => {
     height: 175,
     fontSize: 20,
     fontFamily: 1,
-    text: "Excalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
+    text: "Xcalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
     baseline: 168,
     textAlign: "center",
     verticalAlign: "middle",
     containerId: container.id,
     originalText:
-      "Excalidraw is a virtual opensource whiteboard for sketching hand-drawn like diagrams",
+      "Xcalidraw is a virtual opensource whiteboard for sketching hand-drawn like diagrams",
   };
 
   it("should fix ellipse bounding box", async () => {
     const data = JSON.stringify({
-      type: "excalidraw/clipboard",
+      type: "xcalidraw/clipboard",
       elements: [container, textElement],
     });
     pasteWithCtrlCmdShiftV(data);
@@ -257,7 +257,7 @@ describe("Paste bound text container", () => {
 
   it("should fix diamond bounding box", async () => {
     const data = JSON.stringify({
-      type: "excalidraw/clipboard",
+      type: "xcalidraw/clipboard",
       elements: [
         {
           ...container,
@@ -272,7 +272,7 @@ describe("Paste bound text container", () => {
       await sleep(1);
       expect(h.elements.length).toEqual(2);
       const container = h.elements[0];
-      expect(container.height).toBe(770);
+      expect(container.height).toBe(720);
       expect(container.width).toBe(166);
     });
   });
@@ -482,8 +482,8 @@ describe("pasting & frames", () => {
 
 describe("clipboard - pasting mermaid definition", () => {
   beforeAll(() => {
-    mockMermaidToExcalidraw({
-      parseMermaidToExcalidraw: async (definition) => {
+    mockMermaidToXcalidraw({
+      parseMermaidToXcalidraw: async (definition) => {
         const lines = definition.split("\n");
         return new Promise((resolve, reject) => {
           if (lines.some((line) => line === "flowchart TD")) {

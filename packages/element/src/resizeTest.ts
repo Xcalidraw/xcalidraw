@@ -30,9 +30,9 @@ import type {
   MaybeTransformHandleType,
 } from "./transformHandles";
 import type {
-  ExcalidrawElement,
+  XcalidrawElement,
   PointerType,
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
   ElementsMap,
 } from "./types";
 
@@ -47,7 +47,7 @@ const isInsideTransformHandle = (
   y <= transformHandle[1] + transformHandle[3];
 
 export const resizeTest = <Point extends GlobalPoint | LocalPoint>(
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   elementsMap: ElementsMap,
   appState: AppState,
   x: number,
@@ -128,7 +128,7 @@ export const resizeTest = <Point extends GlobalPoint | LocalPoint>(
 };
 
 export const getElementWithTransformHandleType = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   appState: AppState,
   scenePointerX: number,
   scenePointerY: number,
@@ -152,7 +152,7 @@ export const getElementWithTransformHandleType = (
       editorInterface,
     );
     return transformHandleType ? { element, transformHandleType } : null;
-  }, null as { element: NonDeletedExcalidrawElement; transformHandleType: MaybeTransformHandleType } | null);
+  }, null as { element: NonDeletedXcalidrawElement; transformHandleType: MaybeTransformHandleType } | null);
 };
 
 export const getTransformHandleTypeFromCoords = <
@@ -230,7 +230,7 @@ const rotateResizeCursor = (cursor: string, angle: number) => {
  * Returns bi-directional cursor for the element being resized
  */
 export const getCursorForResizingElement = (resizingElement: {
-  element?: ExcalidrawElement;
+  element?: XcalidrawElement;
   transformHandleType: MaybeTransformHandleType;
 }): string => {
   const { element, transformHandleType } = resizingElement;

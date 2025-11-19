@@ -11,7 +11,7 @@ import {
 
 import { useAtom } from "../../editor-jotai";
 import { t } from "../../i18n";
-import { useExcalidrawContainer, useStylesPanelMode } from "../App";
+import { useXcalidrawContainer, useStylesPanelMode } from "../App";
 import { ButtonSeparator } from "../ButtonSeparator";
 import { activeEyeDropperAtom } from "../EyeDropper";
 import { PropertiesPopover } from "../PropertiesPopover";
@@ -30,7 +30,7 @@ import { activeColorPickerSectionAtom, isColorDark } from "./colorPickerUtils";
 
 import "./ColorPicker.scss";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ColorTuple, ColorPaletteCustom } from "@xcalidraw/common";
 
@@ -68,7 +68,7 @@ interface ColorPickerProps {
   color: string | null;
   onChange: (color: string) => void;
   label: string;
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   appState: AppState;
   palette?: ColorPaletteCustom | null;
   topPicks?: ColorTuple;
@@ -98,7 +98,7 @@ const ColorPickerPopupContent = ({
 > & {
   getOpenPopup: () => AppState["openPopup"];
 }) => {
-  const { container } = useExcalidrawContainer();
+  const { container } = useXcalidrawContainer();
   const stylesPanelMode = useStylesPanelMode();
   const isCompactMode = stylesPanelMode !== "full";
   const isMobileMode = stylesPanelMode === "mobile";
@@ -159,7 +159,7 @@ const ColorPickerPopupContent = ({
         if (appState.editingTextElement) {
           setTimeout(() => {
             const textEditor = document.querySelector(
-              ".excalidraw-wysiwyg",
+              ".xcalidraw-wysiwyg",
             ) as HTMLTextAreaElement;
             if (textEditor) {
               textEditor.focus();

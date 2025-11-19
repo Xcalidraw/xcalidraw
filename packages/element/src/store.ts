@@ -28,8 +28,8 @@ import type App from "@xcalidraw/xcalidraw/components/App";
 import type { ApplyToOptions } from "./delta";
 
 import type {
-  ExcalidrawElement,
-  OrderedExcalidrawElement,
+  XcalidrawElement,
+  OrderedXcalidrawElement,
   SceneElementsMap,
 } from "./types";
 
@@ -116,7 +116,7 @@ export class Store {
     params:
       | {
           action: CaptureUpdateActionType;
-          elements: readonly ExcalidrawElement[] | undefined;
+          elements: readonly XcalidrawElement[] | undefined;
           appState: AppState | ObservedAppState | undefined;
         }
       | {
@@ -431,7 +431,7 @@ export class StoreChange {
   // so figuring out what has changed should ideally be just quick reference checks
   // TODO: we might need to have binary files here as well, in order to be drop-in replacement for `onChange`
   private constructor(
-    public readonly elements: Record<string, OrderedExcalidrawElement>,
+    public readonly elements: Record<string, OrderedXcalidrawElement>,
     public readonly appState: Partial<ObservedAppState>,
   ) {}
 
@@ -687,7 +687,7 @@ export class StoreSnapshot {
   }
 
   public getChangedElements(prevSnapshot: StoreSnapshot) {
-    const changedElements: Record<string, OrderedExcalidrawElement> = {};
+    const changedElements: Record<string, OrderedXcalidrawElement> = {};
 
     for (const prevElement of toIterable(prevSnapshot.elements)) {
       const nextElement = this.elements.get(prevElement.id);

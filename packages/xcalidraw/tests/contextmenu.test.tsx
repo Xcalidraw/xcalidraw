@@ -6,7 +6,7 @@ import { KEYS, reseed } from "@xcalidraw/common";
 import { setDateTimeForTests } from "@xcalidraw/common";
 
 import { copiedStyles } from "../actions/actionStyles";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import * as StaticScene from "../renderer/staticScene";
 
 import { API } from "./helpers/api";
@@ -62,7 +62,7 @@ describe("contextMenu element", () => {
     reseed(7);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
   });
 
   beforeAll(() => {

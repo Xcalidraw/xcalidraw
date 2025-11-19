@@ -25,7 +25,7 @@ import { colorPickerKeyNavHandler } from "./keyboardNavHandlers";
 
 import type { ColorPaletteCustom } from "@xcalidraw/common";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ColorPickerType } from "./colorPickerUtils";
 
@@ -33,7 +33,7 @@ interface PickerProps {
   color: string | null;
   onChange: (color: string) => void;
   type: ColorPickerType;
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   palette: ColorPaletteCustom;
   updateData: (formData?: any) => void;
   children?: React.ReactNode;

@@ -5,9 +5,9 @@ import { memoize, toBrandedType } from "@xcalidraw/common";
 import { renderStaticSceneThrottled } from "../renderer/staticScene";
 
 import type {
-  ExcalidrawElement,
+  XcalidrawElement,
   NonDeletedElementsMap,
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { Scene } from "@xcalidraw/element";
@@ -42,8 +42,8 @@ export class Renderer {
       scrollY: AppState["scrollY"];
       height: AppState["height"];
       width: AppState["width"];
-    }): readonly NonDeletedExcalidrawElement[] => {
-      const visibleElements: NonDeletedExcalidrawElement[] = [];
+    }): readonly NonDeletedXcalidrawElement[] => {
+      const visibleElements: NonDeletedXcalidrawElement[] = [];
       for (const element of elementsMap.values()) {
         if (
           isElementInViewport(
@@ -71,9 +71,9 @@ export class Renderer {
       editingTextElement,
       newElementId,
     }: {
-      elements: readonly NonDeletedExcalidrawElement[];
+      elements: readonly NonDeletedXcalidrawElement[];
       editingTextElement: AppState["editingTextElement"];
-      newElementId: ExcalidrawElement["id"] | undefined;
+      newElementId: XcalidrawElement["id"] | undefined;
     }) => {
       const elementsMap = toBrandedType<RenderableElementsMap>(new Map());
 
@@ -119,7 +119,7 @@ export class Renderer {
         editingTextElement: AppState["editingTextElement"];
         /** note: first render of newElement will always bust the cache
          * (we'd have to prefilter elements outside of this function) */
-        newElementId: ExcalidrawElement["id"] | undefined;
+        newElementId: XcalidrawElement["id"] | undefined;
         sceneNonce: ReturnType<InstanceType<typeof Scene>["getSceneNonce"]>;
       }) => {
         const elements = this.scene.getNonDeletedElements();

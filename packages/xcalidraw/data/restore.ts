@@ -58,17 +58,17 @@ import {
 import type { LocalPoint, Radians } from "@xcalidraw/math";
 
 import type {
-  ExcalidrawArrowElement,
-  ExcalidrawElbowArrowElement,
-  ExcalidrawElement,
-  ExcalidrawElementType,
-  ExcalidrawLinearElement,
-  ExcalidrawSelectionElement,
-  ExcalidrawTextElement,
+  XcalidrawArrowElement,
+  XcalidrawElbowArrowElement,
+  XcalidrawElement,
+  XcalidrawElementType,
+  XcalidrawLinearElement,
+  XcalidrawSelectionElement,
+  XcalidrawTextElement,
   FixedPointBinding,
   FontFamilyValues,
   NonDeletedSceneElementsMap,
-  OrderedExcalidrawElement,
+  OrderedXcalidrawElement,
   PointBinding,
   StrokeRoundness,
 } from "@xcalidraw/element/types";
@@ -83,7 +83,7 @@ type RestoredAppState = Omit<
   "offsetTop" | "offsetLeft" | "width" | "height"
 >;
 
-export const AllowedExcalidrawActiveTools: Record<
+export const AllowedXcalidrawActiveTools: Record<
   AppState["activeTool"]["type"],
   boolean
 > = {
@@ -107,7 +107,7 @@ export const AllowedExcalidrawActiveTools: Record<
 };
 
 export type RestoredDataState = {
-  elements: OrderedExcalidrawElement[];
+  elements: OrderedXcalidrawElement[];
   appState: RestoredAppState;
   files: BinaryFiles;
 };
@@ -121,10 +121,10 @@ const getFontFamilyByName = (fontFamilyName: string): FontFamilyValues => {
   return DEFAULT_FONT_FAMILY;
 };
 
-const repairBinding = <T extends ExcalidrawLinearElement>(
+const repairBinding = <T extends XcalidrawLinearElement>(
   element: T,
   binding: PointBinding | FixedPointBinding | null,
-): T extends ExcalidrawElbowArrowElement
+): T extends XcalidrawElbowArrowElement
   ? FixedPointBinding | null
   : PointBinding | FixedPointBinding | null => {
   if (!binding) {
@@ -135,8 +135,8 @@ const repairBinding = <T extends ExcalidrawLinearElement>(
 
   if (isElbowArrow(element)) {
     const fixedPointBinding:
-      | ExcalidrawElbowArrowElement["startBinding"]
-      | ExcalidrawElbowArrowElement["endBinding"] = isFixedPointBinding(binding)
+      | XcalidrawElbowArrowElement["startBinding"]
+      | XcalidrawElbowArrowElement["endBinding"] = isFixedPointBinding(binding)
       ? {
           ...binding,
           focus,
@@ -150,20 +150,20 @@ const repairBinding = <T extends ExcalidrawLinearElement>(
   return {
     ...binding,
     focus,
-  } as T extends ExcalidrawElbowArrowElement
+  } as T extends XcalidrawElbowArrowElement
     ? FixedPointBinding | null
     : PointBinding | FixedPointBinding | null;
 };
 
 const restoreElementWithProperties = <
-  T extends Required<Omit<ExcalidrawElement, "customData">> & {
-    customData?: ExcalidrawElement["customData"];
+  T extends Required<Omit<XcalidrawElement, "customData">> & {
+    customData?: XcalidrawElement["customData"];
     /** @deprecated */
-    boundElementIds?: readonly ExcalidrawElement["id"][];
+    boundElementIds?: readonly XcalidrawElement["id"][];
     /** @deprecated */
     strokeSharpness?: StrokeRoundness;
   },
-  K extends Pick<T, keyof Omit<Required<T>, keyof ExcalidrawElement>>,
+  K extends Pick<T, keyof Omit<Required<T>, keyof XcalidrawElement>>,
 >(
   element: T,
   extra: Pick<
@@ -172,9 +172,9 @@ const restoreElementWithProperties = <
     // @ts-ignore TS complains here but type checks the call sites fine.
     keyof K
   > &
-    Partial<Pick<ExcalidrawElement, "type" | "x" | "y" | "customData">>,
+    Partial<Pick<XcalidrawElement, "type" | "x" | "y" | "customData">>,
 ): T => {
-  const base: Pick<T, keyof ExcalidrawElement> = {
+  const base: Pick<T, keyof XcalidrawElement> = {
     type: extra.type || element.type,
     // all elements must have version > 0 so getSceneVersion() will pick up
     // newly added elements
@@ -242,14 +242,14 @@ const restoreElementWithProperties = <
 };
 
 export const restoreElement = (
-  element: Exclude<ExcalidrawElement, ExcalidrawSelectionElement>,
+  element: Exclude<XcalidrawElement, XcalidrawSelectionElement>,
   opts?: { deleteInvisibleElements?: boolean },
 ): typeof element | null => {
   element = { ...element };
 
   switch (element.type) {
     case "text":
-      // temp fix: cleanup legacy obsidian-excalidraw attribute else it'll
+      // temp fix: cleanup legacy obsidian-xcalidraw attribute else it'll
       // conflict when porting between the apps
       delete (element as any).rawText;
 
@@ -332,7 +332,7 @@ export const restoreElement = (
 
       return restoreElementWithProperties(element, {
         type:
-          (element.type as ExcalidrawElementType | "draw") === "draw"
+          (element.type as XcalidrawElementType | "draw") === "draw"
             ? "line"
             : element.type,
         startBinding: repairBinding(element, element.startBinding),
@@ -376,13 +376,13 @@ export const restoreElement = (
         points,
         x,
         y,
-        elbowed: (element as ExcalidrawArrowElement).elbowed,
+        elbowed: (element as XcalidrawArrowElement).elbowed,
         ...getSizeFromPoints(points),
       } as const;
 
       // TODO: Separate arrow from linear element
       return isElbowArrow(element)
-        ? restoreElementWithProperties(element as ExcalidrawElbowArrowElement, {
+        ? restoreElementWithProperties(element as XcalidrawElbowArrowElement, {
             ...base,
             elbowed: true,
             startBinding: repairBinding(element, element.startBinding),
@@ -394,7 +394,7 @@ export const restoreElement = (
             startIsSpecial: element.startIsSpecial,
             endIsSpecial: element.endIsSpecial,
           })
-        : restoreElementWithProperties(element as ExcalidrawArrowElement, base);
+        : restoreElementWithProperties(element as XcalidrawArrowElement, base);
     }
 
     // generic elements
@@ -425,18 +425,18 @@ export const restoreElement = (
  * NOTE mutates elements.
  */
 const repairContainerElement = (
-  container: Mutable<ExcalidrawElement>,
-  elementsMap: Map<string, Mutable<ExcalidrawElement>>,
+  container: Mutable<XcalidrawElement>,
+  elementsMap: Map<string, Mutable<XcalidrawElement>>,
 ) => {
   if (container.boundElements) {
     // copy because we're not cloning on restore, and we don't want to mutate upstream
     const boundElements = container.boundElements.slice();
 
     // dedupe bindings & fix boundElement.containerId if not set already
-    const boundIds = new Set<ExcalidrawElement["id"]>();
+    const boundIds = new Set<XcalidrawElement["id"]>();
     container.boundElements = boundElements.reduce(
       (
-        acc: Mutable<NonNullable<ExcalidrawElement["boundElements"]>>,
+        acc: Mutable<NonNullable<XcalidrawElement["boundElements"]>>,
         binding,
       ) => {
         const boundElement = elementsMap.get(binding.id);
@@ -473,8 +473,8 @@ const repairContainerElement = (
  * NOTE mutates elements.
  */
 const repairBoundElement = (
-  boundElement: Mutable<ExcalidrawTextElement>,
-  elementsMap: Map<string, Mutable<ExcalidrawElement>>,
+  boundElement: Mutable<XcalidrawTextElement>,
+  elementsMap: Map<string, Mutable<XcalidrawElement>>,
 ) => {
   const container = boundElement.containerId
     ? elementsMap.get(boundElement.containerId)
@@ -512,8 +512,8 @@ const repairBoundElement = (
  * NOTE mutates elements.
  */
 const repairFrameMembership = (
-  element: Mutable<ExcalidrawElement>,
-  elementsMap: Map<string, Mutable<ExcalidrawElement>>,
+  element: Mutable<XcalidrawElement>,
+  elementsMap: Map<string, Mutable<XcalidrawElement>>,
 ) => {
   if (element.frameId) {
     const containingFrame = elementsMap.get(element.frameId);
@@ -527,7 +527,7 @@ const repairFrameMembership = (
 export const restoreElements = (
   elements: ImportedDataState["elements"],
   /** NOTE doesn't serve for reconciliation */
-  localElements: readonly ExcalidrawElement[] | null | undefined,
+  localElements: readonly XcalidrawElement[] | null | undefined,
   opts?:
     | {
         refreshDimensions?: boolean;
@@ -535,7 +535,7 @@ export const restoreElements = (
         deleteInvisibleElements?: boolean;
       }
     | undefined,
-): OrderedExcalidrawElement[] => {
+): OrderedXcalidrawElement[] => {
   // used to detect duplicate top-level element ids
   const existingIds = new Set<string>();
   const localElementsMap = localElements ? arrayToMap(localElements) : null;
@@ -547,7 +547,7 @@ export const restoreElements = (
         return elements;
       }
 
-      let migratedElement: ExcalidrawElement | null = restoreElement(element, {
+      let migratedElement: XcalidrawElement | null = restoreElement(element, {
         deleteInvisibleElements: opts?.deleteInvisibleElements,
       });
       if (migratedElement) {
@@ -576,7 +576,7 @@ export const restoreElements = (
       }
 
       return elements;
-    }, [] as ExcalidrawElement[]),
+    }, [] as XcalidrawElement[]),
   );
 
   if (!opts?.repairBindings) {
@@ -613,14 +613,14 @@ export const restoreElements = (
         (!restoredElementsMap.has(element.startBinding.elementId) ||
           !isArrowElement(element))
       ) {
-        (element as Mutable<ExcalidrawLinearElement>).startBinding = null;
+        (element as Mutable<XcalidrawLinearElement>).startBinding = null;
       }
       if (
         element.endBinding &&
         (!restoredElementsMap.has(element.endBinding.elementId) ||
           !isArrowElement(element))
       ) {
-        (element as Mutable<ExcalidrawLinearElement>).endBinding = null;
+        (element as Mutable<XcalidrawLinearElement>).endBinding = null;
       }
     }
   }
@@ -775,7 +775,7 @@ export const restoreAppState = (
       ...updateActiveTool(
         defaultAppState,
         nextAppState.activeTool.type &&
-          AllowedExcalidrawActiveTools[nextAppState.activeTool.type]
+          AllowedXcalidrawActiveTools[nextAppState.activeTool.type]
           ? nextAppState.activeTool
           : { type: "selection" },
       ),
@@ -814,7 +814,7 @@ export const restore = (
    * Supply `null` if you can't get access to it.
    */
   localAppState: Partial<AppState> | null | undefined,
-  localElements: readonly ExcalidrawElement[] | null | undefined,
+  localElements: readonly XcalidrawElement[] | null | undefined,
   elementsConfig?: {
     refreshDimensions?: boolean;
     repairBindings?: boolean;

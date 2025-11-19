@@ -4,9 +4,9 @@
 
 Xcalidraw is a **monorepo** with a clear separation between the core library and the application:
 
-- **`packages/xcalidraw/`** - Main React component library published to npm as `@excalidraw/excalidraw`
+- **`packages/xcalidraw/`** - Main React component library published to npm as `@xcalidraw/xcalidraw`
 - **`xcalidraw-app/`** - Full-featured web application (xcalidraw.com) that uses the library
-- **`packages/`** - Core packages: `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`
+- **`packages/`** - Core packages: `@xcalidraw/common`, `@xcalidraw/element`, `@xcalidraw/math`, `@xcalidraw/utils`
 - **`examples/`** - Integration examples (NextJS, browser script)
 
 ## Development Workflow

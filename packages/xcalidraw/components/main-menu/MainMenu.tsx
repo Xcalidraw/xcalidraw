@@ -5,7 +5,7 @@ import { composeEventHandlers } from "@xcalidraw/common";
 import { useTunnels } from "../../context/tunnels";
 import { useUIAppState } from "../../context/ui-appState";
 import { t } from "../../i18n";
-import { useEditorInterface, useExcalidrawSetAppState } from "../App";
+import { useEditorInterface, useXcalidrawSetAppState } from "../App";
 import { UserList } from "../UserList";
 import DropdownMenu from "../dropdownMenu/DropdownMenu";
 import { withInternalFallback } from "../hoc/withInternalFallback";
@@ -29,7 +29,7 @@ const MainMenu = Object.assign(
       const { MainMenuTunnel } = useTunnels();
       const editorInterface = useEditorInterface();
       const appState = useUIAppState();
-      const setAppState = useExcalidrawSetAppState();
+      const setAppState = useXcalidrawSetAppState();
 
       return (
         <MainMenuTunnel.In>

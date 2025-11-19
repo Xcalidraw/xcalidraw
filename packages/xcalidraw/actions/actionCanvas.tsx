@@ -47,7 +47,7 @@ import { getShortcutKey } from "../shortcut";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppState, Offsets } from "../types";
 
@@ -367,7 +367,7 @@ export const zoomToFit = ({
   maxZoom,
 }: {
   canvasOffsets?: Offsets;
-  targetElements: readonly ExcalidrawElement[];
+  targetElements: readonly XcalidrawElement[];
   appState: Readonly<AppState>;
   /** whether to fit content to viewport (beyond >100%) */
   fitToViewport: boolean;

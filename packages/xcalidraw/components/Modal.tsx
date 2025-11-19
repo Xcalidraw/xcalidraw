@@ -21,11 +21,11 @@ export const Modal: React.FC<{
 }> = (props) => {
   const { closeOnClickOutside = true } = props;
   const modalRoot = useCreatePortalContainer({
-    className: "excalidraw-modal-container",
+    className: "xcalidraw-modal-container",
   });
 
   const animationsDisabledRef = useRef(
-    document.body.classList.contains("excalidraw-animations-disabled"),
+    document.body.classList.contains("xcalidraw-animations-disabled"),
   );
 
   if (!modalRoot) {

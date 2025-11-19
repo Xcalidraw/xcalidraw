@@ -5,7 +5,7 @@ import {
   restoreOriginalGetBoundingClientRect,
 } from "@xcalidraw/xcalidraw/tests/test-utils";
 
-import ExcalidrawApp from "../App";
+import XcalidrawApp from "../App";
 
 describe("Test MobileMenu", () => {
   const { h } = window;
@@ -16,7 +16,7 @@ describe("Test MobileMenu", () => {
   });
 
   beforeEach(async () => {
-    await render(<ExcalidrawApp />);
+    await render(<XcalidrawApp />);
     h.app.refreshEditorInterface();
   });
 

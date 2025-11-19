@@ -12,7 +12,7 @@ import { selectAllIcon } from "../components/icons";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 export const actionSelectAll = register({
   name: "selectAll",
@@ -32,7 +32,7 @@ export const actionSelectAll = register({
           !(isTextElement(element) && element.containerId) &&
           !element.locked,
       )
-      .reduce((map: Record<ExcalidrawElement["id"], true>, element) => {
+      .reduce((map: Record<XcalidrawElement["id"], true>, element) => {
         map[element.id] = true;
         return map;
       }, {});

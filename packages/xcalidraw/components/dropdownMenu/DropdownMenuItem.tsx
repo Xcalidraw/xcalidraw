@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 import { THEME } from "@xcalidraw/common";
 
-import { useExcalidrawAppState } from "../App";
+import { useXcalidrawAppState } from "../App";
 
 import MenuItemContent from "./DropdownMenuItemContent";
 import {
@@ -83,7 +83,7 @@ export const DropDownMenuItemBadge = ({
   type?: ValueOf<typeof DropDownMenuItemBadgeType>;
   children: React.ReactNode;
 }) => {
-  const { theme } = useExcalidrawAppState();
+  const { theme } = useXcalidrawAppState();
   const style = {
     display: "inline-flex",
     marginLeft: "auto",

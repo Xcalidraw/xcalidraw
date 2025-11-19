@@ -24,9 +24,9 @@ import { flipHorizontal, flipVertical } from "../components/icons";
 import { register } from "./register";
 
 import type {
-  ExcalidrawArrowElement,
-  ExcalidrawElbowArrowElement,
-  ExcalidrawElement,
+  XcalidrawArrowElement,
+  XcalidrawElbowArrowElement,
+  XcalidrawElement,
   NonDeleted,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
@@ -85,7 +85,7 @@ export const actionFlipVertical = register({
 });
 
 const flipSelectedElements = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   elementsMap: NonDeletedSceneElementsMap,
   appState: Readonly<AppState>,
   flipDirection: "horizontal" | "vertical",
@@ -116,12 +116,12 @@ const flipSelectedElements = (
 };
 
 const flipElements = (
-  selectedElements: NonDeleted<ExcalidrawElement>[],
+  selectedElements: NonDeleted<XcalidrawElement>[],
   elementsMap: NonDeletedSceneElementsMap,
   appState: AppState,
   flipDirection: "horizontal" | "vertical",
   app: AppClassProperties,
-): ExcalidrawElement[] => {
+): XcalidrawElement[] => {
   if (
     selectedElements.every(
       (element) =>
@@ -129,7 +129,7 @@ const flipElements = (
     )
   ) {
     return selectedElements.map((element) => {
-      const _element = element as ExcalidrawArrowElement;
+      const _element = element as XcalidrawArrowElement;
       return newElementWith(_element, {
         startArrowhead: _element.endArrowhead,
         endArrowhead: _element.startArrowhead,
@@ -175,8 +175,8 @@ const flipElements = (
   const { elbowArrows, otherElements } = selectedElements.reduce(
     (
       acc: {
-        elbowArrows: ExcalidrawElbowArrowElement[];
-        otherElements: ExcalidrawElement[];
+        elbowArrows: XcalidrawElbowArrowElement[];
+        otherElements: XcalidrawElement[];
       },
       element,
     ) =>

@@ -5,8 +5,8 @@ import { isPromiseLike } from "@xcalidraw/common";
 import { trackEvent } from "../analytics";
 
 import type {
-  ExcalidrawElement,
-  OrderedExcalidrawElement,
+  XcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, AppState } from "../types";
@@ -23,7 +23,7 @@ const trackAction = (
   action: Action,
   source: ActionSource,
   appState: Readonly<AppState>,
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   app: AppClassProperties,
   value: any,
 ) => {
@@ -55,13 +55,13 @@ export class ActionManager {
   updater: (actionResult: ActionResult | Promise<ActionResult>) => void;
 
   getAppState: () => Readonly<AppState>;
-  getElementsIncludingDeleted: () => readonly OrderedExcalidrawElement[];
+  getElementsIncludingDeleted: () => readonly OrderedXcalidrawElement[];
   app: AppClassProperties;
 
   constructor(
     updater: UpdaterFn,
     getAppState: () => AppState,
-    getElementsIncludingDeleted: () => readonly OrderedExcalidrawElement[],
+    getElementsIncludingDeleted: () => readonly OrderedXcalidrawElement[],
     app: AppClassProperties,
   ) {
     this.updater = (actionResult) => {

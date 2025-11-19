@@ -5,7 +5,7 @@ import { getSelectedElementsByGroup } from "./groups";
 
 import type { AppState } from "@xcalidraw/xcalidraw/types";
 
-import type { ElementsMap, ExcalidrawElement } from "./types";
+import type { ElementsMap, XcalidrawElement } from "./types";
 
 export interface Distribution {
   space: "between";
@@ -13,11 +13,11 @@ export interface Distribution {
 }
 
 export const distributeElements = (
-  selectedElements: ExcalidrawElement[],
+  selectedElements: XcalidrawElement[],
   elementsMap: ElementsMap,
   distribution: Distribution,
   appState: Readonly<AppState>,
-): ExcalidrawElement[] => {
+): XcalidrawElement[] => {
   const [start, mid, end, extent] =
     distribution.axis === "x"
       ? (["minX", "midX", "maxX", "width"] as const)

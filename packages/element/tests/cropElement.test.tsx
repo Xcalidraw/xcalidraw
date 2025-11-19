@@ -3,7 +3,7 @@ import { vi } from "vitest";
 
 import { KEYS, cloneJSON } from "@xcalidraw/common";
 
-import { Excalidraw, exportToCanvas, exportToSvg } from "@xcalidraw/xcalidraw";
+import { Xcalidraw, exportToCanvas, exportToSvg } from "@xcalidraw/xcalidraw";
 import {
   actionFlipHorizontal,
   actionFlipVertical,
@@ -22,7 +22,7 @@ import { duplicateElement } from "../src/duplicate";
 
 import type { NormalizedZoomValue } from "@xcalidraw/xcalidraw/types";
 
-import type { ExcalidrawImageElement, ImageCrop } from "../src/types";
+import type { XcalidrawImageElement, ImageCrop } from "../src/types";
 
 const { h } = window;
 const mouse = new Pointer("mouse");
@@ -38,7 +38,7 @@ beforeEach(async () => {
   Object.assign(document, {
     elementFromPoint: () => GlobalTestState.canvas,
   });
-  await render(<Excalidraw autoFocus={true} handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw autoFocus={true} handleKeyboardGlobally={true} />);
   API.setAppState({
     zoom: {
       value: 1 as NormalizedZoomValue,
@@ -54,7 +54,7 @@ beforeEach(async () => {
   });
 });
 
-const generateRandomNaturalWidthAndHeight = (image: ExcalidrawImageElement) => {
+const generateRandomNaturalWidthAndHeight = (image: XcalidrawImageElement) => {
   const initialWidth = image.width;
   const initialHeight = image.height;
 
@@ -113,7 +113,7 @@ describe("Enter and leave the crop editor", () => {
 
 describe("Crop an image", () => {
   it("Cropping changes the dimension", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
 
     const initialWidth = image.width;
     const initialHeight = image.height;
@@ -129,7 +129,7 @@ describe("Crop an image", () => {
   });
 
   it("Cropping has minimal sizes", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 
@@ -146,7 +146,7 @@ describe("Crop an image", () => {
   });
 
   it("Preserve aspect ratio", async () => {
-    let image = h.elements[0] as ExcalidrawImageElement;
+    let image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 
@@ -211,7 +211,7 @@ describe("Crop an image", () => {
 
 describe("Cropping and other features", async () => {
   it("Cropping works independently of duplication", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 
@@ -253,7 +253,7 @@ describe("Cropping and other features", async () => {
   });
 
   it("Resizing should not affect crop", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 
@@ -282,7 +282,7 @@ describe("Cropping and other features", async () => {
   });
 
   it("Flipping does not change crop", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 
@@ -309,7 +309,7 @@ describe("Cropping and other features", async () => {
   });
 
   it("Exports should preserve crops", async () => {
-    const image = h.elements[0] as ExcalidrawImageElement;
+    const image = h.elements[0] as XcalidrawImageElement;
     const initialWidth = image.width;
     const initialHeight = image.height;
 

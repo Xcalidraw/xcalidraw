@@ -15,13 +15,13 @@ import { getDefaultAppState } from "../../appState";
 import type { LocalPoint } from "@xcalidraw/math";
 
 import type {
-  ExcalidrawArrowElement,
-  ExcalidrawElement,
-  ExcalidrawFreeDrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElement,
+  XcalidrawArrowElement,
+  XcalidrawElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
-import type { NormalizedZoomValue } from "@xcalidraw/xcalidraw/types";
+import type { NormalizedZoomValue } from "../../types";
 
 import type { ImportedDataState } from "../../data/types";
 
@@ -41,7 +41,7 @@ describe("restoreElements", () => {
   });
 
   it("should not call isInvisiblySmallElement when element is a selection element", () => {
-    const selectionEl = { type: "selection" } as ExcalidrawElement;
+    const selectionEl = { type: "selection" } as XcalidrawElement;
     const restoreElements = restore.restoreElements([selectionEl], null);
     expect(restoreElements.length).toBe(0);
     expect(sizeHelpers.isInvisiblySmallElement).toBeCalledTimes(0);
@@ -83,7 +83,7 @@ describe("restoreElements", () => {
     const restoredText = restore.restoreElements(
       [textElement],
       null,
-    )[0] as ExcalidrawTextElement;
+    )[0] as XcalidrawTextElement;
 
     expect(restoredText).toMatchSnapshot({
       seed: expect.any(Number),
@@ -122,7 +122,7 @@ describe("restoreElements", () => {
     expect(textElement.isDeleted).toBe(false);
     const restoredText = restore.restoreElements([textElement], null, {
       deleteInvisibleElements: true,
-    })[0] as ExcalidrawTextElement;
+    })[0] as XcalidrawTextElement;
     expect(restoredText.isDeleted).toBe(true);
     expect(restoredText).toMatchSnapshot({
       seed: expect.any(Number),
@@ -140,7 +140,7 @@ describe("restoreElements", () => {
     const restoredFreedraw = restore.restoreElements(
       [freedrawElement],
       null,
-    )[0] as ExcalidrawFreeDrawElement;
+    )[0] as XcalidrawFreeDrawElement;
 
     expect(restoredFreedraw).toMatchSnapshot({
       seed: expect.any(Number),
@@ -162,8 +162,8 @@ describe("restoreElements", () => {
       null,
     );
 
-    const restoredLine = restoredElements[0] as ExcalidrawLinearElement;
-    const restoredDraw = restoredElements[1] as ExcalidrawLinearElement;
+    const restoredLine = restoredElements[0] as XcalidrawLinearElement;
+    const restoredDraw = restoredElements[1] as XcalidrawLinearElement;
 
     expect(restoredLine).toMatchSnapshot({
       seed: expect.any(Number),
@@ -180,7 +180,7 @@ describe("restoreElements", () => {
 
     const restoredElements = restore.restoreElements([arrowElement], null);
 
-    const restoredArrow = restoredElements[0] as ExcalidrawLinearElement;
+    const restoredArrow = restoredElements[0] as XcalidrawLinearElement;
 
     expect(restoredArrow).toMatchSnapshot({
       seed: expect.any(Number),
@@ -204,7 +204,7 @@ describe("restoreElements", () => {
     });
 
     const restoredArrow = restoredElements[0] as
-      | ExcalidrawArrowElement
+      | XcalidrawArrowElement
       | undefined;
 
     expect(restoredArrow).not.toBeUndefined();
@@ -272,10 +272,10 @@ describe("restoreElements", () => {
     );
 
     const restoredLinear = restoredElements[0] as
-      | ExcalidrawLinearElement
+      | XcalidrawLinearElement
       | undefined;
     const restoredArrow = restoredElements[1] as
-      | ExcalidrawArrowElement
+      | XcalidrawArrowElement
       | undefined;
 
     expect(restoredLinear?.type).toBe("line");
@@ -298,7 +298,7 @@ describe("restoreElements", () => {
     const arrowElement = API.createElement({ type: "arrow" });
     const restoredElements = restore.restoreElements([arrowElement], null);
 
-    const restoredArrow = restoredElements[0] as ExcalidrawLinearElement;
+    const restoredArrow = restoredElements[0] as XcalidrawLinearElement;
 
     expect(arrowElement.endArrowhead).toBe(restoredArrow.endArrowhead);
   });
@@ -311,7 +311,7 @@ describe("restoreElements", () => {
 
     const restoredElements = restore.restoreElements([arrowElement], null);
 
-    const restoredArrow = restoredElements[0] as ExcalidrawLinearElement;
+    const restoredArrow = restoredElements[0] as XcalidrawLinearElement;
 
     expect(restoredArrow.endArrowhead).toBe("arrow");
   });
@@ -333,7 +333,7 @@ describe("restoreElements", () => {
     const restoredLine = restore.restoreElements(
       [lineElement],
       null,
-    )[0] as ExcalidrawLinearElement;
+    )[0] as XcalidrawLinearElement;
 
     expect(restoredLine.points).toMatchObject(expectedLinePoints);
   });
@@ -375,8 +375,8 @@ describe("restoreElements", () => {
       null,
     );
 
-    const restoredLine_0 = restoredElements[0] as ExcalidrawLinearElement;
-    const restoredLine_1 = restoredElements[1] as ExcalidrawLinearElement;
+    const restoredLine_0 = restoredElements[0] as XcalidrawLinearElement;
+    const restoredLine_1 = restoredElements[1] as XcalidrawLinearElement;
 
     expect(restoredLine_0.points).toMatchObject(pointsEl_0);
 
@@ -394,7 +394,7 @@ describe("restoreElements", () => {
   it("should restore correctly with rectangle, ellipse and diamond elements", () => {
     const types = ["rectangle", "ellipse", "diamond"];
 
-    const elements: ExcalidrawElement[] = [];
+    const elements: XcalidrawElement[] = [];
     let idCount = 0;
     types.forEach((elType) => {
       idCount += 1;
@@ -552,10 +552,10 @@ describe("restoreAppState", () => {
     );
   });
 
-  it("when imported data state has a not allowed Excalidraw Element Types", () => {
+  it("when imported data state has a not allowed Xcalidraw Element Types", () => {
     const stubImportedAppState: any = getDefaultAppState();
 
-    stubImportedAppState.activeTool = "not allowed Excalidraw Element Types";
+    stubImportedAppState.activeTool = "not allowed Xcalidraw Element Types";
     const stubLocalAppState = getDefaultAppState();
 
     const restoredAppState = restore.restoreAppState(

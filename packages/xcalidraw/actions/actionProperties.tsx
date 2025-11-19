@@ -128,10 +128,10 @@ import type { CaptureUpdateActionType } from "@xcalidraw/element";
 import type {
   Arrowhead,
   ElementsMap,
-  ExcalidrawBindableElement,
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElement,
+  XcalidrawBindableElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
   FontFamilyValues,
   TextAlign,
   VerticalAlign,
@@ -153,9 +153,9 @@ const getStylesPanelInfo = (app: AppClassProperties) => {
 };
 
 export const changeProperty = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
-  callback: (element: ExcalidrawElement) => ExcalidrawElement,
+  callback: (element: XcalidrawElement) => XcalidrawElement,
   includeBoundText = false,
 ) => {
   const selectedElementIds = arrayToMap(
@@ -176,10 +176,10 @@ export const changeProperty = (
 };
 
 export const getFormValue = function <T extends Primitive>(
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   app: AppClassProperties,
-  getAttribute: (element: ExcalidrawElement) => T,
-  isRelevantElement: true | ((element: ExcalidrawElement) => boolean),
+  getAttribute: (element: XcalidrawElement) => T,
+  isRelevantElement: true | ((element: XcalidrawElement) => boolean),
   defaultValue: T | ((isSomeElementSelected: boolean) => T),
 ): T {
   const editingTextElement = app.state.editingTextElement;
@@ -216,8 +216,8 @@ export const getFormValue = function <T extends Primitive>(
 };
 
 const offsetElementAfterFontResize = (
-  prevElement: ExcalidrawTextElement,
-  nextElement: ExcalidrawTextElement,
+  prevElement: XcalidrawTextElement,
+  nextElement: XcalidrawTextElement,
   scene: Scene,
 ) => {
   if (isBoundToContainer(nextElement) || !nextElement.autoResize) {
@@ -230,18 +230,18 @@ const offsetElementAfterFontResize = (
         : prevElement.x +
           (prevElement.width - nextElement.width) /
             (prevElement.textAlign === "center" ? 2 : 1),
-    // centering vertically is non-standard, but for Excalidraw I think
+    // centering vertically is non-standard, but for Xcalidraw I think
     // it makes sense
     y: prevElement.y + (prevElement.height - nextElement.height) / 2,
   });
 };
 
 const changeFontSize = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
   app: AppClassProperties,
-  getNewFontSize: (element: ExcalidrawTextElement) => number,
-  fallbackValue?: ExcalidrawTextElement["fontSize"],
+  getNewFontSize: (element: XcalidrawTextElement) => number,
+  fallbackValue?: XcalidrawTextElement["fontSize"],
 ) => {
   const newFontSizes = new Set<number>();
 
@@ -253,7 +253,7 @@ const changeFontSize = (
         const newFontSize = getNewFontSize(oldElement);
         newFontSizes.add(newFontSize);
 
-        let newElement: ExcalidrawTextElement = newElementWith(oldElement, {
+        let newElement: XcalidrawTextElement = newElementWith(oldElement, {
           fontSize: newFontSize,
         });
         redrawTextBoundingBox(
@@ -923,7 +923,7 @@ export const actionChangeFontFamily = register({
           i < selectedTextElements.length &&
           textLengthAccumulator < 5000
         ) {
-          const textElement = selectedTextElements[i] as ExcalidrawTextElement;
+          const textElement = selectedTextElements[i] as XcalidrawTextElement;
           textLengthAccumulator += textElement?.originalText.length || 0;
           i++;
         }
@@ -944,8 +944,8 @@ export const actionChangeFontFamily = register({
 
     if (nextFontFamily && !skipOnHoverRender) {
       const elementContainerMapping = new Map<
-        ExcalidrawTextElement,
-        ExcalidrawElement | null
+        XcalidrawTextElement,
+        XcalidrawElement | null
       >();
       let uniqueChars = new Set<string>();
       let skipFontFaceCheck = false;
@@ -976,7 +976,7 @@ export const actionChangeFontFamily = register({
               (oldElement.fontFamily !== nextFontFamily ||
                 currentItemFontFamily) // force update on selection
             ) {
-              const newElement: ExcalidrawTextElement = newElementWith(
+              const newElement: XcalidrawTextElement = newElementWith(
                 oldElement,
                 {
                   fontFamily: nextFontFamily,
@@ -1037,7 +1037,7 @@ export const actionChangeFontFamily = register({
             if (latestElement) {
               // trigger async redraw
               redrawTextBoundingBox(
-                latestElement as ExcalidrawTextElement,
+                latestElement as XcalidrawTextElement,
                 latestContainer,
                 app.scene,
               );
@@ -1062,7 +1062,7 @@ export const actionChangeFontFamily = register({
 
     const selectedFontFamily = useMemo(() => {
       const getFontFamily = (
-        elementsArray: readonly ExcalidrawElement[],
+        elementsArray: readonly XcalidrawElement[],
         elementsMap: ElementsMap,
       ) =>
         getFormValue(
@@ -1247,7 +1247,7 @@ export const actionChangeTextAlign = register({
         appState,
         (oldElement) => {
           if (isTextElement(oldElement)) {
-            const newElement: ExcalidrawTextElement = newElementWith(
+            const newElement: XcalidrawTextElement = newElementWith(
               oldElement,
               { textAlign: value },
             );
@@ -1348,7 +1348,7 @@ export const actionChangeVerticalAlign = register({
         appState,
         (oldElement) => {
           if (isTextElement(oldElement)) {
-            const newElement: ExcalidrawTextElement = newElementWith(
+            const newElement: XcalidrawTextElement = newElementWith(
               oldElement,
               { verticalAlign: value },
             );
@@ -1609,12 +1609,12 @@ export const actionChangeArrowhead = register({
           const { position, type } = value;
 
           if (position === "start") {
-            const element: ExcalidrawLinearElement = newElementWith(el, {
+            const element: XcalidrawLinearElement = newElementWith(el, {
               startArrowhead: type,
             });
             return element;
           } else if (position === "end") {
-            const element: ExcalidrawLinearElement = newElementWith(el, {
+            const element: XcalidrawLinearElement = newElementWith(el, {
               endArrowhead: type,
             });
             return element;
@@ -1743,12 +1743,12 @@ export const actionChangeArrowType = register({
           newElement.startBinding &&
           (elementsMap.get(
             newElement.startBinding.elementId,
-          ) as ExcalidrawBindableElement);
+          ) as XcalidrawBindableElement);
         const endElement =
           newElement.endBinding &&
           (elementsMap.get(
             newElement.endBinding.elementId,
-          ) as ExcalidrawBindableElement);
+          ) as XcalidrawBindableElement);
 
         const startBinding =
           startElement && newElement.startBinding
@@ -1796,7 +1796,7 @@ export const actionChangeArrowType = register({
         if (newElement.startBinding) {
           const startElement = elementsMap.get(
             newElement.startBinding.elementId,
-          ) as ExcalidrawBindableElement;
+          ) as XcalidrawBindableElement;
           if (startElement) {
             bindLinearElement(newElement, startElement, "start", app.scene);
           }
@@ -1804,7 +1804,7 @@ export const actionChangeArrowType = register({
         if (newElement.endBinding) {
           const endElement = elementsMap.get(
             newElement.endBinding.elementId,
-          ) as ExcalidrawBindableElement;
+          ) as XcalidrawBindableElement;
           if (endElement) {
             bindLinearElement(newElement, endElement, "end", app.scene);
           }
@@ -1826,7 +1826,7 @@ export const actionChangeArrowType = register({
       const selected = newElements.find((el) => el.id === selectedId);
       if (selected) {
         newState.selectedLinearElement = new LinearElementEditor(
-          selected as ExcalidrawLinearElement,
+          selected as XcalidrawLinearElement,
           arrayToMap(elements),
         );
       }

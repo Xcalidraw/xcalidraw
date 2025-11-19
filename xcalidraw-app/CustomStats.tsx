@@ -14,7 +14,7 @@ import {
   getTotalStorageSize,
 } from "./data/localStorage";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 import type { UIAppState } from "@xcalidraw/xcalidraw/types";
 
 type StorageSizes = { scene: number; total: number };
@@ -30,7 +30,7 @@ const getStorageSizes = debounce((cb: (sizes: StorageSizes) => void) => {
 
 type Props = {
   setToast: (message: string) => void;
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   appState: UIAppState;
 };
 const CustomStats = (props: Props) => {

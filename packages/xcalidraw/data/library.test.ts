@@ -5,100 +5,100 @@ describe("validateLibraryUrl", () => {
     // valid hostnames
     // -------------------------------------------------------------------------
     expect(
-      validateLibraryUrl("https://www.excalidraw.com", ["excalidraw.com"]),
+      validateLibraryUrl("https://www.xcalidraw.com", ["xcalidraw.com"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.com", ["xcalidraw.com"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://library.excalidraw.com", ["excalidraw.com"]),
+      validateLibraryUrl("https://library.xcalidraw.com", ["xcalidraw.com"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://library.excalidraw.com", [
-        "library.excalidraw.com",
+      validateLibraryUrl("https://library.xcalidraw.com", [
+        "library.xcalidraw.com",
       ]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/", ["excalidraw.com/"]),
+      validateLibraryUrl("https://xcalidraw.com/", ["xcalidraw.com/"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com", ["excalidraw.com/"]),
+      validateLibraryUrl("https://xcalidraw.com", ["xcalidraw.com/"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.com/", ["xcalidraw.com"]),
     ).toBe(true);
 
     // valid pathnames
     // -------------------------------------------------------------------------
     expect(
-      validateLibraryUrl("https://excalidraw.com/path", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.com/path", ["xcalidraw.com"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/path/", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.com/path/", ["xcalidraw.com"]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/specific/path", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/path", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/specific/path/", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/path/", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/specific/path", [
-        "excalidraw.com/specific/path/",
+      validateLibraryUrl("https://xcalidraw.com/specific/path", [
+        "xcalidraw.com/specific/path/",
       ]),
     ).toBe(true);
     expect(
-      validateLibraryUrl("https://excalidraw.com/specific/path/other", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/path/other", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toBe(true);
 
     // invalid hostnames
     // -------------------------------------------------------------------------
     expect(() =>
-      validateLibraryUrl("https://xexcalidraw.com", ["excalidraw.com"]),
+      validateLibraryUrl("https://xxcalidraw.com", ["xcalidraw.com"]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://x-excalidraw.com", ["excalidraw.com"]),
+      validateLibraryUrl("https://x-xcalidraw.com", ["xcalidraw.com"]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.comx", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.comx", ["xcalidraw.com"]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.comx", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.comx", ["xcalidraw.com"]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.com.mx", ["excalidraw.com"]),
+      validateLibraryUrl("https://xcalidraw.com.mx", ["xcalidraw.com"]),
     ).toThrow();
     // protocol must be https
     expect(() =>
-      validateLibraryUrl("http://excalidraw.com.mx", ["excalidraw.com"]),
+      validateLibraryUrl("http://xcalidraw.com.mx", ["xcalidraw.com"]),
     ).toThrow();
 
     // invalid pathnames
     // -------------------------------------------------------------------------
     expect(() =>
-      validateLibraryUrl("https://excalidraw.com/specific/other/path", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/other/path", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.com/specific/paths", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/paths", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.com/specific/path-s", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/specific/path-s", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toThrow();
     expect(() =>
-      validateLibraryUrl("https://excalidraw.com/some/specific/path", [
-        "excalidraw.com/specific/path",
+      validateLibraryUrl("https://xcalidraw.com/some/specific/path", [
+        "xcalidraw.com/specific/path",
       ]),
     ).toThrow();
   });

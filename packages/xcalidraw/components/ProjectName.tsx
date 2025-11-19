@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { focusNearestParent, KEYS } from "@xcalidraw/common";
 
-import { useExcalidrawContainer } from "./App";
+import { useXcalidrawContainer } from "./App";
 
 import "./TextInput.scss";
 import "./ProjectName.scss";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const ProjectName = (props: Props) => {
-  const { id } = useExcalidrawContainer();
+  const { id } = useXcalidrawContainer();
   const [fileName, setFileName] = useState<string>(props.value);
 
   const handleBlur = (event: any) => {

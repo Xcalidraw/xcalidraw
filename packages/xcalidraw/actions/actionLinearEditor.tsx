@@ -22,8 +22,8 @@ import { newElementWith } from "../../element/src/mutateElement";
 import { register } from "./register";
 
 import type {
-  ExcalidrawLinearElement,
-  ExcalidrawLineElement,
+  XcalidrawLinearElement,
+  XcalidrawLineElement,
 } from "@xcalidraw/element/types";
 
 export const actionToggleLinearEditor = register({
@@ -32,7 +32,7 @@ export const actionToggleLinearEditor = register({
   label: (elements, appState, app) => {
     const selectedElement = app.scene.getSelectedElements({
       selectedElementIds: appState.selectedElementIds,
-    })[0] as ExcalidrawLinearElement | undefined;
+    })[0] as XcalidrawLinearElement | undefined;
 
     return selectedElement?.type === "arrow"
       ? "labels.lineEditor.editArrow"
@@ -58,7 +58,7 @@ export const actionToggleLinearEditor = register({
     const selectedElement = app.scene.getSelectedElements({
       selectedElementIds: appState.selectedElementIds,
       includeBoundTextElement: true,
-    })[0] as ExcalidrawLinearElement;
+    })[0] as XcalidrawLinearElement;
 
     invariant(selectedElement, "No selected element found");
     invariant(
@@ -86,7 +86,7 @@ export const actionToggleLinearEditor = register({
   PanelComponent: ({ appState, updateData, app }) => {
     const selectedElement = app.scene.getSelectedElements({
       selectedElementIds: appState.selectedElementIds,
-    })[0] as ExcalidrawLinearElement;
+    })[0] as XcalidrawLinearElement;
 
     if (!selectedElement) {
       return null;
@@ -149,7 +149,7 @@ export const actionTogglePolygon = register({
       return false;
     }
 
-    const targetElements = selectedElements as ExcalidrawLineElement[];
+    const targetElements = selectedElements as XcalidrawLineElement[];
 
     // if one element not a polygon, convert all to polygon
     const nextPolygonState = targetElements.some((element) => !element.polygon);

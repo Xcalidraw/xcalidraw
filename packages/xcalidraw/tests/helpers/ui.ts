@@ -30,16 +30,16 @@ import { API } from "./api";
 
 import type { TransformHandleType } from "@xcalidraw/element";
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElement,
-  ExcalidrawArrowElement,
-  ExcalidrawRectangleElement,
-  ExcalidrawEllipseElement,
-  ExcalidrawDiamondElement,
-  ExcalidrawTextContainer,
-  ExcalidrawTextElementWithContainer,
-  ExcalidrawImageElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
+  XcalidrawArrowElement,
+  XcalidrawRectangleElement,
+  XcalidrawEllipseElement,
+  XcalidrawDiamondElement,
+  XcalidrawTextContainer,
+  XcalidrawTextElementWithContainer,
+  XcalidrawImageElement,
   ElementsMap,
 } from "@xcalidraw/element/types";
 import type { GlobalPoint, LocalPoint, Radians } from "@xcalidraw/math";
@@ -149,7 +149,7 @@ export class Keyboard {
 }
 
 const getElementPointForSelection = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
 ): GlobalPoint => {
   const { x, y, width, angle } = element;
@@ -296,7 +296,7 @@ export class Pointer {
 
   select(
     /** if multiple elements supplied, they're shift-selected */
-    elements: ExcalidrawElement | ExcalidrawElement[],
+    elements: XcalidrawElement | XcalidrawElement[],
   ) {
     API.clearSelection();
 
@@ -316,7 +316,7 @@ export class Pointer {
     this.reset();
   }
 
-  clickOn(element: ExcalidrawElement) {
+  clickOn(element: XcalidrawElement) {
     this.reset();
     this.click(
       ...getElementPointForSelection(
@@ -327,7 +327,7 @@ export class Pointer {
     this.reset();
   }
 
-  doubleClickOn(element: ExcalidrawElement) {
+  doubleClickOn(element: XcalidrawElement) {
     this.reset();
     this.doubleClick(
       ...getElementPointForSelection(
@@ -342,7 +342,7 @@ export class Pointer {
 const mouse = new Pointer("mouse");
 
 const transform = (
-  element: ExcalidrawElement | ExcalidrawElement[],
+  element: XcalidrawElement | XcalidrawElement[],
   handle: TransformHandleType,
   mouseMove: [deltaX: number, deltaY: number],
   keyboardModifiers: KeyboardModifiers = {},
@@ -396,7 +396,7 @@ const transform = (
   });
 };
 
-const proxy = <T extends ExcalidrawElement>(
+const proxy = <T extends XcalidrawElement>(
   element: T,
 ): typeof element & {
   /** Returns the actual, current element from the elements array, instead of
@@ -413,7 +413,7 @@ const proxy = <T extends ExcalidrawElement>(
         if (prop === "get") {
           if (currentElement.hasOwnProperty("get")) {
             throw new Error(
-              "trying to get `get` test property, but ExcalidrawElement seems to define its own",
+              "trying to get `get` test property, but XcalidrawElement seems to define its own",
             );
           }
           return () => currentElement;
@@ -431,18 +431,18 @@ type DrawingToolName = Exclude<
 >;
 
 type Element<T extends DrawingToolName> = T extends "line" | "freedraw"
-  ? ExcalidrawLinearElement
+  ? XcalidrawLinearElement
   : T extends "arrow"
-  ? ExcalidrawArrowElement
+  ? XcalidrawArrowElement
   : T extends "text"
-  ? ExcalidrawTextElement
+  ? XcalidrawTextElement
   : T extends "rectangle"
-  ? ExcalidrawRectangleElement
+  ? XcalidrawRectangleElement
   : T extends "ellipse"
-  ? ExcalidrawEllipseElement
+  ? XcalidrawEllipseElement
   : T extends "diamond"
-  ? ExcalidrawDiamondElement
-  : ExcalidrawElement;
+  ? XcalidrawDiamondElement
+  : XcalidrawElement;
 
 export class UI {
   static clickTool = (toolName: ToolType | "lock") => {
@@ -471,7 +471,7 @@ export class UI {
   };
 
   /**
-   * Creates an Excalidraw element, and returns a proxy that wraps it so that
+   * Creates an Xcalidraw element, and returns a proxy that wraps it so that
    * accessing props will return the latest ones from the object existing in
    * the app's elements array. This is because across the app lifecycle we tend
    * to recreate element objects and the returned reference will become stale.
@@ -550,7 +550,7 @@ export class UI {
   }
 
   static async editText<
-    T extends ExcalidrawTextElement | ExcalidrawTextContainer,
+    T extends XcalidrawTextElement | XcalidrawTextContainer,
   >(element: T, text: string) {
     const openedEditor =
       document.querySelector<HTMLTextAreaElement>(TEXT_EDITOR_SELECTOR);
@@ -575,7 +575,7 @@ export class UI {
       : proxy(
           h.elements[
             h.elements.length - 1
-          ] as ExcalidrawTextElementWithContainer,
+          ] as XcalidrawTextElementWithContainer,
         );
   }
 
@@ -588,7 +588,7 @@ export class UI {
   };
 
   static resize(
-    element: ExcalidrawElement | ExcalidrawElement[],
+    element: XcalidrawElement | XcalidrawElement[],
     handle: TransformHandleDirection,
     mouseMove: [deltaX: number, deltaY: number],
     keyboardModifiers: KeyboardModifiers = {},
@@ -597,7 +597,7 @@ export class UI {
   }
 
   static crop(
-    element: ExcalidrawImageElement,
+    element: XcalidrawImageElement,
     handle: TransformHandleDirection,
     naturalWidth: number,
     naturalHeight: number,
@@ -630,21 +630,21 @@ export class UI {
   }
 
   static rotate(
-    element: ExcalidrawElement | ExcalidrawElement[],
+    element: XcalidrawElement | XcalidrawElement[],
     mouseMove: [deltaX: number, deltaY: number],
     keyboardModifiers: KeyboardModifiers = {},
   ) {
     return transform(element, "rotation", mouseMove, keyboardModifiers);
   }
 
-  static group(elements: ExcalidrawElement[]) {
+  static group(elements: XcalidrawElement[]) {
     mouse.select(elements);
     Keyboard.withModifierKeys({ ctrl: true }, () => {
       Keyboard.keyPress(KEYS.G);
     });
   }
 
-  static ungroup(elements: ExcalidrawElement[]) {
+  static ungroup(elements: XcalidrawElement[]) {
     mouse.select(elements);
     Keyboard.withModifierKeys({ ctrl: true, shift: true }, () => {
       Keyboard.keyPress(KEYS.G);

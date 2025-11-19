@@ -11,8 +11,8 @@ import { getStepSizedValue } from "./utils";
 import type { Scene } from "@xcalidraw/element";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawTextElement,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
 
@@ -20,7 +20,7 @@ import type { DragInputCallbackType } from "./DragInput";
 import type { AppState } from "../../types";
 
 interface MultiFontSizeProps {
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   scene: Scene;
   elementsMap: NonDeletedSceneElementsMap;
   appState: AppState;
@@ -31,11 +31,11 @@ const MIN_FONT_SIZE = 4;
 const STEP_SIZE = 4;
 
 const getApplicableTextElements = (
-  elements: readonly (ExcalidrawElement | undefined)[],
+  elements: readonly (XcalidrawElement | undefined)[],
   elementsMap: NonDeletedSceneElementsMap,
 ) =>
   elements.reduce(
-    (acc: ExcalidrawTextElement[], el) => {
+    (acc: XcalidrawTextElement[], el) => {
       if (!el || isInGroup(el)) {
         return acc;
       }
@@ -59,7 +59,7 @@ const getApplicableTextElements = (
 
 const handleFontSizeChange: DragInputCallbackType<
   MultiFontSizeProps["property"],
-  ExcalidrawTextElement
+  XcalidrawTextElement
 > = ({
   accumulatedChange,
   originalElements,
@@ -70,7 +70,7 @@ const handleFontSizeChange: DragInputCallbackType<
   const elementsMap = scene.getNonDeletedElementsMap();
   const latestTextElements = originalElements.map((el) =>
     elementsMap.get(el.id),
-  ) as ExcalidrawTextElement[];
+  ) as XcalidrawTextElement[];
 
   let nextFontSize;
 
@@ -91,7 +91,7 @@ const handleFontSizeChange: DragInputCallbackType<
 
     scene.triggerUpdate();
   } else {
-    const originalTextElements = originalElements as ExcalidrawTextElement[];
+    const originalTextElements = originalElements as XcalidrawTextElement[];
 
     for (let i = 0; i < latestTextElements.length; i++) {
       const latestElement = latestTextElements[i];

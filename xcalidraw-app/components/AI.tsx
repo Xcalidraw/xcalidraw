@@ -8,18 +8,18 @@ import {
 import { getDataURL } from "@xcalidraw/xcalidraw/data/blob";
 import { safelyParseJSON } from "@xcalidraw/common";
 
-import type { ExcalidrawImperativeAPI } from "@xcalidraw/xcalidraw/types";
+import type { XcalidrawImperativeAPI } from "@xcalidraw/xcalidraw/types";
 
 export const AIComponents = ({
-  excalidrawAPI,
+  xcalidrawAPI,
 }: {
-  excalidrawAPI: ExcalidrawImperativeAPI;
+  xcalidrawAPI: XcalidrawImperativeAPI;
 }) => {
   return (
     <>
       <DiagramToCodePlugin
         generate={async ({ frame, children }) => {
-          const appState = excalidrawAPI.getAppState();
+          const appState = xcalidrawAPI.getAppState();
 
           const blob = await exportToBlob({
             elements: children,
@@ -29,7 +29,7 @@ export const AIComponents = ({
               viewBackgroundColor: appState.viewBackgroundColor,
             },
             exportingFrame: frame,
-            files: excalidrawAPI.getFiles(),
+            files: xcalidrawAPI.getFiles(),
             mimeType: MIME_TYPES.jpg,
           });
 
@@ -73,7 +73,7 @@ export const AIComponents = ({
                   </br>
                   <div>You can also try <a href="${
                     import.meta.env.VITE_APP_PLUS_LP
-                  }/plus?utm_source=excalidraw&utm_medium=app&utm_content=d2c" target="_blank" rel="noopener">Excalidraw+</a> to get more requests.</div>
+                  }/plus?utm_source=xcalidraw&utm_medium=app&utm_content=d2c" target="_blank" rel="noopener">Xcalidraw+</a> to get more requests.</div>
                 </div>
                 </body>
                 </html>`,

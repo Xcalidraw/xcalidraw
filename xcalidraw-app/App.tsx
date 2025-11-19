@@ -1,5 +1,5 @@
 import {
-  Excalidraw,
+  Xcalidraw,
   LiveCollaborationTrigger,
   TTDDialogTrigger,
   CaptureUpdateAction,
@@ -67,7 +67,7 @@ import {
 } from "./app-jotai";
 import {
   FIREBASE_STORAGE_PREFIXES,
-  isExcalidrawPlusSignedUser,
+  isXcalidrawPlusSignedUser,
   STORAGE_KEYS,
   SYNC_BROWSER_TABS_TIMEOUT,
 } from "./app_constants";
@@ -80,9 +80,9 @@ import { AppFooter } from "./components/AppFooter";
 import { AppMainMenu } from "./components/AppMainMenu";
 import { AppWelcomeScreen } from "./components/AppWelcomeScreen";
 import {
-  ExportToExcalidrawPlus,
-  exportToExcalidrawPlus,
-} from "./components/ExportToExcalidrawPlus";
+  ExportToXcalidrawPlus,
+  exportToXcalidrawPlus,
+} from "./components/ExportToXcalidrawPlus";
 import { TopErrorBoundary } from "./components/TopErrorBoundary";
 
 import {
@@ -117,25 +117,25 @@ import DebugCanvas, {
   loadSavedDebugState,
 } from "./components/DebugCanvas";
 import { AIComponents } from "./components/AI";
-import { ExcalidrawPlusIframeExport } from "./ExcalidrawPlusIframeExport";
+import { XcalidrawPlusIframeExport } from "./XcalidrawPlusIframeExport";
 
 import "./index.scss";
 
-import { ExcalidrawPlusPromoBanner } from "./components/ExcalidrawPlusPromoBanner";
+import { XcalidrawPlusPromoBanner } from "./components/XcalidrawPlusPromoBanner";
 import { AppSidebar } from "./components/AppSidebar";
 
-import type { RemoteExcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
+import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
 import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
 import type {
   FileId,
-  NonDeletedExcalidrawElement,
-  OrderedExcalidrawElement,
+  NonDeletedXcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type {
   AppState,
-  ExcalidrawImperativeAPI,
+  XcalidrawImperativeAPI,
   BinaryFiles,
-  ExcalidrawInitialDataState,
+  XcalidrawInitialDataState,
   UIAppState,
 } from "@xcalidraw/xcalidraw/types";
 import type { ResolutionType } from "@xcalidraw/common/utility-types";
@@ -145,7 +145,7 @@ import type { CollabAPI } from "./collab/Collab";
 
 polyfill();
 
-window.EXCALIDRAW_THROTTLE_RENDER = true;
+window.XCALIDRAW_THROTTLE_RENDER = true;
 
 declare global {
   interface BeforeInstallPromptEventChoiceResult {
@@ -208,9 +208,9 @@ const shareableLinkConfirmDialog = {
 
 const initializeScene = async (opts: {
   collabAPI: CollabAPI | null;
-  excalidrawAPI: ExcalidrawImperativeAPI;
+  xcalidrawAPI: XcalidrawImperativeAPI;
 }): Promise<
-  { scene: ExcalidrawInitialDataState | null } & (
+  { scene: XcalidrawInitialDataState | null } & (
     | { isExternalScene: true; id: string; key: string }
     | { isExternalScene: false; id?: null; key?: null }
   )
@@ -251,7 +251,7 @@ const initializeScene = async (opts: {
         window.history.replaceState({}, APP_NAME, window.location.origin);
       }
     } else {
-      // https://github.com/excalidraw/excalidraw/issues/1919
+      // https://github.com/xcalidraw/xcalidraw/issues/1919
       if (document.hidden) {
         return new Promise((resolve, reject) => {
           window.addEventListener(
@@ -293,7 +293,7 @@ const initializeScene = async (opts: {
   }
 
   if (roomLinkData && opts.collabAPI) {
-    const { excalidrawAPI } = opts;
+    const { xcalidrawAPI } = opts;
 
     const scene = await opts.collabAPI.startCollaboration(roomLinkData);
 
@@ -309,7 +309,7 @@ const initializeScene = async (opts: {
               ...scene?.appState,
               theme: localDataState?.appState?.theme || scene?.appState?.theme,
             },
-            excalidrawAPI.getAppState(),
+            xcalidrawAPI.getAppState(),
           ),
           // necessary if we're invoking from a hashchange handler which doesn't
           // go through App.initializeScene() that resets this flag
@@ -317,8 +317,8 @@ const initializeScene = async (opts: {
         },
         elements: reconcileElements(
           scene?.elements || [],
-          excalidrawAPI.getSceneElementsIncludingDeleted() as RemoteExcalidrawElement[],
-          excalidrawAPI.getAppState(),
+          xcalidrawAPI.getSceneElementsIncludingDeleted() as RemoteXcalidrawElement[],
+          xcalidrawAPI.getAppState(),
         ),
       },
       isExternalScene: true,
@@ -338,7 +338,7 @@ const initializeScene = async (opts: {
   return { scene: null, isExternalScene: false };
 };
 
-const ExcalidrawWrapper = () => {
+const XcalidrawWrapper = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const isCollabDisabled = isRunningInIframe();
 
@@ -352,11 +352,11 @@ const ExcalidrawWrapper = () => {
   // ---------------------------------------------------------------------------
 
   const initialStatePromiseRef = useRef<{
-    promise: ResolvablePromise<ExcalidrawInitialDataState | null>;
+    promise: ResolvablePromise<XcalidrawInitialDataState | null>;
   }>({ promise: null! });
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
-      resolvablePromise<ExcalidrawInitialDataState | null>();
+      resolvablePromise<XcalidrawInitialDataState | null>();
   }
 
   const debugCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -369,8 +369,8 @@ const ExcalidrawWrapper = () => {
     }, VERSION_TIMEOUT);
   }, []);
 
-  const [excalidrawAPI, excalidrawRefCallback] =
-    useCallbackRefState<ExcalidrawImperativeAPI>();
+  const [xcalidrawAPI, xcalidrawRefCallback] =
+    useCallbackRefState<XcalidrawImperativeAPI>();
 
   const [, setShareDialogState] = useAtom(shareDialogStateAtom);
   const [collabAPI] = useAtom(collabAPIAtom);
@@ -380,7 +380,7 @@ const ExcalidrawWrapper = () => {
   const collabError = useAtomValue(collabErrorIndicatorAtom);
 
   useHandleLibrary({
-    excalidrawAPI,
+    xcalidrawAPI,
     adapter: LibraryIndexedDBAdapter,
     // TODO maybe remove this in several months (shipped: 24-03-11)
     migrationAdapter: LibraryLocalStorageMigrationAdapter,
@@ -401,10 +401,10 @@ const ExcalidrawWrapper = () => {
       }
       forceRefresh((prev) => !prev);
     }
-  }, [excalidrawAPI]);
+  }, [xcalidrawAPI]);
 
   useEffect(() => {
-    if (!excalidrawAPI || (!isCollabDisabled && !collabAPI)) {
+    if (!xcalidrawAPI || (!isCollabDisabled && !collabAPI)) {
       return;
     }
 
@@ -423,11 +423,11 @@ const ExcalidrawWrapper = () => {
               forceFetchFiles: true,
             })
             .then(({ loadedFiles, erroredFiles }) => {
-              excalidrawAPI.addFiles(loadedFiles);
+              xcalidrawAPI.addFiles(loadedFiles);
               updateStaleImageStatuses({
-                excalidrawAPI,
+                xcalidrawAPI,
                 erroredFiles,
-                elements: excalidrawAPI.getSceneElementsIncludingDeleted(),
+                elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
               });
             });
         }
@@ -446,11 +446,11 @@ const ExcalidrawWrapper = () => {
             data.key,
             fileIds,
           ).then(({ loadedFiles, erroredFiles }) => {
-            excalidrawAPI.addFiles(loadedFiles);
+            xcalidrawAPI.addFiles(loadedFiles);
             updateStaleImageStatuses({
-              excalidrawAPI,
+              xcalidrawAPI,
               erroredFiles,
-              elements: excalidrawAPI.getSceneElementsIncludingDeleted(),
+              elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
             });
           });
         } else if (isInitialLoad) {
@@ -459,12 +459,12 @@ const ExcalidrawWrapper = () => {
               .getFiles(fileIds)
               .then(({ loadedFiles, erroredFiles }) => {
                 if (loadedFiles.length) {
-                  excalidrawAPI.addFiles(loadedFiles);
+                  xcalidrawAPI.addFiles(loadedFiles);
                 }
                 updateStaleImageStatuses({
-                  excalidrawAPI,
+                  xcalidrawAPI,
                   erroredFiles,
-                  elements: excalidrawAPI.getSceneElementsIncludingDeleted(),
+                  elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
                 });
               });
           }
@@ -475,7 +475,7 @@ const ExcalidrawWrapper = () => {
       }
     };
 
-    initializeScene({ collabAPI, excalidrawAPI }).then(async (data) => {
+    initializeScene({ collabAPI, xcalidrawAPI }).then(async (data) => {
       loadImages(data, /* isInitialLoad */ true);
       initialStatePromiseRef.current.promise.resolve(data.scene);
     });
@@ -490,12 +490,12 @@ const ExcalidrawWrapper = () => {
         ) {
           collabAPI.stopCollaboration(false);
         }
-        excalidrawAPI.updateScene({ appState: { isLoading: true } });
+        xcalidrawAPI.updateScene({ appState: { isLoading: true } });
 
-        initializeScene({ collabAPI, excalidrawAPI }).then((data) => {
+        initializeScene({ collabAPI, xcalidrawAPI }).then((data) => {
           loadImages(data);
           if (data.scene) {
-            excalidrawAPI.updateScene({
+            xcalidrawAPI.updateScene({
               ...data.scene,
               ...restore(data.scene, null, null, { repairBindings: true }),
               captureUpdate: CaptureUpdateAction.IMMEDIATELY,
@@ -518,13 +518,13 @@ const ExcalidrawWrapper = () => {
           const localDataState = importFromLocalStorage();
           const username = importUsernameFromLocalStorage();
           setLangCode(getPreferredLanguage());
-          excalidrawAPI.updateScene({
+          xcalidrawAPI.updateScene({
             ...localDataState,
             captureUpdate: CaptureUpdateAction.NEVER,
           });
           LibraryIndexedDBAdapter.load().then((data) => {
             if (data) {
-              excalidrawAPI.updateLibrary({
+              xcalidrawAPI.updateLibrary({
                 libraryItems: data.libraryItems,
               });
             }
@@ -533,8 +533,8 @@ const ExcalidrawWrapper = () => {
         }
 
         if (isBrowserStorageStateNewer(STORAGE_KEYS.VERSION_FILES)) {
-          const elements = excalidrawAPI.getSceneElementsIncludingDeleted();
-          const currFiles = excalidrawAPI.getFiles();
+          const elements = xcalidrawAPI.getSceneElementsIncludingDeleted();
+          const currFiles = xcalidrawAPI.getFiles();
           const fileIds =
             elements?.reduce((acc, element) => {
               if (
@@ -551,12 +551,12 @@ const ExcalidrawWrapper = () => {
               .getFiles(fileIds)
               .then(({ loadedFiles, erroredFiles }) => {
                 if (loadedFiles.length) {
-                  excalidrawAPI.addFiles(loadedFiles);
+                  xcalidrawAPI.addFiles(loadedFiles);
                 }
                 updateStaleImageStatuses({
-                  excalidrawAPI,
+                  xcalidrawAPI,
                   erroredFiles,
-                  elements: excalidrawAPI.getSceneElementsIncludingDeleted(),
+                  elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
                 });
               });
           }
@@ -596,16 +596,16 @@ const ExcalidrawWrapper = () => {
         false,
       );
     };
-  }, [isCollabDisabled, collabAPI, excalidrawAPI, setLangCode]);
+  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode]);
 
   useEffect(() => {
     const unloadHandler = (event: BeforeUnloadEvent) => {
       LocalData.flushSave();
 
       if (
-        excalidrawAPI &&
+        xcalidrawAPI &&
         LocalData.fileStorage.shouldPreventUnload(
-          excalidrawAPI.getSceneElements(),
+          xcalidrawAPI.getSceneElements(),
         )
       ) {
         if (import.meta.env.VITE_APP_DISABLE_PREVENT_UNLOAD !== "true") {
@@ -621,10 +621,10 @@ const ExcalidrawWrapper = () => {
     return () => {
       window.removeEventListener(EVENT.BEFORE_UNLOAD, unloadHandler);
     };
-  }, [excalidrawAPI]);
+  }, [xcalidrawAPI]);
 
   const onChange = (
-    elements: readonly OrderedExcalidrawElement[],
+    elements: readonly OrderedXcalidrawElement[],
     appState: AppState,
     files: BinaryFiles,
   ) => {
@@ -636,10 +636,10 @@ const ExcalidrawWrapper = () => {
     // not to evaludate the nested expression every time
     if (!LocalData.isSavePaused()) {
       LocalData.save(elements, appState, files, () => {
-        if (excalidrawAPI) {
+        if (xcalidrawAPI) {
           let didChange = false;
 
-          const elements = excalidrawAPI
+          const elements = xcalidrawAPI
             .getSceneElementsIncludingDeleted()
             .map((element) => {
               if (
@@ -655,7 +655,7 @@ const ExcalidrawWrapper = () => {
             });
 
           if (didChange) {
-            excalidrawAPI.updateScene({
+            xcalidrawAPI.updateScene({
               elements,
               captureUpdate: CaptureUpdateAction.NEVER,
             });
@@ -665,7 +665,7 @@ const ExcalidrawWrapper = () => {
     }
 
     // Render the debug scene if the debug canvas is available
-    if (debugCanvasRef.current && excalidrawAPI) {
+    if (debugCanvasRef.current && xcalidrawAPI) {
       debugRenderer(
         debugCanvasRef.current,
         appState,
@@ -680,7 +680,7 @@ const ExcalidrawWrapper = () => {
   );
 
   const onExportToBackend = async (
-    exportedElements: readonly NonDeletedExcalidrawElement[],
+    exportedElements: readonly NonDeletedXcalidrawElement[],
     appState: Partial<AppState>,
     files: BinaryFiles,
   ) => {
@@ -720,12 +720,12 @@ const ExcalidrawWrapper = () => {
   };
 
   const renderCustomStats = (
-    elements: readonly NonDeletedExcalidrawElement[],
+    elements: readonly NonDeletedXcalidrawElement[],
     appState: UIAppState,
   ) => {
     return (
       <CustomStats
-        setToast={(message) => excalidrawAPI!.setToast({ message })}
+        setToast={(message) => xcalidrawAPI!.setToast({ message })}
         appState={appState}
         elements={elements}
       />
@@ -760,8 +760,8 @@ const ExcalidrawWrapper = () => {
     );
   }
 
-  const ExcalidrawPlusCommand = {
-    label: "Excalidraw+",
+  const XcalidrawPlusCommand = {
+    label: "Xcalidraw+",
     category: DEFAULT_CATEGORIES.links,
     predicate: true,
     icon: <div style={{ width: 14 }}>{ExcalLogo}</div>,
@@ -770,18 +770,18 @@ const ExcalidrawWrapper = () => {
       window.open(
         `${
           import.meta.env.VITE_APP_PLUS_LP
-        }/plus?utm_source=excalidraw&utm_medium=app&utm_content=command_palette`,
+        }/plus?utm_source=xcalidraw&utm_medium=app&utm_content=command_palette`,
         "_blank",
       );
     },
   };
-  const ExcalidrawPlusAppCommand = {
+  const XcalidrawPlusAppCommand = {
     label: "Sign up",
     category: DEFAULT_CATEGORIES.links,
     predicate: true,
     icon: <div style={{ width: 14 }}>{ExcalLogo}</div>,
     keywords: [
-      "excalidraw",
+      "xcalidraw",
       "plus",
       "cloud",
       "server",
@@ -793,7 +793,7 @@ const ExcalidrawWrapper = () => {
       window.open(
         `${
           import.meta.env.VITE_APP_PLUS_APP
-        }?utm_source=excalidraw&utm_medium=app&utm_content=command_palette`,
+        }?utm_source=xcalidraw&utm_medium=app&utm_content=command_palette`,
         "_blank",
       );
     },
@@ -802,12 +802,12 @@ const ExcalidrawWrapper = () => {
   return (
     <div
       style={{ height: "100%" }}
-      className={clsx("excalidraw-app", {
+      className={clsx("xcalidraw-app", {
         "is-collaborating": isCollaborating,
       })}
     >
-      <Excalidraw
-        excalidrawAPI={excalidrawRefCallback}
+      <Xcalidraw
+        xcalidrawAPI={xcalidrawRefCallback}
         onChange={onChange}
         initialData={initialStatePromiseRef.current.promise}
         isCollaborating={isCollaborating}
@@ -817,23 +817,23 @@ const ExcalidrawWrapper = () => {
             toggleTheme: true,
             export: {
               onExportToBackend,
-              renderCustomUI: excalidrawAPI
+              renderCustomUI: xcalidrawAPI
                 ? (elements, appState, files) => {
                     return (
-                      <ExportToExcalidrawPlus
+                      <ExportToXcalidrawPlus
                         elements={elements}
                         appState={appState}
                         files={files}
-                        name={excalidrawAPI.getName()}
+                        name={xcalidrawAPI.getName()}
                         onError={(error) => {
-                          excalidrawAPI?.updateScene({
+                          xcalidrawAPI?.updateScene({
                             appState: {
                               errorMessage: error.message,
                             },
                           });
                         }}
                         onSuccess={() => {
-                          excalidrawAPI.updateScene({
+                          xcalidrawAPI.updateScene({
                             appState: { openDialog: null },
                           });
                         }}
@@ -856,10 +856,10 @@ const ExcalidrawWrapper = () => {
           }
 
           return (
-            <div className="excalidraw-ui-top-right">
-              {excalidrawAPI?.getEditorInterface().formFactor === "desktop" && (
-                <ExcalidrawPlusPromoBanner
-                  isSignedIn={isExcalidrawPlusSignedUser}
+            <div className="xcalidraw-ui-top-right">
+              {xcalidrawAPI?.getEditorInterface().formFactor === "desktop" && (
+                <XcalidrawPlusPromoBanner
+                  isSignedIn={isXcalidrawPlusSignedUser}
                 />
               )}
 
@@ -877,7 +877,7 @@ const ExcalidrawWrapper = () => {
         onLinkOpen={(element, event) => {
           if (element.link && isElementLink(element.link)) {
             event.preventDefault();
-            excalidrawAPI?.scrollToContent(element.link, { animate: true });
+            xcalidrawAPI?.scrollToContent(element.link, { animate: true });
           }
         }}
       >
@@ -896,25 +896,25 @@ const ExcalidrawWrapper = () => {
         <OverwriteConfirmDialog>
           <OverwriteConfirmDialog.Actions.ExportToImage />
           <OverwriteConfirmDialog.Actions.SaveToDisk />
-          {excalidrawAPI && (
+          {xcalidrawAPI && (
             <OverwriteConfirmDialog.Action
-              title={t("overwriteConfirm.action.excalidrawPlus.title")}
-              actionLabel={t("overwriteConfirm.action.excalidrawPlus.button")}
+              title={t("overwriteConfirm.action.xcalidrawPlus.title")}
+              actionLabel={t("overwriteConfirm.action.xcalidrawPlus.button")}
               onClick={() => {
-                exportToExcalidrawPlus(
-                  excalidrawAPI.getSceneElements(),
-                  excalidrawAPI.getAppState(),
-                  excalidrawAPI.getFiles(),
-                  excalidrawAPI.getName(),
+                exportToXcalidrawPlus(
+                  xcalidrawAPI.getSceneElements(),
+                  xcalidrawAPI.getAppState(),
+                  xcalidrawAPI.getFiles(),
+                  xcalidrawAPI.getName(),
                 );
               }}
             >
-              {t("overwriteConfirm.action.excalidrawPlus.description")}
+              {t("overwriteConfirm.action.xcalidrawPlus.description")}
             </OverwriteConfirmDialog.Action>
           )}
         </OverwriteConfirmDialog>
-        <AppFooter onChange={() => excalidrawAPI?.refresh()} />
-        {excalidrawAPI && <AIComponents excalidrawAPI={excalidrawAPI} />}
+        <AppFooter onChange={() => xcalidrawAPI?.refresh()} />
+        {xcalidrawAPI && <AIComponents xcalidrawAPI={xcalidrawAPI} />}
 
         <TTDDialogTrigger />
         {isCollaborating && isOffline && (
@@ -934,19 +934,19 @@ const ExcalidrawWrapper = () => {
             setErrorMessage={setErrorMessage}
           />
         )}
-        {excalidrawAPI && !isCollabDisabled && (
-          <Collab excalidrawAPI={excalidrawAPI} />
+        {xcalidrawAPI && !isCollabDisabled && (
+          <Collab xcalidrawAPI={xcalidrawAPI} />
         )}
 
         <ShareDialog
           collabAPI={collabAPI}
           onExportToBackend={async () => {
-            if (excalidrawAPI) {
+            if (xcalidrawAPI) {
               try {
                 await onExportToBackend(
-                  excalidrawAPI.getSceneElements(),
-                  excalidrawAPI.getAppState(),
-                  excalidrawAPI.getFiles(),
+                  xcalidrawAPI.getSceneElements(),
+                  xcalidrawAPI.getAppState(),
+                  xcalidrawAPI.getFiles(),
                 );
               } catch (error: any) {
                 setErrorMessage(error.message);
@@ -1042,7 +1042,7 @@ const ExcalidrawWrapper = () => {
               ],
               perform: () => {
                 window.open(
-                  "https://github.com/excalidraw/excalidraw",
+                  "https://github.com/xcalidraw/xcalidraw",
                   "_blank",
                   "noopener noreferrer",
                 );
@@ -1056,7 +1056,7 @@ const ExcalidrawWrapper = () => {
               keywords: ["twitter", "contact", "social", "community"],
               perform: () => {
                 window.open(
-                  "https://x.com/excalidraw",
+                  "https://x.com/xcalidraw",
                   "_blank",
                   "noopener noreferrer",
                 );
@@ -1095,34 +1095,34 @@ const ExcalidrawWrapper = () => {
               keywords: ["features", "tutorials", "howto", "help", "community"],
               perform: () => {
                 window.open(
-                  "https://youtube.com/@excalidraw",
+                  "https://youtube.com/@xcalidraw",
                   "_blank",
                   "noopener noreferrer",
                 );
               },
             },
-            ...(isExcalidrawPlusSignedUser
+            ...(isXcalidrawPlusSignedUser
               ? [
                   {
-                    ...ExcalidrawPlusAppCommand,
-                    label: "Sign in / Go to Excalidraw+",
+                    ...XcalidrawPlusAppCommand,
+                    label: "Sign in / Go to Xcalidraw+",
                   },
                 ]
-              : [ExcalidrawPlusCommand, ExcalidrawPlusAppCommand]),
+              : [XcalidrawPlusCommand, XcalidrawPlusAppCommand]),
 
             {
-              label: t("overwriteConfirm.action.excalidrawPlus.button"),
+              label: t("overwriteConfirm.action.xcalidrawPlus.button"),
               category: DEFAULT_CATEGORIES.export,
               icon: exportToPlus,
               predicate: true,
               keywords: ["plus", "export", "save", "backup"],
               perform: () => {
-                if (excalidrawAPI) {
-                  exportToExcalidrawPlus(
-                    excalidrawAPI.getSceneElements(),
-                    excalidrawAPI.getAppState(),
-                    excalidrawAPI.getFiles(),
-                    excalidrawAPI.getName(),
+                if (xcalidrawAPI) {
+                  exportToXcalidrawPlus(
+                    xcalidrawAPI.getSceneElements(),
+                    xcalidrawAPI.getAppState(),
+                    xcalidrawAPI.getFiles(),
+                    xcalidrawAPI.getName(),
                   );
                 }
               },
@@ -1152,32 +1152,32 @@ const ExcalidrawWrapper = () => {
             },
           ]}
         />
-        {isVisualDebuggerEnabled() && excalidrawAPI && (
+        {isVisualDebuggerEnabled() && xcalidrawAPI && (
           <DebugCanvas
-            appState={excalidrawAPI.getAppState()}
+            appState={xcalidrawAPI.getAppState()}
             scale={window.devicePixelRatio}
             ref={debugCanvasRef}
           />
         )}
-      </Excalidraw>
+      </Xcalidraw>
     </div>
   );
 };
 
-const ExcalidrawApp = () => {
+const XcalidrawApp = () => {
   const isCloudExportWindow =
-    window.location.pathname === "/excalidraw-plus-export";
+    window.location.pathname === "/xcalidraw-plus-export";
   if (isCloudExportWindow) {
-    return <ExcalidrawPlusIframeExport />;
+    return <XcalidrawPlusIframeExport />;
   }
 
   return (
     <TopErrorBoundary>
       <Provider store={appJotaiStore}>
-        <ExcalidrawWrapper />
+        <XcalidrawWrapper />
       </Provider>
     </TopErrorBoundary>
   );
 };
 
-export default ExcalidrawApp;
+export default XcalidrawApp;

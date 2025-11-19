@@ -10,7 +10,7 @@ import { newLinearElement } from "@xcalidraw/element";
 
 import { actionFlipHorizontal, actionFlipVertical } from "../actions";
 import { createPasteEvent } from "../clipboard";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 // Importing to spy on it and mock the implementation (mocking does not work with simple vi.mock for some reason)
 import * as blobModule from "../data/blob";
@@ -32,10 +32,10 @@ import { getTextEditor } from "./queries/dom";
 import { mockHTMLImageElement } from "./helpers/mocks";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawImageElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElementWithContainer,
+  XcalidrawElement,
+  XcalidrawImageElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElementWithContainer,
   FileId,
 } from "@xcalidraw/element/types";
 
@@ -65,7 +65,7 @@ beforeEach(async () => {
   Object.assign(document, {
     elementFromPoint: () => GlobalTestState.canvas,
   });
-  await render(<Excalidraw autoFocus={true} handleKeyboardGlobally={true} />);
+  await render(<Xcalidraw autoFocus={true} handleKeyboardGlobally={true} />);
   API.setAppState({
     zoom: {
       value: 1 as NormalizedZoomValue,
@@ -198,8 +198,8 @@ const createLinearElementsWithCurveOutsideMinMaxPoints = (
 };
 
 const checkElementsBoundingBox = async (
-  element1: ExcalidrawElement,
-  element2: ExcalidrawElement,
+  element1: XcalidrawElement,
+  element2: XcalidrawElement,
   toleranceInPx: number = 0,
 ) => {
   const elementsMap = arrayToMap([element1, element2]);
@@ -222,9 +222,9 @@ const checkHorizontalFlip = async (toleranceInPx: number = 0.00001) => {
 };
 
 const checkTwoPointsLineHorizontalFlip = async () => {
-  const originalElement = cloneJSON(h.elements[0]) as ExcalidrawLinearElement;
+  const originalElement = cloneJSON(h.elements[0]) as XcalidrawLinearElement;
   API.executeAction(actionFlipHorizontal);
-  const newElement = h.elements[0] as ExcalidrawLinearElement;
+  const newElement = h.elements[0] as XcalidrawLinearElement;
   await waitFor(() => {
     expect(originalElement.points[0][0]).toBeCloseTo(
       -newElement.points[0][0],
@@ -246,9 +246,9 @@ const checkTwoPointsLineHorizontalFlip = async () => {
 };
 
 const checkTwoPointsLineVerticalFlip = async () => {
-  const originalElement = cloneJSON(h.elements[0]) as ExcalidrawLinearElement;
+  const originalElement = cloneJSON(h.elements[0]) as XcalidrawLinearElement;
   API.executeAction(actionFlipVertical);
-  const newElement = h.elements[0] as ExcalidrawLinearElement;
+  const newElement = h.elements[0] as XcalidrawLinearElement;
   await waitFor(() => {
     expect(originalElement.points[0][0]).toBeCloseTo(
       newElement.points[0][0],
@@ -775,13 +775,13 @@ describe("image", () => {
     //paste image
     await createImage();
     await waitFor(() => {
-      expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, 1]);
+      expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, 1]);
       expect(API.getSelectedElements().length).toBeGreaterThan(0);
       expect(API.getSelectedElements()[0].type).toEqual("image");
       expect(h.app.files.fileId).toBeDefined();
     });
     await checkHorizontalFlip();
-    expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([-1, 1]);
+    expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([-1, 1]);
     expect(h.elements[0].angle).toBeCloseTo(0);
   });
 
@@ -789,14 +789,14 @@ describe("image", () => {
     //paste image
     await createImage();
     await waitFor(() => {
-      expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, 1]);
+      expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, 1]);
       expect(API.getSelectedElements().length).toBeGreaterThan(0);
       expect(API.getSelectedElements()[0].type).toEqual("image");
       expect(h.app.files.fileId).toBeDefined();
     });
 
     await checkVerticalFlip();
-    expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, -1]);
+    expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, -1]);
     expect(h.elements[0].angle).toBeCloseTo(0);
   });
 
@@ -806,7 +806,7 @@ describe("image", () => {
     //paste image
     await createImage();
     await waitFor(() => {
-      expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, 1]);
+      expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, 1]);
       expect(API.getSelectedElements().length).toBeGreaterThan(0);
       expect(API.getSelectedElements()[0].type).toEqual("image");
       expect(h.app.files.fileId).toBeDefined();
@@ -815,7 +815,7 @@ describe("image", () => {
       angle: originalAngle,
     });
     await checkRotatedHorizontalFlip(expectedAngle);
-    expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([-1, 1]);
+    expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([-1, 1]);
   });
 
   it("flips an rotated image vertically correctly", async () => {
@@ -824,7 +824,7 @@ describe("image", () => {
     //paste image
     await createImage();
     await waitFor(() => {
-      expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, 1]);
+      expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, 1]);
       expect(h.elements[0].angle).toEqual(0);
       expect(API.getSelectedElements().length).toBeGreaterThan(0);
       expect(API.getSelectedElements()[0].type).toEqual("image");
@@ -835,7 +835,7 @@ describe("image", () => {
     });
 
     await checkRotatedVerticalFlip(expectedAngle);
-    expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, -1]);
+    expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, -1]);
     expect(h.elements[0].angle).toBeCloseTo(expectedAngle);
   });
 
@@ -843,14 +843,14 @@ describe("image", () => {
     //paste image
     await createImage();
     await waitFor(() => {
-      expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([1, 1]);
+      expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([1, 1]);
       expect(API.getSelectedElements().length).toBeGreaterThan(0);
       expect(API.getSelectedElements()[0].type).toEqual("image");
       expect(h.app.files.fileId).toBeDefined();
     });
 
     await checkVerticalHorizontalFlip();
-    expect((h.elements[0] as ExcalidrawImageElement).scale).toEqual([-1, -1]);
+    expect((h.elements[0] as XcalidrawImageElement).scale).toEqual([-1, -1]);
     expect(h.elements[0].angle).toBeCloseTo(0);
   });
 });
@@ -887,13 +887,13 @@ describe("mutliple elements", () => {
     API.executeAction(actionFlipHorizontal);
     API.executeAction(actionFlipVertical);
 
-    const arrowText = h.elements[1] as ExcalidrawTextElementWithContainer;
+    const arrowText = h.elements[1] as XcalidrawTextElementWithContainer;
     const arrowTextPos = getBoundTextElementPosition(
       arrow.get(),
       arrowText,
       arrayToMap(h.elements),
     )!;
-    const rectText = h.elements[3] as ExcalidrawTextElementWithContainer;
+    const rectText = h.elements[3] as XcalidrawTextElementWithContainer;
 
     expect(arrow.x).toBeCloseTo(180);
     expect(arrow.y).toBeCloseTo(200);

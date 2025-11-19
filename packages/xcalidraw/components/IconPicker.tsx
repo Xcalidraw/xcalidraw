@@ -8,7 +8,7 @@ import { atom, useAtom } from "../editor-jotai";
 import { getLanguage, t } from "../i18n";
 
 import Collapsible from "./Stats/Collapsible";
-import { useEditorInterface, useExcalidrawContainer } from "./App";
+import { useEditorInterface, useXcalidrawContainer } from "./App";
 
 import "./IconPicker.scss";
 
@@ -39,7 +39,7 @@ function Picker<T>({
   numberOfOptionsToAlwaysShow?: number;
 }) {
   const editorInterface = useEditorInterface();
-  const { container } = useExcalidrawContainer();
+  const { container } = useXcalidrawContainer();
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const pressedOption = options.find(

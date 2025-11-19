@@ -1,12 +1,14 @@
 import React from "react";
+import { vi } from "vitest";
 
-import { SVG_NS } from "@xcalidraw/common";
+import { SVG_NS, randomId } from "@xcalidraw/common";
 
 import { getDefaultAppState } from "../appState";
 import { getDataURL } from "../data/blob";
+import * as blobModule from "../data/blob";
 import { encodePngMetadata } from "../data/image";
 import { serializeAsJSON } from "../data/json";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import {
   decodeSvgBase64Payload,
   encodeSvgBase64Payload,
@@ -22,7 +24,7 @@ const { h } = window;
 
 const testElements = [
   {
-    ...API.createElement({
+    ...API.createElement<"text">({
       type: "text",
       id: "A",
       text: "😀",
@@ -48,7 +50,7 @@ Object.defineProperty(window, "TextDecoder", {
 
 describe("export", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("export embedded png and reimport", async () => {
@@ -153,7 +155,7 @@ describe("export", () => {
     const normalizeAngle = (angle: number) => (angle / 180) * Math.PI;
 
     const elements = [
-      API.createElement({
+      API.createElement<"image">({
         type: "image",
         fileId: "file_A",
         x: 0,
@@ -163,7 +165,7 @@ describe("export", () => {
         height: 100,
         angle: normalizeAngle(315),
       }),
-      API.createElement({
+      API.createElement<"image">({
         type: "image",
         fileId: "file_A",
         x: 100,
@@ -173,7 +175,7 @@ describe("export", () => {
         height: 50,
         angle: normalizeAngle(45),
       }),
-      API.createElement({
+      API.createElement<"image">({
         type: "image",
         fileId: "file_A",
         x: 0,
@@ -183,7 +185,7 @@ describe("export", () => {
         height: 100,
         angle: normalizeAngle(45),
       }),
-      API.createElement({
+      API.createElement<"image">({
         type: "image",
         fileId: "file_A",
         x: 100,
@@ -211,7 +213,7 @@ describe("export", () => {
 
     // expect 1 <image> element (deduped)
     expect(svgText.match(/<image/g)?.length).toBe(1);
-    // expect 4 <use> elements (one for each excalidraw image element)
+    // expect 4 <use> elements (one for each xcalidraw image element)
     expect(svgText.match(/<use/g)?.length).toBe(4);
 
     // in case of regressions, save the SVG to a file and visually compare to:

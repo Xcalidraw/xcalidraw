@@ -20,7 +20,7 @@ import {
 
 import type { AppState, Offsets, Zoom } from "@xcalidraw/xcalidraw/types";
 
-import type { ElementsMap, ExcalidrawElement } from "./types";
+import type { ElementsMap, XcalidrawElement } from "./types";
 
 export const INVISIBLY_SMALL_ELEMENT_SIZE = 0.1;
 
@@ -28,7 +28,7 @@ export const INVISIBLY_SMALL_ELEMENT_SIZE = 0.1;
 //        - perhaps could be as part of a standalone 'cleanup' action, in addition to 'finalize'
 //        - could also be part of `_clearElements`
 export const isInvisiblySmallElement = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
 ): boolean => {
   if (isLinearElement(element) || isFreeDrawElement(element)) {
     return (
@@ -47,7 +47,7 @@ export const isInvisiblySmallElement = (
 };
 
 export const isElementInViewport = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   width: number,
   height: number,
   viewTransformations: {
@@ -84,7 +84,7 @@ export const isElementInViewport = (
 };
 
 export const isElementCompletelyInViewport = (
-  elements: ExcalidrawElement[],
+  elements: XcalidrawElement[],
   width: number,
   height: number,
   viewTransformations: {
@@ -223,12 +223,12 @@ export const getLockedLinearCursorAlignSize = (
 };
 
 export const getNormalizedDimensions = (
-  element: Pick<ExcalidrawElement, "width" | "height" | "x" | "y">,
+  element: Pick<XcalidrawElement, "width" | "height" | "x" | "y">,
 ): {
-  width: ExcalidrawElement["width"];
-  height: ExcalidrawElement["height"];
-  x: ExcalidrawElement["x"];
-  y: ExcalidrawElement["y"];
+  width: XcalidrawElement["width"];
+  height: XcalidrawElement["height"];
+  x: XcalidrawElement["x"];
+  y: XcalidrawElement["y"];
 } => {
   const ret = {
     width: element.width,

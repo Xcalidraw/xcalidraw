@@ -8,9 +8,9 @@ import { useCallbackRefState } from "../hooks/useCallbackRefState";
 import { t } from "../i18n";
 
 import {
-  useExcalidrawContainer,
+  useXcalidrawContainer,
   useEditorInterface,
-  useExcalidrawSetAppState,
+  useXcalidrawSetAppState,
 } from "./App";
 import { Island } from "./Island";
 import { isLibraryMenuOpenAtom } from "./LibraryMenu";
@@ -50,7 +50,7 @@ function getDialogSize(size: DialogSize): number {
 export const Dialog = (props: DialogProps) => {
   const [islandNode, setIslandNode] = useCallbackRefState<HTMLDivElement>();
   const [lastActiveElement] = useState(document.activeElement);
-  const { id } = useExcalidrawContainer();
+  const { id } = useXcalidrawContainer();
   const isFullscreen = useEditorInterface().formFactor === "phone";
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const Dialog = (props: DialogProps) => {
     return () => islandNode.removeEventListener("keydown", handleKeyDown);
   }, [islandNode, props.autofocus]);
 
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const setIsLibraryMenuOpen = useSetAtom(isLibraryMenuOpenAtom);
 
   const onClose = () => {

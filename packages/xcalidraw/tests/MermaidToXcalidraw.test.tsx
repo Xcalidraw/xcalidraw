@@ -1,15 +1,15 @@
 import React from "react";
 import { expect } from "vitest";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
-import { mockMermaidToExcalidraw } from "./helpers/mocks";
+import { mockMermaidToXcalidraw } from "./helpers/mocks";
 import { getTextEditor, updateTextEditor } from "./queries/dom";
 import { render, waitFor } from "./test-utils";
 
-mockMermaidToExcalidraw({
+mockMermaidToXcalidraw({
   mockRef: true,
-  parseMermaidToExcalidraw: async (definition) => {
+  parseMermaidToXcalidraw: async (definition) => {
     const firstLine = definition.split("\n")[0];
     return new Promise((resolve, reject) => {
       if (firstLine === "flowchart TD") {
@@ -77,10 +77,10 @@ mockMermaidToExcalidraw({
   },
 });
 
-describe("Test <MermaidToExcalidraw/>", () => {
+describe("Test <MermaidToXcalidraw/>", () => {
   beforeEach(async () => {
     await render(
-      <Excalidraw
+      <Xcalidraw
         initialData={{
           appState: {
             openDialog: { name: "ttd", tab: "mermaid" },

@@ -85,25 +85,25 @@ import type {
   ConvertibleGenericTypes,
   ConvertibleLinearTypes,
   ConvertibleTypes,
-  ExcalidrawDiamondElement,
-  ExcalidrawElement,
-  ExcalidrawEllipseElement,
-  ExcalidrawLinearElement,
-  ExcalidrawRectangleElement,
-  ExcalidrawSelectionElement,
-  ExcalidrawTextContainer,
-  ExcalidrawTextElementWithContainer,
+  XcalidrawDiamondElement,
+  XcalidrawElement,
+  XcalidrawEllipseElement,
+  XcalidrawLinearElement,
+  XcalidrawRectangleElement,
+  XcalidrawSelectionElement,
+  XcalidrawTextContainer,
+  XcalidrawTextElementWithContainer,
   FixedSegment,
 } from "@xcalidraw/element/types";
 
 const GAP_HORIZONTAL = 8;
 const GAP_VERTICAL = 10;
 
-type ExcalidrawConvertibleElement =
-  | ExcalidrawRectangleElement
-  | ExcalidrawDiamondElement
-  | ExcalidrawEllipseElement
-  | ExcalidrawLinearElement;
+type XcalidrawConvertibleElement =
+  | XcalidrawRectangleElement
+  | XcalidrawDiamondElement
+  | XcalidrawEllipseElement
+  | XcalidrawLinearElement;
 
 // indicates order of switching
 const GENERIC_TYPES = ["rectangle", "diamond", "ellipse"] as const;
@@ -141,7 +141,7 @@ export const convertElementTypePopupAtom = atom<{
 type CacheKey = string & { _brand: "CacheKey" };
 
 const FONT_SIZE_CONVERSION_CACHE = new Map<
-  ExcalidrawElement["id"],
+  XcalidrawElement["id"],
   {
     fontSize: number;
   }
@@ -149,7 +149,7 @@ const FONT_SIZE_CONVERSION_CACHE = new Map<
 
 const LINEAR_ELEMENT_CONVERSION_CACHE = new Map<
   CacheKey,
-  ExcalidrawLinearElement
+  XcalidrawLinearElement
 >();
 
 const ConvertElementTypePopup = ({ app }: { app: App }) => {
@@ -192,7 +192,7 @@ const Panel = ({
   elements,
 }: {
   app: App;
-  elements: ExcalidrawElement[];
+  elements: XcalidrawElement[];
 }) => {
   const conversionType = getConversionTypeFromElements(elements);
 
@@ -363,8 +363,8 @@ const Panel = ({
 };
 
 export const adjustBoundTextSize = (
-  container: ExcalidrawTextContainer,
-  boundText: ExcalidrawTextElementWithContainer,
+  container: XcalidrawTextContainer,
+  boundText: XcalidrawTextElementWithContainer,
   scene: Scene,
 ) => {
   const maxWidth = getBoundTextMaxWidth(container, boundText);
@@ -454,7 +454,7 @@ export const convertElementTypes = (
       ];
 
     if (nextType && isConvertibleGenericType(nextType)) {
-      const convertedElements: Record<string, ExcalidrawElement> = {};
+      const convertedElements: Record<string, XcalidrawElement> = {};
 
       for (const element of convertibleGenericElements) {
         const convertedElement = convertElementType(element, nextType, app);
@@ -488,7 +488,7 @@ export const convertElementTypes = (
           }
 
           adjustBoundTextSize(
-            element as ExcalidrawTextContainer,
+            element as XcalidrawTextContainer,
             boundText,
             app.scene,
           );
@@ -509,7 +509,7 @@ export const convertElementTypes = (
   if (conversionType === "linear") {
     const convertibleLinearElements = filterLinearConvertibleElements(
       selectedElements,
-    ) as ExcalidrawLinearElement[];
+    ) as XcalidrawLinearElement[];
 
     if (!nextType) {
       const commonSubType = reduceToCommonValue(
@@ -525,9 +525,9 @@ export const convertElementTypes = (
     }
 
     if (isConvertibleLinearType(nextType)) {
-      const convertedElements: ExcalidrawElement[] = [];
+      const convertedElements: XcalidrawElement[] = [];
 
-      const nextElementsMap: Map<ExcalidrawElement["id"], ExcalidrawElement> =
+      const nextElementsMap: Map<XcalidrawElement["id"], XcalidrawElement> =
         app.scene.getElementsMapIncludingDeleted();
 
       for (const element of convertibleLinearElements) {
@@ -630,7 +630,7 @@ export const convertElementTypes = (
 };
 
 export const getConversionTypeFromElements = (
-  elements: ExcalidrawElement[],
+  elements: XcalidrawElement[],
 ): ConversionType => {
   if (elements.length === 0) {
     return null;
@@ -654,7 +654,7 @@ export const getConversionTypeFromElements = (
   return null;
 };
 
-const isEligibleLinearElement = (element: ExcalidrawElement) => {
+const isEligibleLinearElement = (element: XcalidrawElement) => {
   return (
     isLinearElement(element) &&
     (!isArrowElement(element) ||
@@ -663,23 +663,23 @@ const isEligibleLinearElement = (element: ExcalidrawElement) => {
 };
 
 const toCacheKey = (
-  elementId: ExcalidrawElement["id"],
+  elementId: XcalidrawElement["id"],
   convertitleType: ConvertibleTypes,
 ) => {
   return `${elementId}:${convertitleType}` as CacheKey;
 };
 
-const filterGenericConvetibleElements = (elements: ExcalidrawElement[]) =>
+const filterGenericConvetibleElements = (elements: XcalidrawElement[]) =>
   elements.filter((element) => isConvertibleGenericType(element.type)) as Array<
-    | ExcalidrawRectangleElement
-    | ExcalidrawDiamondElement
-    | ExcalidrawEllipseElement
+    | XcalidrawRectangleElement
+    | XcalidrawDiamondElement
+    | XcalidrawEllipseElement
   >;
 
-const filterLinearConvertibleElements = (elements: ExcalidrawElement[]) =>
+const filterLinearConvertibleElements = (elements: XcalidrawElement[]) =>
   elements.filter((element) =>
     isEligibleLinearElement(element),
-  ) as ExcalidrawLinearElement[];
+  ) as XcalidrawLinearElement[];
 
 const THRESHOLD = 20;
 const isVert = (a: LocalPoint, b: LocalPoint) => a[0] === b[0];
@@ -687,7 +687,7 @@ const isHorz = (a: LocalPoint, b: LocalPoint) => a[1] === b[1];
 const dist = (a: LocalPoint, b: LocalPoint) =>
   isVert(a, b) ? Math.abs(a[1] - b[1]) : Math.abs(a[0] - b[0]);
 
-const convertLineToElbow = (line: ExcalidrawLinearElement): LocalPoint[] => {
+const convertLineToElbow = (line: XcalidrawLinearElement): LocalPoint[] => {
   // 1. build an *orthogonal* route, snapping offsets < SNAP
   const ortho: LocalPoint[] = [line.points[0]];
   const src = sanitizePoints(line.points);
@@ -809,12 +809,12 @@ const sanitizePoints = (points: readonly LocalPoint[]): LocalPoint[] => {
  *   e.g. elbow arrow -> line
  */
 const convertElementType = <
-  TElement extends Exclude<ExcalidrawElement, ExcalidrawSelectionElement>,
+  TElement extends Exclude<XcalidrawElement, XcalidrawSelectionElement>,
 >(
   element: TElement,
   targetType: ConvertibleTypes,
   app: AppClassProperties,
-): ExcalidrawElement => {
+): XcalidrawElement => {
   if (!isValidConversion(element.type, targetType)) {
     if (!isProdEnv()) {
       throw Error(`Invalid conversion from ${element.type} to ${targetType}.`);
@@ -928,7 +928,7 @@ const isValidConversion = (
 };
 
 const getConvertibleType = (
-  element: ExcalidrawConvertibleElement,
+  element: XcalidrawConvertibleElement,
 ): ConvertibleTypes => {
   if (isLinearElement(element)) {
     return getLinearElementSubType(element);

@@ -28,9 +28,9 @@ import { fileSave } from "./filesystem";
 import { serializeAsJSON } from "./json";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawFrameLikeElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  XcalidrawFrameLikeElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { FileSystemHandle } from "./filesystem";
@@ -41,12 +41,12 @@ import type { AppState, BinaryFiles } from "../types";
 export { loadFromBlob } from "./blob";
 export { loadFromJSON, saveAsJSON } from "./json";
 
-export type ExportedElements = readonly NonDeletedExcalidrawElement[] & {
+export type ExportedElements = readonly NonDeletedXcalidrawElement[] & {
   _brand: "exportedElements";
 };
 
 export const prepareElementsForExport = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   { selectedElementIds }: Pick<AppState, "selectedElementIds">,
   exportSelectionOnly: boolean,
 ) => {
@@ -56,7 +56,7 @@ export const prepareElementsForExport = (
     exportSelectionOnly &&
     isSomeElementSelected(elements, { selectedElementIds });
 
-  let exportingFrame: ExcalidrawFrameLikeElement | null = null;
+  let exportingFrame: XcalidrawFrameLikeElement | null = null;
   let exportedElements = isExportingSelection
     ? getSelectedElements(
         elements,
@@ -111,7 +111,7 @@ export const exportCanvas = async (
     /** filename, if applicable */
     name?: string;
     fileHandle?: FileSystemHandle | null;
-    exportingFrame: ExcalidrawFrameLikeElement | null;
+    exportingFrame: XcalidrawFrameLikeElement | null;
   },
 ) => {
   if (elements.length === 0) {
@@ -144,7 +144,7 @@ export const exportCanvas = async (
         {
           description: "Export to SVG",
           name,
-          extension: appState.exportEmbedScene ? "excalidraw.svg" : "svg",
+          extension: appState.exportEmbedScene ? "xcalidraw.svg" : "svg",
           mimeTypes: [IMAGE_MIME_TYPES.svg],
           fileHandle,
         },
@@ -184,7 +184,7 @@ export const exportCanvas = async (
     return fileSave(blob, {
       description: "Export to PNG",
       name,
-      extension: appState.exportEmbedScene ? "excalidraw.png" : "png",
+      extension: appState.exportEmbedScene ? "xcalidraw.png" : "png",
       mimeTypes: [IMAGE_MIME_TYPES.png],
       fileHandle,
     });

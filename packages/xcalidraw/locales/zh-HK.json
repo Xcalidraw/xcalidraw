@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "",
     "fontSize": "字型大小",
     "fontFamily": "字體",
-    "addWatermark": "加入「使用 Excalidraw 製圖」水印",
+    "addWatermark": "加入「使用 Xcalidraw 製圖」水印",
     "handDrawn": "手繪體",
     "normal": "電腦字體",
     "code": "等寬體",
@@ -91,7 +91,7 @@
     "untitled": "未命名的作品",
     "name": "",
     "yourName": "你的名稱",
-    "madeWithExcalidraw": "使用 Excalidraw 製圖",
+    "madeWithXcalidraw": "使用 Xcalidraw 製圖",
     "group": "建立物件群組",
     "ungroup": "取消物件群組",
     "collaborators": "已連線的協作者",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "",
-    "excalidrawLib": "",
+    "xcalidrawLib": "",
     "decreaseFontSize": "",
     "increaseFontSize": "",
     "unbindText": "",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "",
     "link_details": "",
     "link_button": "",
-    "excalidrawplus_description": "",
-    "excalidrawplus_button": "",
-    "excalidrawplus_exportError": ""
+    "xcalidrawplus_description": "",
+    "xcalidrawplus_button": "",
+    "xcalidrawplus_exportError": ""
   },
   "helpDialog": {
     "blog": "",
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

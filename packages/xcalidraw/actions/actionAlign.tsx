@@ -32,7 +32,7 @@ import { register } from "./register";
 
 import type { Alignment } from "@xcalidraw/element";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, AppState, UIAppState } from "../types";
 
@@ -53,7 +53,7 @@ export const alignActionsPredicate = (
 };
 
 const alignSelectedElements = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: Readonly<AppState>,
   app: AppClassProperties,
   alignment: Alignment,

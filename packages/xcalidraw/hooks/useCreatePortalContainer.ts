@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from "react";
 
 import { THEME } from "@xcalidraw/common";
 
-import { useEditorInterface, useExcalidrawContainer } from "../components/App";
+import { useEditorInterface, useXcalidrawContainer } from "../components/App";
 import { useUIAppState } from "../context/ui-appState";
 
 export const useCreatePortalContainer = (opts?: {
@@ -14,14 +14,14 @@ export const useCreatePortalContainer = (opts?: {
   const editorInterface = useEditorInterface();
   const { theme } = useUIAppState();
 
-  const { container: excalidrawContainer } = useExcalidrawContainer();
+  const { container: xcalidrawContainer } = useXcalidrawContainer();
 
   useLayoutEffect(() => {
     if (div) {
       div.className = "";
-      div.classList.add("excalidraw", ...(opts?.className?.split(/\s+/) || []));
+      div.classList.add("xcalidraw", ...(opts?.className?.split(/\s+/) || []));
       div.classList.toggle(
-        "excalidraw--mobile",
+        "xcalidraw--mobile",
         editorInterface.formFactor === "phone",
       );
       div.classList.toggle("theme--dark", theme === THEME.DARK);
@@ -30,7 +30,7 @@ export const useCreatePortalContainer = (opts?: {
 
   useLayoutEffect(() => {
     const container = opts?.parentSelector
-      ? excalidrawContainer?.querySelector(opts.parentSelector)
+      ? xcalidrawContainer?.querySelector(opts.parentSelector)
       : document.body;
 
     if (!container) {
@@ -46,7 +46,7 @@ export const useCreatePortalContainer = (opts?: {
     return () => {
       container.removeChild(div);
     };
-  }, [excalidrawContainer, opts?.parentSelector]);
+  }, [xcalidrawContainer, opts?.parentSelector]);
 
   return div;
 };

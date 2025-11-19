@@ -4,7 +4,7 @@ import React from "react";
 import { getShortcutFromShortcutName } from "../actions/shortcuts";
 import { t } from "../i18n";
 
-import { useExcalidrawAppState, useExcalidrawElements } from "./App";
+import { useXcalidrawAppState, useXcalidrawElements } from "./App";
 
 import { Popover } from "./Popover";
 
@@ -32,8 +32,8 @@ export const CONTEXT_MENU_SEPARATOR = "separator";
 
 export const ContextMenu = React.memo(
   ({ actionManager, items, top, left, onClose }: ContextMenuProps) => {
-    const appState = useExcalidrawAppState();
-    const elements = useExcalidrawElements();
+    const appState = useXcalidrawAppState();
+    const elements = useXcalidrawElements();
 
     const filteredItems = items.reduce((acc: ContextMenuItem[], item) => {
       if (

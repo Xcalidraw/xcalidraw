@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 
 import { trackEvent } from "@xcalidraw/xcalidraw/analytics";
 import { Card } from "@xcalidraw/xcalidraw/components/Card";
-import { ExcalidrawLogo } from "@xcalidraw/xcalidraw/components/XcalidrawLogo";
+import { XcalidrawLogo } from "@xcalidraw/xcalidraw/components/XcalidrawLogo";
 import { ToolButton } from "@xcalidraw/xcalidraw/components/ToolButton";
 import { MIME_TYPES, getFrame } from "@xcalidraw/common";
 import {
@@ -21,7 +21,7 @@ import { loadFirebaseStorage, saveFilesToFirebase } from "../data/firebase";
 
 import type {
   FileId,
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type {
   AppState,
@@ -31,8 +31,8 @@ import type {
 
 const PLUS_APP_URL = import.meta.env.VITE_APP_PLUS_APP;
 
-export const exportToExcalidrawPlus = async (
-  elements: readonly NonDeletedExcalidrawElement[],
+export const exportToXcalidrawPlus = async (
+  elements: readonly NonDeletedXcalidrawElement[],
   appState: Partial<AppState>,
   files: BinaryFiles,
   name: string,
@@ -82,11 +82,11 @@ export const exportToExcalidrawPlus = async (
     });
   }
 
-  window.open(`${PLUS_APP_URL}/import?excalidraw=${id},${encryptionKey}`);
+  window.open(`${PLUS_APP_URL}/import?xcalidraw=${id},${encryptionKey}`);
 };
 
-export const ExportToExcalidrawPlus: React.FC<{
-  elements: readonly NonDeletedExcalidrawElement[];
+export const ExportToXcalidrawPlus: React.FC<{
+  elements: readonly NonDeletedXcalidrawElement[];
   appState: Partial<AppState>;
   files: BinaryFiles;
   name: string;
@@ -97,7 +97,7 @@ export const ExportToExcalidrawPlus: React.FC<{
   return (
     <Card color="primary">
       <div className="Card-icon">
-        <ExcalidrawLogo
+        <XcalidrawLogo
           style={{
             [`--color-logo-icon` as any]: "#fff",
             width: "2.8rem",
@@ -105,25 +105,25 @@ export const ExportToExcalidrawPlus: React.FC<{
           }}
         />
       </div>
-      <h2>Excalidraw+</h2>
+      <h2>Xcalidraw+</h2>
       <div className="Card-details">
-        {t("exportDialog.excalidrawplus_description")}
+        {t("exportDialog.xcalidrawplus_description")}
       </div>
       <ToolButton
         className="Card-button"
         type="button"
-        title={t("exportDialog.excalidrawplus_button")}
-        aria-label={t("exportDialog.excalidrawplus_button")}
+        title={t("exportDialog.xcalidrawplus_button")}
+        aria-label={t("exportDialog.xcalidrawplus_button")}
         showAriaLabel={true}
         onClick={async () => {
           try {
             trackEvent("export", "eplus", `ui (${getFrame()})`);
-            await exportToExcalidrawPlus(elements, appState, files, name);
+            await exportToXcalidrawPlus(elements, appState, files, name);
             onSuccess();
           } catch (error: any) {
             console.error(error);
             if (error.name !== "AbortError") {
-              onError(new Error(t("exportDialog.excalidrawplus_exportError")));
+              onError(new Error(t("exportDialog.xcalidrawplus_exportError")));
             }
           }
         }}

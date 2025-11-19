@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import { isMemberOf } from "@xcalidraw/common";
 
-import { useExcalidrawSetAppState } from "../App";
+import { useXcalidrawSetAppState } from "../App";
 
 import type { ReactNode } from "react";
 
@@ -12,7 +12,7 @@ const TTDDialogTabs = (
     children: ReactNode;
   } & { dialog: "ttd"; tab: "text-to-diagram" | "mermaid" },
 ) => {
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const minHeightRef = useRef<number>(0);

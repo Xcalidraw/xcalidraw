@@ -10,11 +10,11 @@ import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useStable } from "../hooks/useStable";
 import { getSelectedElements } from "../scene";
 
-import { useApp, useExcalidrawContainer, useExcalidrawElements } from "./App";
+import { useApp, useXcalidrawContainer, useXcalidrawElements } from "./App";
 
 import "./EyeDropper.scss";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ColorPickerType } from "./ColorPicker/colorPickerUtils";
 
@@ -40,17 +40,17 @@ export const EyeDropper: React.FC<{
   onChange: (
     type: ColorPickerType,
     color: string,
-    selectedElements: ExcalidrawElement[],
+    selectedElements: XcalidrawElement[],
     event: { altKey: boolean },
   ) => void;
   colorPickerType: EyeDropperProperties["colorPickerType"];
 }> = ({ onCancel, onChange, onSelect, colorPickerType }) => {
   const eyeDropperContainer = useCreatePortalContainer({
-    className: "excalidraw-eye-dropper-backdrop",
-    parentSelector: ".excalidraw-eye-dropper-container",
+    className: "xcalidraw-eye-dropper-backdrop",
+    parentSelector: ".xcalidraw-eye-dropper-container",
   });
   const appState = useUIAppState();
-  const elements = useExcalidrawElements();
+  const elements = useXcalidrawElements();
   const app = useApp();
 
   const selectedElements = getSelectedElements(elements, appState);
@@ -63,7 +63,7 @@ export const EyeDropper: React.FC<{
     selectedElements,
   });
 
-  const { container: excalidrawContainer } = useExcalidrawContainer();
+  const { container: xcalidrawContainer } = useXcalidrawContainer();
 
   useEffect(() => {
     const colorPreviewDiv = ref.current;
@@ -143,7 +143,7 @@ export const EyeDropper: React.FC<{
 
       // since we're not preventing default on pointerdown, the focus would
       // goes back to `body` so we want to refocus the editor container instead
-      excalidrawContainer?.focus();
+      xcalidrawContainer?.focus();
 
       event.stopImmediatePropagation();
       event.preventDefault();
@@ -202,7 +202,7 @@ export const EyeDropper: React.FC<{
     app.canvas,
     eyeDropperContainer,
     colorPickerType,
-    excalidrawContainer,
+    xcalidrawContainer,
     appState.offsetLeft,
     appState.offsetTop,
   ]);
@@ -217,7 +217,7 @@ export const EyeDropper: React.FC<{
     (event) => {
       if (
         event.target.closest(
-          ".excalidraw-eye-dropper-trigger, .excalidraw-eye-dropper-backdrop",
+          ".xcalidraw-eye-dropper-trigger, .xcalidraw-eye-dropper-backdrop",
         )
       ) {
         return true;
@@ -232,7 +232,7 @@ export const EyeDropper: React.FC<{
   }
 
   return createPortal(
-    <div ref={ref} className="excalidraw-eye-dropper-preview" />,
+    <div ref={ref} className="xcalidraw-eye-dropper-preview" />,
     eyeDropperContainer,
   );
 };

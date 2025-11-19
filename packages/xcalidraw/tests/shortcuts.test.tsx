@@ -2,7 +2,7 @@ import React from "react";
 
 import { KEYS } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { Keyboard } from "./helpers/ui";
@@ -11,7 +11,7 @@ import { fireEvent, render, waitFor } from "./test-utils";
 describe("shortcuts", () => {
   it("Clear canvas shortcut should display confirm dialog", async () => {
     await render(
-      <Excalidraw
+      <Xcalidraw
         initialData={{ elements: [API.createElement({ type: "rectangle" })] }}
         handleKeyboardGlobally
       />,

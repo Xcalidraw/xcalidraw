@@ -7,7 +7,7 @@ import {
   KEYS,
 } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { Keyboard } from "./helpers/ui";
@@ -15,15 +15,15 @@ import { updateTextEditor } from "./queries/dom";
 import { act, render, waitFor } from "./test-utils";
 
 import type {
-  ExcalidrawFrameLikeElement,
-  ExcalidrawTextElement,
+  XcalidrawFrameLikeElement,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 const { h } = window;
 
 const querySearchInput = async () => {
   const input =
-    h.app.excalidrawContainerValue.container?.querySelector<HTMLInputElement>(
+    h.app.xcalidrawContainerValue.container?.querySelector<HTMLInputElement>(
       `.${CLASSES.SEARCH_MENU_INPUT_WRAPPER} input`,
     )!;
   await waitFor(() => expect(input).not.toBeNull());
@@ -32,7 +32,7 @@ const querySearchInput = async () => {
 
 describe("search", () => {
   beforeEach(async () => {
-    await render(<Excalidraw handleKeyboardGlobally />);
+    await render(<Xcalidraw handleKeyboardGlobally />);
     API.setAppState({
       openSidebar: null,
     });
@@ -58,7 +58,7 @@ describe("search", () => {
     });
 
     const searchInput =
-      h.app.excalidrawContainerValue.container?.querySelector<HTMLInputElement>(
+      h.app.xcalidrawContainerValue.container?.querySelector<HTMLInputElement>(
         `.${CLASSES.SEARCH_MENU_INPUT_WRAPPER} input`,
       );
 
@@ -124,7 +124,7 @@ describe("search", () => {
       }),
     ]);
 
-    API.updateElement(h.elements[0] as ExcalidrawTextElement, {
+    API.updateElement(h.elements[0] as XcalidrawTextElement, {
       text: "t\ne\ns\nt \nt\ne\nx\nt \ns\np\nli\nt \ni\nn\nt\no\nm\nu\nlt\ni\np\nl\ne \nli\nn\ne\ns",
       originalText: "test text split into multiple lines",
     });
@@ -171,7 +171,7 @@ describe("search", () => {
       }),
     ]);
 
-    API.updateElement(h.elements[0] as ExcalidrawFrameLikeElement, {
+    API.updateElement(h.elements[0] as XcalidrawFrameLikeElement, {
       name: "Frame: name test for frame, yes, frame!",
     });
 

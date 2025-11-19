@@ -29,10 +29,9 @@
       "@xcalidraw/math/*": ["./packages/math/src/*"],
       "@xcalidraw/utils": ["./packages/utils/src/index.ts"],
       "@xcalidraw/utils/*": ["./packages/utils/src/*"],
-      "excalidraw-app/*": ["./xcalidraw-app/*"],
       "xcalidraw-app/*": ["./xcalidraw-app/*"]
     }
   },
   "include": ["packages", "xcalidraw-app"],
-  "exclude": ["examples", "dist", "types", "tests"]
+  "exclude": ["examples", "dist", "types"]
 }

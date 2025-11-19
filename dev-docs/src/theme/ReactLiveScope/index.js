@@ -5,35 +5,35 @@ import { useColorMode } from "@docusaurus/theme-common";
 
 import "@xcalidraw/xcalidraw/index.css";
 
-let ExcalidrawComp = {};
+let XcalidrawComp = {};
 if (ExecutionEnvironment.canUseDOM) {
-  ExcalidrawComp = require("@xcalidraw/xcalidraw");
+  XcalidrawComp = require("@xcalidraw/xcalidraw");
 }
-const Excalidraw = React.forwardRef((props, ref) => {
-  if (!window.EXCALIDRAW_ASSET_PATH) {
-    window.EXCALIDRAW_ASSET_PATH =
+const Xcalidraw = React.forwardRef((props, ref) => {
+  if (!window.XCALIDRAW_ASSET_PATH) {
+    window.XCALIDRAW_ASSET_PATH =
       "https://esm.sh/@xcalidraw/xcalidraw@0.18.0/dist/prod/";
   }
 
   const { colorMode } = useColorMode();
-  return <ExcalidrawComp.Excalidraw theme={colorMode} {...props} ref={ref} />;
+  return <XcalidrawComp.Xcalidraw theme={colorMode} {...props} ref={ref} />;
 });
 // Add react-live imports you need here
-const ExcalidrawScope = {
+const XcalidrawScope = {
   React,
   ...React,
-  Excalidraw,
-  Footer: ExcalidrawComp.Footer,
-  useDevice: ExcalidrawComp.useDevice,
-  MainMenu: ExcalidrawComp.MainMenu,
-  WelcomeScreen: ExcalidrawComp.WelcomeScreen,
-  LiveCollaborationTrigger: ExcalidrawComp.LiveCollaborationTrigger,
-  Sidebar: ExcalidrawComp.Sidebar,
-  exportToCanvas: ExcalidrawComp.exportToCanvas,
+  Xcalidraw,
+  Footer: XcalidrawComp.Footer,
+  useDevice: XcalidrawComp.useDevice,
+  MainMenu: XcalidrawComp.MainMenu,
+  WelcomeScreen: XcalidrawComp.WelcomeScreen,
+  LiveCollaborationTrigger: XcalidrawComp.LiveCollaborationTrigger,
+  Sidebar: XcalidrawComp.Sidebar,
+  exportToCanvas: XcalidrawComp.exportToCanvas,
   initialData,
-  useI18n: ExcalidrawComp.useI18n,
-  convertToExcalidrawElements: ExcalidrawComp.convertToExcalidrawElements,
-  CaptureUpdateAction: ExcalidrawComp.CaptureUpdateAction,
+  useI18n: XcalidrawComp.useI18n,
+  convertToXcalidrawElements: XcalidrawComp.convertToXcalidrawElements,
+  CaptureUpdateAction: XcalidrawComp.CaptureUpdateAction,
 };
 
-export default ExcalidrawScope;
+export default XcalidrawScope;

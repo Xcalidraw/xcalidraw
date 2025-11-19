@@ -22,8 +22,8 @@ import { AnimatedTrail } from "../animated-trail";
 import { getLassoSelectedElementIds } from "./utils";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
   NonDeleted,
 } from "@xcalidraw/element/types";
 
@@ -36,8 +36,8 @@ type CanvasTranslate = {
 };
 
 export class LassoTrail extends AnimatedTrail {
-  private intersectedElements: Set<ExcalidrawElement["id"]> = new Set();
-  private enclosedElements: Set<ExcalidrawElement["id"]> = new Set();
+  private intersectedElements: Set<XcalidrawElement["id"]> = new Set();
+  private enclosedElements: Set<XcalidrawElement["id"]> = new Set();
   private elementsSegments: Map<string, LineSegment<GlobalPoint>[]> | null =
     null;
   private canvasTranslate: CanvasTranslate | null = null;
@@ -90,7 +90,7 @@ export class LassoTrail extends AnimatedTrail {
       const nextSelectedElementIds = ids.reduce((acc, id) => {
         acc[id] = true;
         return acc;
-      }, {} as Record<ExcalidrawElement["id"], true>);
+      }, {} as Record<XcalidrawElement["id"], true>);
 
       if (this.keepPreviousSelection) {
         for (const id of Object.keys(prevState.selectedElementIds)) {
@@ -151,7 +151,7 @@ export class LassoTrail extends AnimatedTrail {
             ? new LinearElementEditor(
                 this.app.scene.getNonDeletedElement(
                   selectedIds[0],
-                ) as NonDeleted<ExcalidrawLinearElement>,
+                ) as NonDeleted<XcalidrawLinearElement>,
                 this.app.scene.getNonDeletedElementsMap(),
               )
             : null,

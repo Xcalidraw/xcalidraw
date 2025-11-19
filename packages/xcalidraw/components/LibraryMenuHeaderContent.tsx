@@ -11,7 +11,7 @@ import { useAtom } from "../editor-jotai";
 import { useLibraryCache } from "../hooks/useLibraryItemSvg";
 import { t } from "../i18n";
 
-import { useApp, useExcalidrawSetAppState } from "./App";
+import { useApp, useXcalidrawSetAppState } from "./App";
 import ConfirmDialog from "./ConfirmDialog";
 import { Dialog } from "./Dialog";
 import { isLibraryMenuOpenAtom } from "./LibraryMenu";
@@ -159,11 +159,11 @@ export const LibraryDropdownMenuButton: React.FC<{
     try {
       await library.updateLibrary({
         libraryItems: fileOpen({
-          description: "Excalidraw library files",
+          description: "Xcalidraw library files",
           // ToDo: Be over-permissive until https://bugs.webkit.org/show_bug.cgi?id=34442
-          // gets resolved. Else, iOS users cannot open `.excalidraw` files.
+          // gets resolved. Else, iOS users cannot open `.xcalidraw` files.
           /*
-            extensions: [".json", ".excalidrawlib"],
+            extensions: [".json", ".xcalidrawlib"],
             */
         }),
         merge: true,
@@ -286,7 +286,7 @@ export const LibraryDropdownMenu = ({
   const { library } = useApp();
   const { clearLibraryCache, deleteItemsFromLibraryCache } = useLibraryCache();
   const appState = useUIAppState();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
 
   const [libraryItemsData] = useAtom(libraryItemsAtom);
 

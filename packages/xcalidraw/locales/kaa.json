@@ -91,7 +91,7 @@
     "untitled": "Atamasız",
     "name": "Ataması",
     "yourName": "Atıńız",
-    "madeWithExcalidraw": "Excalidraw járdeminde islengen",
+    "madeWithXcalidraw": "Xcalidraw járdeminde islengen",
     "group": "",
     "ungroup": "",
     "collaborators": "Qatnasıwshılar",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "Jeke kitapxana",
-    "excalidrawLib": "Excalidraw kitapxanası",
+    "xcalidrawLib": "Xcalidraw kitapxanası",
     "decreaseFontSize": "Shrift ólshemin kishireytiw",
     "increaseFontSize": "Shrift ólshemin úlkeytiw",
     "unbindText": "",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "",
     "link_details": "",
     "link_button": "Siltemege eksportlaw",
-    "excalidrawplus_description": "",
-    "excalidrawplus_button": "Eksportlaw",
-    "excalidrawplus_exportError": ""
+    "xcalidrawplus_description": "",
+    "xcalidrawplus_button": "Eksportlaw",
+    "xcalidrawplus_exportError": ""
   },
   "helpDialog": {
     "blog": "Biziń blogtı oqıń",
@@ -587,7 +587,7 @@
         "button": "Diskke saqlaw",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

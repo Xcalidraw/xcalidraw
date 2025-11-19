@@ -8,8 +8,8 @@
           {
             "patterns": [
               {
-                "group": ["../../xcalidraw", "../../../packages/xcalidraw", "@xcalidraw/xcalidraw", "@excalidraw/excalidraw"],
-                "message": "Do not import from '@xcalidraw/xcalidraw' or '@excalidraw/excalidraw' package anything but types, as this package must be independent.",
+                "group": ["../../xcalidraw", "../../../packages/xcalidraw", "@xcalidraw/xcalidraw", "@xcalidraw/xcalidraw"],
+                "message": "Do not import from '@xcalidraw/xcalidraw' or '@xcalidraw/xcalidraw' package anything but types, as this package must be independent.",
                 "allowTypeImports": true
               }
             ]

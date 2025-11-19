@@ -32,13 +32,13 @@ import { atom, useAtom } from "../editor-jotai";
 import { useStable } from "../hooks/useStable";
 import { t } from "../i18n";
 
-import { useApp, useExcalidrawSetAppState } from "./App";
+import { useApp, useXcalidrawSetAppState } from "./App";
 
 import "./SearchMenu.scss";
 
 import type {
-  ExcalidrawFrameLikeElement,
-  ExcalidrawTextElement,
+  XcalidrawFrameLikeElement,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 import { Button } from "./Button";
@@ -61,7 +61,7 @@ export const searchItemInFocusAtom = atom<number | null>(null);
 const SEARCH_DEBOUNCE = 350;
 
 type SearchMatchItem = {
-  element: ExcalidrawTextElement | ExcalidrawFrameLikeElement;
+  element: XcalidrawTextElement | XcalidrawFrameLikeElement;
   searchQuery: SearchQuery;
   index: number;
   preview: {
@@ -82,7 +82,7 @@ type SearchQuery = string & { _brand: "SearchQuery" };
 
 export const SearchMenu = () => {
   const app = useApp();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -636,7 +636,7 @@ const normalizeWrappedText = (
 };
 
 const getMatchedLines = (
-  textElement: ExcalidrawTextElement,
+  textElement: XcalidrawTextElement,
   searchQuery: SearchQuery,
   index: number,
 ) => {
@@ -743,7 +743,7 @@ const getMatchedLines = (
 };
 
 const getMatchInFrame = (
-  frame: ExcalidrawFrameLikeElement,
+  frame: XcalidrawFrameLikeElement,
   searchQuery: SearchQuery,
   index: number,
   zoomValue: number,
@@ -801,11 +801,11 @@ const handleSearch = debounce(
     const elements = app.scene.getNonDeletedElements();
     const texts = elements.filter((el) =>
       isTextElement(el),
-    ) as ExcalidrawTextElement[];
+    ) as XcalidrawTextElement[];
 
     const frames = elements.filter((el) =>
       isFrameLikeElement(el),
-    ) as ExcalidrawFrameLikeElement[];
+    ) as XcalidrawFrameLikeElement[];
 
     texts.sort((a, b) => a.y - b.y);
     frames.sort((a, b) => a.y - b.y);

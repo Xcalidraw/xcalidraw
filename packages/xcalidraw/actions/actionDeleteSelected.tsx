@@ -32,12 +32,12 @@ import { useStylesPanelMode } from "..";
 
 import { register } from "./register";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, AppState } from "../types";
 
 const deleteSelectedElements = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
   app: AppClassProperties,
 ) => {
@@ -48,11 +48,11 @@ const deleteSelectedElements = (
     ).map((el) => el.id),
   );
 
-  const selectedElementIds: Record<ExcalidrawElement["id"], true> = {};
+  const selectedElementIds: Record<XcalidrawElement["id"], true> = {};
 
   const elementsMap = app.scene.getNonDeletedElementsMap();
 
-  const processedElements = new Set<ExcalidrawElement["id"]>();
+  const processedElements = new Set<XcalidrawElement["id"]>();
 
   for (const frameId of framesToBeDeleted) {
     const frameChildren = getFrameChildren(elements, frameId);
@@ -188,7 +188,7 @@ const deleteSelectedElements = (
 
 const handleGroupEditingState = (
   appState: AppState,
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ): AppState => {
   if (appState.editingGroupId) {
     const siblingElements = getElementsInGroup(

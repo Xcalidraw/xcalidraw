@@ -6,7 +6,7 @@ import { clearElementsForLocalStorage } from "@xcalidraw/element";
 
 import { STORAGE_KEYS } from "../app_constants";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 import type { AppState } from "@xcalidraw/xcalidraw/types";
 
 export const saveUsernameToLocalStorage = (username: string) => {
@@ -47,7 +47,7 @@ export const importFromLocalStorage = () => {
     console.error(error);
   }
 
-  let elements: ExcalidrawElement[] = [];
+  let elements: XcalidrawElement[] = [];
   if (savedElements) {
     try {
       elements = clearElementsForLocalStorage(JSON.parse(savedElements));

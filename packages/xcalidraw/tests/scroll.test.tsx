@@ -2,7 +2,7 @@ import React from "react";
 
 import { KEYS } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { Keyboard } from "./helpers/ui";
@@ -29,7 +29,7 @@ describe("appState", () => {
 
     await render(
       <div>
-        <Excalidraw
+        <Xcalidraw
           initialData={{
             elements: [
               API.createElement({
@@ -59,7 +59,7 @@ describe("appState", () => {
 
   it("moving by page up/down/left/right", async () => {
     mockBoundingClientRect();
-    await render(<Excalidraw handleKeyboardGlobally={true} />, {});
+    await render(<Xcalidraw handleKeyboardGlobally={true} />, {});
 
     const scrollTest = () => {
       const initialScrollY = h.state.scrollY;

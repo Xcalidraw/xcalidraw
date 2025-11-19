@@ -2,7 +2,7 @@ import { MAX_CUSTOM_COLORS_USED_IN_CANVAS } from "@xcalidraw/common";
 
 import { atom } from "../../editor-jotai";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ColorPickerColor, ColorPaletteCustom } from "@xcalidraw/common";
 
@@ -50,7 +50,7 @@ export const isCustomColor = ({
 };
 
 export const getMostUsedCustomColors = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   type: "elementBackground" | "elementStroke",
   palette: ColorPaletteCustom,
 ) => {

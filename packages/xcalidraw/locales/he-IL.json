@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "חץ זוויתי",
     "fontSize": "גודל גופן",
     "fontFamily": "גופן",
-    "addWatermark": "הוספת „נוצר באמצעות Excalidraw”",
+    "addWatermark": "הוספת „נוצר באמצעות Xcalidraw”",
     "handDrawn": "ציור יד",
     "normal": "רגיל",
     "code": "קוד",
@@ -91,7 +91,7 @@
     "untitled": "ללא כותרת",
     "name": "שם",
     "yourName": "שמך",
-    "madeWithExcalidraw": "נוצר באמצעות Excalidraw",
+    "madeWithXcalidraw": "נוצר באמצעות Xcalidraw",
     "group": "קיבוץ הבחירה",
     "ungroup": "פירוק קבוצה",
     "collaborators": "שותפים",
@@ -121,7 +121,7 @@
     "toggleTheme": "החלפת מצב מואר/חשוך",
     "theme": "ערכת עיצוב",
     "personalLib": "ספריה פרטית",
-    "excalidrawLib": "הספרייה של Excalidraw",
+    "xcalidrawLib": "הספרייה של Xcalidraw",
     "decreaseFontSize": "הקטנת הכתב",
     "increaseFontSize": "הגדלת הכתב",
     "unbindText": "ביטול קיבוע הטקסט",
@@ -163,7 +163,7 @@
     "zoomToFitViewport": "התאמת התקריב לגודל המסך",
     "zoomToFitSelection": "להתמקד בחלק הנבחר",
     "zoomToFit": "להציג את כל הרכיבים",
-    "installPWA": "התקנת Excalidraw לשימוש מקומי (PWA)",
+    "installPWA": "התקנת Xcalidraw לשימוש מקומי (PWA)",
     "autoResize": "לאפשר התאמה אוטומטית של גודל הכתב",
     "imageCropping": "חיתוך תמונה",
     "unCroppedDimension": "ממדים ללא חיתוך",
@@ -248,7 +248,7 @@
     "cannotExportEmptyCanvas": "לא ניתן לייצא לוח ציור ריק.",
     "couldNotCopyToClipboard": "לא ניתן להעתיק ללוח.",
     "decryptFailed": "פענוח הצפנת הנתונים נכשל.",
-    "uploadedSecurly": "ההעלאה אובטחה באמצעות הצפנה מקצה לקצה, פירוש הדבר שהשרת של Excalidraw וגורמי צד ג׳ לא יכולים לקרוא את התוכן.",
+    "uploadedSecurly": "ההעלאה אובטחה באמצעות הצפנה מקצה לקצה, פירוש הדבר שהשרת של Xcalidraw וגורמי צד ג׳ לא יכולים לקרוא את התוכן.",
     "loadSceneOverridePrompt": "טעינה של ציור חיצוני תחליף את התוכן הקיים שלך. האם תרצה להמשיך?",
     "collabStopOverridePrompt": "עצירת השיתוף תוביל למחיקת הציור הקודם ששמור מקומית בדפדפן. האם אתה בטוח?\n\n(אם תרצה לשמור את הציור המקומי, סגור את הטאב של הדפדפן במקום.)",
     "errorAddingToLibrary": "לא ניתן להוסיף פריט לספרייה",
@@ -256,7 +256,7 @@
     "confirmAddLibrary": "זה יוסיף {{numShapes}} צורה(ות) לספריה שלך. האם אתה בטוח?",
     "imageDoesNotContainScene": "נראה שהתמונה לא מכילה מידע על הסצינה. האם אפשרת הטמעת מידע הסצינה בעת השמירה?",
     "cannotRestoreFromImage": "לא הצלחנו לשחזר את הסצנה מקובץ התמונה",
-    "invalidSceneUrl": "ייבוא מידע סצנה מהקישור שסופק כשל. או שהוא משובש, או שאינו מכיל מידע של Excalidraw בפורמט JSON.",
+    "invalidSceneUrl": "ייבוא מידע סצנה מהקישור שסופק כשל. או שהוא משובש, או שאינו מכיל מידע של Xcalidraw בפורמט JSON.",
     "resetLibrary": "פעולה זו תנקה את כל הספריה שלך. אתה בטוח?",
     "removeItemsFromsLibrary": "מחק {{count}} פריט(ים) מהספריה?",
     "invalidEncryptionKey": "מפתח ההצפנה חייב להיות בן 22 תוים. השיתוף החי מנוטרל.",
@@ -312,7 +312,7 @@
     "laser": "סמן לייזר",
     "hand": "יד (כלי הזזה)",
     "extraTools": "כלים נוספים",
-    "mermaidToExcalidraw": "Mermaid ל־Excalidraw",
+    "mermaidToXcalidraw": "Mermaid ל־Xcalidraw",
     "convertElementType": ""
   },
   "element": {
@@ -389,7 +389,7 @@
     "desc_inProgressIntro": "שיתוף חי פעיל כרגע.",
     "desc_shareLink": "שתף את הקישור עם כל מי שאתה מעוניין לעבוד אתו:",
     "desc_exitSession": "עצירת השיתוף תנתק אותך מהחדר, אבל עדיין תוכל להמשיך לעבוד על הקנבאס, מקומית. שים לב שזה לא ישפיע על אנשים אחרים, והם עדיין יוכלו לבצע שיתוף עם הגרסה שלהם.",
-    "shareTitle": "הצטרף לשיתוף לעבודה משותפת חיה, בזמן אמת, על גבי Excalidraw"
+    "shareTitle": "הצטרף לשיתוף לעבודה משותפת חיה, בזמן אמת, על גבי Xcalidraw"
   },
   "errorDialog": {
     "title": "שגיאה"
@@ -401,9 +401,9 @@
     "link_title": "קבל קישור לשיתוף",
     "link_details": "ייצוא כקישור לקריאה בלבד.",
     "link_button": "ייצוא לקישור",
-    "excalidrawplus_description": "שמור את הקנבאס לסביבת העבודה שלך ב- +Excalidraw.",
-    "excalidrawplus_button": "ייצוא",
-    "excalidrawplus_exportError": "לא הצלחתי לייצא ל- +Excalidraw כרגע..."
+    "xcalidrawplus_description": "שמור את הקנבאס לסביבת העבודה שלך ב- +Xcalidraw.",
+    "xcalidrawplus_button": "ייצוא",
+    "xcalidrawplus_exportError": "לא הצלחתי לייצא ל- +Xcalidraw כרגע..."
   },
   "helpDialog": {
     "blog": "קרא את הבלוג שלנו",
@@ -502,8 +502,8 @@
     }
   },
   "encrypted": {
-    "tooltip": "הציורים שלך מוצפנים מקצה לקצה כך שהשרתים של Excalidraw לא יראו אותם לעולם.",
-    "link": "פוסט בבלוג על הצפנה מקצה לקצב ב-Excalidraw"
+    "tooltip": "הציורים שלך מוצפנים מקצה לקצה כך שהשרתים של Xcalidraw לא יראו אותם לעולם.",
+    "link": "פוסט בבלוג על הצפנה מקצה לקצב ב-Xcalidraw"
   },
   "stats": {
     "angle": "זווית",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "כל המידע שלח נשמר מקומית בדפדפן.",
-      "center_heading_plus": "אתה רוצה ללכת אל Excalidraw+ במקום?",
+      "center_heading_plus": "אתה רוצה ללכת אל Xcalidraw+ במקום?",
       "menuHint": "ייצוא, העדפות, שפות, ..."
     },
     "defaults": {
@@ -587,10 +587,10 @@
         "button": "שמירה לכונן",
         "description": "ייצוא נתוני הסצנה לקובץ אותו אפשר לייבא בהמשך."
       },
-      "excalidrawPlus": {
-        "title": "Excalidraw+‎",
-        "button": "ייצוא ל־Excalidraw+‎",
-        "description": "שמירת הסצנה לסביבת העבודה שלך ב־+Excalidraw."
+      "xcalidrawPlus": {
+        "title": "Xcalidraw+‎",
+        "button": "ייצוא ל־Xcalidraw+‎",
+        "description": "שמירת הסצנה לסביבת העבודה שלך ב־+Xcalidraw."
       }
     },
     "modal": {
@@ -607,9 +607,9 @@
     }
   },
   "mermaid": {
-    "title": "Mermaid ל־Excalidraw",
+    "title": "Mermaid ל־Xcalidraw",
     "button": "הוספה",
-    "description": "לעת עתה נתמכים רק <flowchartLink>תרשימי זרימה</flowchartLink>, <sequenceLink>תהליכים</sequenceLink>, <classLink>ודיאגרמת מחלקה</classLink>. שאר הסוגים ייוצרו כתמונות ב-Excalidraw.",
+    "description": "לעת עתה נתמכים רק <flowchartLink>תרשימי זרימה</flowchartLink>, <sequenceLink>תהליכים</sequenceLink>, <classLink>ודיאגרמת מחלקה</classLink>. שאר הסוגים ייוצרו כתמונות ב-Xcalidraw.",
     "syntax": "תחביר Mermaid",
     "preview": "תצוגה מקדימה"
   },

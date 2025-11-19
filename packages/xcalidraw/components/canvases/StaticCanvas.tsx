@@ -6,7 +6,7 @@ import { isRenderThrottlingEnabled } from "../../reactUtils";
 import { renderStaticScene } from "../../renderer/staticScene";
 
 import type {
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
 
@@ -22,7 +22,7 @@ type StaticCanvasProps = {
   rc: RoughCanvas;
   elementsMap: RenderableElementsMap;
   allElementsMap: NonDeletedSceneElementsMap;
-  visibleElements: readonly NonDeletedExcalidrawElement[];
+  visibleElements: readonly NonDeletedXcalidrawElement[];
   sceneNonce: number | undefined;
   selectionNonce: number | undefined;
   scale: number;
@@ -53,7 +53,7 @@ const StaticCanvas = (props: StaticCanvasProps) => {
       isComponentMounted.current = true;
 
       wrapper.replaceChildren(canvas);
-      canvas.classList.add("excalidraw__canvas", "static");
+      canvas.classList.add("xcalidraw__canvas", "static");
     }
 
     renderStaticScene(
@@ -71,7 +71,7 @@ const StaticCanvas = (props: StaticCanvasProps) => {
     );
   });
 
-  return <div className="excalidraw__canvas-wrapper" ref={wrapperRef} />;
+  return <div className="xcalidraw__canvas-wrapper" ref={wrapperRef} />;
 };
 
 const getRelevantAppStateProps = (appState: AppState): StaticCanvasAppState => {

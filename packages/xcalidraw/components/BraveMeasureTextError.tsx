@@ -19,7 +19,7 @@ const BraveMeasureTextError = () => {
         <Trans
           i18nKey="errors.brave_measure_text_error.line3"
           link={(el) => (
-            <a href="http://docs.excalidraw.com/docs/@xcalidraw/xcalidraw/faq#turning-off-aggresive-block-fingerprinting-in-brave-browser">
+            <a href="http://docs.xcalidraw.com/docs/@xcalidraw/xcalidraw/faq#turning-off-aggresive-block-fingerprinting-in-brave-browser">
               {el}
             </a>
           )}
@@ -29,7 +29,7 @@ const BraveMeasureTextError = () => {
         <Trans
           i18nKey="errors.brave_measure_text_error.line4"
           issueLink={(el) => (
-            <a href="https://github.com/excalidraw/excalidraw/issues/new">
+            <a href="https://github.com/xcalidraw/xcalidraw/issues/new">
               {el}
             </a>
           )}

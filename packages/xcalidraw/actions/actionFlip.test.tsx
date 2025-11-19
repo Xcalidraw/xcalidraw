@@ -1,6 +1,6 @@
 import { pointFrom } from "@xcalidraw/math";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import { API } from "../tests/helpers/api";
 import { render } from "../tests/test-utils";
 
@@ -61,7 +61,7 @@ describe("flipping re-centers selection", () => {
         elbowed: true,
       }),
     ];
-    await render(<Excalidraw initialData={{ elements }} />);
+    await render(<Xcalidraw initialData={{ elements }} />);
 
     API.setSelectedElements(elements);
 
@@ -84,7 +84,7 @@ describe("flipping re-centers selection", () => {
 
 describe("flipping arrowheads", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("flipping bound arrow should flip arrowheads only", () => {

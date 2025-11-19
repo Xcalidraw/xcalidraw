@@ -6,18 +6,18 @@ import { trackEvent } from "../../analytics";
 import { useUIAppState } from "../../context/ui-appState";
 import { atom, useAtom } from "../../editor-jotai";
 import { t } from "../../i18n";
-import { useApp, useExcalidrawSetAppState } from "../App";
+import { useApp, useXcalidrawSetAppState } from "../App";
 import { Dialog } from "../Dialog";
 import { InlineIcon } from "../InlineIcon";
 import { withInternalFallback } from "../hoc/withInternalFallback";
 import { ArrowRightIcon } from "../icons";
 
-import MermaidToExcalidraw from "./MermaidToExcalidraw";
+import MermaidToXcalidraw from "./MermaidToXcalidraw";
 import TTDDialogTabs from "./TTDDialogTabs";
 
 import "./TTDDialog.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import { TTDDialogTabTriggers } from "./TTDDialogTabTriggers";
 import { TTDDialogTabTrigger } from "./TTDDialogTabTrigger";
@@ -28,7 +28,7 @@ import { TTDDialogPanel } from "./TTDDialogPanel";
 import { TTDDialogPanels } from "./TTDDialogPanels";
 
 import {
-  convertMermaidToExcalidraw,
+  convertMermaidToXcalidraw,
   insertToEditor,
   saveMermaidDataToStorage,
 } from "./common";
@@ -37,7 +37,7 @@ import { TTDDialogSubmitShortcut } from "./TTDDialogSubmitShortcut";
 import "./TTDDialog.scss";
 
 import type { ChangeEventHandler } from "react";
-import type { MermaidToExcalidrawLibProps } from "./common";
+import type { MermaidToXcalidrawLibProps } from "./common";
 
 import type { BinaryFiles } from "../../types";
 
@@ -98,7 +98,7 @@ export const TTDDialogBase = withInternalFallback(
     | { __fallback: true }
   )) => {
     const app = useApp();
-    const setAppState = useExcalidrawSetAppState();
+    const setAppState = useXcalidrawSetAppState();
 
     const someRandomDivRef = useRef<HTMLDivElement>(null);
 
@@ -177,10 +177,10 @@ export const TTDDialogBase = withInternalFallback(
         }
 
         try {
-          await convertMermaidToExcalidraw({
+          await convertMermaidToXcalidraw({
             canvasRef: someRandomDivRef,
             data,
-            mermaidToExcalidrawLib,
+            mermaidToXcalidrawLib,
             setError,
             mermaidDefinition: generatedResponse,
           });
@@ -215,22 +215,22 @@ export const TTDDialogBase = withInternalFallback(
     const refOnGenerate = useRef(onGenerate);
     refOnGenerate.current = onGenerate;
 
-    const [mermaidToExcalidrawLib, setMermaidToExcalidrawLib] =
-      useState<MermaidToExcalidrawLibProps>({
+    const [mermaidToXcalidrawLib, setMermaidToXcalidrawLib] =
+      useState<MermaidToXcalidrawLibProps>({
         loaded: false,
         api: import("@excalidraw/mermaid-to-excalidraw"),
       });
 
     useEffect(() => {
       const fn = async () => {
-        await mermaidToExcalidrawLib.api;
-        setMermaidToExcalidrawLib((prev) => ({ ...prev, loaded: true }));
+        await mermaidToXcalidrawLib.api;
+        setMermaidToXcalidrawLib((prev) => ({ ...prev, loaded: true }));
       };
       fn();
-    }, [mermaidToExcalidrawLib.api]);
+    }, [mermaidToXcalidrawLib.api]);
 
     const data = useRef<{
-      elements: readonly NonDeletedExcalidrawElement[];
+      elements: readonly NonDeletedXcalidrawElement[];
       files: BinaryFiles | null;
     }>({ elements: [], files: null });
 
@@ -277,9 +277,7 @@ export const TTDDialogBase = withInternalFallback(
           )}
 
           <TTDDialogTab className="ttd-dialog-content" tab="mermaid">
-            <MermaidToExcalidraw
-              mermaidToExcalidrawLib={mermaidToExcalidrawLib}
-            />
+            <MermaidToXcalidraw mermaidToXcalidrawLib={mermaidToXcalidrawLib} />
           </TTDDialogTab>
           {!("__fallback" in rest) && (
             <TTDDialogTab className="ttd-dialog-content" tab="text-to-diagram">
@@ -327,7 +325,7 @@ export const TTDDialogBase = withInternalFallback(
                     if (typeof ttdGeneration?.generatedResponse === "string") {
                       return (
                         <div
-                          className="excalidraw-link"
+                          className="xcalidraw-link"
                           style={{ marginLeft: "auto", fontSize: 14 }}
                           onClick={() => {
                             if (
@@ -391,7 +389,7 @@ export const TTDDialogBase = withInternalFallback(
                   <TTDDialogOutput
                     canvasRef={someRandomDivRef}
                     error={error}
-                    loaded={mermaidToExcalidrawLib.loaded}
+                    loaded={mermaidToXcalidrawLib.loaded}
                   />
                 </TTDDialogPanel>
               </TTDDialogPanels>

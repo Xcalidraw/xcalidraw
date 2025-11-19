@@ -17,8 +17,8 @@ import type { Radians } from "@xcalidraw/math";
 
 import type {
   ElementsMap,
-  ExcalidrawElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { Scene } from "@xcalidraw/element";
@@ -38,8 +38,8 @@ export const SMALLEST_DELTA = 0.01;
 export const STEP_SIZE = 10;
 
 export const isPropertyEditable = (
-  element: ExcalidrawElement,
-  property: keyof ExcalidrawElement,
+  element: XcalidrawElement,
+  property: keyof XcalidrawElement,
 ) => {
   if (property === "angle" && isFrameLikeElement(element)) {
     return false;
@@ -64,8 +64,8 @@ export const getElementsInAtomicUnit = (
       latest: elementsMap.get(id),
     }))
     .filter((el) => el.original !== undefined && el.latest !== undefined) as {
-    original: NonDeletedExcalidrawElement;
-    latest: NonDeletedExcalidrawElement;
+    original: NonDeletedXcalidrawElement;
+    latest: NonDeletedXcalidrawElement;
   }[];
 };
 
@@ -108,7 +108,7 @@ export const newOrigin = (
 export const moveElement = (
   newTopLeftX: number,
   newTopLeftY: number,
-  originalElement: ExcalidrawElement,
+  originalElement: XcalidrawElement,
   scene: Scene,
   originalElementsMap: ElementsMap,
   shouldInformMutation = true,
@@ -211,7 +211,7 @@ export const moveElement = (
 };
 
 export const getAtomicUnits = (
-  targetElements: readonly ExcalidrawElement[],
+  targetElements: readonly XcalidrawElement[],
   appState: AppState,
 ) => {
   const selectedGroupIds = getSelectedGroupIds(appState);

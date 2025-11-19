@@ -1,6 +1,6 @@
 @import "../packages/xcalidraw/css/variables.module.scss";
 
-.excalidraw {
+.xcalidraw {
   --color-primary-contrast-offset: #625ee0; // to offset Chubb illusion
 
   &.theme--dark {
@@ -80,7 +80,7 @@
   }
 }
 
-.excalidraw-app.is-collaborating {
+.xcalidraw-app.is-collaborating {
   [data-testid="clear-canvas-button"] {
     display: none;
   }

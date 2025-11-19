@@ -11,7 +11,7 @@ import {
   VERTICAL_ALIGN,
 } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import { API } from "../tests/helpers/api";
 import { Keyboard, Pointer, UI } from "../tests/helpers/ui";
 import { getTextEditor, updateTextEditor } from "../tests/queries/dom";
@@ -29,8 +29,8 @@ import {
 import { actionBindText } from "../actions";
 
 import type {
-  ExcalidrawTextElement,
-  ExcalidrawTextElementWithContainer,
+  XcalidrawTextElement,
+  XcalidrawTextElementWithContainer,
 } from "@xcalidraw/element/types";
 
 unmountComponent();
@@ -42,7 +42,7 @@ describe("textWysiwyg", () => {
   describe("start text editing", () => {
     const { h } = window;
     beforeEach(async () => {
-      await render(<Excalidraw handleKeyboardGlobally={true} />);
+      await render(<Xcalidraw handleKeyboardGlobally={true} />);
       API.setElements([]);
     });
 
@@ -70,7 +70,7 @@ describe("textWysiwyg", () => {
 
       expect(h.state.editingTextElement?.id).toBe(text.id);
       expect(
-        (h.state.editingTextElement as ExcalidrawTextElement).containerId,
+        (h.state.editingTextElement as XcalidrawTextElement).containerId,
       ).toBe(null);
     });
 
@@ -252,7 +252,7 @@ describe("textWysiwyg", () => {
     });
 
     beforeEach(async () => {
-      await render(<Excalidraw handleKeyboardGlobally={true} />);
+      await render(<Xcalidraw handleKeyboardGlobally={true} />);
       // @ts-ignore
       h.app.refreshEditorInterface();
 
@@ -266,7 +266,7 @@ describe("textWysiwyg", () => {
     it("should keep width when editing a wrapped text", async () => {
       const text = API.createElement({
         type: "text",
-        text: "Excalidraw\nEditor",
+        text: "Xcalidraw\nEditor",
       });
 
       API.setElements([text]);
@@ -310,7 +310,7 @@ describe("textWysiwyg", () => {
     });
 
     it("should restore original text after unwrapping a wrapped text", async () => {
-      const originalText = "Excalidraw\neditor\nis great!";
+      const originalText = "Xcalidraw\neditor\nis great!";
       const text = API.createElement({
         type: "text",
         text: originalText,
@@ -326,7 +326,7 @@ describe("textWysiwyg", () => {
       Keyboard.exitTextEditor(editor);
       // restore after unwrapping
       UI.resize(text, "e", [40, 0]);
-      expect((h.elements[0] as ExcalidrawTextElement).text).toBe(originalText);
+      expect((h.elements[0] as XcalidrawTextElement).text).toBe(originalText);
 
       // wrap again and add a new line
       UI.resize(text, "e", [-30, 0]);
@@ -343,7 +343,7 @@ describe("textWysiwyg", () => {
       // unwrap
       UI.resize(text, "e", [30, 0]);
       // expect the text to be restored the same
-      expect((h.elements[0] as ExcalidrawTextElement).text).toBe(originalText);
+      expect((h.elements[0] as XcalidrawTextElement).text).toBe(originalText);
     });
   });
 
@@ -352,14 +352,14 @@ describe("textWysiwyg", () => {
     const dimensions = { height: 400, width: 800 };
 
     let textarea: HTMLTextAreaElement;
-    let textElement: ExcalidrawTextElement;
+    let textElement: XcalidrawTextElement;
 
     beforeAll(() => {
       mockBoundingClientRect(dimensions);
     });
 
     beforeEach(async () => {
-      await render(<Excalidraw handleKeyboardGlobally={true} />);
+      await render(<Xcalidraw handleKeyboardGlobally={true} />);
       // @ts-ignore
       h.app.refreshEditorInterface();
 
@@ -557,12 +557,12 @@ describe("textWysiwyg", () => {
       textarea = await getTextEditor();
       updateTextEditor(
         textarea,
-        "Excalidraw is an opensource virtual collaborative whiteboard for sketching hand-drawn like diagrams!",
+        "Xcalidraw is an opensource virtual collaborative whiteboard for sketching hand-drawn like diagrams!",
       );
       Keyboard.exitTextEditor(textarea);
 
       expect(textarea.style.width).toBe("792px");
-      expect(h.elements[0].width).toBe(1000);
+      expect(h.elements[0].width).toBe(990);
     });
   });
 
@@ -571,7 +571,7 @@ describe("textWysiwyg", () => {
     const { h } = window;
 
     beforeEach(async () => {
-      await render(<Excalidraw handleKeyboardGlobally={true} />);
+      await render(<Xcalidraw handleKeyboardGlobally={true} />);
       API.setElements([]);
 
       rectangle = UI.createElement("rectangle", {
@@ -599,7 +599,7 @@ describe("textWysiwyg", () => {
       mouse.doubleClickAt(rectangle.x + 10, rectangle.y + 10);
       expect(h.elements.length).toBe(2);
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
       expect(rectangle.boundElements).toStrictEqual([
@@ -625,7 +625,7 @@ describe("textWysiwyg", () => {
       });
       API.setElements([rectangle]);
       mouse.doubleClickAt(rectangle.x + 10, rectangle.y + 10);
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
       expect(rectangle.boundElements).toStrictEqual([
@@ -689,7 +689,7 @@ describe("textWysiwyg", () => {
 
       mouse.doubleClickAt(rectangle.x + 10, rectangle.y + 10);
       expect(h.elements.length).toBe(2);
-      let text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      let text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(null);
       mouse.down();
@@ -702,7 +702,7 @@ describe("textWysiwyg", () => {
       );
       expect(h.elements.length).toBe(3);
 
-      text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
 
@@ -725,7 +725,7 @@ describe("textWysiwyg", () => {
 
       expect(h.elements.length).toBe(2);
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
       const editor = await getTextEditor();
@@ -754,7 +754,7 @@ describe("textWysiwyg", () => {
       mouse.doubleClickAt(rectangle.x + 2, rectangle.y + 2);
       expect(h.elements.length).toBe(2);
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
       expect(rectangle.boundElements).toStrictEqual([
@@ -791,7 +791,7 @@ describe("textWysiwyg", () => {
 
       expect(freedraw.boundElements).toBe(null);
       expect(h.elements[1].type).toBe("text");
-      expect((h.elements[1] as ExcalidrawTextElement).containerId).toBe(null);
+      expect((h.elements[1] as XcalidrawTextElement).containerId).toBe(null);
     });
 
     ["freedraw", "line"].forEach((type: any) => {
@@ -815,7 +815,7 @@ describe("textWysiwyg", () => {
       mouse.doubleClickAt(rectangle.x + 20, rectangle.y + 20);
       expect(h.elements.length).toBe(2);
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(null);
       mouse.down();
@@ -837,7 +837,7 @@ describe("textWysiwyg", () => {
 
       updateTextEditor(
         editor,
-        "Excalidraw is an opensource virtual collaborative whiteboard",
+        "Xcalidraw is an opensource virtual collaborative whiteboard",
       );
       expect(h.elements.length).toBe(2);
       expect(h.elements[1].type).toBe("text");
@@ -852,7 +852,7 @@ describe("textWysiwyg", () => {
       fireEvent.click(
         queryByText(contextMenu as HTMLElement, "Bind text to the container")!,
       );
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(rectangle.boundElements).toStrictEqual([
         { id: h.elements[1].id, type: "text" },
       ]);
@@ -875,7 +875,7 @@ describe("textWysiwyg", () => {
         rectangle.y + rectangle.height / 2,
       );
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       const editor = await getTextEditor();
 
       updateTextEditor(editor, "Hello World!");
@@ -891,7 +891,7 @@ describe("textWysiwyg", () => {
       fireEvent.click(screen.getByTitle(/code/i));
 
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY["Comic Shanns"]);
 
       //undo
@@ -899,7 +899,7 @@ describe("textWysiwyg", () => {
         Keyboard.keyPress(KEYS.Z);
       });
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY.Excalifont);
 
       //redo
@@ -907,7 +907,7 @@ describe("textWysiwyg", () => {
         Keyboard.keyPress(KEYS.Z);
       });
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY["Comic Shanns"]);
     });
 
@@ -915,13 +915,13 @@ describe("textWysiwyg", () => {
       expect(h.elements.length).toBe(1);
 
       Keyboard.keyDown(KEYS.ENTER);
-      let text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      let text = h.elements[1] as XcalidrawTextElementWithContainer;
       let editor = await getTextEditor();
 
       updateTextEditor(editor, "Hello World!");
 
       Keyboard.exitTextEditor(editor);
-      text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.text).toBe("Hello\nWorld!");
       expect(text.originalText).toBe("Hello World!");
       expect(text.y).toBe(
@@ -940,7 +940,7 @@ describe("textWysiwyg", () => {
       updateTextEditor(editor, "Hello");
 
       Keyboard.exitTextEditor(editor);
-      text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      text = h.elements[1] as XcalidrawTextElementWithContainer;
 
       expect(text.text).toBe("Hello");
       expect(text.originalText).toBe("Hello");
@@ -960,7 +960,7 @@ describe("textWysiwyg", () => {
 
       expect(h.elements.length).toBe(2);
 
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.containerId).toBe(rectangle.id);
 
       const editor = await getTextEditor();
@@ -983,9 +983,7 @@ describe("textWysiwyg", () => {
       const contextMenu = document.querySelector(".context-menu");
       fireEvent.click(queryByText(contextMenu as HTMLElement, "Unbind text")!);
       expect(h.elements[0].boundElements).toEqual([]);
-      expect((h.elements[1] as ExcalidrawTextElement).containerId).toEqual(
-        null,
-      );
+      expect((h.elements[1] as XcalidrawTextElement).containerId).toEqual(null);
     });
 
     it("shouldn't bind to container if container has bound text", async () => {
@@ -996,7 +994,7 @@ describe("textWysiwyg", () => {
       expect(h.elements.length).toBe(2);
 
       // Bind first text
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.containerId).toBe(rectangle.id);
       const editor = await getTextEditor();
       updateTextEditor(editor, "Hello World!");
@@ -1085,7 +1083,7 @@ describe("textWysiwyg", () => {
 
       expect(h.elements.length).toBe(3);
       expect(h.elements[1].type).toBe("text");
-      const text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      const text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.type).toBe("text");
       expect(text.containerId).toBe(rectangle.id);
       mouse.down();
@@ -1106,7 +1104,7 @@ describe("textWysiwyg", () => {
       const editor = await getTextEditor();
       updateTextEditor(editor, "Hello");
       Keyboard.exitTextEditor(editor);
-      const textElement = h.elements[1] as ExcalidrawTextElement;
+      const textElement = h.elements[1] as XcalidrawTextElement;
       expect(rectangle.width).toBe(90);
       expect(rectangle.height).toBe(75);
       expect(textElement.fontSize).toBe(20);
@@ -1134,10 +1132,9 @@ describe("textWysiwyg", () => {
       });
       expect(h.elements.length).toBe(4);
       const duplicatedRectangle = h.elements[0];
-      const duplicatedText = h
-        .elements[1] as ExcalidrawTextElementWithContainer;
+      const duplicatedText = h.elements[1] as XcalidrawTextElementWithContainer;
       const originalRect = h.elements[2];
-      const originalText = h.elements[3] as ExcalidrawTextElementWithContainer;
+      const originalText = h.elements[3] as XcalidrawTextElementWithContainer;
       expect(originalRect.boundElements).toStrictEqual([
         { id: originalText.id, type: "text" },
       ]);
@@ -1159,7 +1156,7 @@ describe("textWysiwyg", () => {
       expect(rectangle.boundElements).toStrictEqual([
         { id: h.elements[1].id, type: "text" },
       ]);
-      let text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      let text = h.elements[1] as XcalidrawTextElementWithContainer;
       const originalRectX = rectangle.x;
       const originalRectY = rectangle.y;
       const originalTextX = text.x;
@@ -1178,7 +1175,7 @@ describe("textWysiwyg", () => {
       });
       expect(rectangle.x).toBe(originalRectX);
       expect(rectangle.y).toBe(originalRectY);
-      text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.x).toBe(originalTextX);
       expect(text.y).toBe(originalTextY);
       expect(rectangle.boundElements).toStrictEqual([
@@ -1228,7 +1225,7 @@ describe("textWysiwyg", () => {
         queryByText(contextMenu as HTMLElement, "Bind text to the container")!,
       );
 
-      expect((h.elements[1] as ExcalidrawTextElementWithContainer).text).toBe(
+      expect((h.elements[1] as XcalidrawTextElementWithContainer).text).toBe(
         "Online\nwhiteboa\nrd\ncollabor\nation\nmade\neasy",
       );
       fireEvent.contextMenu(GlobalTestState.interactiveCanvas, {
@@ -1283,13 +1280,13 @@ describe("textWysiwyg", () => {
       fireEvent.click(screen.getByTitle(/code/i));
 
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY["Comic Shanns"]);
       expect(getOriginalContainerHeightFromCache(rectangle.id)).toBe(75);
 
       fireEvent.click(screen.getByTitle(/Very large/i));
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontSize,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontSize,
       ).toEqual(36);
       expect(getOriginalContainerHeightFromCache(rectangle.id)).toBe(100);
     });
@@ -1302,7 +1299,7 @@ describe("textWysiwyg", () => {
       updateTextEditor(editor, "Hello World!");
       Keyboard.exitTextEditor(editor);
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).lineHeight,
+        (h.elements[1] as XcalidrawTextElementWithContainer).lineHeight,
       ).toEqual(1.25);
 
       mouse.select(rectangle);
@@ -1310,18 +1307,18 @@ describe("textWysiwyg", () => {
 
       fireEvent.click(screen.getByTitle(/code/i));
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY["Comic Shanns"]);
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).lineHeight,
+        (h.elements[1] as XcalidrawTextElementWithContainer).lineHeight,
       ).toEqual(1.25);
 
       fireEvent.click(screen.getByTitle(/normal/i));
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).fontFamily,
+        (h.elements[1] as XcalidrawTextElementWithContainer).fontFamily,
       ).toEqual(FONT_FAMILY.Nunito);
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).lineHeight,
+        (h.elements[1] as XcalidrawTextElementWithContainer).lineHeight,
       ).toEqual(1.25);
     });
 
@@ -1450,7 +1447,7 @@ describe("textWysiwyg", () => {
 
       updateTextEditor(
         editor,
-        "Excalidraw is an opensource virtual collaborative whiteboard",
+        "Xcalidraw is an opensource virtual collaborative whiteboard",
       );
 
       editor.select();
@@ -1458,12 +1455,12 @@ describe("textWysiwyg", () => {
 
       Keyboard.exitTextEditor(editor);
 
-      const textElement = h.elements[1] as ExcalidrawTextElement;
-      expect(textElement.width).toBe(600);
+      const textElement = h.elements[1] as XcalidrawTextElement;
+      expect(textElement.width).toBe(590);
       expect(textElement.height).toBe(25);
       expect(textElement.textAlign).toBe(TEXT_ALIGN.LEFT);
-      expect((textElement as ExcalidrawTextElement).text).toBe(
-        "Excalidraw is an opensource virtual collaborative whiteboard",
+      expect((textElement as XcalidrawTextElement).text).toBe(
+        "Xcalidraw is an opensource virtual collaborative whiteboard",
       );
 
       API.setSelectedElements([textElement]);
@@ -1505,14 +1502,14 @@ describe("textWysiwyg", () => {
           type: "rectangle",
           updated: 1,
           version: 2,
-          width: 610,
+          width: 600,
           x: 15,
           y: 25,
         }),
       );
-      expect(h.elements[2] as ExcalidrawTextElement).toEqual(
+      expect(h.elements[2] as XcalidrawTextElement).toEqual(
         expect.objectContaining({
-          text: "Excalidraw is an opensource virtual collaborative whiteboard",
+          text: "Xcalidraw is an opensource virtual collaborative whiteboard",
           verticalAlign: VERTICAL_ALIGN.MIDDLE,
           textAlign: TEXT_ALIGN.CENTER,
           boundElements: null,
@@ -1528,12 +1525,12 @@ describe("textWysiwyg", () => {
       expect(h.elements.length).toBe(2);
 
       // Bind first text
-      let text = h.elements[1] as ExcalidrawTextElementWithContainer;
+      let text = h.elements[1] as XcalidrawTextElementWithContainer;
       expect(text.containerId).toBe(rectangle.id);
       let editor = await getTextEditor();
       updateTextEditor(editor, "Hello!");
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).verticalAlign,
+        (h.elements[1] as XcalidrawTextElementWithContainer).verticalAlign,
       ).toBe(VERTICAL_ALIGN.MIDDLE);
 
       fireEvent.click(screen.getByTitle("Align bottom"));
@@ -1544,7 +1541,7 @@ describe("textWysiwyg", () => {
         { id: text.id, type: "text" },
       ]);
       expect(
-        (h.elements[1] as ExcalidrawTextElementWithContainer).verticalAlign,
+        (h.elements[1] as XcalidrawTextElementWithContainer).verticalAlign,
       ).toBe(VERTICAL_ALIGN.BOTTOM);
 
       // Attempt to Bind 2nd text using text tool
@@ -1554,16 +1551,16 @@ describe("textWysiwyg", () => {
         rectangle.y + rectangle.height / 2,
       );
       editor = await getTextEditor();
-      updateTextEditor(editor, "Excalidraw");
+      updateTextEditor(editor, "Xcalidraw");
       Keyboard.exitTextEditor(editor);
 
       expect(h.elements.length).toBe(3);
       expect(rectangle.boundElements).toStrictEqual([
         { id: h.elements[1].id, type: "text" },
       ]);
-      text = h.elements[2] as ExcalidrawTextElementWithContainer;
+      text = h.elements[2] as XcalidrawTextElementWithContainer;
       expect(text.containerId).toBe(null);
-      expect(text.text).toBe("Excalidraw");
+      expect(text.text).toBe("Xcalidraw");
     });
 
     it("should reset the text element angle to the container's when binding to rotated non-arrow container", async () => {

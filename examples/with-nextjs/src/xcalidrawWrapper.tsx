@@ -1,23 +1,23 @@
 "use client";
-import * as excalidrawLib from "@xcalidraw/xcalidraw";
-import { Excalidraw } from "@xcalidraw/xcalidraw";
+import * as xcalidrawLib from "@xcalidraw/xcalidraw";
+import { Xcalidraw } from "@xcalidraw/xcalidraw";
 
 import "@xcalidraw/xcalidraw/index.css";
 
 import App from "../../with-script-in-browser/components/ExampleApp";
 
-const ExcalidrawWrapper: React.FC = () => {
+const XcalidrawWrapper: React.FC = () => {
   return (
     <>
       <App
-        appTitle={"Excalidraw with Nextjs Example"}
+        appTitle={"Xcalidraw with Nextjs Example"}
         useCustom={(api: any, args?: any[]) => {}}
-        excalidrawLib={excalidrawLib}
+        xcalidrawLib={xcalidrawLib}
       >
-        <Excalidraw />
+        <Xcalidraw />
       </App>
     </>
   );
 };
 
-export default ExcalidrawWrapper;
+export default XcalidrawWrapper;

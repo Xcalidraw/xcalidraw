@@ -5,18 +5,18 @@ import styles from "./styles.module.css";
 
 const FeatureList = [
   {
-    title: "Learn how Excalidraw works",
+    title: "Learn how Xcalidraw works",
     Svg: require("@site/static/img/undraw_innovative.svg").default,
     description: (
-      <>Want to contribute to Excalidraw but got lost in the codebase?</>
+      <>Want to contribute to Xcalidraw but got lost in the codebase?</>
     ),
   },
   {
-    title: "Integrate Excalidraw",
+    title: "Integrate Xcalidraw",
     Svg: require("@site/static/img/undraw_blank_canvas.svg").default,
     description: (
       <>
-        Want to build your own app powered by Excalidraw but don't know where to
+        Want to build your own app powered by Xcalidraw but don't know where to
         start?
       </>
     ),

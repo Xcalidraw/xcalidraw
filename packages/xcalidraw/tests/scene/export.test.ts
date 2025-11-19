@@ -13,9 +13,9 @@ import {
 import { API } from "../helpers/api";
 
 import type {
-  ExcalidrawTextElement,
+  XcalidrawTextElement,
   FractionalIndex,
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 describe("exportToSvg", () => {
@@ -47,7 +47,7 @@ describe("exportToSvg", () => {
       width: ELEMENT_WIDTH,
       index: "a3",
     },
-  ] as NonDeletedExcalidrawElement[];
+  ] as NonDeletedXcalidrawElement[];
 
   const DEFAULT_OPTIONS = {
     exportBackground: false,
@@ -77,7 +77,7 @@ describe("exportToSvg", () => {
           originalText:
             "中国你好！这是一个测试。中国你好！日本こんにちは！これはテストです。한국 안녕하세요! 이것은 테스트입니다.",
           index: "a4" as FractionalIndex,
-        } as ExcalidrawTextElement,
+        } as XcalidrawTextElement,
       ],
       DEFAULT_OPTIONS,
       null,

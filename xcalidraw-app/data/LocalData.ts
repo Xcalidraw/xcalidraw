@@ -37,7 +37,7 @@ import { updateBrowserStateVersion } from "./tabSync";
 
 import type { LibraryPersistedData } from "@xcalidraw/xcalidraw/data/library";
 import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
-import type { ExcalidrawElement, FileId } from "@xcalidraw/element/types";
+import type { XcalidrawElement, FileId } from "@xcalidraw/element/types";
 import type {
   AppState,
   BinaryFileData,
@@ -70,7 +70,7 @@ class LocalFileManager extends FileManager {
 }
 
 const saveDataStateToLocalStorage = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
 ) => {
   const localStorageQuotaExceeded = appJotaiStore.get(
@@ -116,7 +116,7 @@ type SavingLockTypes = "collaboration";
 export class LocalData {
   private static _save = debounce(
     async (
-      elements: readonly ExcalidrawElement[],
+      elements: readonly XcalidrawElement[],
       appState: AppState,
       files: BinaryFiles,
       onFilesSaved: () => void,
@@ -134,7 +134,7 @@ export class LocalData {
 
   /** Saves DataState, including files. Bails if saving is paused */
   static save = (
-    elements: readonly ExcalidrawElement[],
+    elements: readonly XcalidrawElement[],
     appState: AppState,
     files: BinaryFiles,
     onFilesSaved: () => void,

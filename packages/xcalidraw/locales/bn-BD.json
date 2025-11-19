@@ -91,7 +91,7 @@
     "untitled": "অনামী",
     "name": "নাম",
     "yourName": "আপনার নাম",
-    "madeWithExcalidraw": "এক্সক্যালিড্র দ্বারা তৈরি",
+    "madeWithXcalidraw": "এক্সক্যালিড্র দ্বারা তৈরি",
     "group": "দল গঠন করুন",
     "ungroup": "দল বিভেদ করুন",
     "collaborators": "সহযোগী",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "ব্যক্তিগত লাইব্রেরি",
-    "excalidrawLib": "এক্সক্যালিড্র লাইব্রেরি",
+    "xcalidrawLib": "এক্সক্যালিড্র লাইব্রেরি",
     "decreaseFontSize": "লেখনীর মাত্রা কমান",
     "increaseFontSize": "লেখনীর মাত্রা বাড়ান",
     "unbindText": "লেখার জোড় খুলুন",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "",
     "link_details": "",
     "link_button": "",
-    "excalidrawplus_description": "",
-    "excalidrawplus_button": "নিবদ্ধ",
-    "excalidrawplus_exportError": ""
+    "xcalidrawplus_description": "",
+    "xcalidrawplus_button": "নিবদ্ধ",
+    "xcalidrawplus_exportError": ""
   },
   "helpDialog": {
     "blog": "",
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

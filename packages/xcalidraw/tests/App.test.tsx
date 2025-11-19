@@ -3,7 +3,7 @@ import { vi } from "vitest";
 
 import { reseed } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 import * as StaticScene from "../renderer/staticScene";
 import { render, queryByTestId, unmountComponent } from "../tests/test-utils";
 
@@ -35,10 +35,10 @@ describe("Test <App/>", () => {
       };
     };
 
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
     expect(
       queryByTestId(
-        document.querySelector(".excalidraw-modal-container")!,
+        document.querySelector(".xcalidraw-modal-container")!,
         "brave-measure-text-error",
       ),
     ).toMatchSnapshot();

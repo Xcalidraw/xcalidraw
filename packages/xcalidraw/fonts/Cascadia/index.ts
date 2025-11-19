@@ -1,8 +1,8 @@
-import { type ExcalidrawFontFaceDescriptor } from "../Fonts";
+import { type XcalidrawFontFaceDescriptor } from "../Fonts";
 
 import CascadiaCodeRegular from "./CascadiaCode-Regular.woff2";
 
-export const CascadiaFontFaces: ExcalidrawFontFaceDescriptor[] = [
+export const CascadiaFontFaces: XcalidrawFontFaceDescriptor[] = [
   {
     uri: CascadiaCodeRegular,
   },

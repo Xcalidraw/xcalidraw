@@ -2,7 +2,7 @@ import React from "react";
 
 import { CURSOR_TYPE, KEYS } from "@xcalidraw/common";
 
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { Keyboard, Pointer, UI } from "./helpers/ui";
@@ -15,7 +15,7 @@ const pointerTypes = [mouse, touch, pen];
 
 describe("view mode", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("after switching to view mode – cursor type should be pointer", async () => {

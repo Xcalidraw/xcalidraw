@@ -7,7 +7,7 @@ import type { AppState } from "@xcalidraw/xcalidraw/types";
 import type { Scene } from "./Scene";
 
 import type { BoundingBox } from "./bounds";
-import type { ExcalidrawElement } from "./types";
+import type { XcalidrawElement } from "./types";
 
 export interface Alignment {
   position: "start" | "center" | "end";
@@ -15,12 +15,12 @@ export interface Alignment {
 }
 
 export const alignElements = (
-  selectedElements: ExcalidrawElement[],
+  selectedElements: XcalidrawElement[],
   alignment: Alignment,
   scene: Scene,
   appState: Readonly<AppState>,
-): ExcalidrawElement[] => {
-  const groups: ExcalidrawElement[][] = getSelectedElementsByGroup(
+): XcalidrawElement[] => {
+  const groups: XcalidrawElement[][] = getSelectedElementsByGroup(
     selectedElements,
     scene.getNonDeletedElementsMap(),
     appState,
@@ -50,7 +50,7 @@ export const alignElements = (
 };
 
 const calculateTranslation = (
-  group: ExcalidrawElement[],
+  group: XcalidrawElement[],
   selectionBoundingBox: BoundingBox,
   { axis, position }: Alignment,
 ): { x: number; y: number } => {

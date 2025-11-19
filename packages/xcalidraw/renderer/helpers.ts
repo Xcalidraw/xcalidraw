@@ -17,8 +17,8 @@ import {
 
 import type {
   ElementsMap,
-  ExcalidrawDiamondElement,
-  ExcalidrawRectanguloidElement,
+  XcalidrawDiamondElement,
+  XcalidrawRectanguloidElement,
 } from "@xcalidraw/element/types";
 
 import type { StaticCanvasRenderConfig } from "../scene/types";
@@ -128,7 +128,7 @@ function drawCatmullRomCubicApprox(
 
 export const drawHighlightForRectWithRotation = (
   context: CanvasRenderingContext2D,
-  element: ExcalidrawRectanguloidElement,
+  element: XcalidrawRectanguloidElement,
   elementsMap: ElementsMap,
   padding: number,
 ) => {
@@ -287,7 +287,7 @@ export const strokeRectWithRotation = (
 export const drawHighlightForDiamondWithRotation = (
   context: CanvasRenderingContext2D,
   padding: number,
-  element: ExcalidrawDiamondElement,
+  element: XcalidrawDiamondElement,
   elementsMap: ElementsMap,
 ) => {
   const [x, y] = pointRotateRads(

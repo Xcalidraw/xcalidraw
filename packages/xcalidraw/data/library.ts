@@ -32,14 +32,14 @@ import { restoreLibraryItems } from "./restore";
 
 import type { MaybePromise } from "@xcalidraw/common/utility-types";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type App from "../components/App";
 
 import type {
   LibraryItems,
   LibraryItem,
-  ExcalidrawImperativeAPI,
+  XcalidrawImperativeAPI,
   LibraryItemsSource,
   LibraryItems_anyVersion,
 } from "../types";
@@ -52,9 +52,9 @@ import type {
  * boundaries
  **/
 const ALLOWED_LIBRARY_URLS = [
-  "excalidraw.com",
+  "xcalidraw.com",
   // when installing from github PRs
-  "raw.githubusercontent.com/excalidraw/excalidraw-libraries",
+  "raw.githubusercontent.com/xcalidraw/xcalidraw-libraries",
 ];
 
 type LibraryUpdate = {
@@ -128,12 +128,12 @@ const isUniqueItem = (
       return false;
     }
 
-    // detect z-index difference by checking the excalidraw elements
+    // detect z-index difference by checking the xcalidraw elements
     // are in order
-    return libraryItem.elements.every((libItemExcalidrawItem, idx) => {
+    return libraryItem.elements.every((libItemXcalidrawItem, idx) => {
       return (
-        libItemExcalidrawItem.id === targetLibraryItem.elements[idx].id &&
-        libItemExcalidrawItem.versionNonce ===
+        libItemXcalidrawItem.id === targetLibraryItem.elements[idx].id &&
+        libItemXcalidrawItem.versionNonce ===
           targetLibraryItem.elements[idx].versionNonce
       );
     });
@@ -245,7 +245,7 @@ class Library {
     }
   };
 
-  /** call on excalidraw instance unmount */
+  /** call on xcalidraw instance unmount */
   destroy = () => {
     this.updateQueue = [];
     this.currLibraryItems = [];
@@ -281,7 +281,7 @@ class Library {
     });
   };
 
-  // NOTE this is a high-level public API (exposed on ExcalidrawAPI) with
+  // NOTE this is a high-level public API (exposed on XcalidrawAPI) with
   // a slight overhead (always restoring library items). For internal use
   // where merging isn't needed, use `library.setLibrary()` directly.
   updateLibrary = async ({
@@ -408,7 +408,7 @@ export const distributeLibraryItemsOnSquareGrid = (
   const PADDING = 50;
   const ITEMS_PER_ROW = Math.ceil(Math.sqrt(libraryItems.length));
 
-  const resElements: ExcalidrawElement[] = [];
+  const resElements: XcalidrawElement[] = [];
 
   const getMaxHeightPerRow = (row: number) => {
     const maxHeight = libraryItems
@@ -676,10 +676,10 @@ const persistLibraryUpdate = async (
 
 export const useHandleLibrary = (
   opts: {
-    excalidrawAPI: ExcalidrawImperativeAPI | null;
+    xcalidrawAPI: XcalidrawImperativeAPI | null;
     /**
      * Return `true` if the library install url should be allowed.
-     * If not supplied, only the excalidraw.com base domain is allowed.
+     * If not supplied, only the xcalidraw.com base domain is allowed.
      */
     validateLibraryUrl?: (libraryUrl: string) => boolean;
   } & (
@@ -700,7 +700,7 @@ export const useHandleLibrary = (
       }
   ),
 ) => {
-  const { excalidrawAPI } = opts;
+  const { xcalidrawAPI } = opts;
 
   const optsRef = useRef(opts);
   optsRef.current = opts;
@@ -708,11 +708,11 @@ export const useHandleLibrary = (
   const isLibraryLoadedRef = useRef(false);
 
   useEffect(() => {
-    if (!excalidrawAPI) {
+    if (!xcalidrawAPI) {
       return;
     }
 
-    // reset on editor remount (excalidrawAPI changed)
+    // reset on editor remount (xcalidrawAPI changed)
     isLibraryLoadedRef.current = false;
 
     const importLibraryFromURL = async ({
@@ -738,7 +738,7 @@ export const useHandleLibrary = (
         }
       });
 
-      const shouldPrompt = idToken !== excalidrawAPI.id;
+      const shouldPrompt = idToken !== xcalidrawAPI.id;
 
       // wait for the tab to be focused before continuing in case we'll prompt
       // for confirmation
@@ -751,7 +751,7 @@ export const useHandleLibrary = (
         : null);
 
       try {
-        await excalidrawAPI.updateLibrary({
+        await xcalidrawAPI.updateLibrary({
           libraryItems: libraryPromise,
           prompt: shouldPrompt,
           merge: true,
@@ -759,7 +759,7 @@ export const useHandleLibrary = (
           openLibraryMenu: true,
         });
       } catch (error: any) {
-        excalidrawAPI.updateScene({
+        xcalidrawAPI.updateScene({
           appState: {
             errorMessage: error.message,
           },
@@ -813,7 +813,7 @@ export const useHandleLibrary = (
 
       Promise.resolve(optsRef.current.getInitialLibraryItems())
         .then((libraryItems) => {
-          excalidrawAPI.updateLibrary({
+          xcalidrawAPI.updateLibrary({
             libraryItems,
             // merge with current library items because we may have already
             // populated it (e.g. by installing 3rd party library which can
@@ -901,7 +901,7 @@ export const useHandleLibrary = (
       }
 
       // load initial (or migrated) library
-      excalidrawAPI
+      xcalidrawAPI
         .updateLibrary({
           libraryItems: initDataPromise.then((libraryItems) => {
             const _libraryItems = libraryItems || [];
@@ -924,12 +924,12 @@ export const useHandleLibrary = (
       window.removeEventListener(EVENT.HASHCHANGE, onHashChange);
     };
   }, [
-    // important this useEffect only depends on excalidrawAPI so it only reruns
-    // on editor remounts (the excalidrawAPI changes)
-    excalidrawAPI,
+    // important this useEffect only depends on xcalidrawAPI so it only reruns
+    // on editor remounts (the xcalidrawAPI changes)
+    xcalidrawAPI,
   ]);
 
-  // This effect is run without excalidrawAPI dependency so that host apps
+  // This effect is run without xcalidrawAPI dependency so that host apps
   // can run this hook outside of an active editor instance and the library
   // update queue/loop survives editor remounts
   //
@@ -968,8 +968,8 @@ export const useHandleLibrary = (
             );
 
             // currently we only show error if an editor is loaded
-            if (isLoaded && optsRef.current.excalidrawAPI) {
-              optsRef.current.excalidrawAPI.updateScene({
+            if (isLoaded && optsRef.current.xcalidrawAPI) {
+              optsRef.current.xcalidrawAPI.updateScene({
                 appState: {
                   errorMessage: t("errors.saveLibraryError"),
                 },

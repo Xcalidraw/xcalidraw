@@ -64,7 +64,7 @@ import { LaserPointerButton } from "./LaserPointerButton";
 import "./LayerUI.scss";
 import "./Toolbar.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ActionManager } from "../actions/manager";
 
@@ -72,7 +72,7 @@ import type { Language } from "../i18n";
 import type {
   AppProps,
   AppState,
-  ExcalidrawProps,
+  XcalidrawProps,
   BinaryFiles,
   UIAppState,
   AppClassProperties,
@@ -84,15 +84,15 @@ interface LayerUIProps {
   files: BinaryFiles;
   canvas: HTMLCanvasElement;
   setAppState: React.Component<any, AppState>["setState"];
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   onLockToggle: () => void;
   onHandToolToggle: () => void;
   onPenModeToggle: AppClassProperties["togglePenMode"];
   showExitZenModeBtn: boolean;
   langCode: Language["code"];
-  renderTopLeftUI?: ExcalidrawProps["renderTopLeftUI"];
-  renderTopRightUI?: ExcalidrawProps["renderTopRightUI"];
-  renderCustomStats?: ExcalidrawProps["renderCustomStats"];
+  renderTopLeftUI?: XcalidrawProps["renderTopLeftUI"];
+  renderTopRightUI?: XcalidrawProps["renderTopRightUI"];
+  renderCustomStats?: XcalidrawProps["renderCustomStats"];
   UIOptions: AppProps["UIOptions"];
   onExportImage: AppClassProperties["onExportImage"];
   renderWelcomeScreen: boolean;
@@ -119,7 +119,7 @@ const DefaultMainMenu: React.FC<{
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
-      <MainMenu.Group title="Excalidraw links">
+      <MainMenu.Group title="Xcalidraw links">
         <MainMenu.DefaultItems.Socials />
       </MainMenu.Group>
       <MainMenu.Separator />

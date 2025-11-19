@@ -2,9 +2,9 @@ import { DEFAULT_FONT_FAMILY } from "@xcalidraw/common";
 
 import type { Radians } from "@xcalidraw/math";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
-const elementBase: Omit<ExcalidrawElement, "type"> = {
+const elementBase: Omit<XcalidrawElement, "type"> = {
   id: "vWrqOAfkind2qcm7LDAGZ",
   x: 414,
   y: 237,
@@ -32,29 +32,29 @@ const elementBase: Omit<ExcalidrawElement, "type"> = {
   locked: false,
 };
 
-export const rectangleFixture: ExcalidrawElement = {
+export const rectangleFixture: XcalidrawElement = {
   ...elementBase,
   type: "rectangle",
 };
-export const embeddableFixture: ExcalidrawElement = {
+export const embeddableFixture: XcalidrawElement = {
   ...elementBase,
   type: "embeddable",
 };
-export const ellipseFixture: ExcalidrawElement = {
+export const ellipseFixture: XcalidrawElement = {
   ...elementBase,
   type: "ellipse",
 };
-export const diamondFixture: ExcalidrawElement = {
+export const diamondFixture: XcalidrawElement = {
   ...elementBase,
   type: "diamond",
 };
-export const rectangleWithLinkFixture: ExcalidrawElement = {
+export const rectangleWithLinkFixture: XcalidrawElement = {
   ...elementBase,
   type: "rectangle",
-  link: "excalidraw.com",
+  link: "xcalidraw.com",
 };
 
-export const textFixture: ExcalidrawElement = {
+export const textFixture: XcalidrawElement = {
   ...elementBase,
   type: "text",
   fontSize: 20,

@@ -3,13 +3,13 @@ import React from "react";
 import { EXPORT_DATA_TYPES, MIME_TYPES } from "@xcalidraw/common";
 
 import { getDefaultAppState } from "../appState";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { Pointer, UI } from "./helpers/ui";
 import { fireEvent, queryByTestId, render, waitFor } from "./test-utils";
 
-import type { ExcalidrawTextElement } from "@xcalidraw/element/types";
+import type { XcalidrawTextElement } from "@xcalidraw/element/types";
 
 const { h } = window;
 
@@ -19,7 +19,7 @@ describe("appState", () => {
     const exportBackground = !defaultAppState.exportBackground;
 
     await render(
-      <Excalidraw
+      <Xcalidraw
         initialData={{
           appState: {
             exportBackground,
@@ -41,7 +41,7 @@ describe("appState", () => {
         file: new Blob(
           [
             JSON.stringify({
-              type: EXPORT_DATA_TYPES.excalidraw,
+              type: EXPORT_DATA_TYPES.xcalidraw,
               appState: {
                 viewBackgroundColor: "#000",
               },
@@ -64,7 +64,7 @@ describe("appState", () => {
 
   it("changing fontSize with text tool selected (no element created yet)", async () => {
     const { container } = await render(
-      <Excalidraw
+      <Xcalidraw
         initialData={{
           appState: {
             currentItemFontSize: 30,
@@ -83,6 +83,6 @@ describe("appState", () => {
 
     mouse.clickAt(100, 100);
 
-    expect((h.elements[0] as ExcalidrawTextElement).fontSize).toBe(16);
+    expect((h.elements[0] as XcalidrawTextElement).fontSize).toBe(16);
   });
 });

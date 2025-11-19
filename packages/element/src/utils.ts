@@ -26,21 +26,21 @@ import type { Curve, LineSegment, LocalPoint } from "@xcalidraw/math";
 import type { NormalizedZoomValue, Zoom } from "@xcalidraw/xcalidraw/types";
 
 import type {
-  ExcalidrawDiamondElement,
-  ExcalidrawElement,
-  ExcalidrawFreeDrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawRectanguloidElement,
+  XcalidrawDiamondElement,
+  XcalidrawElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawLinearElement,
+  XcalidrawRectanguloidElement,
 } from "./types";
 
 type ElementShape = [LineSegment<GlobalPoint>[], Curve<GlobalPoint>[]];
 
 const ElementShapesCache = new WeakMap<
-  ExcalidrawElement,
-  { version: ExcalidrawElement["version"]; shapes: Map<number, ElementShape> }
+  XcalidrawElement,
+  { version: XcalidrawElement["version"]; shapes: Map<number, ElementShape> }
 >();
 
-const getElementShapesCacheEntry = <T extends ExcalidrawElement>(
+const getElementShapesCacheEntry = <T extends XcalidrawElement>(
   element: T,
   offset: number,
 ): ElementShape | undefined => {
@@ -60,7 +60,7 @@ const getElementShapesCacheEntry = <T extends ExcalidrawElement>(
   return shapes.get(offset);
 };
 
-const setElementShapesCacheEntry = <T extends ExcalidrawElement>(
+const setElementShapesCacheEntry = <T extends XcalidrawElement>(
   element: T,
   shape: ElementShape,
   offset: number,
@@ -97,7 +97,7 @@ const setElementShapesCacheEntry = <T extends ExcalidrawElement>(
  * @returns The rotated in components.
  */
 export function deconstructLinearOrFreeDrawElement(
-  element: ExcalidrawLinearElement | ExcalidrawFreeDrawElement,
+  element: XcalidrawLinearElement | XcalidrawFreeDrawElement,
 ): [LineSegment<GlobalPoint>[], Curve<GlobalPoint>[]] {
   const cachedShape = getElementShapesCacheEntry(element, 0);
 
@@ -184,7 +184,7 @@ export function deconstructLinearOrFreeDrawElement(
  * @returns Tuple of **unrotated** line segments (0) and curves (1)
  */
 export function deconstructRectanguloidElement(
-  element: ExcalidrawRectanguloidElement,
+  element: XcalidrawRectanguloidElement,
   offset: number = 0,
 ): [LineSegment<GlobalPoint>[], Curve<GlobalPoint>[]] {
   const cachedShape = getElementShapesCacheEntry(element, offset);
@@ -324,7 +324,7 @@ export function deconstructRectanguloidElement(
  * @returns Tuple of line **unrotated** segments (0) and curves (1)
  */
 export function deconstructDiamondElement(
-  element: ExcalidrawDiamondElement,
+  element: XcalidrawDiamondElement,
   offset: number = 0,
 ): [LineSegment<GlobalPoint>[], Curve<GlobalPoint>[]] {
   const cachedShape = getElementShapesCacheEntry(element, offset);
@@ -444,7 +444,7 @@ export function deconstructDiamondElement(
 // Checks if the first and last point are close enough
 // to be considered a loop
 export const isPathALoop = (
-  points: ExcalidrawLinearElement["points"],
+  points: XcalidrawLinearElement["points"],
   /** supply if you want the loop detection to account for current zoom */
   zoomValue: Zoom["value"] = 1 as NormalizedZoomValue,
 ): boolean => {
@@ -459,7 +459,7 @@ export const isPathALoop = (
   return false;
 };
 
-export const getCornerRadius = (x: number, element: ExcalidrawElement) => {
+export const getCornerRadius = (x: number, element: XcalidrawElement) => {
   if (
     element.roundness?.type === ROUNDNESS.PROPORTIONAL_RADIUS ||
     element.roundness?.type === ROUNDNESS.LEGACY

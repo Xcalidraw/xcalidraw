@@ -4,7 +4,7 @@ import { pointFrom } from "@xcalidraw/math";
 
 import { actionWrapTextInContainer } from "@xcalidraw/xcalidraw/actions/actionBoundText";
 
-import { Excalidraw, isLinearElement } from "@xcalidraw/xcalidraw";
+import { Xcalidraw, isLinearElement } from "@xcalidraw/xcalidraw";
 
 import { API } from "@xcalidraw/xcalidraw/tests/helpers/api";
 import { UI, Pointer, Keyboard } from "@xcalidraw/xcalidraw/tests/helpers/ui";
@@ -24,7 +24,7 @@ const mouse = new Pointer("mouse");
 
 describe("element binding", () => {
   beforeEach(async () => {
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
   });
 
   it("should create valid binding if duplicate start/end points", async () => {
@@ -155,7 +155,7 @@ describe("element binding", () => {
       expect(API.getSelectedElement().type).toBe("arrow");
 
       // NOTE this mouse down/up + await needs to be done in order to repro
-      // the issue, due to https://github.com/excalidraw/excalidraw/blob/46bff3daceb602accf60c40a84610797260fca94/src/components/App.tsx#L740
+      // the issue, due to https://github.com/xcalidraw/xcalidraw/blob/46bff3daceb602accf60c40a84610797260fca94/src/components/App.tsx#L740
       mouse.reset();
       expect(h.state.selectedLinearElement?.isEditing).toBe(true);
       mouse.down(0, 0);

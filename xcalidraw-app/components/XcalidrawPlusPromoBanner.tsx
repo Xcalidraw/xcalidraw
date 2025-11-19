@@ -1,4 +1,4 @@
-export const ExcalidrawPlusPromoBanner = ({
+export const XcalidrawPlusPromoBanner = ({
   isSignedIn,
 }: {
   isSignedIn: boolean;
@@ -10,13 +10,13 @@ export const ExcalidrawPlusPromoBanner = ({
           ? import.meta.env.VITE_APP_PLUS_APP
           : `${
               import.meta.env.VITE_APP_PLUS_LP
-            }/plus?utm_source=excalidraw&utm_medium=app&utm_content=guestBanner#excalidraw-redirect`
+            }/plus?utm_source=xcalidraw&utm_medium=app&utm_content=guestBanner#xcalidraw-redirect`
       }
       target="_blank"
       rel="noopener"
       className="plus-banner"
     >
-      Excalidraw+
+      Xcalidraw+
     </a>
   );
 };

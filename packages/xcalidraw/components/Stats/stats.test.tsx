@@ -9,7 +9,7 @@ import { isInGroup } from "@xcalidraw/element";
 
 import { isTextElement } from "@xcalidraw/element";
 
-import { Excalidraw, getCommonBounds } from "../..";
+import { Xcalidraw, getCommonBounds } from "../..";
 import { actionGroup } from "../../actions";
 import { t } from "../../i18n";
 import * as StaticScene from "../../renderer/staticScene";
@@ -26,9 +26,9 @@ import {
 import { getStepSizedValue } from "./utils";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawLinearElement,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 import type { Degrees } from "@xcalidraw/math";
@@ -40,7 +40,7 @@ let stats: HTMLElement | null = null;
 let elementStats: HTMLElement | null | undefined = null;
 
 const testInputProperty = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   property: "x" | "y" | "width" | "height" | "angle" | "fontSize",
   label: string,
   initialValue: number,
@@ -96,7 +96,7 @@ describe("binding with linear elements", () => {
     reseed(19);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     API.setElements([]);
 
@@ -129,7 +129,7 @@ describe("binding with linear elements", () => {
   });
 
   it("should remain bound to linear element on small position change", async () => {
-    const linear = h.elements[1] as ExcalidrawLinearElement;
+    const linear = h.elements[1] as XcalidrawLinearElement;
     const inputX = UI.queryStatsProperty("X")?.querySelector(
       ".drag-input",
     ) as HTMLInputElement;
@@ -140,7 +140,7 @@ describe("binding with linear elements", () => {
   });
 
   it("should remain bound to linear element on small angle change", async () => {
-    const linear = h.elements[1] as ExcalidrawLinearElement;
+    const linear = h.elements[1] as XcalidrawLinearElement;
     const inputAngle = UI.queryStatsProperty("A")?.querySelector(
       ".drag-input",
     ) as HTMLInputElement;
@@ -151,7 +151,7 @@ describe("binding with linear elements", () => {
   });
 
   it("should unbind linear element on large position change", async () => {
-    const linear = h.elements[1] as ExcalidrawLinearElement;
+    const linear = h.elements[1] as XcalidrawLinearElement;
     const inputX = UI.queryStatsProperty("X")?.querySelector(
       ".drag-input",
     ) as HTMLInputElement;
@@ -163,7 +163,7 @@ describe("binding with linear elements", () => {
   });
 
   it("should remain bound to linear element on small angle change", async () => {
-    const linear = h.elements[1] as ExcalidrawLinearElement;
+    const linear = h.elements[1] as XcalidrawLinearElement;
     const inputAngle = UI.queryStatsProperty("A")?.querySelector(
       ".drag-input",
     ) as HTMLInputElement;
@@ -182,7 +182,7 @@ describe("stats for a generic element", () => {
     reseed(7);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     API.setElements([]);
 
@@ -356,7 +356,7 @@ describe("stats for a non-generic element", () => {
     reseed(7);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     API.setElements([]);
 
@@ -387,7 +387,7 @@ describe("stats for a non-generic element", () => {
       editor.blur();
     });
 
-    const text = h.elements[0] as ExcalidrawTextElement;
+    const text = h.elements[0] as XcalidrawTextElement;
     mouse.clickOn(text);
 
     elementStats = stats?.querySelector("#elementStats");
@@ -514,7 +514,7 @@ describe("stats for multiple elements", () => {
     reseed(7);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     API.setElements([]);
 
@@ -745,7 +745,7 @@ describe("frame resizing behavior", () => {
     reseed(7);
     setDateTimeForTests("201933152653");
 
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
 
     API.setElements([]);
 

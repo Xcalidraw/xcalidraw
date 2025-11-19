@@ -40,7 +40,7 @@ import type { Mutable } from "@xcalidraw/common/utility-types";
 
 import type {
   ElementsMap,
-  ExcalidrawElement,
+  XcalidrawElement,
   GroupId,
   NonDeletedSceneElementsMap,
 } from "./types";
@@ -58,7 +58,7 @@ import type {
  *                               amongst all of them
  * @param element Element to duplicate
  */
-export const duplicateElement = <TElement extends ExcalidrawElement>(
+export const duplicateElement = <TElement extends XcalidrawElement>(
   editingGroupId: AppState["editingGroupId"],
   groupIdMapForOperation: Map<GroupId, GroupId>,
   element: TElement,
@@ -92,16 +92,16 @@ export const duplicateElement = <TElement extends ExcalidrawElement>(
 
 export const duplicateElements = (
   opts: {
-    elements: readonly ExcalidrawElement[];
+    elements: readonly XcalidrawElement[];
     randomizeSeed?: boolean;
     overrides?: (data: {
-      duplicateElement: ExcalidrawElement;
-      origElement: ExcalidrawElement;
+      duplicateElement: XcalidrawElement;
+      origElement: XcalidrawElement;
       origIdToDuplicateId: Map<
-        ExcalidrawElement["id"],
-        ExcalidrawElement["id"]
+        XcalidrawElement["id"],
+        XcalidrawElement["id"]
       >;
-    }) => Partial<ExcalidrawElement>;
+    }) => Partial<XcalidrawElement>;
   } & (
     | {
         /**
@@ -122,8 +122,8 @@ export const duplicateElements = (
          */
         type: "in-place";
         idsOfElementsToDuplicate: Map<
-          ExcalidrawElement["id"],
-          ExcalidrawElement
+          XcalidrawElement["id"],
+          XcalidrawElement
         >;
         appState: {
           editingGroupId: AppState["editingGroupId"];
@@ -152,19 +152,19 @@ export const duplicateElements = (
   //
   // For convenience we mark even the newly created ones even though we don't
   // loop over them.
-  const processedIds = new Map<ExcalidrawElement["id"], true>();
+  const processedIds = new Map<XcalidrawElement["id"], true>();
   const groupIdMap = new Map();
-  const duplicatedElements: ExcalidrawElement[] = [];
-  const origElements: ExcalidrawElement[] = [];
+  const duplicatedElements: XcalidrawElement[] = [];
+  const origElements: XcalidrawElement[] = [];
   const origIdToDuplicateId = new Map<
-    ExcalidrawElement["id"],
-    ExcalidrawElement["id"]
+    XcalidrawElement["id"],
+    XcalidrawElement["id"]
   >();
   const duplicateIdToOrigElement = new Map<
-    ExcalidrawElement["id"],
-    ExcalidrawElement
+    XcalidrawElement["id"],
+    XcalidrawElement
   >();
-  const duplicateElementsMap = new Map<string, ExcalidrawElement>();
+  const duplicateElementsMap = new Map<string, XcalidrawElement>();
   const elementsMap = arrayToMap(elements) as ElementsMap;
   const _idsOfElementsToDuplicate =
     opts.type === "in-place"
@@ -182,22 +182,22 @@ export const duplicateElements = (
 
   elements = normalizeElementOrder(elements);
 
-  const elementsWithDuplicates: ExcalidrawElement[] = elements.slice();
+  const elementsWithDuplicates: XcalidrawElement[] = elements.slice();
 
   // helper functions
   // -------------------------------------------------------------------------
 
   // Used for the heavy lifing of copying a single element, a group of elements
   // an element with bound text etc.
-  const copyElements = <T extends ExcalidrawElement | ExcalidrawElement[]>(
+  const copyElements = <T extends XcalidrawElement | XcalidrawElement[]>(
     element: T,
-  ): T extends ExcalidrawElement[]
-    ? ExcalidrawElement[]
-    : ExcalidrawElement | null => {
+  ): T extends XcalidrawElement[]
+    ? XcalidrawElement[]
+    : XcalidrawElement | null => {
     const elements = castArray(element);
 
     const _newElements = elements.reduce(
-      (acc: ExcalidrawElement[], element) => {
+      (acc: XcalidrawElement[], element) => {
         if (processedIds.has(element.id)) {
           return acc;
         }
@@ -228,15 +228,15 @@ export const duplicateElements = (
 
     return (
       Array.isArray(element) ? _newElements : _newElements[0] || null
-    ) as T extends ExcalidrawElement[]
-      ? ExcalidrawElement[]
-      : ExcalidrawElement | null;
+    ) as T extends XcalidrawElement[]
+      ? XcalidrawElement[]
+      : XcalidrawElement | null;
   };
 
   // Helper to position cloned elements in the Z-order the product needs it
   const insertBeforeOrAfterIndex = (
     index: number,
-    elements: ExcalidrawElement | null | ExcalidrawElement[],
+    elements: XcalidrawElement | null | XcalidrawElement[],
   ) => {
     if (!elements) {
       return;
@@ -401,7 +401,7 @@ export const duplicateElements = (
   };
 };
 
-// Simplified deep clone for the purpose of cloning ExcalidrawElement.
+// Simplified deep clone for the purpose of cloning XcalidrawElement.
 //
 // Only clones plain objects and arrays. Doesn't clone Date, RegExp, Map, Set,
 // Typed arrays and other non-null objects.
@@ -409,7 +409,7 @@ export const duplicateElements = (
 // Adapted from https://github.com/lukeed/klona
 //
 // The reason for `deepCopyElement()` wrapper is type safety (only allow
-// passing ExcalidrawElement as the top-level argument).
+// passing XcalidrawElement as the top-level argument).
 const _deepCopyElement = (val: any, depth: number = 0) => {
   // only clone non-primitives
   if (val == null || typeof val !== "object") {
@@ -446,7 +446,7 @@ const _deepCopyElement = (val: any, depth: number = 0) => {
   }
 
   // we're not cloning non-array & non-plain-object objects because we
-  // don't support them on excalidraw elements yet. If we do, we need to make
+  // don't support them on xcalidraw elements yet. If we do, we need to make
   // sure we start cloning them, so let's warn about it.
   if (import.meta.env.DEV) {
     if (
@@ -464,7 +464,7 @@ const _deepCopyElement = (val: any, depth: number = 0) => {
 };
 
 /**
- * Clones ExcalidrawElement data structure. Does not regenerate id, nonce, or
+ * Clones XcalidrawElement data structure. Does not regenerate id, nonce, or
  * any value. The purpose is to to break object references for immutability
  * reasons, whenever we want to keep the original element, but ensure it's not
  * mutated.
@@ -472,7 +472,7 @@ const _deepCopyElement = (val: any, depth: number = 0) => {
  * Only clones plain objects and arrays. Doesn't clone Date, RegExp, Map, Set,
  * Typed arrays and other non-null objects.
  */
-export const deepCopyElement = <T extends ExcalidrawElement>(
+export const deepCopyElement = <T extends XcalidrawElement>(
   val: T,
 ): Mutable<T> => {
   return _deepCopyElement(val);

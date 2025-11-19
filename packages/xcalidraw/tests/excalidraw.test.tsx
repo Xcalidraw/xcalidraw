@@ -5,23 +5,23 @@ import { useMemo } from "react";
 import { THEME } from "@xcalidraw/common";
 
 import { t } from "../i18n";
-import { Excalidraw, Footer, MainMenu } from "../index";
+import { Xcalidraw, Footer, MainMenu } from "../index";
 
 import { fireEvent, GlobalTestState, toggleMenu, render } from "./test-utils";
 
 const { h } = window;
 
-describe("<Excalidraw/>", () => {
+describe("<Xcalidraw/>", () => {
   afterEach(() => {
     const menu = document.querySelector(".dropdown-menu");
     if (menu) {
-      toggleMenu(document.querySelector(".excalidraw")!);
+      toggleMenu(document.querySelector(".xcalidraw")!);
     }
   });
 
   describe("Test zenModeEnabled prop", () => {
     it('should show exit zen mode button when zen mode is set and zen mode option in context menu when zenModeEnabled is "undefined"', async () => {
-      const { container } = await render(<Excalidraw />);
+      const { container } = await render(<Xcalidraw />);
       expect(
         container.getElementsByClassName("disable-zen-mode--visible").length,
       ).toBe(0);
@@ -41,7 +41,7 @@ describe("<Excalidraw/>", () => {
     });
 
     it("should not show exit zen mode button and zen mode option in context menu when zenModeEnabled is set", async () => {
-      const { container } = await render(<Excalidraw zenModeEnabled={true} />);
+      const { container } = await render(<Xcalidraw zenModeEnabled={true} />);
       expect(
         container.getElementsByClassName("disable-zen-mode--visible").length,
       ).toBe(0);
@@ -64,19 +64,19 @@ describe("<Excalidraw/>", () => {
   it("should render the footer only when Footer is passed as children", async () => {
     //Footer not passed hence it will not render the footer
     let { container } = await render(
-      <Excalidraw>
+      <Xcalidraw>
         <div>This is a custom footer</div>
-      </Excalidraw>,
+      </Xcalidraw>,
     );
     expect(container.querySelector(".footer-center")).toBe(null);
 
     // Footer passed hence it will render the footer
     ({ container } = await render(
-      <Excalidraw>
+      <Xcalidraw>
         <Footer>
           <div>This is a custom footer</div>
         </Footer>
-      </Excalidraw>,
+      </Xcalidraw>,
     ));
     expect(container.querySelector(".footer-center")).toMatchInlineSnapshot(
       `
@@ -93,7 +93,7 @@ describe("<Excalidraw/>", () => {
 
   describe("Test gridModeEnabled prop", () => {
     it('should show grid mode in context menu when gridModeEnabled is "undefined"', async () => {
-      const { container } = await render(<Excalidraw />);
+      const { container } = await render(<Xcalidraw />);
       expect(h.state.gridModeEnabled).toBe(false);
 
       expect(
@@ -111,7 +111,7 @@ describe("<Excalidraw/>", () => {
 
     it('should not show grid mode in context menu when gridModeEnabled is not "undefined"', async () => {
       const { container } = await render(
-        <Excalidraw gridModeEnabled={false} />,
+        <Xcalidraw gridModeEnabled={false} />,
       );
       expect(h.state.gridModeEnabled).toBe(false);
 
@@ -133,7 +133,7 @@ describe("<Excalidraw/>", () => {
     describe("Test canvasActions", () => {
       it('should render menu with default items when "UIOPtions" is "undefined"', async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={undefined} />,
+          <Xcalidraw UIOptions={undefined} />,
         );
         //open menu
         toggleMenu(container);
@@ -142,7 +142,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide clear canvas button when clearCanvas is false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { clearCanvas: false } }} />,
+          <Xcalidraw UIOptions={{ canvasActions: { clearCanvas: false } }} />,
         );
         //open menu
         toggleMenu(container);
@@ -151,7 +151,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide export button when export is false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { export: false } }} />,
+          <Xcalidraw UIOptions={{ canvasActions: { export: false } }} />,
         );
         //open menu
         toggleMenu(container);
@@ -160,7 +160,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide 'Save as image' button when 'saveAsImage' is false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { saveAsImage: false } }} />,
+          <Xcalidraw UIOptions={{ canvasActions: { saveAsImage: false } }} />,
         );
         //open menu
         toggleMenu(container);
@@ -169,7 +169,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide load button when loadScene is false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { loadScene: false } }} />,
+          <Xcalidraw UIOptions={{ canvasActions: { loadScene: false } }} />,
         );
 
         expect(queryByTestId(container, "load-button")).toBeNull();
@@ -177,7 +177,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide save as button when saveFileToDisk is false", async () => {
         const { container } = await render(
-          <Excalidraw
+          <Xcalidraw
             UIOptions={{ canvasActions: { export: { saveFileToDisk: false } } }}
           />,
         );
@@ -188,7 +188,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide save button when saveToActiveFile is false", async () => {
         const { container } = await render(
-          <Excalidraw
+          <Xcalidraw
             UIOptions={{ canvasActions: { saveToActiveFile: false } }}
           />,
         );
@@ -199,7 +199,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide the canvas background picker when changeViewBackgroundColor is false", async () => {
         const { container } = await render(
-          <Excalidraw
+          <Xcalidraw
             UIOptions={{ canvasActions: { changeViewBackgroundColor: false } }}
           />,
         );
@@ -211,13 +211,13 @@ describe("<Excalidraw/>", () => {
 
       it("should hide the canvas background picker even if passed if the `canvasActions.changeViewBackgroundColor` is set to false", async () => {
         const { container } = await render(
-          <Excalidraw
+          <Xcalidraw
             UIOptions={{ canvasActions: { changeViewBackgroundColor: false } }}
           >
             <MainMenu>
               <MainMenu.DefaultItems.ChangeCanvasBackground />
             </MainMenu>
-          </Excalidraw>,
+          </Xcalidraw>,
         );
         //open menu
         toggleMenu(container);
@@ -227,7 +227,7 @@ describe("<Excalidraw/>", () => {
 
       it("should hide the theme toggle when theme is false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { toggleTheme: false } }} />,
+          <Xcalidraw UIOptions={{ canvasActions: { toggleTheme: false } }} />,
         );
         //open menu
         toggleMenu(container);
@@ -236,7 +236,7 @@ describe("<Excalidraw/>", () => {
 
       it("should not render default items in custom menu even if passed if the prop in `canvasActions` is set to false", async () => {
         const { container } = await render(
-          <Excalidraw UIOptions={{ canvasActions: { loadScene: false } }}>
+          <Xcalidraw UIOptions={{ canvasActions: { loadScene: false } }}>
             <MainMenu>
               <MainMenu.ItemCustom>
                 <button
@@ -248,7 +248,7 @@ describe("<Excalidraw/>", () => {
               </MainMenu.ItemCustom>
               <MainMenu.DefaultItems.LoadScene />
             </MainMenu>
-          </Excalidraw>,
+          </Xcalidraw>,
         );
         //open menu
         toggleMenu(container);
@@ -260,7 +260,7 @@ describe("<Excalidraw/>", () => {
 
   describe("Test theme prop", () => {
     it("should show the theme toggle by default", async () => {
-      const { container } = await render(<Excalidraw />);
+      const { container } = await render(<Xcalidraw />);
       expect(h.state.theme).toBe(THEME.LIGHT);
       //open menu
       toggleMenu(container);
@@ -269,7 +269,7 @@ describe("<Excalidraw/>", () => {
     });
 
     it("should not show theme toggle when the theme prop is defined", async () => {
-      const { container } = await render(<Excalidraw theme={THEME.DARK} />);
+      const { container } = await render(<Xcalidraw theme={THEME.DARK} />);
 
       expect(h.state.theme).toBe(THEME.DARK);
       //open menu
@@ -279,7 +279,7 @@ describe("<Excalidraw/>", () => {
 
     it("should show theme mode toggle when `UIOptions.canvasActions.toggleTheme` is true", async () => {
       const { container } = await render(
-        <Excalidraw
+        <Xcalidraw
           theme={THEME.DARK}
           UIOptions={{ canvasActions: { toggleTheme: true } }}
         />,
@@ -293,7 +293,7 @@ describe("<Excalidraw/>", () => {
 
     it("should not show theme toggle when `UIOptions.canvasActions.toggleTheme` is false", async () => {
       const { container } = await render(
-        <Excalidraw
+        <Xcalidraw
           UIOptions={{ canvasActions: { toggleTheme: false } }}
           theme={THEME.DARK}
         />,
@@ -308,7 +308,7 @@ describe("<Excalidraw/>", () => {
 
   describe("Test name prop", () => {
     it("should allow editing name", async () => {
-      const { container } = await render(<Excalidraw />);
+      const { container } = await render(<Xcalidraw />);
       //open menu
       toggleMenu(container);
       fireEvent.click(queryByTestId(container, "image-export-button")!);
@@ -321,7 +321,7 @@ describe("<Excalidraw/>", () => {
 
     it('should set the name when the name prop is present"', async () => {
       const name = "test";
-      const { container } = await render(<Excalidraw name={name} />);
+      const { container } = await render(<Xcalidraw name={name} />);
       //open menu
       toggleMenu(container);
       await fireEvent.click(queryByTestId(container, "image-export-button")!);
@@ -335,18 +335,18 @@ describe("<Excalidraw/>", () => {
 
   describe("Test autoFocus prop", () => {
     it("should not focus when autoFocus is false", async () => {
-      const { container } = await render(<Excalidraw />);
+      const { container } = await render(<Xcalidraw />);
 
       expect(
-        container.querySelector(".excalidraw") === document.activeElement,
+        container.querySelector(".xcalidraw") === document.activeElement,
       ).toBe(false);
     });
 
     it("should focus when autoFocus is true", async () => {
-      const { container } = await render(<Excalidraw autoFocus={true} />);
+      const { container } = await render(<Xcalidraw autoFocus={true} />);
 
       expect(
-        container.querySelector(".excalidraw") === document.activeElement,
+        container.querySelector(".xcalidraw") === document.activeElement,
       ).toBe(true);
     });
   });
@@ -354,13 +354,13 @@ describe("<Excalidraw/>", () => {
   describe("<MainMenu/>", () => {
     it("should render main menu with host menu items if passed from host", async () => {
       const { container } = await render(
-        <Excalidraw>
+        <Xcalidraw>
           <MainMenu>
             <MainMenu.Item onSelect={() => window.alert("Clicked")}>
               Click me
             </MainMenu.Item>
             <MainMenu.ItemLink href="blog.excalidaw.com">
-              Excalidraw blog
+              Xcalidraw blog
             </MainMenu.ItemLink>
             <MainMenu.ItemCustom>
               <button
@@ -372,7 +372,7 @@ describe("<Excalidraw/>", () => {
             </MainMenu.ItemCustom>
             <MainMenu.DefaultItems.Help />
           </MainMenu>
-        </Excalidraw>,
+        </Xcalidraw>,
       );
       //open menu
       toggleMenu(container);
@@ -380,7 +380,7 @@ describe("<Excalidraw/>", () => {
     });
 
     it("should update themeToggle text even if MainMenu memoized", async () => {
-      const CustomExcalidraw = () => {
+      const CustomXcalidraw = () => {
         const customMenu = useMemo(() => {
           return (
             <MainMenu>
@@ -389,10 +389,10 @@ describe("<Excalidraw/>", () => {
           );
         }, []);
 
-        return <Excalidraw>{customMenu}</Excalidraw>;
+        return <Xcalidraw>{customMenu}</Xcalidraw>;
       };
 
-      const { container } = await render(<CustomExcalidraw />);
+      const { container } = await render(<CustomXcalidraw />);
       //open menu
       toggleMenu(container);
 

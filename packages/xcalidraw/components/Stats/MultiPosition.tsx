@@ -16,7 +16,7 @@ import { getElementsInAtomicUnit, moveElement } from "./utils";
 
 import type { Scene } from "@xcalidraw/element";
 
-import type { ElementsMap, ExcalidrawElement } from "@xcalidraw/element/types";
+import type { ElementsMap, XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { DragInputCallbackType } from "./DragInput";
 import type { AtomicUnit } from "./utils";
@@ -24,7 +24,7 @@ import type { AppState } from "../../types";
 
 interface MultiPositionProps {
   property: "x" | "y";
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   elementsMap: ElementsMap;
   atomicUnits: AtomicUnit[];
   scene: Scene;
@@ -35,7 +35,7 @@ const moveElements = (
   property: MultiPositionProps["property"],
   changeInTopX: number,
   changeInTopY: number,
-  originalElements: readonly ExcalidrawElement[],
+  originalElements: readonly XcalidrawElement[],
   originalElementsMap: ElementsMap,
   scene: Scene,
 ) => {
@@ -72,7 +72,7 @@ const moveElements = (
 const moveGroupTo = (
   nextX: number,
   nextY: number,
-  originalElements: ExcalidrawElement[],
+  originalElements: XcalidrawElement[],
   originalElementsMap: ElementsMap,
   scene: Scene,
 ) => {
@@ -221,7 +221,7 @@ const MultiPosition = ({
       atomicUnits.map((atomicUnit) => {
         const elementsInUnit = Object.keys(atomicUnit)
           .map((id) => elementsMap.get(id))
-          .filter((el) => el !== undefined) as ExcalidrawElement[];
+          .filter((el) => el !== undefined) as XcalidrawElement[];
 
         // we're dealing with a group
         if (elementsInUnit.length > 1) {

@@ -61,14 +61,14 @@ import type {
 import type { GlobalPoint } from "@xcalidraw/math";
 
 import type {
-  ExcalidrawElement,
-  NonDeletedExcalidrawElement,
-  ExcalidrawSelectionElement,
-  ExcalidrawLinearElement,
+  XcalidrawElement,
+  NonDeletedXcalidrawElement,
+  XcalidrawSelectionElement,
+  XcalidrawLinearElement,
   Arrowhead,
-  ExcalidrawFreeDrawElement,
+  XcalidrawFreeDrawElement,
   ElementsMap,
-  ExcalidrawLineElement,
+  XcalidrawLineElement,
 } from "./types";
 
 import type { Drawable, Options } from "roughjs/bin/core";
@@ -76,13 +76,13 @@ import type { Point as RoughPoint } from "roughjs/bin/geometry";
 
 export class ShapeCache {
   private static rg = new RoughGenerator();
-  private static cache = new WeakMap<ExcalidrawElement, ElementShape>();
+  private static cache = new WeakMap<XcalidrawElement, ElementShape>();
 
   /**
    * Retrieves shape from cache if available. Use this only if shape
    * is optional and you have a fallback in case it's not cached.
    */
-  public static get = <T extends ExcalidrawElement>(element: T) => {
+  public static get = <T extends XcalidrawElement>(element: T) => {
     return ShapeCache.cache.get(
       element,
     ) as T["type"] extends keyof ElementShapes
@@ -90,14 +90,14 @@ export class ShapeCache {
       : ElementShape | undefined;
   };
 
-  public static set = <T extends ExcalidrawElement>(
+  public static set = <T extends XcalidrawElement>(
     element: T,
     shape: T["type"] extends keyof ElementShapes
       ? ElementShapes[T["type"]]
       : Drawable,
   ) => ShapeCache.cache.set(element, shape);
 
-  public static delete = (element: ExcalidrawElement) =>
+  public static delete = (element: XcalidrawElement) =>
     ShapeCache.cache.delete(element);
 
   public static destroy = () => {
@@ -109,7 +109,7 @@ export class ShapeCache {
    * returns cached shape.
    */
   public static generateElementShape = <
-    T extends Exclude<ExcalidrawElement, ExcalidrawSelectionElement>,
+    T extends Exclude<XcalidrawElement, XcalidrawSelectionElement>,
   >(
     element: T,
     renderConfig: {
@@ -153,7 +153,7 @@ const getDashArrayDashed = (strokeWidth: number) => [8, 8 + strokeWidth];
 
 const getDashArrayDotted = (strokeWidth: number) => [1.5, 6 + strokeWidth];
 
-function adjustRoughness(element: ExcalidrawElement): number {
+function adjustRoughness(element: XcalidrawElement): number {
   const roughness = element.roughness;
 
   const maxSize = Math.max(element.width, element.height);
@@ -177,7 +177,7 @@ function adjustRoughness(element: ExcalidrawElement): number {
 }
 
 export const generateRoughOptions = (
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   continuousPath = false,
 ): Options => {
   const options: Options = {
@@ -243,7 +243,7 @@ export const generateRoughOptions = (
 };
 
 const modifyIframeLikeForRoughOptions = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   isExporting: boolean,
   embedsValidationStatus: EmbedsValidationStatus | null,
 ) => {
@@ -276,7 +276,7 @@ const modifyIframeLikeForRoughOptions = (
 };
 
 const getArrowheadShapes = (
-  element: ExcalidrawLinearElement,
+  element: XcalidrawLinearElement,
   shape: Drawable[],
   position: "start" | "end",
   arrowhead: Arrowhead,
@@ -419,7 +419,7 @@ const getArrowheadShapes = (
 };
 
 export const generateLinearCollisionShape = (
-  element: ExcalidrawLinearElement | ExcalidrawFreeDrawElement,
+  element: XcalidrawLinearElement | XcalidrawFreeDrawElement,
 ) => {
   const generator = new RoughGenerator();
   const options: Options = {
@@ -602,7 +602,7 @@ export const generateLinearCollisionShape = (
  * @private
  */
 const generateElementShape = (
-  element: Exclude<NonDeletedExcalidrawElement, ExcalidrawSelectionElement>,
+  element: Exclude<NonDeletedXcalidrawElement, XcalidrawSelectionElement>,
   generator: RoughGenerator,
   {
     isExporting,
@@ -904,11 +904,11 @@ const generateElbowArrowShape = (
 };
 
 /**
- * get the pure geometric shape of an excalidraw elementw
+ * get the pure geometric shape of an xcalidraw elementw
  * which is then used for hit detection
  */
 export const getElementShape = <Point extends GlobalPoint | LocalPoint>(
-  element: ExcalidrawElement,
+  element: XcalidrawElement,
   elementsMap: ElementsMap,
 ): GeometricShape<Point> => {
   switch (element.type) {
@@ -960,11 +960,11 @@ export const getElementShape = <Point extends GlobalPoint | LocalPoint>(
 };
 
 export const toggleLinePolygonState = (
-  element: ExcalidrawLineElement,
+  element: XcalidrawLineElement,
   nextPolygonState: boolean,
 ): {
-  polygon: ExcalidrawLineElement["polygon"];
-  points: ExcalidrawLineElement["points"];
+  polygon: XcalidrawLineElement["polygon"];
+  points: XcalidrawLineElement["points"];
 } | null => {
   const updatedPoints = [...element.points];
 
@@ -994,7 +994,7 @@ export const toggleLinePolygonState = (
     }
   }
 
-  // TODO: satisfies ElementUpdate<ExcalidrawLineElement>
+  // TODO: satisfies ElementUpdate<XcalidrawLineElement>
   const ret = {
     polygon: nextPolygonState,
     points: updatedPoints,

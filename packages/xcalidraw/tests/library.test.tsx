@@ -9,27 +9,27 @@ import { getCommonBoundingBox } from "@xcalidraw/element";
 import { parseLibraryJSON } from "../data/blob";
 import { serializeLibraryAsJSON } from "../data/json";
 import { distributeLibraryItemsOnSquareGrid } from "../data/library";
-import { Excalidraw } from "../index";
+import { Xcalidraw } from "../index";
 
 import { API } from "./helpers/api";
 import { UI } from "./helpers/ui";
 import { fireEvent, render, waitFor } from "./test-utils";
 
-import type { ExcalidrawGenericElement } from "@xcalidraw/element/types";
+import type { XcalidrawGenericElement } from "@xcalidraw/element/types";
 
 import type { LibraryItem, LibraryItems } from "../types";
 
 const { h } = window;
 
 const libraryJSONPromise = API.readFile(
-  "./fixtures/fixture_library.excalidrawlib",
+  "./fixtures/fixture_library.xcalidrawlib",
   "utf8",
 );
 
 const mockLibraryFilePromise = new Promise<Blob>(async (resolve, reject) => {
   try {
     resolve(
-      new Blob([await libraryJSONPromise], { type: MIME_TYPES.excalidrawlib }),
+      new Blob([await libraryJSONPromise], { type: MIME_TYPES.xcalidrawlib }),
     );
   } catch (error) {
     reject(error);
@@ -83,7 +83,7 @@ describe("library items inserting", () => {
       },
     ];
 
-    await render(<Excalidraw initialData={{ libraryItems }} />);
+    await render(<Xcalidraw initialData={{ libraryItems }} />);
   });
 
   afterEach(async () => {
@@ -103,7 +103,7 @@ describe("library items inserting", () => {
         value: JSON.stringify({
           itemIds: [libraryItems[0].id],
         }),
-        type: MIME_TYPES.excalidrawlibIds,
+        type: MIME_TYPES.xcalidrawlibIds,
       },
     ]);
 
@@ -141,7 +141,7 @@ describe("library items inserting", () => {
 
 describe("library", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
     await act(() => {
       return h.app.library.resetLibrary();
     });
@@ -152,8 +152,8 @@ describe("library", () => {
     await API.drop([
       {
         kind: "file",
-        type: MIME_TYPES.excalidrawlib,
-        file: await API.loadFile("./fixtures/fixture_library.excalidrawlib"),
+        type: MIME_TYPES.xcalidrawlib,
+        file: await API.loadFile("./fixtures/fixture_library.xcalidrawlib"),
       },
     ]);
     await waitFor(async () => {
@@ -176,7 +176,7 @@ describe("library", () => {
       {
         kind: "string",
         value: serializeLibraryAsJSON(libraryItems),
-        type: MIME_TYPES.excalidrawlib,
+        type: MIME_TYPES.xcalidrawlib,
       },
     ]);
     await waitFor(() => {
@@ -204,7 +204,7 @@ describe("library", () => {
       {
         kind: "string",
         value: serializeLibraryAsJSON([item1, item1]),
-        type: MIME_TYPES.excalidrawlib,
+        type: MIME_TYPES.xcalidrawlib,
       },
     ]);
 
@@ -229,7 +229,7 @@ describe("library", () => {
       {
         kind: "string",
         value: serializeLibraryAsJSON(libraryItems),
-        type: MIME_TYPES.excalidrawlib,
+        type: MIME_TYPES.xcalidrawlib,
       },
     ]);
     await waitFor(() => {
@@ -243,7 +243,7 @@ describe("library", () => {
 
 describe("library menu", () => {
   it("should load library from file picker", async () => {
-    const { container } = await render(<Excalidraw />);
+    const { container } = await render(<Xcalidraw />);
 
     const latestLibrary = await h.app.library.getLatestLibrary();
     expect(latestLibrary.length).toBe(0);
@@ -276,7 +276,7 @@ describe("library menu", () => {
 describe("distributeLibraryItemsOnSquareGrid()", () => {
   it("should distribute items on a grid", async () => {
     const createLibraryItem = (
-      elements: ExcalidrawGenericElement[],
+      elements: XcalidrawGenericElement[],
     ): LibraryItem => {
       return {
         id: `id-${Date.now()}`,

@@ -2,25 +2,25 @@ import React from "react";
 
 import CustomFooter from "./CustomFooter";
 
-import type * as TExcalidraw from "@xcalidraw/xcalidraw";
-import type { ExcalidrawImperativeAPI } from "@xcalidraw/xcalidraw/types";
+import type * as TXcalidraw from "@xcalidraw/xcalidraw";
+import type { XcalidrawImperativeAPI } from "@xcalidraw/xcalidraw/types";
 
 const MobileFooter = ({
-  excalidrawAPI,
-  excalidrawLib,
+  xcalidrawAPI,
+  xcalidrawLib,
 }: {
-  excalidrawAPI: ExcalidrawImperativeAPI;
-  excalidrawLib: typeof TExcalidraw;
+  xcalidrawAPI: XcalidrawImperativeAPI;
+  xcalidrawLib: typeof TXcalidraw;
 }) => {
-  const { useEditorInterface, Footer } = excalidrawLib;
+  const { useEditorInterface, Footer } = xcalidrawLib;
 
   const editorInterface = useEditorInterface();
   if (editorInterface.formFactor === "phone") {
     return (
       <Footer>
         <CustomFooter
-          excalidrawAPI={excalidrawAPI}
-          excalidrawLib={excalidrawLib}
+          xcalidrawAPI={xcalidrawAPI}
+          xcalidrawLib={xcalidrawLib}
         />
       </Footer>
     );

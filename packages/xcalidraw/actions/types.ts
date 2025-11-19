@@ -1,6 +1,6 @@
 import type {
-  ExcalidrawElement,
-  OrderedExcalidrawElement,
+  XcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { CaptureUpdateActionType } from "@xcalidraw/element";
@@ -8,7 +8,7 @@ import type { CaptureUpdateActionType } from "@xcalidraw/element";
 import type {
   AppClassProperties,
   AppState,
-  ExcalidrawProps,
+  XcalidrawProps,
   BinaryFiles,
   UIAppState,
 } from "../types";
@@ -24,7 +24,7 @@ export type ActionSource =
 /** if false, the action should be prevented */
 export type ActionResult =
   | {
-      elements?: readonly ExcalidrawElement[] | null;
+      elements?: readonly XcalidrawElement[] | null;
       appState?: Partial<AppState> | null;
       files?: BinaryFiles | null;
       captureUpdate: CaptureUpdateActionType;
@@ -33,7 +33,7 @@ export type ActionResult =
   | false;
 
 type ActionFn = (
-  elements: readonly OrderedExcalidrawElement[],
+  elements: readonly OrderedXcalidrawElement[],
   appState: Readonly<AppState>,
   formData: any,
   app: AppClassProperties,
@@ -145,10 +145,10 @@ export type ActionName =
   | "togglePolygon";
 
 export type PanelComponentProps = {
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   appState: AppState;
   updateData: <T = any>(formData?: T) => void;
-  appProps: ExcalidrawProps;
+  appProps: XcalidrawProps;
   data?: Record<string, any>;
   app: AppClassProperties;
   renderAction: (
@@ -162,7 +162,7 @@ export interface Action {
   label:
     | string
     | ((
-        elements: readonly ExcalidrawElement[],
+        elements: readonly XcalidrawElement[],
         appState: Readonly<AppState>,
         app: AppClassProperties,
       ) => string);
@@ -171,7 +171,7 @@ export interface Action {
     | React.ReactNode
     | ((
         appState: UIAppState,
-        elements: readonly ExcalidrawElement[],
+        elements: readonly XcalidrawElement[],
       ) => React.ReactNode);
   PanelComponent?: React.FC<PanelComponentProps>;
   perform: ActionFn;
@@ -179,13 +179,13 @@ export interface Action {
   keyTest?: (
     event: React.KeyboardEvent | KeyboardEvent,
     appState: AppState,
-    elements: readonly ExcalidrawElement[],
+    elements: readonly XcalidrawElement[],
     app: AppClassProperties,
   ) => boolean;
   predicate?: (
-    elements: readonly ExcalidrawElement[],
+    elements: readonly XcalidrawElement[],
     appState: AppState,
-    appProps: ExcalidrawProps,
+    appProps: XcalidrawProps,
     app: AppClassProperties,
   ) => boolean;
   checked?: (appState: Readonly<AppState>) => boolean;
@@ -206,7 +206,7 @@ export interface Action {
         action?: string;
         predicate?: (
           appState: Readonly<AppState>,
-          elements: readonly ExcalidrawElement[],
+          elements: readonly XcalidrawElement[],
           value: any,
         ) => boolean;
       };

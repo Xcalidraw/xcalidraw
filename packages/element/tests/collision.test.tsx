@@ -1,5 +1,5 @@
 import { type GlobalPoint, type LocalPoint, pointFrom } from "@xcalidraw/math";
-import { Excalidraw } from "@xcalidraw/xcalidraw";
+import { Xcalidraw } from "@xcalidraw/xcalidraw";
 import { UI } from "@xcalidraw/xcalidraw/tests/helpers/ui";
 import "@xcalidraw/utils/test-utils";
 import { render } from "@xcalidraw/xcalidraw/tests/test-utils";
@@ -9,7 +9,7 @@ import { hitElementItself } from "../src/collision";
 describe("check rotated elements can be hit:", () => {
   beforeEach(async () => {
     localStorage.clear();
-    await render(<Excalidraw handleKeyboardGlobally={true} />);
+    await render(<Xcalidraw handleKeyboardGlobally={true} />);
   });
 
   it("arrow", () => {

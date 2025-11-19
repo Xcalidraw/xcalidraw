@@ -15,14 +15,14 @@ import { exportToFileIcon, LinkIcon } from "./icons";
 
 import "./ExportDialog.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ActionManager } from "../actions/manager";
 
 import type { ExportOpts, BinaryFiles, UIAppState } from "../types";
 
 export type ExportCB = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   scale?: number,
 ) => void;
 
@@ -39,7 +39,7 @@ const JSONExportModal = ({
   appState: UIAppState;
   setAppState: React.Component<any, UIAppState>["setState"];
   files: BinaryFiles;
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   actionManager: ActionManager;
   onCloseRequest: () => void;
   exportOpts: ExportOpts;
@@ -109,7 +109,7 @@ export const JSONExportDialog = ({
   canvas,
   setAppState,
 }: {
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   appState: UIAppState;
   files: BinaryFiles;
   actionManager: ActionManager;

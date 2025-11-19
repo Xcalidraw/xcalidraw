@@ -17,9 +17,9 @@ import { useSetAtom } from "../../editor-jotai";
 import { useI18n } from "../../i18n";
 import { activeConfirmDialogAtom } from "../ActiveConfirmDialog";
 import {
-  useExcalidrawSetAppState,
-  useExcalidrawActionManager,
-  useExcalidrawElements,
+  useXcalidrawSetAppState,
+  useXcalidrawActionManager,
+  useXcalidrawElements,
   useAppProps,
 } from "../App";
 import { openConfirmModal } from "../OverwriteConfirm/OverwriteConfirmState";
@@ -49,8 +49,8 @@ import type { Theme } from "@xcalidraw/element/types";
 
 export const LoadScene = () => {
   const { t } = useI18n();
-  const actionManager = useExcalidrawActionManager();
-  const elements = useExcalidrawElements();
+  const actionManager = useXcalidrawActionManager();
+  const elements = useXcalidrawElements();
 
   if (!actionManager.isActionEnabled(actionLoadScene)) {
     return null;
@@ -92,7 +92,7 @@ LoadScene.displayName = "LoadScene";
 
 export const SaveToActiveFile = () => {
   const { t } = useI18n();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   if (!actionManager.isActionEnabled(actionSaveToActiveFile)) {
     return null;
@@ -111,7 +111,7 @@ export const SaveToActiveFile = () => {
 SaveToActiveFile.displayName = "SaveToActiveFile";
 
 export const SaveAsImage = () => {
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const { t } = useI18n();
   return (
     <DropdownMenuItem
@@ -128,7 +128,7 @@ export const SaveAsImage = () => {
 SaveAsImage.displayName = "SaveAsImage";
 
 export const CommandPalette = (opts?: { className?: string }) => {
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   const { t } = useI18n();
 
   return (
@@ -151,7 +151,7 @@ CommandPalette.displayName = "CommandPalette";
 
 export const SearchMenu = (opts?: { className?: string }) => {
   const { t } = useI18n();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   return (
     <DropdownMenuItem
@@ -173,7 +173,7 @@ SearchMenu.displayName = "SearchMenu";
 export const Help = () => {
   const { t } = useI18n();
 
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   return (
     <DropdownMenuItem
@@ -193,7 +193,7 @@ export const ClearCanvas = () => {
   const { t } = useI18n();
 
   const setActiveConfirmDialog = useSetAtom(activeConfirmDialogAtom);
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
 
   if (!actionManager.isActionEnabled(actionClearCanvas)) {
     return null;
@@ -226,7 +226,7 @@ export const ToggleTheme = (
 ) => {
   const { t } = useI18n();
   const appState = useUIAppState();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
   const shortcut = getShortcutFromShortcutName("toggleTheme");
 
   if (!actionManager.isActionEnabled(actionToggleTheme)) {
@@ -296,7 +296,7 @@ ToggleTheme.displayName = "ToggleTheme";
 export const ChangeCanvasBackground = () => {
   const { t } = useI18n();
   const appState = useUIAppState();
-  const actionManager = useExcalidrawActionManager();
+  const actionManager = useXcalidrawActionManager();
   const appProps = useAppProps();
 
   if (
@@ -323,7 +323,7 @@ ChangeCanvasBackground.displayName = "ChangeCanvasBackground";
 
 export const Export = () => {
   const { t } = useI18n();
-  const setAppState = useExcalidrawSetAppState();
+  const setAppState = useXcalidrawSetAppState();
   return (
     <DropdownMenuItem
       icon={ExportIcon}
@@ -346,14 +346,14 @@ export const Socials = () => {
     <>
       <DropdownMenuItemLink
         icon={GithubIcon}
-        href="https://github.com/excalidraw/excalidraw"
+        href="https://github.com/xcalidraw/xcalidraw"
         aria-label="GitHub"
       >
         GitHub
       </DropdownMenuItemLink>
       <DropdownMenuItemLink
         icon={XBrandIcon}
-        href="https://x.com/excalidraw"
+        href="https://x.com/xcalidraw"
         aria-label="X"
       >
         {t("labels.followUs")}

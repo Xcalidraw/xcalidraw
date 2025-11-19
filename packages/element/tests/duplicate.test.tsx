@@ -7,7 +7,7 @@ import {
   isPrimitive,
 } from "@xcalidraw/common";
 
-import { Excalidraw, mutateElement } from "@xcalidraw/xcalidraw";
+import { Xcalidraw, mutateElement } from "@xcalidraw/xcalidraw";
 
 import { actionDuplicateSelection } from "@xcalidraw/xcalidraw/actions";
 
@@ -26,7 +26,7 @@ import { duplicateElement, duplicateElements } from "../src/duplicate";
 
 import type { LocalPoint } from "@xcalidraw/math";
 
-import type { ExcalidrawLinearElement } from "../src/types";
+import type { XcalidrawLinearElement } from "../src/types";
 
 const { h } = window;
 const mouse = new Pointer("mouse");
@@ -217,7 +217,7 @@ describe("duplicating multiple elements", () => {
 
     const clonedArrows = duplicatedElements.filter(
       (e) => e.type === "arrow",
-    ) as ExcalidrawLinearElement[];
+    ) as XcalidrawLinearElement[];
 
     const [clonedRectangle, clonedText1, , clonedArrow2, clonedArrowLabel] =
       duplicatedElements as any as typeof origElements;
@@ -408,7 +408,7 @@ describe("duplicating multiple elements", () => {
 
 describe("group-related duplication", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("action-duplicating within group", async () => {
@@ -517,7 +517,7 @@ describe("group-related duplication", () => {
 
 describe("duplication z-order", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("duplication z order with Cmd+D for the lowest z-ordered element should be +1 for the clone", () => {

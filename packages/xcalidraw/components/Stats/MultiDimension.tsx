@@ -26,7 +26,7 @@ import type { Scene } from "@xcalidraw/element";
 
 import type {
   ElementsMap,
-  ExcalidrawElement,
+  XcalidrawElement,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
 
@@ -39,7 +39,7 @@ import type { AppState } from "../../types";
 
 interface MultiDimensionProps {
   property: "width" | "height";
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   elementsMap: NonDeletedSceneElementsMap;
   atomicUnits: AtomicUnit[];
   scene: Scene;
@@ -52,7 +52,7 @@ const getResizedUpdates = (
   anchorX: number,
   anchorY: number,
   scale: number,
-  origElement: ExcalidrawElement,
+  origElement: XcalidrawElement,
 ) => {
   const offsetX = origElement.x - anchorX;
   const offsetY = origElement.y - anchorY;
@@ -78,8 +78,8 @@ const resizeElementInGroup = (
   anchorY: number,
   property: MultiDimensionProps["property"],
   scale: number,
-  latestElement: ExcalidrawElement,
-  origElement: ExcalidrawElement,
+  latestElement: XcalidrawElement,
+  origElement: XcalidrawElement,
   originalElementsMap: ElementsMap,
   scene: Scene,
 ) => {
@@ -119,8 +119,8 @@ const resizeGroup = (
   aspectRatio: number,
   anchor: GlobalPoint,
   property: MultiDimensionProps["property"],
-  latestElements: ExcalidrawElement[],
-  originalElements: ExcalidrawElement[],
+  latestElements: XcalidrawElement[],
+  originalElements: XcalidrawElement[],
   originalElementsMap: ElementsMap,
   scene: Scene,
 ) => {
@@ -279,7 +279,7 @@ const handleDimensionChange: DragInputCallbackType<
 
   const changeInWidth = property === "width" ? accumulatedChange : 0;
   const changeInHeight = property === "height" ? accumulatedChange : 0;
-  const elementsToHighlight: ExcalidrawElement[] = [];
+  const elementsToHighlight: XcalidrawElement[] = [];
 
   for (const atomicUnit of atomicUnits) {
     const elementsInUnit = getElementsInAtomicUnit(

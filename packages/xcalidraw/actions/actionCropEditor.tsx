@@ -8,7 +8,7 @@ import { t } from "../i18n";
 
 import { register } from "./register";
 
-import type { ExcalidrawImageElement } from "@xcalidraw/element/types";
+import type { XcalidrawImageElement } from "@xcalidraw/element/types";
 
 export const actionToggleCropEditor = register({
   name: "cropEditor",
@@ -21,7 +21,7 @@ export const actionToggleCropEditor = register({
     const selectedElement = app.scene.getSelectedElements({
       selectedElementIds: appState.selectedElementIds,
       includeBoundTextElement: true,
-    })[0] as ExcalidrawImageElement;
+    })[0] as XcalidrawImageElement;
 
     return {
       appState: {

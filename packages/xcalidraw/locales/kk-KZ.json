@@ -91,7 +91,7 @@
     "untitled": "Атауысыз",
     "name": "",
     "yourName": "",
-    "madeWithExcalidraw": "",
+    "madeWithXcalidraw": "",
     "group": "",
     "ungroup": "",
     "collaborators": "",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "",
-    "excalidrawLib": "",
+    "xcalidrawLib": "",
     "decreaseFontSize": "",
     "increaseFontSize": "",
     "unbindText": "",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "Ортақ сілтеме",
     "link_details": "Тек оқуға арналған сілтеме ретінде экспорттау.",
     "link_button": "Сілтемеге экспорттау",
-    "excalidrawplus_description": "Сахнаны өзіңіздің Excalidraw+ жұмыс кеңістігінде сақтаңыз.",
-    "excalidrawplus_button": "Экспорт",
-    "excalidrawplus_exportError": "Қазіргі уақытта Excalidraw+ үшін экспорттау мүмкін емес..."
+    "xcalidrawplus_description": "Сахнаны өзіңіздің Xcalidraw+ жұмыс кеңістігінде сақтаңыз.",
+    "xcalidrawplus_button": "Экспорт",
+    "xcalidrawplus_exportError": "Қазіргі уақытта Xcalidraw+ үшін экспорттау мүмкін емес..."
   },
   "helpDialog": {
     "blog": "Біздің блогты оқу",
@@ -502,8 +502,8 @@
     }
   },
   "encrypted": {
-    "tooltip": "Сіздің сызбаларыңыз өтпелі шифрлеу арқылы шифрланған, сондықтан Excalidraw серверлері оларды ешқашан көрмейді.",
-    "link": "Excalidraw қолданатын өтпелі шифрлеу туралы блог жазбасы"
+    "tooltip": "Сіздің сызбаларыңыз өтпелі шифрлеу арқылы шифрланған, сондықтан Xcalidraw серверлері оларды ешқашан көрмейді.",
+    "link": "Xcalidraw қолданатын өтпелі шифрлеу туралы блог жазбасы"
   },
   "stats": {
     "angle": "Бұрыш",
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

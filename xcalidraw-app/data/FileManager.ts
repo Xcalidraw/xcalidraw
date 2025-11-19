@@ -5,15 +5,15 @@ import { isInitializedImageElement } from "@xcalidraw/element";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawImageElement,
+  XcalidrawElement,
+  XcalidrawImageElement,
   FileId,
-  InitializedExcalidrawImageElement,
+  InitializedXcalidrawImageElement,
 } from "@xcalidraw/element/types";
 import type {
   BinaryFileData,
   BinaryFileMetadata,
-  ExcalidrawImperativeAPI,
+  XcalidrawImperativeAPI,
   BinaryFiles,
 } from "@xcalidraw/xcalidraw/types";
 
@@ -21,20 +21,20 @@ type FileVersion = Required<BinaryFileData>["version"];
 
 export class FileManager {
   /** files being fetched */
-  private fetchingFiles = new Map<ExcalidrawImageElement["fileId"], true>();
+  private fetchingFiles = new Map<XcalidrawImageElement["fileId"], true>();
   private erroredFiles_fetch = new Map<
-    ExcalidrawImageElement["fileId"],
+    XcalidrawImageElement["fileId"],
     true
   >();
   /** files being saved */
   private savingFiles = new Map<
-    ExcalidrawImageElement["fileId"],
+    XcalidrawImageElement["fileId"],
     FileVersion
   >();
   /* files already saved to persistent storage */
-  private savedFiles = new Map<ExcalidrawImageElement["fileId"], FileVersion>();
+  private savedFiles = new Map<XcalidrawImageElement["fileId"], FileVersion>();
   private erroredFiles_save = new Map<
-    ExcalidrawImageElement["fileId"],
+    XcalidrawImageElement["fileId"],
     FileVersion
   >();
 
@@ -87,7 +87,7 @@ export class FileManager {
     elements,
     files,
   }: {
-    elements: readonly ExcalidrawElement[];
+    elements: readonly XcalidrawElement[];
     files: BinaryFiles;
   }) => {
     const addedFiles: Map<FileId, BinaryFileData> = new Map();
@@ -171,7 +171,7 @@ export class FileManager {
    *  yet saved the `status` update to storage, but that should be taken care
    *  of during regular beforeUnload unsaved files check.
    */
-  shouldPreventUnload = (elements: readonly ExcalidrawElement[]) => {
+  shouldPreventUnload = (elements: readonly XcalidrawElement[]) => {
     return elements.some((element) => {
       return (
         isInitializedImageElement(element) &&
@@ -185,8 +185,8 @@ export class FileManager {
    * helper to determine if image element status needs updating
    */
   shouldUpdateImageElementStatus = (
-    element: ExcalidrawElement,
-  ): element is InitializedExcalidrawImageElement => {
+    element: XcalidrawElement,
+  ): element is InitializedXcalidrawImageElement => {
     return (
       isInitializedImageElement(element) &&
       this.savedFiles.has(element.fileId) &&
@@ -248,15 +248,15 @@ export const encodeFilesForUpload = async ({
 };
 
 export const updateStaleImageStatuses = (params: {
-  excalidrawAPI: ExcalidrawImperativeAPI;
+  xcalidrawAPI: XcalidrawImperativeAPI;
   erroredFiles: Map<FileId, true>;
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
 }) => {
   if (!params.erroredFiles.size) {
     return;
   }
-  params.excalidrawAPI.updateScene({
-    elements: params.excalidrawAPI
+  params.xcalidrawAPI.updateScene({
+    elements: params.xcalidrawAPI
       .getSceneElementsIncludingDeleted()
       .map((element) => {
         if (

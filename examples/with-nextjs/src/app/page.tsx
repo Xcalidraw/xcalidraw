@@ -5,7 +5,7 @@ import "../common.scss";
 
 // Since client components get prerenderd on server as well hence importing the xcalidraw stuff dynamically
 // with ssr false
-const ExcalidrawWithClientOnly = dynamic(
+const XcalidrawWithClientOnly = dynamic(
   async () => (await import("../xcalidrawWrapper")).default,
   {
     ssr: false,
@@ -18,10 +18,10 @@ export default function Page() {
       <a href="/xcalidraw-in-pages">Switch to Pages router</a>
       <h1 className="page-title">App Router</h1>
       <Script id="load-env-variables" strategy="beforeInteractive">
-        {`window["EXCALIDRAW_ASSET_PATH"] = window.origin;`}
+        {`window["XCALIDRAW_ASSET_PATH"] = window.origin;`}
       </Script>
       {/* @ts-expect-error - https://github.com/vercel/next.js/issues/42292 */}
-      <ExcalidrawWithClientOnly />
+      <XcalidrawWithClientOnly />
     </>
   );
 }

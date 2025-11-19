@@ -11,7 +11,7 @@ import {
 } from "./constants";
 
 import type {
-  ExcalidrawBindableElement,
+  XcalidrawBindableElement,
   FontFamilyValues,
   FontString,
 } from "@xcalidraw/element/types";
@@ -479,7 +479,7 @@ const RE_RTL_CHECK = new RegExp(`^[^${RS_LTR_CHARS}]*[${RS_RTL_CHARS}]`);
  * Checks whether first directional character is RTL. Meaning whether it starts
  *  with RTL characters, or indeterminate (numbers etc.) characters followed by
  *  RTL.
- * See https://github.com/excalidraw/excalidraw/pull/1722#discussion_r436340171
+ * See https://github.com/xcalidraw/xcalidraw/pull/1722#discussion_r436340171
  */
 export const isRTL = (text: string) => RE_RTL_CHECK.test(text);
 
@@ -559,7 +559,7 @@ export const isTransparent = (color: string) => {
   );
 };
 
-export const isBindingFallthroughEnabled = (el: ExcalidrawBindableElement) =>
+export const isBindingFallthroughEnabled = (el: XcalidrawBindableElement) =>
   el.fillStyle !== "solid" || isTransparent(el.backgroundColor);
 
 export type ResolvablePromise<T> = Promise<T> & {

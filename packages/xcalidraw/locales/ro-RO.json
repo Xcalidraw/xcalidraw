@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "Săgeată arcuită",
     "fontSize": "Dimensiune font",
     "fontFamily": "Familia de fonturi",
-    "addWatermark": "Adaugă „Realizat cu Excalidraw”",
+    "addWatermark": "Adaugă „Realizat cu Xcalidraw”",
     "handDrawn": "Scris de mână",
     "normal": "Normal",
     "code": "Cod",
@@ -91,7 +91,7 @@
     "untitled": "Nedenumit",
     "name": "Nume",
     "yourName": "Numele tău",
-    "madeWithExcalidraw": "Realizat cu Excalidraw",
+    "madeWithXcalidraw": "Realizat cu Xcalidraw",
     "group": "Grupare selecție",
     "ungroup": "Degrupare selecție",
     "collaborators": "Colaboratori",
@@ -121,7 +121,7 @@
     "toggleTheme": "Comutare temă luminoasă/întunecată",
     "theme": "Temă",
     "personalLib": "Biblioteca personală",
-    "excalidrawLib": "Biblioteca Excalidraw",
+    "xcalidrawLib": "Biblioteca Xcalidraw",
     "decreaseFontSize": "Micșorează dimensiunea fontului",
     "increaseFontSize": "Mărește dimensiunea fontului",
     "unbindText": "Deconectare text",
@@ -163,7 +163,7 @@
     "zoomToFitViewport": "Transfocare pentru a se potrivi în poarta de vizualizare",
     "zoomToFitSelection": "Transfocare pentru a cuprinde selecția",
     "zoomToFit": "Transfocare pentru a cuprinde toate elementele",
-    "installPWA": "Instalează Excalidraw la nivel local (PWA)",
+    "installPWA": "Instalează Xcalidraw la nivel local (PWA)",
     "autoResize": "Activare autoredimensionare text",
     "imageCropping": "Decupare imagine",
     "unCroppedDimension": "Dimensiune nedecupată",
@@ -248,7 +248,7 @@
     "cannotExportEmptyCanvas": "Nu se poate exporta pânza goală.",
     "couldNotCopyToClipboard": "Nu s-a putut copia în memoria temporară.",
     "decryptFailed": "Datele nu au putut fi decriptate.",
-    "uploadedSecurly": "Încărcarea a fost securizată prin criptare integrală, însemnând că serverul Excalidraw și terții nu pot citi conținutul.",
+    "uploadedSecurly": "Încărcarea a fost securizată prin criptare integrală, însemnând că serverul Xcalidraw și terții nu pot citi conținutul.",
     "loadSceneOverridePrompt": "Încărcarea desenului extern va înlocui conținutul existent. Dorești să continui?",
     "collabStopOverridePrompt": "Oprirea sesiunii va suprascrie desenul anterior stocat local. Confirmi alegerea?\n\n(Dacă vrei să păstrezi desenul local, pur și simplu închide fila navigatorului în schimb.)",
     "errorAddingToLibrary": "Elementul nu a putut fi adăugat în bibliotecă",
@@ -256,7 +256,7 @@
     "confirmAddLibrary": "Această acțiune va adăuga {{numShapes}} formă(e) la biblioteca ta. Confirmi?",
     "imageDoesNotContainScene": "Această imagine nu pare să conțină date de scenă. Ai activat încorporarea scenei în timpul exportului?",
     "cannotRestoreFromImage": "Scena nu a putut fi restaurată din acest fișier de imagine",
-    "invalidSceneUrl": "Scena nu a putut fi importată din URL-ul furnizat. Este fie incorect formată, fie nu conține date JSON Excalidraw valide.",
+    "invalidSceneUrl": "Scena nu a putut fi importată din URL-ul furnizat. Este fie incorect formată, fie nu conține date JSON Xcalidraw valide.",
     "resetLibrary": "Această opțiune va elimina conținutul din bibliotecă. Confirmi?",
     "removeItemsFromsLibrary": "Ștergi {{count}} element(e) din bibliotecă?",
     "invalidEncryptionKey": "Cheia de criptare trebuie să aibă 22 de caractere. Colaborarea în direct este dezactivată.",
@@ -312,7 +312,7 @@
     "laser": "Indicator laser",
     "hand": "Mână (instrument de panoramare)",
     "extraTools": "Mai multe instrumente",
-    "mermaidToExcalidraw": "Mermaid la Excalidraw",
+    "mermaidToXcalidraw": "Mermaid la Xcalidraw",
     "convertElementType": "Comutare tip formă"
   },
   "element": {
@@ -389,7 +389,7 @@
     "desc_inProgressIntro": "Sesiunea de colaborare în direct este în curs de desfășurare.",
     "desc_shareLink": "Distribuie acest URL persoanelor cu care dorești să colaborezi:",
     "desc_exitSession": "Oprirea sesiunii te va deconecta de la sală, însă vei putea lucra în continuare, pe plan local, cu scena. Reține că această opțiune nu va afecta alte persoane, iar acestea vor putea să colaboreze în continuare pe versiunea lor.",
-    "shareTitle": "Alătură-te unei sesiuni de colaborare în direct pe Excalidraw"
+    "shareTitle": "Alătură-te unei sesiuni de colaborare în direct pe Xcalidraw"
   },
   "errorDialog": {
     "title": "Eroare"
@@ -401,9 +401,9 @@
     "link_title": "URL partajabil",
     "link_details": "Exportă ca URL doar în citire.",
     "link_button": "Exportare în URL",
-    "excalidrawplus_description": "Salvează scena în spațiul de lucru Excalidraw+.",
-    "excalidrawplus_button": "Exportare",
-    "excalidrawplus_exportError": "Excalidraw+ nu a putut fi exportat în acest moment..."
+    "xcalidrawplus_description": "Salvează scena în spațiul de lucru Xcalidraw+.",
+    "xcalidrawplus_button": "Exportare",
+    "xcalidrawplus_exportError": "Xcalidraw+ nu a putut fi exportat în acest moment..."
   },
   "helpDialog": {
     "blog": "Citește blogul nostru",
@@ -502,8 +502,8 @@
     }
   },
   "encrypted": {
-    "tooltip": "Desenele tale sunt criptate integral, astfel că serverele Excalidraw nu le vor vedea niciodată.",
-    "link": "Articol de blog pe criptarea integrală din Excalidraw"
+    "tooltip": "Desenele tale sunt criptate integral, astfel că serverele Xcalidraw nu le vor vedea niciodată.",
+    "link": "Articol de blog pe criptarea integrală din Xcalidraw"
   },
   "stats": {
     "angle": "Unghi",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "Toate datele tale sunt salvate local în navigatorul tău.",
-      "center_heading_plus": "Ai vrut să mergi în schimb la Excalidraw+?",
+      "center_heading_plus": "Ai vrut să mergi în schimb la Xcalidraw+?",
       "menuHint": "Exportare, preferințe, limbi, ..."
     },
     "defaults": {
@@ -587,10 +587,10 @@
         "button": "Salvare pe disc",
         "description": "Exportă datele scenei pe un fișier din care poți importa mai târziu."
       },
-      "excalidrawPlus": {
-        "title": "Excalidraw+",
-        "button": "Exportare în Excalidraw+",
-        "description": "Salvează scena în spațiul de lucru Excalidraw+."
+      "xcalidrawPlus": {
+        "title": "Xcalidraw+",
+        "button": "Exportare în Xcalidraw+",
+        "description": "Salvează scena în spațiul de lucru Xcalidraw+."
       }
     },
     "modal": {
@@ -607,9 +607,9 @@
     }
   },
   "mermaid": {
-    "title": "Mermaid la Excalidraw",
+    "title": "Mermaid la Xcalidraw",
     "button": "Introducere",
-    "description": "În prezent, numai <flowchartLink>Organigramele</flowchartLink>, <sequenceLink>Diagramele de secvență</sequenceLink> și <classLink>Diagramele de clasă</classLink> sunt acceptate. Celelalte tipuri vor fi redate ca imagine în Excalidraw.",
+    "description": "În prezent, numai <flowchartLink>Organigramele</flowchartLink>, <sequenceLink>Diagramele de secvență</sequenceLink> și <classLink>Diagramele de clasă</classLink> sunt acceptate. Celelalte tipuri vor fi redate ca imagine în Xcalidraw.",
     "syntax": "Sintaxă Mermaid",
     "preview": "Previzualizare"
   },

@@ -91,7 +91,7 @@
     "untitled": "தலைப்பற்றது",
     "name": "பெயர்",
     "yourName": "உங்கள் பெயர்",
-    "madeWithExcalidraw": "எக்ஸ்கேலிட்ரா கொண்டு ஆனது",
+    "madeWithXcalidraw": "எக்ஸ்கேலிட்ரா கொண்டு ஆனது",
     "group": "தேர்ந்ததை ஒன்றிணை",
     "ungroup": "தேர்ந்ததைப் பிரி",
     "collaborators": "கூட்டுப்பணியினர்",
@@ -121,7 +121,7 @@
     "toggleTheme": "வெளிர்ந்த/கருமை தோற்றத்தை இருநிலைமாற்று",
     "theme": "தோற்றம்",
     "personalLib": "தனக்குரிய நூலகம்",
-    "excalidrawLib": "எக்ஸ்கேலிட்ரா நூலகம்",
+    "xcalidrawLib": "எக்ஸ்கேலிட்ரா நூலகம்",
     "decreaseFontSize": "எழுத்துரு அளவைக் குறை",
     "increaseFontSize": "எழுத்துரு அளவை அதிகரி",
     "unbindText": "உரையைப் பிணைவவிழ்",
@@ -312,7 +312,7 @@
     "laser": "சீரொளி குறிமுள்",
     "hand": "கை (பார்வை நகர்கும் கருவி)",
     "extraTools": "மற்ற கருவிகள்",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "பகிரக்கூடிய தொடுப்பு",
     "link_details": "வாசிக்க-மட்டும் தொடுப்பாக ஏற்றுமதிசெய்.",
     "link_button": "தொடுப்புக்கு ஏற்றுமதிசெய்",
-    "excalidrawplus_description": "காட்சியை உன் எக்ஸ்கேலிட்ரா பணியிடத்தில் சேமி.",
-    "excalidrawplus_button": "ஏற்றுமதி",
-    "excalidrawplus_exportError": "இத்தருணத்தில் எக்ஸ்கேலிட்ரா+ க்கு ஏற்றுமதிசெய்ய முடியவில்லை..."
+    "xcalidrawplus_description": "காட்சியை உன் எக்ஸ்கேலிட்ரா பணியிடத்தில் சேமி.",
+    "xcalidrawplus_button": "ஏற்றுமதி",
+    "xcalidrawplus_exportError": "இத்தருணத்தில் எக்ஸ்கேலிட்ரா+ க்கு ஏற்றுமதிசெய்ய முடியவில்லை..."
   },
   "helpDialog": {
     "blog": "எமது வலைப்பூவை வாசி",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "",
-      "center_heading_plus": "நீங்கள் Excalidraw+க்கு செல்ல விரும்புகிறீர்களா?",
+      "center_heading_plus": "நீங்கள் Xcalidraw+க்கு செல்ல விரும்புகிறீர்களா?",
       "menuHint": "விருப்பத்தேர்வுகள், மொழிகள் போன்றனவை ஏற்றுமதிசெய்..."
     },
     "defaults": {
@@ -587,7 +587,7 @@
         "button": "வட்டில் சேமி",
         "description": "காட்சித் தரவை நீங்கள் பின்னர் இறக்குமதி செய்யக்கூடிய ஒரு கோப்பிற்கு ஏற்றுமதிசெய்க."
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "எக்ஸ்காலிட்ரா+",
         "button": "எக்ஸ்காலிட்ரா+-க்கு ஏற்றுமதிசெய்",
         "description": "காட்சியை உன் எக்ஸ்கேலிட்ரா+ பணியிடத்தில் சேமி."

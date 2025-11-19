@@ -4,7 +4,7 @@ import { useTransition } from "../hooks/useTransition";
 
 import { EmptyLibraryUnit, LibraryUnit } from "./LibraryUnit";
 
-import type { ExcalidrawElement, NonDeleted } from "@xcalidraw/element/types";
+import type { XcalidrawElement, NonDeleted } from "@xcalidraw/element/types";
 
 import type { SvgCache } from "../hooks/useLibraryItemSvg";
 import type { LibraryItem } from "../types";
@@ -14,7 +14,7 @@ type LibraryOrPendingItem = readonly (
   | LibraryItem
   | /* pending library item */ {
       id: null;
-      elements: readonly NonDeleted<ExcalidrawElement>[];
+      elements: readonly NonDeleted<XcalidrawElement>[];
     }
 )[];
 

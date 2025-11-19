@@ -20,7 +20,7 @@ export const GitHubCorner = React.memo(
       }}
     >
       <a
-        href="https://github.com/excalidraw/excalidraw"
+        href="https://github.com/xcalidraw/xcalidraw"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="GitHub repository"

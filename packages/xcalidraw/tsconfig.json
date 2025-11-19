@@ -1,8 +1,19 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist/types"
+    "outDir": "./dist/types",
+    "baseUrl": "../..",
+    "paths": {
+      "@xcalidraw/common": ["packages/common/src/index.ts"],
+      "@xcalidraw/common/*": ["packages/common/src/*"],
+      "@xcalidraw/element": ["packages/element/src/index.ts"],
+      "@xcalidraw/element/*": ["packages/element/src/*"],
+      "@xcalidraw/math": ["packages/math/src/index.ts"],
+      "@xcalidraw/math/*": ["packages/math/src/*"],
+      "@xcalidraw/utils": ["packages/utils/src/index.ts"],
+      "@xcalidraw/utils/*": ["packages/utils/src/*"]
+    }
   },
-  "include": ["**/*"],
-  "exclude": ["**/*.test.*", "tests", "types", "examples", "dist"]
+  "include": ["**/*", "tests/**/*"],
+  "exclude": ["types", "examples", "dist"]
 }

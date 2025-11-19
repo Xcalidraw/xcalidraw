@@ -36,9 +36,9 @@ import { getFreeDrawSvgPath, IMAGE_INVERT_FILTER } from "@xcalidraw/element";
 import { getElementAbsoluteCoords } from "@xcalidraw/element";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawTextElementWithContainer,
-  NonDeletedExcalidrawElement,
+  XcalidrawElement,
+  XcalidrawTextElementWithContainer,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import type { RenderableElementsMap, SVGRenderConfig } from "../scene/types";
@@ -63,7 +63,7 @@ const roughSVGDrawWithPrecision = (
 };
 
 const maybeWrapNodesInFrameClipPath = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   root: SVGElement,
   nodes: SVGElement[],
   frameRendering: AppState["frameRendering"],
@@ -84,7 +84,7 @@ const maybeWrapNodesInFrameClipPath = (
 };
 
 const renderElementToSvg = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   elementsMap: RenderableElementsMap,
   rsvg: RoughSVG,
   svgRoot: SVGElement,
@@ -104,7 +104,7 @@ const renderElementToSvg = (
 
       const boundTextCoords = LinearElementEditor.getBoundTextElementPosition(
         container,
-        element as ExcalidrawTextElementWithContainer,
+        element as XcalidrawTextElementWithContainer,
         elementsMap,
       );
       cx = (x2 - x1) / 2 - (boundTextCoords.x - x1);
@@ -126,7 +126,7 @@ const renderElementToSvg = (
     root = anchorTag;
   }
 
-  const addToRoot = (node: SVGElement, element: ExcalidrawElement) => {
+  const addToRoot = (node: SVGElement, element: XcalidrawElement) => {
     if (isTestEnv()) {
       node.setAttribute("data-id", element.id);
     }
@@ -199,7 +199,7 @@ const renderElementToSvg = (
       );
       addToRoot(node, element);
 
-      const label: ExcalidrawElement =
+      const label: XcalidrawElement =
         createPlaceholderEmbeddableLabel(element);
       renderElementToSvg(
         label,
@@ -671,7 +671,7 @@ const renderElementToSvg = (
 };
 
 export const renderSceneToSvg = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   elementsMap: RenderableElementsMap,
   rsvg: RoughSVG,
   svgRoot: SVGElement,

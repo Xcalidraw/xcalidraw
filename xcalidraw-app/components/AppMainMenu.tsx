@@ -9,7 +9,7 @@ import React from "react";
 import { isDevEnv } from "@xcalidraw/common";
 
 import { LanguageList } from "../app-language/LanguageList";
-import { isExcalidrawPlusSignedUser } from "../app_constants";
+import { isXcalidrawPlusSignedUser } from "../app_constants";
 
 import { saveDebugState } from "./DebugCanvas";
 
@@ -45,20 +45,20 @@ export const AppMainMenu: React.FC<{
       <MainMenu.Separator />
       <MainMenu.ItemLink
         icon={ExcalLogo}
-        href={`${PLUS_LP_URL}/plus?utm_source=excalidraw&utm_medium=app&utm_content=hamburger`}
+        href={`${PLUS_LP_URL}/plus?utm_source=xcalidraw&utm_medium=app&utm_content=hamburger`}
         className=""
       >
-        Excalidraw+
+        Xcalidraw+
       </MainMenu.ItemLink>
       <MainMenu.DefaultItems.Socials />
       <MainMenu.ItemLink
         icon={loginIcon}
         href={`${PLUS_APP_URL}${
-          isExcalidrawPlusSignedUser ? "" : "/sign-up"
+          isXcalidrawPlusSignedUser ? "" : "/sign-up"
         }?utm_source=signin&utm_medium=app&utm_content=hamburger`}
         className="highlighted"
       >
-        {isExcalidrawPlusSignedUser ? "Sign in" : "Sign up"}
+        {isXcalidrawPlusSignedUser ? "Sign in" : "Sign up"}
       </MainMenu.ItemLink>
       {isDevEnv() && (
         <MainMenu.Item

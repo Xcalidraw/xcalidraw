@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "سهم زاوي",
     "fontSize": "حجم الخط",
     "fontFamily": "نوع الخط",
-    "addWatermark": "إضافة \"مصنوعة بواسطة Excalidraw\"",
+    "addWatermark": "إضافة \"مصنوعة بواسطة Xcalidraw\"",
     "handDrawn": "رسم باليد",
     "normal": "عادي",
     "code": "رمز",
@@ -91,7 +91,7 @@
     "untitled": "غير معنون",
     "name": "الاسم",
     "yourName": "اسمك",
-    "madeWithExcalidraw": "مصنوعة بواسطة Excalidraw",
+    "madeWithXcalidraw": "مصنوعة بواسطة Xcalidraw",
     "group": "تحديد مجموعة",
     "ungroup": "إلغاء تحديد مجموعة",
     "collaborators": "المتعاونون",
@@ -121,7 +121,7 @@
     "toggleTheme": "تبديل الوضع الفاتح/الداكن",
     "theme": "السمة",
     "personalLib": "المكتبة الشخصية",
-    "excalidrawLib": "مكتبتنا",
+    "xcalidrawLib": "مكتبتنا",
     "decreaseFontSize": "تصغير حجم الخط",
     "increaseFontSize": "تكبير حجم الخط",
     "unbindText": "فك ربط النص",
@@ -163,7 +163,7 @@
     "zoomToFitViewport": "التكبير لتناسب العرض",
     "zoomToFitSelection": "تكبير للعنصر المحدد",
     "zoomToFit": "تكبير لتلائم جميع العناصر",
-    "installPWA": "تثبيت Excalidraw محليًا (PWA)",
+    "installPWA": "تثبيت Xcalidraw محليًا (PWA)",
     "autoResize": "تمكين تغيير حجم النص تلقائيًا",
     "imageCropping": "قص الصورة",
     "unCroppedDimension": "الأبعاد غير المقصوصة",
@@ -248,7 +248,7 @@
     "cannotExportEmptyCanvas": "لا يمكن تصدير لوحة فارغة.",
     "couldNotCopyToClipboard": "تعذر النسخ إلى الحافظة.",
     "decryptFailed": "تعذر فك تشفير البيانات.",
-    "uploadedSecurly": "تم تأمين التحميل بتشفير النهاية إلى النهاية، مما يعني أن خادم Excalidraw والأطراف الثالثة لا يمكنها قراءة المحتوى.",
+    "uploadedSecurly": "تم تأمين التحميل بتشفير النهاية إلى النهاية، مما يعني أن خادم Xcalidraw والأطراف الثالثة لا يمكنها قراءة المحتوى.",
     "loadSceneOverridePrompt": "تحميل الرسم الخارجي سيحل محل المحتوى الموجود لديك. هل ترغب في المتابعة؟",
     "collabStopOverridePrompt": "إيقاف الجلسة سيؤدي إلى الكتابة فوق رسومك السابقة المخزنة داخليًا. هل أنت متأكد؟\n\n(إذا كنت ترغب في الاحتفاظ برسمك المخزن داخليًا، أغلق علامة تبويب المتصفح بدلاً من ذلك.)",
     "errorAddingToLibrary": "تعذر إضافة العنصر إلى المكتبة",
@@ -256,7 +256,7 @@
     "confirmAddLibrary": "هذا سيضيف {{numShapes}} شكل إلى مكتبتك. هل أنت متأكد؟",
     "imageDoesNotContainScene": "يبدو أن هذه الصورة لا تحتوي على أي بيانات مشهد. هل قمت بتمكين تضمين المشهد أثناء التصدير؟",
     "cannotRestoreFromImage": "تعذر استعادة المشهد من ملف الصورة",
-    "invalidSceneUrl": "تعذر استيراد المشهد من عنوان URL المتوفر. إما أنها مشوهة، أو لا تحتوي على بيانات Excalidraw JSON صالحة.",
+    "invalidSceneUrl": "تعذر استيراد المشهد من عنوان URL المتوفر. إما أنها مشوهة، أو لا تحتوي على بيانات Xcalidraw JSON صالحة.",
     "resetLibrary": "هذا سيؤدي إلى مسح مكتبتك. هل أنت متأكد؟",
     "removeItemsFromsLibrary": "حذف {{count}} عنصر (عناصر) من المكتبة؟",
     "invalidEncryptionKey": "مفتاح التشفير يجب أن يكون من 22 حرفًا. التعاون المباشر معطل.",
@@ -312,7 +312,7 @@
     "laser": "مؤشر ليزر",
     "hand": "يد (أداة الإزاحة)",
     "extraTools": "المزيد من الأدوات",
-    "mermaidToExcalidraw": "من Mermaid إلى Excalidraw",
+    "mermaidToXcalidraw": "من Mermaid إلى Xcalidraw",
     "convertElementType": ""
   },
   "element": {
@@ -389,7 +389,7 @@
     "desc_inProgressIntro": "تجري الآن جلسة تعاون مباشرة.",
     "desc_shareLink": "شارك هذا الرابط مع أي شخص تريده أن يشاركك الجلسة:",
     "desc_exitSession": "إيقاف الجلسة سيؤدي إلى قطع الاتصال الخاص بك من الغرفة، ولكن ستتمكن من مواصلة العمل مع المشهد محليًا. لاحظ أن هذا لن يؤثر على الأشخاص الآخرين، وسيظلون قادرين على التعاون في إصدارهم.",
-    "shareTitle": "الانضمام إلى جلسة تعاون مباشرة على Excalidraw"
+    "shareTitle": "الانضمام إلى جلسة تعاون مباشرة على Xcalidraw"
   },
   "errorDialog": {
     "title": "خطأ"
@@ -401,9 +401,9 @@
     "link_title": "رابط قابل للمشاركة",
     "link_details": "تصدير الملف للمشاهدة فقط.",
     "link_button": "تصدير كرابط",
-    "excalidrawplus_description": "حفظ المشهد إلى مساحة العمل +Excalidraw الخاصة بك.",
-    "excalidrawplus_button": "تصدير",
-    "excalidrawplus_exportError": "تعذر التص несп في الوقت الحالي إلى +Excalidraw..."
+    "xcalidrawplus_description": "حفظ المشهد إلى مساحة العمل +Xcalidraw الخاصة بك.",
+    "xcalidrawplus_button": "تصدير",
+    "xcalidrawplus_exportError": "تعذر التص несп في الوقت الحالي إلى +Xcalidraw..."
   },
   "helpDialog": {
     "blog": "اقرأ مدونتنا",
@@ -502,8 +502,8 @@
     }
   },
   "encrypted": {
-    "tooltip": "رسوماتك مشفرة من النهاية إلى النهاية، لذا لا يمكن لخوادم Excalidraw رؤيتها أبدًا.",
-    "link": "مشاركة المدونة حول التشفير من النهاية إلى النهاية في Excalidraw"
+    "tooltip": "رسوماتك مشفرة من النهاية إلى النهاية، لذا لا يمكن لخوادم Xcalidraw رؤيتها أبدًا.",
+    "link": "مشاركة المدونة حول التشفير من النهاية إلى النهاية في Xcalidraw"
   },
   "stats": {
     "angle": "الزاوية",
@@ -557,7 +557,7 @@
   "welcomeScreen": {
     "app": {
       "center_heading": "جميع بياناتك محفوظة محليًا في المتصفح الخاص بك.",
-      "center_heading_plus": "هل تريد الانتقال إلى Excalidraw+ بدلاً من ذلك؟",
+      "center_heading_plus": "هل تريد الانتقال إلى Xcalidraw+ بدلاً من ذلك؟",
       "menuHint": "التصدير، التفضيلات، اللغات..."
     },
     "defaults": {
@@ -587,10 +587,10 @@
         "button": "حفظ الملف على الجهاز",
         "description": "تصدير بيانات المشهد إلى ملف يمكنك الاستيراد منه لاحقًا."
       },
-      "excalidrawPlus": {
-        "title": "Excalidraw+",
-        "button": "تصدير إلى Excalidraw+",
-        "description": "حفظ المشهد إلى مساحة العمل +Excalidraw الخاصة بك."
+      "xcalidrawPlus": {
+        "title": "Xcalidraw+",
+        "button": "تصدير إلى Xcalidraw+",
+        "description": "حفظ المشهد إلى مساحة العمل +Xcalidraw الخاصة بك."
       }
     },
     "modal": {
@@ -607,9 +607,9 @@
     }
   },
   "mermaid": {
-    "title": "Mermaid إلى Excalidraw",
+    "title": "Mermaid إلى Xcalidraw",
     "button": "إدراج",
-    "description": "حاليًا، يتم دعم <flowchartLink>مخططات التدفق</flowchartLink>، <sequenceLink>التسلسلات</sequenceLink>، و<classLink>الفئات</classLink> فقط. سيتم عرض الأنواع الأخرى كصورة في Excalidraw.",
+    "description": "حاليًا، يتم دعم <flowchartLink>مخططات التدفق</flowchartLink>، <sequenceLink>التسلسلات</sequenceLink>، و<classLink>الفئات</classLink> فقط. سيتم عرض الأنواع الأخرى كصورة في Xcalidraw.",
     "syntax": "صيغة Mermaid",
     "preview": "معاينة"
   },

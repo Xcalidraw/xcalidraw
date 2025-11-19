@@ -1,14 +1,14 @@
 import { DEFAULT_EXPORT_PADDING, EDITOR_LS_KEYS } from "@xcalidraw/common";
 
 import type { MermaidConfig } from "@excalidraw/mermaid-to-excalidraw";
-import type { MermaidToExcalidrawResult } from "@excalidraw/mermaid-to-excalidraw/dist/interfaces";
+import type { MermaidToXcalidrawResult } from "@excalidraw/mermaid-to-excalidraw/dist/interfaces";
 
 import { EditorLocalStorage } from "../../data/EditorLocalStorage";
 import { canvasToBlob } from "../../data/blob";
 import { t } from "../../i18n";
-import { convertToExcalidrawElements, exportToCanvas } from "../../index";
+import { convertToXcalidrawElements, exportToCanvas } from "../../index";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppClassProperties, BinaryFiles } from "../../types";
 
@@ -33,34 +33,34 @@ const resetPreview = ({
   canvasNode.replaceChildren();
 };
 
-export interface MermaidToExcalidrawLibProps {
+export interface MermaidToXcalidrawLibProps {
   loaded: boolean;
   api: Promise<{
     parseMermaidToExcalidraw: (
       definition: string,
       config?: MermaidConfig,
-    ) => Promise<MermaidToExcalidrawResult>;
+    ) => Promise<MermaidToXcalidrawResult>;
   }>;
 }
 
-interface ConvertMermaidToExcalidrawFormatProps {
+interface ConvertMermaidToXcalidrawFormatProps {
   canvasRef: React.RefObject<HTMLDivElement | null>;
-  mermaidToExcalidrawLib: MermaidToExcalidrawLibProps;
+  mermaidToXcalidrawLib: MermaidToXcalidrawLibProps;
   mermaidDefinition: string;
   setError: (error: Error | null) => void;
   data: React.MutableRefObject<{
-    elements: readonly NonDeletedExcalidrawElement[];
+    elements: readonly NonDeletedXcalidrawElement[];
     files: BinaryFiles | null;
   }>;
 }
 
-export const convertMermaidToExcalidraw = async ({
+export const convertMermaidToXcalidraw = async ({
   canvasRef,
-  mermaidToExcalidrawLib,
+  mermaidToXcalidrawLib,
   mermaidDefinition,
   setError,
   data,
-}: ConvertMermaidToExcalidrawFormatProps) => {
+}: ConvertMermaidToXcalidrawFormatProps) => {
   const canvasNode = canvasRef.current;
   const parent = canvasNode?.parentElement;
 
@@ -74,7 +74,7 @@ export const convertMermaidToExcalidraw = async ({
   }
 
   try {
-    const api = await mermaidToExcalidrawLib.api;
+    const api = await mermaidToXcalidrawLib.api;
 
     let ret;
     try {
@@ -88,7 +88,7 @@ export const convertMermaidToExcalidraw = async ({
     setError(null);
 
     data.current = {
-      elements: convertToExcalidrawElements(elements, {
+      elements: convertToXcalidrawElements(elements, {
         regenerateIds: true,
       }),
       files,
@@ -126,7 +126,7 @@ export const convertMermaidToExcalidraw = async ({
 
 export const saveMermaidDataToStorage = (mermaidDefinition: string) => {
   EditorLocalStorage.set(
-    EDITOR_LS_KEYS.MERMAID_TO_EXCALIDRAW,
+    EDITOR_LS_KEYS.MERMAID_TO_XCALIDRAW,
     mermaidDefinition,
   );
 };
@@ -139,7 +139,7 @@ export const insertToEditor = ({
 }: {
   app: AppClassProperties;
   data: React.MutableRefObject<{
-    elements: readonly NonDeletedExcalidrawElement[];
+    elements: readonly NonDeletedXcalidrawElement[];
     files: BinaryFiles | null;
   }>;
   text?: string;

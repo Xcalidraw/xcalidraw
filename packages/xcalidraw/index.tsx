@@ -16,16 +16,16 @@ import "./css/app.scss";
 import "./css/styles.scss";
 import "./fonts/fonts.css";
 
-import type { AppProps, ExcalidrawProps } from "./types";
+import type { AppProps, XcalidrawProps } from "./types";
 
 polyfill();
 
-const ExcalidrawBase = (props: ExcalidrawProps) => {
+const XcalidrawBase = (props: XcalidrawProps) => {
   const {
     onChange,
     onIncrement,
     initialData,
-    excalidrawAPI,
+    xcalidrawAPI,
     isCollaborating = false,
     onPointerUpdate,
     renderTopLeftUI,
@@ -118,7 +118,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
           onChange={onChange}
           onIncrement={onIncrement}
           initialData={initialData}
-          excalidrawAPI={excalidrawAPI}
+          xcalidrawAPI={xcalidrawAPI}
           isCollaborating={isCollaborating}
           onPointerUpdate={onPointerUpdate}
           renderTopLeftUI={renderTopLeftUI}
@@ -157,7 +157,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
   );
 };
 
-const areEqual = (prevProps: ExcalidrawProps, nextProps: ExcalidrawProps) => {
+const areEqual = (prevProps: XcalidrawProps, nextProps: XcalidrawProps) => {
   // short-circuit early
   if (prevProps.children !== nextProps.children) {
     return false;
@@ -214,8 +214,8 @@ const areEqual = (prevProps: ExcalidrawProps, nextProps: ExcalidrawProps) => {
   return isUIOptionsSame && isShallowEqual(prev, next);
 };
 
-export const Excalidraw = React.memo(ExcalidrawBase, areEqual);
-Excalidraw.displayName = "Excalidraw";
+export const Xcalidraw = React.memo(XcalidrawBase, areEqual);
+Xcalidraw.displayName = "Xcalidraw";
 
 export {
   getSceneVersion,
@@ -289,7 +289,7 @@ export { TTDDialog } from "./components/TTDDialog/TTDDialog";
 export { TTDDialogTrigger } from "./components/TTDDialog/TTDDialogTrigger";
 
 export { zoomToFitBounds } from "./actions/actionCanvas";
-export { convertToExcalidrawElements } from "./data/transform";
+export { convertToXcalidrawElements } from "./data/transform";
 export { getCommonBounds, getVisibleSceneBounds } from "@xcalidraw/element";
 
 export {

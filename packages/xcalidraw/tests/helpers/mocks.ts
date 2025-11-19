@@ -1,11 +1,11 @@
-import * as MermaidToExcalidraw from "@excalidraw/mermaid-to-excalidraw";
+import * as MermaidToXcalidraw from "@excalidraw/mermaid-to-excalidraw";
 import React from "react";
 import { vi } from "vitest";
 
 import type { parseMermaidToExcalidraw } from "@excalidraw/mermaid-to-excalidraw";
 
-export const mockMermaidToExcalidraw = (opts: {
-  parseMermaidToExcalidraw: typeof parseMermaidToExcalidraw;
+export const mockMermaidToXcalidraw = (opts: {
+  parseMermaidToXcalidraw: typeof parseMermaidToExcalidraw;
   mockRef?: boolean;
 }) => {
   vi.mock("@excalidraw/mermaid-to-excalidraw", async (importActual) => {
@@ -16,17 +16,17 @@ export const mockMermaidToExcalidraw = (opts: {
       ...module,
     };
   });
-  const parseMermaidToExcalidrawSpy = vi.spyOn(
-    MermaidToExcalidraw,
+  const parseMermaidToXcalidrawSpy = vi.spyOn(
+    MermaidToXcalidraw,
     "parseMermaidToExcalidraw",
   );
 
-  parseMermaidToExcalidrawSpy.mockImplementation(opts.parseMermaidToExcalidraw);
+  parseMermaidToXcalidrawSpy.mockImplementation(opts.parseMermaidToXcalidraw);
 
   if (opts.mockRef) {
     vi.spyOn(React, "useRef").mockReturnValue({
       current: {
-        parseMermaidToExcalidraw: parseMermaidToExcalidrawSpy,
+        parseMermaidToXcalidraw: parseMermaidToXcalidrawSpy,
       },
     });
   }

@@ -6,7 +6,7 @@ import { isPromiseLike } from "@xcalidraw/common";
 import { AbortError } from "../errors";
 
 import Spinner from "./Spinner";
-import { useExcalidrawContainer } from "./App";
+import { useXcalidrawContainer } from "./App";
 
 import "./ToolIcon.scss";
 
@@ -70,7 +70,7 @@ export const ToolButton = React.forwardRef(
     }: ToolButtonProps,
     ref,
   ) => {
-    const { id: excalId } = useExcalidrawContainer();
+    const { id: excalId } = useXcalidrawContainer();
     const innerRef = React.useRef(null);
     React.useImperativeHandle(ref, () => innerRef.current);
     const sizeCn = `ToolIcon_size_${size}`;

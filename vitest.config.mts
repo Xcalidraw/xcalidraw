@@ -46,7 +46,7 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "./packages/utils/src/$1"),
       },
       {
-        find: /^excalidraw-app\/(.*?)/,
+        find: /^xcalidraw-app\/(.*?)/,
         replacement: path.resolve(__dirname, "./xcalidraw-app/$1"),
       },
       {

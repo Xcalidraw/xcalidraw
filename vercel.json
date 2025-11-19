@@ -6,7 +6,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://excalidraw.com"
+          "value": "https://xcalidraw.com"
         },
         {
           "key": "X-Content-Type-Options",
@@ -31,7 +31,7 @@
         },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://excalidraw.com"
+          "value": "https://xcalidraw.com"
         }
       ]
     },
@@ -52,17 +52,17 @@
   "redirects": [
     {
       "source": "/webex/:match*",
-      "destination": "https://for-webex.excalidraw.com"
+      "destination": "https://for-webex.xcalidraw.com"
     },
     {
       "source": "/:path*",
       "has": [
         {
           "type": "host",
-          "value": "vscode.excalidraw.com"
+          "value": "vscode.xcalidraw.com"
         }
       ],
-      "destination": "https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor"
+      "destination": "https://marketplace.visualstudio.com/items?itemName=pomdtr.xcalidraw-editor"
     }
   ],
   "outputDirectory": "xcalidraw-app/build",

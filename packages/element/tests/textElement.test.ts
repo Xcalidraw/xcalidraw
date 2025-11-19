@@ -12,7 +12,7 @@ import {
 } from "../src/textElement";
 import { detectLineHeight, getLineHeightInPx } from "../src/textMeasurements";
 
-import type { ExcalidrawTextElementWithContainer } from "../src/types";
+import type { XcalidrawTextElementWithContainer } from "../src/types";
 
 describe("Test measureText", () => {
   describe("Test getContainerCoords", () => {
@@ -127,11 +127,11 @@ describe("Test measureText", () => {
       height: 175,
       fontSize: 20,
       fontFamily: 1,
-      text: "Excalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
+      text: "Xcalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
       textAlign: "center",
       verticalAlign: "middle",
       containerId: params.id,
-    }) as ExcalidrawTextElementWithContainer;
+    }) as XcalidrawTextElementWithContainer;
 
     it("should return max height when container is rectangle", () => {
       const container = API.createElement({ type: "rectangle", ...params });
@@ -173,7 +173,7 @@ describe("Test measureText", () => {
 
 const textElement = API.createElement({
   type: "text",
-  text: "Excalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
+  text: "Xcalidraw is a\nvirtual \nopensource \nwhiteboard for \nsketching \nhand-drawn like\ndiagrams",
   fontSize: 20,
   fontFamily: 1,
   height: 175,
@@ -234,7 +234,7 @@ describe("Test computeBoundTextPosition", () => {
       textAlign: textAlign as any,
       verticalAlign: verticalAlign as any,
       containerId: container.id,
-    }) as ExcalidrawTextElementWithContainer;
+    }) as XcalidrawTextElementWithContainer;
 
     const elementsMap = createMockElementsMap();
 

@@ -34,7 +34,7 @@ import { FilledButton } from "./FilledButton";
 
 import "./ImageExportDialog.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ActionManager } from "../actions/manager";
 
@@ -57,7 +57,7 @@ export const ErrorCanvasPreview = () => {
 
 type ImageExportModalProps = {
   appStateSnapshot: Readonly<UIAppState>;
-  elementsSnapshot: readonly NonDeletedExcalidrawElement[];
+  elementsSnapshot: readonly NonDeletedXcalidrawElement[];
   files: BinaryFiles;
   actionManager: ActionManager;
   onExportImage: AppClassProperties["onExportImage"];
@@ -379,7 +379,7 @@ export const ImageExportDialog = ({
   name,
 }: {
   appState: UIAppState;
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   files: BinaryFiles;
   actionManager: ActionManager;
   onExportImage: AppClassProperties["onExportImage"];

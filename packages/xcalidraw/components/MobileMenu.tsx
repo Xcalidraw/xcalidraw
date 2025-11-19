@@ -13,7 +13,7 @@ import { Island } from "./Island";
 
 import { PenModeButton } from "./PenModeButton";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ActionManager } from "../actions/manager";
 import type {
@@ -30,7 +30,7 @@ type MobileMenuProps = {
   renderJSONExportDialog: () => React.ReactNode;
   renderImageExportDialog: () => React.ReactNode;
   setAppState: React.Component<any, AppState>["setState"];
-  elements: readonly NonDeletedExcalidrawElement[];
+  elements: readonly NonDeletedXcalidrawElement[];
   onHandToolToggle: () => void;
   onPenModeToggle: AppClassProperties["togglePenMode"];
 
@@ -73,7 +73,7 @@ export const MobileMenu = ({
     }
 
     const topRightUI = (
-      <div className="excalidraw-ui-top-right">
+      <div className="xcalidraw-ui-top-right">
         {renderTopRightUI?.(true, appState) ??
           (!appState.viewModeEnabled && (
             <>
@@ -94,7 +94,7 @@ export const MobileMenu = ({
     );
 
     const topLeftUI = (
-      <div className="excalidraw-ui-top-left">
+      <div className="xcalidraw-ui-top-left">
         {renderTopLeftUI?.(true, appState)}
         <MainMenuTunnel.Out />
       </div>

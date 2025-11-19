@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "",
     "fontSize": "Šrifto dydis",
     "fontFamily": "Šriftas",
-    "addWatermark": "Sukurta su Excalidraw",
+    "addWatermark": "Sukurta su Xcalidraw",
     "handDrawn": "Ranka rašytas",
     "normal": "Normalus",
     "code": "Kodas",
@@ -91,7 +91,7 @@
     "untitled": "",
     "name": "",
     "yourName": "Jūsų vardas",
-    "madeWithExcalidraw": "Sukurta su Excalidraw",
+    "madeWithXcalidraw": "Sukurta su Xcalidraw",
     "group": "Grupuoti pasirinkimą",
     "ungroup": "Išgrupuoti pasirinkimą",
     "collaborators": "Bendradarbiautojai",
@@ -121,7 +121,7 @@
     "toggleTheme": "",
     "theme": "",
     "personalLib": "Asmeninė biblioteka",
-    "excalidrawLib": "Exaclidraw biblioteka",
+    "xcalidrawLib": "Exaclidraw biblioteka",
     "decreaseFontSize": "",
     "increaseFontSize": "",
     "unbindText": "",
@@ -256,7 +256,7 @@
     "confirmAddLibrary": "Tai įtrauks {{numShapes}} figūrą/-as į tavo biblioteką. Ar tikrai to nori?",
     "imageDoesNotContainScene": "Panašu, jog šis paveiksliukas neturi scenos duomenų. Ar yra įjuntas scenos įtraukimas ekportavimo metu?",
     "cannotRestoreFromImage": "Nepavyko atstatyti scenos iš šio nuotraukos failo",
-    "invalidSceneUrl": "Nepavyko suimportuoti scenos iš pateiktos nuorodos (URL). Ji arba blogai suformatuota, arba savyje neturi teisingų Excalidraw JSON duomenų.",
+    "invalidSceneUrl": "Nepavyko suimportuoti scenos iš pateiktos nuorodos (URL). Ji arba blogai suformatuota, arba savyje neturi teisingų Xcalidraw JSON duomenų.",
     "resetLibrary": "Tai išvalys tavo biblioteką. Ar tikrai to nori?",
     "removeItemsFromsLibrary": "Ištrinti {{count}} elementą/-us iš bibliotekos?",
     "invalidEncryptionKey": "Šifravimo raktas turi būti iš 22 simbolių. Redagavimas gyvai yra išjungtas.",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "Nuoroda dalinimuisi",
     "link_details": "",
     "link_button": "",
-    "excalidrawplus_description": "",
-    "excalidrawplus_button": "Eksportuoti",
-    "excalidrawplus_exportError": ""
+    "xcalidrawplus_description": "",
+    "xcalidrawplus_button": "Eksportuoti",
+    "xcalidrawplus_exportError": ""
   },
   "helpDialog": {
     "blog": "",
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

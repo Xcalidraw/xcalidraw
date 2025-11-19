@@ -10,11 +10,11 @@ import { wrapText } from "./textWrapping";
 import { isIframeElement } from "./typeChecks";
 
 import type { MarkRequired } from "@xcalidraw/common/utility-types";
-import type { ExcalidrawProps } from "@xcalidraw/xcalidraw/types";
+import type { XcalidrawProps } from "@xcalidraw/xcalidraw/types";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawIframeLikeElement,
+  XcalidrawElement,
+  XcalidrawIframeLikeElement,
   IframeData,
 } from "./types";
 
@@ -91,7 +91,7 @@ const ALLOWED_DOMAINS = new Set([
   "vimeo.com",
   "player.vimeo.com",
   "figma.com",
-  "link.excalidraw.com",
+  "link.xcalidraw.com",
   "gist.github.com",
   "twitter.com",
   "x.com",
@@ -323,8 +323,8 @@ export const getEmbedLink = (
 };
 
 export const createPlaceholderEmbeddableLabel = (
-  element: ExcalidrawIframeLikeElement,
-): ExcalidrawElement => {
+  element: XcalidrawIframeLikeElement,
+): XcalidrawElement => {
   let text: string;
   if (isIframeElement(element)) {
     text = "IFrame element";
@@ -424,7 +424,7 @@ export const maybeParseEmbedSrc = (str: string): string => {
 
 export const embeddableURLValidator = (
   url: string | null | undefined,
-  validateEmbeddable: ExcalidrawProps["validateEmbeddable"],
+  validateEmbeddable: XcalidrawProps["validateEmbeddable"],
 ): boolean => {
   if (!url) {
     return false;

@@ -39,12 +39,12 @@ export const AppSidebar = () => {
             }}
           />
           <div className="app-sidebar-promo-text">
-            Make comments with Excalidraw+
+            Make comments with Xcalidraw+
           </div>
           <LinkButton
             href={`${
               import.meta.env.VITE_APP_PLUS_LP
-            }/plus?utm_source=excalidraw&utm_medium=app&utm_content=comments_promo#excalidraw-redirect`}
+            }/plus?utm_source=xcalidraw&utm_medium=app&utm_content=comments_promo#xcalidraw-redirect`}
           >
             Sign up now
           </LinkButton>
@@ -63,12 +63,12 @@ export const AppSidebar = () => {
             }}
           />
           <div className="app-sidebar-promo-text">
-            Create presentations with Excalidraw+
+            Create presentations with Xcalidraw+
           </div>
           <LinkButton
             href={`${
               import.meta.env.VITE_APP_PLUS_LP
-            }/plus?utm_source=excalidraw&utm_medium=app&utm_content=presentations_promo#excalidraw-redirect`}
+            }/plus?utm_source=xcalidraw&utm_medium=app&utm_content=presentations_promo#xcalidraw-redirect`}
           >
             Sign up now
           </LinkButton>

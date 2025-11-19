@@ -56,7 +56,7 @@
     "arrowtype_elbowed": "Albuepil",
     "fontSize": "Skriftstørrelse",
     "fontFamily": "Skrifttypefamilie",
-    "addWatermark": "Tilføj \"Lavet med Excalidraw\"",
+    "addWatermark": "Tilføj \"Lavet med Xcalidraw\"",
     "handDrawn": "Hånd-tegnet",
     "normal": "Normal",
     "code": "Kode",
@@ -91,7 +91,7 @@
     "untitled": "Unavngivet",
     "name": "Navn",
     "yourName": "Dit navn",
-    "madeWithExcalidraw": "Fremstillet med Excalidraw",
+    "madeWithXcalidraw": "Fremstillet med Xcalidraw",
     "group": "Gruppér valgte",
     "ungroup": "Afgruppér valgte",
     "collaborators": "Samarbejdspartnere",
@@ -121,7 +121,7 @@
     "toggleTheme": "Slå lys/mørkt tema til/fra",
     "theme": "Tema",
     "personalLib": "Personligt bibliotek",
-    "excalidrawLib": "",
+    "xcalidrawLib": "",
     "decreaseFontSize": "",
     "increaseFontSize": "",
     "unbindText": "",
@@ -312,7 +312,7 @@
     "laser": "",
     "hand": "",
     "extraTools": "",
-    "mermaidToExcalidraw": "",
+    "mermaidToXcalidraw": "",
     "convertElementType": ""
   },
   "element": {
@@ -401,9 +401,9 @@
     "link_title": "",
     "link_details": "",
     "link_button": "",
-    "excalidrawplus_description": "",
-    "excalidrawplus_button": "",
-    "excalidrawplus_exportError": ""
+    "xcalidrawplus_description": "",
+    "xcalidrawplus_button": "",
+    "xcalidrawplus_exportError": ""
   },
   "helpDialog": {
     "blog": "Læs vores blog",
@@ -587,7 +587,7 @@
         "button": "",
         "description": ""
       },
-      "excalidrawPlus": {
+      "xcalidrawPlus": {
         "title": "",
         "button": "",
         "description": ""

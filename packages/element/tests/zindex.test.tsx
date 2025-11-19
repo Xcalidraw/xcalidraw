@@ -8,7 +8,7 @@ import {
   actionDuplicateSelection,
 } from "@xcalidraw/xcalidraw/actions";
 
-import { Excalidraw } from "@xcalidraw/xcalidraw";
+import { Xcalidraw } from "@xcalidraw/xcalidraw";
 
 import { API } from "@xcalidraw/xcalidraw/tests/helpers/api";
 import {
@@ -23,9 +23,9 @@ import { selectGroupsForSelectedElements } from "../src/groups";
 import type { AppState } from "@xcalidraw/xcalidraw/types";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawFrameElement,
-  ExcalidrawSelectionElement,
+  XcalidrawElement,
+  XcalidrawFrameElement,
+  XcalidrawSelectionElement,
 } from "../src/types";
 
 unmountComponent();
@@ -37,15 +37,15 @@ beforeEach(() => {
 
 const { h } = window;
 
-type ExcalidrawElementType = Exclude<
-  ExcalidrawElement,
-  ExcalidrawSelectionElement
+type XcalidrawElementType = Exclude<
+  XcalidrawElement,
+  XcalidrawSelectionElement
 >["type"];
 
 const populateElements = (
   elements: {
     id: string;
-    type?: ExcalidrawElementType;
+    type?: XcalidrawElementType;
     isDeleted?: boolean;
     isSelected?: boolean;
     groupIds?: string[];
@@ -54,8 +54,8 @@ const populateElements = (
     width?: number;
     height?: number;
     containerId?: string;
-    frameId?: ExcalidrawFrameElement["id"];
-    index?: ExcalidrawElement["index"];
+    frameId?: XcalidrawFrameElement["id"];
+    index?: XcalidrawElement["index"];
   }[],
   appState?: Partial<AppState>,
 ) => {
@@ -145,8 +145,8 @@ const assertZindex = ({
     isSelected?: true;
     groupIds?: string[];
     containerId?: string;
-    frameId?: ExcalidrawFrameElement["id"];
-    type?: ExcalidrawElementType;
+    frameId?: XcalidrawFrameElement["id"];
+    type?: XcalidrawElementType;
   }[];
   appState?: Partial<AppState>;
   operations: [Actions, string[]][];
@@ -161,7 +161,7 @@ const assertZindex = ({
 
 describe("z-index manipulation", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   it("send back", () => {
@@ -1231,7 +1231,7 @@ describe("z-index manipulation", () => {
 
 describe("z-indexing with frames", () => {
   beforeEach(async () => {
-    await render(<Excalidraw />);
+    await render(<Xcalidraw />);
   });
 
   // naming scheme:

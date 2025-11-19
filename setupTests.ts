@@ -64,7 +64,7 @@ Object.defineProperty(document, "fonts", {
   },
 });
 
-Object.defineProperty(window, "EXCALIDRAW_ASSET_PATH", {
+Object.defineProperty(window, "XCALIDRAW_ASSET_PATH", {
   value: `file://${__dirname}/`,
 });
 
@@ -75,11 +75,11 @@ vi.mock(
     const mod = await importOriginal<
       typeof import("./packages/xcalidraw/fonts/XcalidrawFontFace")
     >();
-    const ExcalidrawFontFaceImpl = mod.ExcalidrawFontFace;
+    const XcalidrawFontFaceImpl = mod.XcalidrawFontFace;
 
     return {
       ...mod,
-      ExcalidrawFontFace: class extends ExcalidrawFontFaceImpl {
+      XcalidrawFontFace: class extends XcalidrawFontFaceImpl {
         public async fetchFont(url: URL): Promise<ArrayBuffer> {
           if (!url.toString().startsWith("file://")) {
             return super.fetchFont(url);

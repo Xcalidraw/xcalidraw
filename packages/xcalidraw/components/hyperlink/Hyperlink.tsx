@@ -33,7 +33,7 @@ import { getTooltipDiv, updateTooltipPosition } from "../../components/Tooltip";
 
 import { t } from "../../i18n";
 
-import { useAppProps, useEditorInterface, useExcalidrawAppState } from "../App";
+import { useAppProps, useEditorInterface, useXcalidrawAppState } from "../App";
 
 import "./Hyperlink.scss";
 
@@ -41,8 +41,8 @@ import type { Scene } from "@xcalidraw/element";
 
 import type {
   ElementsMap,
-  ExcalidrawEmbeddableElement,
-  NonDeletedExcalidrawElement,
+  XcalidrawEmbeddableElement,
+  NonDeletedXcalidrawElement,
 } from "@xcalidraw/element/types";
 
 import { ToolButton } from "../ToolButton";
@@ -53,7 +53,7 @@ import { getLinkHandleFromCoords } from "./helpers";
 
 import "./Hyperlink.scss";
 
-import type { AppState, ExcalidrawProps, UIAppState } from "../../types";
+import type { AppState, XcalidrawProps, UIAppState } from "../../types";
 
 const POPUP_WIDTH = 380;
 const POPUP_HEIGHT = 42;
@@ -64,7 +64,7 @@ const AUTO_HIDE_TIMEOUT = 500;
 let IS_HYPERLINK_TOOLTIP_VISIBLE = false;
 
 const embeddableLinkCache = new Map<
-  ExcalidrawEmbeddableElement["id"],
+  XcalidrawEmbeddableElement["id"],
   string
 >();
 
@@ -76,20 +76,20 @@ export const Hyperlink = ({
   setToast,
   updateEmbedValidationStatus,
 }: {
-  element: NonDeletedExcalidrawElement;
+  element: NonDeletedXcalidrawElement;
   scene: Scene;
   setAppState: React.Component<any, AppState>["setState"];
-  onLinkOpen: ExcalidrawProps["onLinkOpen"];
+  onLinkOpen: XcalidrawProps["onLinkOpen"];
   setToast: (
     toast: { message: string; closable?: boolean; duration?: number } | null,
   ) => void;
   updateEmbedValidationStatus: (
-    element: ExcalidrawEmbeddableElement,
+    element: XcalidrawEmbeddableElement,
     status: boolean,
   ) => void;
 }) => {
   const elementsMap = scene.getNonDeletedElementsMap();
-  const appState = useExcalidrawAppState();
+  const appState = useXcalidrawAppState();
   const appProps = useAppProps();
   const editorInterface = useEditorInterface();
 
@@ -253,7 +253,7 @@ export const Hyperlink = ({
 
   return (
     <div
-      className="excalidraw-hyperlinkContainer"
+      className="xcalidraw-hyperlinkContainer"
       style={{
         top: `${y}px`,
         left: `${x}px`,
@@ -263,7 +263,7 @@ export const Hyperlink = ({
     >
       {isEditing ? (
         <input
-          className={clsx("excalidraw-hyperlinkContainer-input")}
+          className={clsx("xcalidraw-hyperlinkContainer-input")}
           placeholder={t("labels.link.hint")}
           ref={inputRef}
           value={inputVal}
@@ -284,12 +284,12 @@ export const Hyperlink = ({
       ) : element.link ? (
         <a
           href={normalizeLink(element.link || "")}
-          className="excalidraw-hyperlinkContainer-link"
+          className="xcalidraw-hyperlinkContainer-link"
           target={isLocalLink(element.link) ? "_self" : "_blank"}
           onClick={(event) => {
             if (element.link && onLinkOpen) {
               const customEvent = wrapEvent(
-                EVENT.EXCALIDRAW_LINK,
+                EVENT.XCALIDRAW_LINK,
                 event.nativeEvent,
               );
               onLinkOpen(
@@ -309,11 +309,11 @@ export const Hyperlink = ({
           {element.link}
         </a>
       ) : (
-        <div className="excalidraw-hyperlinkContainer-link">
+        <div className="xcalidraw-hyperlinkContainer-link">
           {t("labels.link.empty")}
         </div>
       )}
-      <div className="excalidraw-hyperlinkContainer__buttons">
+      <div className="xcalidraw-hyperlinkContainer__buttons">
         {!isEditing && (
           <ToolButton
             type="button"
@@ -321,7 +321,7 @@ export const Hyperlink = ({
             aria-label={t("buttons.edit")}
             label={t("buttons.edit")}
             onClick={onEdit}
-            className="excalidraw-hyperlinkContainer--edit"
+            className="xcalidraw-hyperlinkContainer--edit"
             icon={FreedrawIcon}
           />
         )}
@@ -347,7 +347,7 @@ export const Hyperlink = ({
             aria-label={t("buttons.remove")}
             label={t("buttons.remove")}
             onClick={handleRemove}
-            className="excalidraw-hyperlinkContainer--remove"
+            className="xcalidraw-hyperlinkContainer--remove"
             icon={TrashIcon}
           />
         )}
@@ -357,7 +357,7 @@ export const Hyperlink = ({
 };
 
 const getCoordsForPopover = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   appState: AppState,
   elementsMap: ElementsMap,
 ) => {
@@ -372,7 +372,7 @@ const getCoordsForPopover = (
 };
 
 export const getContextMenuLabel = (
-  elements: readonly NonDeletedExcalidrawElement[],
+  elements: readonly NonDeletedXcalidrawElement[],
   appState: UIAppState,
 ) => {
   const selectedElements = getSelectedElements(elements, appState);
@@ -386,7 +386,7 @@ export const getContextMenuLabel = (
 
 let HYPERLINK_TOOLTIP_TIMEOUT_ID: number | null = null;
 export const showHyperlinkTooltip = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   appState: AppState,
   elementsMap: ElementsMap,
 ) => {
@@ -400,7 +400,7 @@ export const showHyperlinkTooltip = (
 };
 
 const renderTooltip = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   appState: AppState,
   elementsMap: ElementsMap,
 ) => {
@@ -410,7 +410,7 @@ const renderTooltip = (
 
   const tooltipDiv = getTooltipDiv();
 
-  tooltipDiv.classList.add("excalidraw-tooltip--visible");
+  tooltipDiv.classList.add("xcalidraw-tooltip--visible");
   tooltipDiv.style.maxWidth = "20rem";
   tooltipDiv.textContent = isElementLink(element.link)
     ? t("labels.link.goToElement")
@@ -449,12 +449,12 @@ export const hideHyperlinkToolip = () => {
   }
   if (IS_HYPERLINK_TOOLTIP_VISIBLE) {
     IS_HYPERLINK_TOOLTIP_VISIBLE = false;
-    getTooltipDiv().classList.remove("excalidraw-tooltip--visible");
+    getTooltipDiv().classList.remove("xcalidraw-tooltip--visible");
   }
 };
 
 const shouldHideLinkPopup = (
-  element: NonDeletedExcalidrawElement,
+  element: NonDeletedXcalidrawElement,
   elementsMap: ElementsMap,
   appState: AppState,
   [clientX, clientY]: GlobalPoint,

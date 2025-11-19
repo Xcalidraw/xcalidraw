@@ -20,7 +20,7 @@ import {
 import { useUIAppState } from "../../context/ui-appState";
 import { atom, useSetAtom } from "../../editor-jotai";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-import { useEditorInterface, useExcalidrawSetAppState } from "../App";
+import { useEditorInterface, useXcalidrawSetAppState } from "../App";
 import { Island } from "../Island";
 
 import { SidebarHeader } from "./SidebarHeader";
@@ -63,7 +63,7 @@ export const SidebarInner = forwardRef(
       );
     }
 
-    const setAppState = useExcalidrawSetAppState();
+    const setAppState = useXcalidrawSetAppState();
 
     const setIsSidebarDockedAtom = useSetAtom(isSidebarDockedAtom);
 

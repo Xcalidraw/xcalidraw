@@ -8,7 +8,7 @@ import { getClosestElementBounds } from "@xcalidraw/element";
 
 import { getCommonBounds } from "@xcalidraw/element";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { AppState, Offsets, PointerCoords, Zoom } from "../types";
 
@@ -58,7 +58,7 @@ export const centerScrollOn = ({
 };
 
 export const calculateScrollCenter = (
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
   appState: AppState,
 ): { scrollX: number; scrollY: number } => {
   elements = getVisibleElements(elements);

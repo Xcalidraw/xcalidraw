@@ -1,6 +1,6 @@
 import type { VERSIONS } from "@xcalidraw/common";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { cleanAppStateForExport } from "../appState";
 import type {
@@ -15,7 +15,7 @@ export interface ExportedDataState {
   type: string;
   version: number;
   source: string;
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   appState: ReturnType<typeof cleanAppStateForExport>;
   files: BinaryFiles | undefined;
 }
@@ -36,7 +36,7 @@ export interface ImportedDataState {
   type?: string;
   version?: number;
   source?: string;
-  elements?: readonly ExcalidrawElement[] | null;
+  elements?: readonly XcalidrawElement[] | null;
   appState?: Readonly<
     Partial<
       AppState & {
@@ -51,7 +51,7 @@ export interface ImportedDataState {
 
 export interface ExportedLibraryData {
   type: string;
-  version: typeof VERSIONS.excalidrawLibrary;
+  version: typeof VERSIONS.xcalidrawLibrary;
   source: string;
   libraryItems: LibraryItems;
 }
@@ -61,6 +61,6 @@ export interface ImportedLibraryData extends Partial<ExportedLibraryData> {
   library?: LibraryItems;
 }
 
-export type ExcalidrawLibraryIds = {
+export type XcalidrawLibraryIds = {
   itemIds: LibraryItem["id"][];
 };

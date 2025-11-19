@@ -18,11 +18,11 @@ import { FILE_CACHE_MAX_AGE_SEC } from "../app_constants";
 
 import { getSyncableElements } from ".";
 
-import type { RemoteExcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
+import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
 import type {
-  ExcalidrawElement,
+  XcalidrawElement,
   FileId,
-  OrderedExcalidrawElement,
+  OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type {
   AppState,
@@ -30,7 +30,7 @@ import type {
   BinaryFileMetadata,
   DataURL,
 } from "@xcalidraw/xcalidraw/types";
-import type { SyncableExcalidrawElement } from ".";
+import type { SyncableXcalidrawElement } from ".";
 import type Portal from "../collab/Portal";
 import type { Socket } from "socket.io-client";
 
@@ -88,7 +88,7 @@ type FirebaseStoredScene = {
 
 const encryptElements = async (
   key: string,
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ): Promise<{ ciphertext: ArrayBuffer; iv: Uint8Array }> => {
   const json = JSON.stringify(elements);
   const encoded = new TextEncoder().encode(json);
@@ -100,7 +100,7 @@ const encryptElements = async (
 const decryptElements = async (
   data: FirebaseStoredScene,
   roomKey: string,
-): Promise<readonly ExcalidrawElement[]> => {
+): Promise<readonly XcalidrawElement[]> => {
   const ciphertext = data.ciphertext.toUint8Array();
   const iv = data.iv.toUint8Array();
 
@@ -118,7 +118,7 @@ class FirebaseSceneVersionCache {
   };
   static set = (
     socket: Socket,
-    elements: readonly SyncableExcalidrawElement[],
+    elements: readonly SyncableXcalidrawElement[],
   ) => {
     FirebaseSceneVersionCache.cache.set(socket, getSceneVersion(elements));
   };
@@ -126,7 +126,7 @@ class FirebaseSceneVersionCache {
 
 export const isSavedToFirebase = (
   portal: Portal,
-  elements: readonly ExcalidrawElement[],
+  elements: readonly XcalidrawElement[],
 ): boolean => {
   if (portal.socket && portal.roomId && portal.roomKey) {
     const sceneVersion = getSceneVersion(elements);
@@ -168,7 +168,7 @@ export const saveFilesToFirebase = async ({
 };
 
 const createFirebaseSceneDocument = async (
-  elements: readonly SyncableExcalidrawElement[],
+  elements: readonly SyncableXcalidrawElement[],
   roomKey: string,
 ) => {
   const sceneVersion = getSceneVersion(elements);
@@ -182,7 +182,7 @@ const createFirebaseSceneDocument = async (
 
 export const saveToFirebase = async (
   portal: Portal,
-  elements: readonly SyncableExcalidrawElement[],
+  elements: readonly SyncableXcalidrawElement[],
   appState: AppState,
 ) => {
   const { roomId, roomKey, socket } = portal;
@@ -217,7 +217,7 @@ export const saveToFirebase = async (
     const reconciledElements = getSyncableElements(
       reconcileElements(
         elements,
-        prevStoredElements as OrderedExcalidrawElement[] as RemoteExcalidrawElement[],
+        prevStoredElements as OrderedXcalidrawElement[] as RemoteXcalidrawElement[],
         appState,
       ),
     );
@@ -246,7 +246,7 @@ export const loadFromFirebase = async (
   roomId: string,
   roomKey: string,
   socket: Socket | null,
-): Promise<readonly SyncableExcalidrawElement[] | null> => {
+): Promise<readonly SyncableXcalidrawElement[] | null> => {
   const firestore = _getFirestore();
   const docRef = doc(firestore, "scenes", roomId);
   const docSnap = await getDoc(docRef);

@@ -13,7 +13,7 @@ import { getStepSizedValue, isPropertyEditable } from "./utils";
 
 import type { Degrees } from "@xcalidraw/math";
 
-import type { ExcalidrawElement } from "@xcalidraw/element/types";
+import type { XcalidrawElement } from "@xcalidraw/element/types";
 
 import type { Scene } from "@xcalidraw/element";
 
@@ -21,7 +21,7 @@ import type { DragInputCallbackType } from "./DragInput";
 import type { AppState } from "../../types";
 
 interface MultiAngleProps {
-  elements: readonly ExcalidrawElement[];
+  elements: readonly XcalidrawElement[];
   scene: Scene;
   appState: AppState;
   property: "angle";

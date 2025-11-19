@@ -14,13 +14,13 @@ import { elementsAreInSameGroup } from "@xcalidraw/element";
 
 import { t } from "../../i18n";
 import { isGridModeEnabled } from "../../snapping";
-import { useExcalidrawAppState, useExcalidrawSetAppState } from "../App";
+import { useXcalidrawAppState, useXcalidrawSetAppState } from "../App";
 import { Island } from "../Island";
 import { CloseIcon } from "../icons";
 
 import "./Stats.scss";
 
-import type { NonDeletedExcalidrawElement } from "@xcalidraw/element/types";
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import Angle from "./Angle";
 import CanvasGrid from "./CanvasGrid";
@@ -39,19 +39,19 @@ import "./Stats.scss";
 import type {
   AppClassProperties,
   AppState,
-  ExcalidrawProps,
+  XcalidrawProps,
 } from "../../types";
 
 interface StatsProps {
   app: AppClassProperties;
   onClose: () => void;
-  renderCustomStats: ExcalidrawProps["renderCustomStats"];
+  renderCustomStats: XcalidrawProps["renderCustomStats"];
 }
 
 const STATS_TIMEOUT = 50;
 
 export const Stats = (props: StatsProps) => {
-  const appState = useExcalidrawAppState();
+  const appState = useXcalidrawAppState();
   const sceneNonce = props.app.scene.getSceneNonce() || 1;
   const selectedElements = props.app.scene.getSelectedElements({
     selectedElementIds: appState.selectedElementIds,
@@ -125,14 +125,14 @@ export const StatsInner = memo(
     gridModeEnabled,
   }: StatsProps & {
     sceneNonce: number;
-    selectedElements: readonly NonDeletedExcalidrawElement[];
+    selectedElements: readonly NonDeletedXcalidrawElement[];
     appState: AppState;
     gridModeEnabled: boolean;
   }) => {
     const scene = app.scene;
     const elements = scene.getNonDeletedElements();
     const elementsMap = scene.getNonDeletedElementsMap();
-    const setAppState = useExcalidrawSetAppState();
+    const setAppState = useXcalidrawSetAppState();
 
     const singleElement =
       selectedElements.length === 1 ? selectedElements[0] : null;
@@ -157,7 +157,7 @@ export const StatsInner = memo(
 
     const throttledSetSceneDimension = useMemo(
       () =>
-        throttle((elements: readonly NonDeletedExcalidrawElement[]) => {
+        throttle((elements: readonly NonDeletedXcalidrawElement[]) => {
           const boundingBox = getCommonBounds(elements);
           setSceneDimension({
             width: Math.round(boundingBox[2]) - Math.round(boundingBox[0]),

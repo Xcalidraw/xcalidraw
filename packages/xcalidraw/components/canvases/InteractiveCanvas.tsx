@@ -21,7 +21,7 @@ import type {
 } from "@xcalidraw/xcalidraw/scene/types";
 
 import type {
-  NonDeletedExcalidrawElement,
+  NonDeletedXcalidrawElement,
   NonDeletedSceneElementsMap,
 } from "@xcalidraw/element/types";
 
@@ -36,8 +36,8 @@ type InteractiveCanvasProps = {
   containerRef: React.RefObject<HTMLDivElement | null>;
   canvas: HTMLCanvasElement | null;
   elementsMap: RenderableElementsMap;
-  visibleElements: readonly NonDeletedExcalidrawElement[];
-  selectedElements: readonly NonDeletedExcalidrawElement[];
+  visibleElements: readonly NonDeletedXcalidrawElement[];
+  selectedElements: readonly NonDeletedXcalidrawElement[];
   allElementsMap: NonDeletedSceneElementsMap;
   sceneNonce: number | undefined;
   selectionNonce: number | undefined;
@@ -197,7 +197,7 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
 
   return (
     <canvas
-      className="excalidraw__canvas interactive"
+      className="xcalidraw__canvas interactive"
       style={{
         width: props.appState.width,
         height: props.appState.height,

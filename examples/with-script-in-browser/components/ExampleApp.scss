@@ -34,11 +34,11 @@
   }
 }
 
-.excalidraw .App-menu_top .buttonList {
+.xcalidraw .App-menu_top .buttonList {
   display: flex;
 }
 
-.excalidraw-wrapper {
+.xcalidraw-wrapper {
   height: 800px;
   margin: 50px;
   position: relative;
@@ -46,13 +46,13 @@
 }
 
 :root[dir="ltr"]
-  .excalidraw
+  .xcalidraw
   .layer-ui__wrapper
   .zen-mode-transition.App-menu_bottom--transition-left {
   transform: none;
 }
 
-.excalidraw .selected-shape-actions {
+.xcalidraw .selected-shape-actions {
   text-align: left;
 }
 
@@ -66,7 +66,7 @@
   }
 }
 
-.excalidraw {
+.xcalidraw {
   --color-primary: #faa2c1;
   --color-primary-darker: #f783ac;
   --color-primary-darkest: #e64980;

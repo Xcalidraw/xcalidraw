@@ -9,15 +9,15 @@ import { getStepSizedValue } from "./utils";
 import type { Scene } from "@xcalidraw/element";
 
 import type {
-  ExcalidrawElement,
-  ExcalidrawTextElement,
+  XcalidrawElement,
+  XcalidrawTextElement,
 } from "@xcalidraw/element/types";
 
 import type { DragInputCallbackType } from "./DragInput";
 import type { AppState } from "../../types";
 
 interface FontSizeProps {
-  element: ExcalidrawElement;
+  element: XcalidrawElement;
   scene: Scene;
   appState: AppState;
   property: "fontSize";
@@ -28,7 +28,7 @@ const STEP_SIZE = 4;
 
 const handleFontSizeChange: DragInputCallbackType<
   FontSizeProps["property"],
-  ExcalidrawTextElement
+  XcalidrawTextElement
 > = ({
   accumulatedChange,
   originalElements,
