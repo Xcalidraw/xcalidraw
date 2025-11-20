@@ -6,10 +6,15 @@ import {
   sceneCoordsToViewportCoords,
   type EditorInterface,
 } from "@xcalidraw/common";
-import { AnimationController } from "@xcalidraw/xcalidraw/renderer/animation";
+
+import type {
+  NonDeletedXcalidrawElement,
+  NonDeletedSceneElementsMap,
+} from "@xcalidraw/element/types";
 
 import { t } from "../../i18n";
 
+import { AnimationController } from "../../renderer/animation";
 import { renderInteractiveScene } from "../../renderer/interactiveScene";
 
 import type {
@@ -18,12 +23,7 @@ import type {
   InteractiveSceneRenderConfig,
   RenderableElementsMap,
   RenderInteractiveSceneCallback,
-} from "@xcalidraw/xcalidraw/scene/types";
-
-import type {
-  NonDeletedXcalidrawElement,
-  NonDeletedSceneElementsMap,
-} from "@xcalidraw/element/types";
+} from "../../scene/types";
 
 import type {
   AppClassProperties,
@@ -134,12 +134,11 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
       remotePointerButton.set(socketId, user.button);
     });
 
-    const selectionColor =
-      (props.containerRef?.current &&
-        getComputedStyle(props.containerRef.current).getPropertyValue(
-          "--color-selection",
-        )) ||
-      "#6965db";
+    const selectionColor = props.containerRef?.current
+      ? getComputedStyle(props.containerRef.current)
+          .getPropertyValue("--color-selection")
+          .trim() || "#087f5b"
+      : "#087f5b";
 
     rendererParams.current = {
       app: props.app,
@@ -170,7 +169,13 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
     if (!AnimationController.running(INTERACTIVE_SCENE_ANIMATION_KEY)) {
       AnimationController.start<InteractiveSceneRenderAnimationState>(
         INTERACTIVE_SCENE_ANIMATION_KEY,
-        ({ deltaTime, state }) => {
+        ({
+          deltaTime,
+          state,
+        }: {
+          deltaTime: number;
+          state?: InteractiveSceneRenderAnimationState;
+        }) => {
           const nextAnimationState = renderInteractiveScene({
             ...rendererParams.current!,
             deltaTime,

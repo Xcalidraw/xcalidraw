@@ -24,6 +24,22 @@ import {
   invariant,
 } from "@xcalidraw/common";
 
+import type {
+  StaticCanvasRenderConfig,
+  RenderableElementsMap,
+  InteractiveCanvasRenderConfig,
+} from "@xcalidraw/xcalidraw/scene/types";
+
+import type {
+  AppState,
+  StaticCanvasAppState,
+  Zoom,
+  InteractiveCanvasAppState,
+  ElementsPendingErasure,
+  PendingXcalidrawElements,
+  NormalizedZoomValue,
+} from "@xcalidraw/xcalidraw/types";
+
 import { getElementAbsoluteCoords, getElementBounds } from "./bounds";
 import { getUncroppedImageElement } from "./cropElement";
 import { LinearElementEditor } from "./linearElementEditor";
@@ -49,22 +65,6 @@ import { getContainingFrame } from "./frame";
 import { getCornerRadius } from "./utils";
 
 import { ShapeCache } from "./shape";
-
-import type {
-  StaticCanvasRenderConfig,
-  RenderableElementsMap,
-  InteractiveCanvasRenderConfig,
-} from "@xcalidraw/xcalidraw/scene/types";
-
-import type {
-  AppState,
-  StaticCanvasAppState,
-  Zoom,
-  InteractiveCanvasAppState,
-  ElementsPendingErasure,
-  PendingXcalidrawElements,
-  NormalizedZoomValue,
-} from "@xcalidraw/xcalidraw/types";
 
 import type {
   XcalidrawElement,
@@ -710,7 +710,7 @@ export const renderSelectionElement = (
 ) => {
   context.save();
   context.translate(element.x + appState.scrollX, element.y + appState.scrollY);
-  context.fillStyle = "rgba(0, 0, 200, 0.04)";
+  context.fillStyle = "rgba(8, 127, 91, 0.04)";
 
   // render from 0.5px offset  to get 1px wide line
   // https://stackoverflow.com/questions/7530593/html5-canvas-and-line-width/7531540#7531540
