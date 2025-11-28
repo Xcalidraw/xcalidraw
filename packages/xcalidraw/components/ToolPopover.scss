@@ -3,16 +3,24 @@
 .xcalidraw {
   .tool-popover-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 0.25rem;
     border-radius: 0.5rem;
     background: var(--island-bg-color);
     box-shadow: var(--shadow-island);
-    padding: 0.5rem;
+    padding: 4px;
     z-index: var(--zIndex-layerUI);
   }
 
   &:focus {
     outline: none;
   }
+}
+
+.Shape {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

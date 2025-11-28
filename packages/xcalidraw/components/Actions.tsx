@@ -22,6 +22,13 @@ import {
   toolIsArrow,
 } from "@xcalidraw/element";
 
+import type {
+  XcalidrawElement,
+  XcalidrawElementType,
+  NonDeletedElementsMap,
+  NonDeletedSceneElementsMap,
+} from "@xcalidraw/element/types";
+
 import { actionToggleZenMode } from "../actions";
 
 import { alignActionsPredicate } from "../actions/actionAlign";
@@ -78,13 +85,6 @@ import {
 } from "./icons";
 
 import { Island } from "./Island";
-
-import type {
-  XcalidrawElement,
-  XcalidrawElementType,
-  NonDeletedElementsMap,
-  NonDeletedSceneElementsMap,
-} from "@xcalidraw/element/types";
 
 import type {
   AppClassProperties,
@@ -1247,7 +1247,7 @@ export const ShapesSwitcher = ({
               {t("toolBar.lasso")}
             </DropdownMenu.Item>
           )}
-          <div style={{ margin: "6px 0", fontSize: 14, fontWeight: 600 }}>
+          <div style={{ margin: "12px", fontSize: 14, fontWeight: 600 }}>
             Generate
           </div>
           {app.props.aiEnabled !== false && <TTDDialogTriggerTunnel.Out />}

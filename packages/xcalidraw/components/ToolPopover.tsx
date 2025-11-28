@@ -92,6 +92,8 @@ export const ToolPopover = ({
 
       <Popover.Content
         className="tool-popover-content"
+        side="right"
+        align="center"
         sideOffset={SIDE_OFFSET}
         collisionBoundary={container ?? undefined}
       >

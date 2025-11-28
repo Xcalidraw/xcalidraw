@@ -334,12 +334,62 @@ body.xcalidraw-cursor-resize * {
   }
 
   .shapes-section {
+    position: fixed;
+    left: var(--editor-container-padding);
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     pointer-events: none !important;
+    z-index: 2;
 
     & > * {
       pointer-events: var(--ui-pointerEvents);
+    }
+
+    .App-toolbar .Stack_horizontal {
+      grid-auto-flow: row;
+      grid-template-columns: auto;
+      grid-auto-rows: min-content;
+    }
+
+    .App-toolbar__divider {
+      width: 2.75rem;
+      height: 1px;
+      margin: 0.25rem 0;
+    }
+
+    .Island {
+      padding: 4px;
+    }
+
+    .ToolIcon__icon {
+      width: 44px;
+      height: 44px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .dropdown-menu-button {
+      width: 44px;
+      height: 44px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .dropdown-menu {
+      top: auto;
+      bottom: 0;
+      left: 100%;
+      right: auto;
+      margin-top: 0;
+      margin-left: 0.5rem;
     }
   }
 
