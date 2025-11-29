@@ -313,7 +313,8 @@
     "hand": "Ruka (nástroj pro posouvání)",
     "extraTools": "Více nástrojů",
     "mermaidToXcalidraw": "",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Obdélník",

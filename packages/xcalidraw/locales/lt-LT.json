@@ -313,7 +313,8 @@
     "hand": "",
     "extraTools": "",
     "mermaidToXcalidraw": "",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

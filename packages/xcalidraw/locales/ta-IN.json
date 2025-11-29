@@ -313,7 +313,8 @@
     "hand": "கை (பார்வை நகர்கும் கருவி)",
     "extraTools": "மற்ற கருவிகள்",
     "mermaidToXcalidraw": "",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "செவ்வகம்",

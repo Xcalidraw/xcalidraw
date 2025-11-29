@@ -313,7 +313,8 @@
     "hand": "Ręka (narzędzie do przesuwania)",
     "extraTools": "Więcej narzędzi",
     "mermaidToXcalidraw": "Konwertuj diagram Mermaid do Xcalidraw",
-    "convertElementType": "Przełącz typ kształtu"
+    "convertElementType": "Przełącz typ kształtu",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Prostokąt",

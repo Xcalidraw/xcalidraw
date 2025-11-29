@@ -313,7 +313,8 @@
     "hand": "हाथ ( खिसका के देखने का औज़ार)",
     "extraTools": "अधिक उपकरण",
     "mermaidToXcalidraw": "मर्मेड से एक्सकाली में",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "आयत",

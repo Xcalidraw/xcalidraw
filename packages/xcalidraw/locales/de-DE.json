@@ -313,7 +313,8 @@
     "hand": "Hand (Schwenkwerkzeug)",
     "extraTools": "Weitere Werkzeuge",
     "mermaidToXcalidraw": "Mermaid zu Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Rechteck",

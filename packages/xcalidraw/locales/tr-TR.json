@@ -313,7 +313,8 @@
     "hand": "El (hareket aracı)",
     "extraTools": "Daha fazla araç",
     "mermaidToXcalidraw": "Mermaid'den Xcalidraw'a",
-    "convertElementType": "Şekil türünü aç/kapat"
+    "convertElementType": "Şekil türünü aç/kapat",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Dikdörtgen",

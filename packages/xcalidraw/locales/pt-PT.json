@@ -313,7 +313,8 @@
     "hand": "Mão (ferramenta de deslocar vista)",
     "extraTools": "Mais ferramentas",
     "mermaidToXcalidraw": "Mermaid para Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Retângulo",

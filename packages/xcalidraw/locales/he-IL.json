@@ -313,7 +313,8 @@
     "hand": "יד (כלי הזזה)",
     "extraTools": "כלים נוספים",
     "mermaidToXcalidraw": "Mermaid ל־Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "מלבן",

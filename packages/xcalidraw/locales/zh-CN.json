@@ -313,7 +313,8 @@
     "hand": "抓手（平移工具）",
     "extraTools": "更多工具",
     "mermaidToXcalidraw": "Mermaid 至 Xcalidraw",
-    "convertElementType": "切换形状种类"
+    "convertElementType": "切换形状种类",
+    "shapes": ""
   },
   "element": {
     "rectangle": "矩形",

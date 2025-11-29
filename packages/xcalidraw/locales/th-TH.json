@@ -313,7 +313,8 @@
     "hand": "มือ (เครื่องมือเลื่อน)",
     "extraTools": "เครื่องมืออื่นๆ",
     "mermaidToXcalidraw": "เมอร์เมดเป็นเอกซ์คาลิดรอว์",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "สี่เหลี่ยม",

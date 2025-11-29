@@ -313,7 +313,8 @@
     "hand": "يد (أداة الإزاحة)",
     "extraTools": "المزيد من الأدوات",
     "mermaidToXcalidraw": "من Mermaid إلى Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "مستطيل",

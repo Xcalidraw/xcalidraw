@@ -313,7 +313,8 @@
     "hand": "Mains (outil de déplacement de la vue)",
     "extraTools": "Plus d'outils",
     "mermaidToXcalidraw": "De Mermaid à Xcalidraw",
-    "convertElementType": "Basculer le type de forme"
+    "convertElementType": "Basculer le type de forme",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Rectangle",

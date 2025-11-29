@@ -313,7 +313,8 @@
     "hand": "Man (ferramenta de desprazamento)",
     "extraTools": "Máis ferramentas",
     "mermaidToXcalidraw": "",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

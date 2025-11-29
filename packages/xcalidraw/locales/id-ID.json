@@ -313,7 +313,8 @@
     "hand": "Tangan (alat panning)",
     "extraTools": "Alat-alat lain",
     "mermaidToXcalidraw": "Mermaid menjadi Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Persegi Panjang",

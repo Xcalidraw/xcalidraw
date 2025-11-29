@@ -313,7 +313,8 @@
     "hand": "手 (パンニングツール)",
     "extraTools": "その他のツール",
     "mermaidToXcalidraw": "Mermaid を Xcalidraw に変換",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

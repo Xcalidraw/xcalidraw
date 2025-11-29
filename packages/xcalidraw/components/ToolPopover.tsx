@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 
 import { capitalizeString } from "@xcalidraw/common";
@@ -33,6 +33,9 @@ type ToolPopoverProps = {
   onToolChange: (type: string) => void;
   displayedOption: ToolOption;
   fillable?: boolean;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  suppressActiveState?: boolean;
 };
 
 export const ToolPopover = ({
@@ -47,44 +50,63 @@ export const ToolPopover = ({
   onToolChange,
   displayedOption,
   fillable = false,
+  isOpen: controlledIsOpen,
+  onOpenChange: controlledOnOpenChange,
+  suppressActiveState = false,
 }: ToolPopoverProps) => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = useCallback(
+    (open: boolean) => {
+      if (controlledOnOpenChange) {
+        controlledOnOpenChange(open);
+      }
+      if (!isControlled) {
+        setInternalIsOpen(open);
+      }
+    },
+    [controlledOnOpenChange, isControlled],
+  );
+
   const currentType = activeTool.type;
   const isActive = displayedOption.type === currentType;
   const SIDE_OFFSET = 32 / 2 + 10;
   const { container } = useXcalidrawContainer();
 
   // if currentType is not in options, close popup
-  if (!options.some((o) => o.type === currentType) && isPopupOpen) {
-    setIsPopupOpen(false);
+  if (!options.some((o) => o.type === currentType) && isOpen) {
+    setIsOpen(false);
   }
 
   // Close popover when user starts interacting with the canvas (pointer down)
   useEffect(() => {
-    // app.onPointerDownEmitter emits when pointer down happens on canvas area
     const unsubscribe = app.onPointerDownEmitter.on(() => {
-      setIsPopupOpen(false);
+      setIsOpen(false);
     });
     return () => unsubscribe?.();
-  }, [app]);
+  }, [app, setIsOpen]);
 
   return (
-    <Popover.Root open={isPopupOpen}>
+    <Popover.Root open={isOpen}>
       <Popover.Trigger asChild>
         <ToolButton
           className={clsx(className, {
             fillable,
-            active: options.some((o) => o.type === activeTool.type),
+            active:
+              !suppressActiveState &&
+              options.some((o) => o.type === activeTool.type),
           })}
           type="radio"
           icon={displayedOption.icon}
-          checked={isActive}
+          checked={isActive && !suppressActiveState}
           name="editor-current-shape"
           title={title}
           aria-label={title}
           data-testid={dataTestId}
           onPointerDown={() => {
-            setIsPopupOpen((v) => !v);
+            setIsOpen(!isOpen);
             onToolChange(defaultOption);
           }}
         />

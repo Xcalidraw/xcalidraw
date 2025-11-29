@@ -313,7 +313,8 @@
     "hand": "Käsi (panning-työkalu)",
     "extraTools": "Lisää työkaluja",
     "mermaidToXcalidraw": "Mermaid Xcalidrawiksi",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

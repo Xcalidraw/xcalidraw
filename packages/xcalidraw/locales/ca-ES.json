@@ -313,7 +313,8 @@
     "hand": "Mà (eina de desplaçament)",
     "extraTools": "Més eines",
     "mermaidToXcalidraw": "Mermaid a Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Rectangle",

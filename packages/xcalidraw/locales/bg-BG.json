@@ -313,7 +313,8 @@
     "hand": "",
     "extraTools": "Още инструменти",
     "mermaidToXcalidraw": "Mermaid към Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Правоъгълник",

@@ -383,13 +383,23 @@ body.xcalidraw-cursor-resize * {
       }
     }
 
-    .dropdown-menu {
-      top: auto;
-      bottom: 0;
-      left: 100%;
-      right: auto;
-      margin-top: 0;
-      margin-left: 0.5rem;
+    .toolbar-dropdown-wrapper {
+      position: relative;
+      display: flex;
+
+      .dropdown-menu {
+        top: 0;
+        bottom: auto;
+        left: 100%;
+        right: auto;
+        margin-top: 0;
+        margin-left: 0.75rem;
+      }
+
+      &--from-bottom .dropdown-menu {
+        top: auto;
+        bottom: 0;
+      }
     }
   }
 

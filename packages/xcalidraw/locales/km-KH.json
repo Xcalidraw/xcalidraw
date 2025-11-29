@@ -313,7 +313,8 @@
     "hand": "ដៃ (panning tool)",
     "extraTools": "",
     "mermaidToXcalidraw": "",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

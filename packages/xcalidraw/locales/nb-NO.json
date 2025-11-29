@@ -313,7 +313,8 @@
     "hand": "Hånd (panoreringsverktøy)",
     "extraTools": "Flere verktøy",
     "mermaidToXcalidraw": "Mermaid til Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Rektangel",

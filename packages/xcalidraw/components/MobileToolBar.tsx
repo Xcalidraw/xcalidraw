@@ -22,7 +22,7 @@ import {
   EraserIcon,
   RectangleIcon,
   ArrowIcon,
-  extraToolsIcon,
+  moreToolsIcon,
   DiamondIcon,
   EllipseIcon,
   LineIcon,
@@ -187,8 +187,8 @@ export const MobileToolBar = ({
       ? laserPointerToolIcon
       : activeTool.type === "magicframe"
       ? MagicIcon
-      : extraToolsIcon
-    : extraToolsIcon;
+      : moreToolsIcon
+    : moreToolsIcon;
 
   return (
     <div

@@ -313,7 +313,8 @@
     "hand": "Tay kéo",
     "extraTools": "Công cụ khác",
     "mermaidToXcalidraw": "Mermaid sang Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Hình chữ nhật",

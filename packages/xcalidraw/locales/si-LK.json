@@ -313,7 +313,8 @@
     "hand": "අත",
     "extraTools": "අමතර මෙවලම්",
     "mermaidToXcalidraw": "Mermaid වලින් Xcalidraw වෙත",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "",

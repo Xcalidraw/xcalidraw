@@ -313,7 +313,8 @@
     "hand": "Hand (panning tool)",
     "extraTools": "More tools",
     "mermaidToXcalidraw": "Mermaid to Xcalidraw",
-    "convertElementType": "Toggle shape type"
+    "convertElementType": "Toggle shape type",
+    "shapes": "Shapes"
   },
   "element": {
     "rectangle": "Rectangle",

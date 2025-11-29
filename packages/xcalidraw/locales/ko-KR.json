@@ -313,7 +313,8 @@
     "hand": "손 (패닝 도구)",
     "extraTools": "다른 도구",
     "mermaidToXcalidraw": "Mermaid를 Xcalidraw로",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "직사각형",

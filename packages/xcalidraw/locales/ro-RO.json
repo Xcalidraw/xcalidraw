@@ -313,7 +313,8 @@
     "hand": "Mână (instrument de panoramare)",
     "extraTools": "Mai multe instrumente",
     "mermaidToXcalidraw": "Mermaid la Xcalidraw",
-    "convertElementType": "Comutare tip formă"
+    "convertElementType": "Comutare tip formă",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Dreptunghi",

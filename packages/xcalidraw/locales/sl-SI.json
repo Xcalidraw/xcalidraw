@@ -313,7 +313,8 @@
     "hand": "Roka (orodje za premikanje)",
     "extraTools": "Več orodij",
     "mermaidToXcalidraw": "Mermaid v Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Pravokotnik",

@@ -313,7 +313,8 @@
     "hand": "Mano (herramienta de panoramización)",
     "extraTools": "Más herramientas",
     "mermaidToXcalidraw": "Mermaid a Xcalidraw",
-    "convertElementType": ""
+    "convertElementType": "",
+    "shapes": ""
   },
   "element": {
     "rectangle": "Rectángulo",
