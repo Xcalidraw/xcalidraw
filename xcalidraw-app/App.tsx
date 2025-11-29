@@ -139,7 +139,6 @@ import { XcalidrawPlusIframeExport } from "./XcalidrawPlusIframeExport";
 
 import "./index.scss";
 
-import { XcalidrawPlusPromoBanner } from "./components/XcalidrawPlusPromoBanner";
 import { AppSidebar } from "./components/AppSidebar";
 
 import type { CollabAPI } from "./collab/Collab";
@@ -857,13 +856,7 @@ const XcalidrawWrapper = () => {
           }
 
           return (
-            <div className="xcalidraw-ui-top-right">
-              {xcalidrawAPI?.getEditorInterface().formFactor === "desktop" && (
-                <XcalidrawPlusPromoBanner
-                  isSignedIn={isXcalidrawPlusSignedUser}
-                />
-              )}
-
+            <>
               {collabError.message && <CollabError collabError={collabError} />}
               <LiveCollaborationTrigger
                 isCollaborating={isCollaborating}
@@ -872,7 +865,7 @@ const XcalidrawWrapper = () => {
                 }
                 editorInterface={editorInterface}
               />
-            </div>
+            </>
           );
         }}
         onLinkOpen={(element, event) => {

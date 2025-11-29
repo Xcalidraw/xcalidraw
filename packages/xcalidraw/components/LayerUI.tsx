@@ -30,6 +30,7 @@ import { calculateScrollCenter } from "../scene";
 import { ShapesSwitcher } from "./Actions";
 import { FloatingShapeActions } from "./FloatingShapeActions";
 import { HeaderBar } from "./HeaderBar";
+import { RightHeaderBar } from "./RightHeaderBar";
 import { LoadingMessage } from "./LoadingMessage";
 import { LockButton } from "./LockButton";
 import { MobileMenu } from "./MobileMenu";
@@ -344,17 +345,20 @@ const LayerUI = ({
                 userToFollow={appState.userToFollow?.socketId || null}
               />
             )}
-            {renderTopRightUI?.(
-              editorInterface.formFactor === "phone",
-              appState,
-            )}
-            {!appState.viewModeEnabled &&
-              appState.openDialog?.name !== "elementLinkSelector" &&
-              // hide button when sidebar docked
-              (!isSidebarDocked ||
-                appState.openSidebar?.name !== DEFAULT_SIDEBAR.name) && (
-                <tunnels.DefaultSidebarTriggerTunnel.Out />
-              )}
+            <RightHeaderBar
+              renderCustomContent={() =>
+                renderTopRightUI?.(
+                  editorInterface.formFactor === "phone",
+                  appState,
+                )
+              }
+              showLibraryButton={
+                !appState.viewModeEnabled &&
+                appState.openDialog?.name !== "elementLinkSelector" &&
+                (!isSidebarDocked ||
+                  appState.openSidebar?.name !== DEFAULT_SIDEBAR.name)
+              }
+            />
             {shouldShowStats && (
               <Stats
                 app={app}
@@ -548,7 +552,6 @@ const LayerUI = ({
               appState={appState}
               actionManager={actionManager}
               showExitZenModeBtn={showExitZenModeBtn}
-              renderWelcomeScreen={renderWelcomeScreen}
             />
             {appState.scrolledOutside && (
               <button
