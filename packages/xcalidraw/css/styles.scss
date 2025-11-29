@@ -394,24 +394,16 @@ body.xcalidraw-cursor-resize * {
   }
 
   .App-menu_top {
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-gap: 1rem;
+    display: flex;
+    justify-content: space-between;
     align-items: flex-start;
+    width: 100%;
     cursor: default;
     pointer-events: none !important;
 
     & > * {
       pointer-events: var(--ui-pointerEvents);
     }
-
-    @media (min-width: 1536px) {
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: 3rem;
-    }
-  }
-
-  .App-menu_top > *:first-child {
-    justify-self: flex-start;
   }
 
   .selected-shape-actions-container {
@@ -420,10 +412,6 @@ body.xcalidraw-cursor-resize * {
     &--compact {
       min-width: 48px;
     }
-  }
-
-  .App-menu_top > *:last-child {
-    justify-self: flex-end;
   }
 
   .App-menu_bottom {
