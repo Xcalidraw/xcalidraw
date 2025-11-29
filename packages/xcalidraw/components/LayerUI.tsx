@@ -2,7 +2,6 @@ import clsx from "clsx";
 import React from "react";
 
 import {
-  CLASSES,
   DEFAULT_SIDEBAR,
   TOOL_TYPE,
   arrayToMap,
@@ -16,6 +15,8 @@ import { showSelectedShapeActions } from "@xcalidraw/element";
 
 import { ShapeCache } from "@xcalidraw/element";
 
+import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
+
 import { actionToggleStats } from "../actions";
 import { trackEvent } from "../analytics";
 import { isHandToolActive } from "../appState";
@@ -26,11 +27,8 @@ import { useAtom, useAtomValue } from "../editor-jotai";
 import { t } from "../i18n";
 import { calculateScrollCenter } from "../scene";
 
-import {
-  SelectedShapeActions,
-  ShapesSwitcher,
-  CompactShapeActions,
-} from "./Actions";
+import { ShapesSwitcher } from "./Actions";
+import { FloatingShapeActions } from "./FloatingShapeActions";
 import { LoadingMessage } from "./LoadingMessage";
 import { LockButton } from "./LockButton";
 import { MobileMenu } from "./MobileMenu";
@@ -63,8 +61,6 @@ import { LaserPointerButton } from "./LaserPointerButton";
 
 import "./LayerUI.scss";
 import "./Toolbar.scss";
-
-import type { NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
 
 import type { ActionManager } from "../actions/manager";
 
@@ -235,62 +231,7 @@ const LayerUI = ({
     </div>
   );
 
-  const renderSelectedShapeActions = () => {
-    const isCompactMode = isCompactStylesPanel;
-
-    return (
-      <Section
-        heading="selectedShapeActions"
-        className={clsx("selected-shape-actions zen-mode-transition", {
-          "transition-left": appState.zenModeEnabled,
-        })}
-      >
-        {isCompactMode ? (
-          <Island
-            className={clsx("compact-shape-actions-island")}
-            padding={0}
-            style={{
-              // we want to make sure this doesn't overflow so subtracting the
-              // approximate height of hamburgerMenu + footer
-              maxHeight: `${appState.height - 166}px`,
-            }}
-          >
-            <CompactShapeActions
-              appState={appState}
-              elementsMap={app.scene.getNonDeletedElementsMap()}
-              renderAction={actionManager.renderAction}
-              app={app}
-              setAppState={setAppState}
-            />
-          </Island>
-        ) : (
-          <Island
-            className={CLASSES.SHAPE_ACTIONS_MENU}
-            padding={2}
-            style={{
-              // we want to make sure this doesn't overflow so subtracting the
-              // approximate height of hamburgerMenu + footer
-              maxHeight: `${appState.height - 166}px`,
-            }}
-          >
-            <SelectedShapeActions
-              appState={appState}
-              elementsMap={app.scene.getNonDeletedElementsMap()}
-              renderAction={actionManager.renderAction}
-              app={app}
-            />
-          </Island>
-        )}
-      </Section>
-    );
-  };
-
   const renderFixedSideContainer = () => {
-    const shouldRenderSelectedShapeActions = showSelectedShapeActions(
-      appState,
-      elements,
-    );
-
     const shouldShowStats =
       appState.stats.open &&
       !appState.zenModeEnabled &&
@@ -305,14 +246,6 @@ const LayerUI = ({
             className={clsx("App-menu_top__left")}
           >
             {renderCanvasActions()}
-            <div
-              className={clsx("selected-shape-actions-container", {
-                "selected-shape-actions-container--compact":
-                  isCompactStylesPanel,
-              })}
-            >
-              {shouldRenderSelectedShapeActions && renderSelectedShapeActions()}
-            </div>
           </Stack.Col>
           {!appState.viewModeEnabled &&
             appState.openDialog?.name !== "elementLinkSelector" && (
@@ -608,6 +541,13 @@ const LayerUI = ({
           >
             {renderWelcomeScreen && <tunnels.WelcomeScreenCenterTunnel.Out />}
             {renderFixedSideContainer()}
+            {showSelectedShapeActions(appState, elements) && (
+              <FloatingShapeActions
+                appState={appState}
+                app={app}
+                actionManager={actionManager}
+              />
+            )}
             <Footer
               appState={appState}
               actionManager={actionManager}

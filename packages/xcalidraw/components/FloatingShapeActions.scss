@@ -1,0 +1,12 @@
+.xcalidraw {
+  .floating-shape-actions {
+    position: absolute;
+    z-index: 100;
+    pointer-events: auto;
+
+    &.hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+}

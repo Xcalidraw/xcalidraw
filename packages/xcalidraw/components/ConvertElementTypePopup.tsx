@@ -1,7 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
-import type { Scene } from "@xcalidraw/element";
-
 import {
   getLinearElementSubType,
   updateElbowArrowPoints,
@@ -56,6 +54,8 @@ import { ShapeCache } from "@xcalidraw/element";
 
 import { updateBindings } from "@xcalidraw/element";
 
+import type { Scene } from "@xcalidraw/element";
+
 import {
   bumpVersion,
   mutateElement,
@@ -66,7 +66,6 @@ import { trackEvent } from "../analytics";
 import { atom } from "../editor-jotai";
 
 import "./ConvertElementTypePopup.scss";
-import { ToolButton } from "./ToolButton";
 import {
   DiamondIcon,
   elbowArrowIcon,
@@ -76,6 +75,8 @@ import {
   roundArrowIcon,
   sharpArrowIcon,
 } from "./icons";
+
+import { ToolButton } from "./ToolButton";
 
 import type App from "./App";
 
