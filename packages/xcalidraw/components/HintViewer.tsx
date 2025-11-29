@@ -19,6 +19,7 @@ import { isGridModeEnabled } from "../snapping";
 import "./HintViewer.scss";
 
 import type { EditorInterface } from "@xcalidraw/common";
+
 import type { AppClassProperties, UIAppState } from "../types";
 
 interface HintViewerProps {
@@ -162,11 +163,8 @@ const getHints = ({
       });
     }
 
-    if (!selectedElements.length && !isMobile) {
-      return t("hints.canvasPanning", {
-        shortcut_1: getTaggedShortcutKey(t("keys.mmb")),
-        shortcut_2: getTaggedShortcutKey("Space"),
-      });
+    if (!selectedElements.length) {
+      return null;
     }
 
     if (selectedElements.length === 1) {
