@@ -29,6 +29,7 @@ import { calculateScrollCenter } from "../scene";
 
 import { ShapesSwitcher } from "./Actions";
 import { FloatingShapeActions } from "./FloatingShapeActions";
+import { HeaderBar } from "./HeaderBar";
 import { LoadingMessage } from "./LoadingMessage";
 import { LockButton } from "./LockButton";
 import { MobileMenu } from "./MobileMenu";
@@ -223,11 +224,10 @@ const LayerUI = ({
   };
 
   const renderCanvasActions = () => (
-    <div style={{ position: "relative" }}>
-      {/* wrapping to Fragment stops React from occasionally complaining
-                about identical Keys */}
-      <tunnels.MainMenuTunnel.Out />
-    </div>
+    <HeaderBar
+      boardName={app.getName()}
+      onBoardNameChange={(name) => setAppState({ name })}
+    />
   );
 
   const renderFixedSideContainer = () => {

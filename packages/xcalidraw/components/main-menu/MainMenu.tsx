@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 import { composeEventHandlers } from "@xcalidraw/common";
@@ -31,19 +32,21 @@ const MainMenu = Object.assign(
       const appState = useUIAppState();
       const setAppState = useXcalidrawSetAppState();
 
+      const isOpen = appState.openMenu === "canvas";
+
       return (
         <MainMenuTunnel.In>
-          <DropdownMenu open={appState.openMenu === "canvas"}>
+          <DropdownMenu open={isOpen}>
             <DropdownMenu.Trigger
               onToggle={() => {
                 setAppState({
-                  openMenu: appState.openMenu === "canvas" ? null : "canvas",
+                  openMenu: isOpen ? null : "canvas",
                   openPopup: null,
                   openDialog: null,
                 });
               }}
               data-testid="main-menu-trigger"
-              className="main-menu-trigger"
+              className={clsx("main-menu-trigger", { "is-open": isOpen })}
             >
               {HamburgerMenuIcon}
             </DropdownMenu.Trigger>
