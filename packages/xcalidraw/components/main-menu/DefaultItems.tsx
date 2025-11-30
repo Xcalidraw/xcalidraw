@@ -2,6 +2,8 @@ import clsx from "clsx";
 
 import { THEME } from "@xcalidraw/common";
 
+import type { Theme } from "@xcalidraw/element/types";
+
 import {
   actionClearCanvas,
   actionLoadScene,
@@ -26,8 +28,6 @@ import { openConfirmModal } from "../OverwriteConfirm/OverwriteConfirmState";
 import Trans from "../Trans";
 import DropdownMenuItem from "../dropdownMenu/DropdownMenuItem";
 import DropdownMenuItemContentRadio from "../dropdownMenu/DropdownMenuItemContentRadio";
-import DropdownMenuItemLink from "../dropdownMenu/DropdownMenuItemLink";
-import { GithubIcon, DiscordIcon, XBrandIcon } from "../icons";
 import {
   boltIcon,
   DeviceDesktopIcon,
@@ -44,8 +44,6 @@ import {
 } from "../icons";
 
 import "./DefaultItems.scss";
-
-import type { Theme } from "@xcalidraw/element/types";
 
 export const LoadScene = () => {
   const { t } = useI18n();
@@ -338,37 +336,6 @@ export const Export = () => {
   );
 };
 Export.displayName = "Export";
-
-export const Socials = () => {
-  const { t } = useI18n();
-
-  return (
-    <>
-      <DropdownMenuItemLink
-        icon={GithubIcon}
-        href="https://github.com/xcalidraw/xcalidraw"
-        aria-label="GitHub"
-      >
-        GitHub
-      </DropdownMenuItemLink>
-      <DropdownMenuItemLink
-        icon={XBrandIcon}
-        href="https://x.com/xcalidraw"
-        aria-label="X"
-      >
-        {t("labels.followUs")}
-      </DropdownMenuItemLink>
-      <DropdownMenuItemLink
-        icon={DiscordIcon}
-        href="https://discord.gg/UexuTaE"
-        aria-label="Discord"
-      >
-        {t("labels.discordChat")}
-      </DropdownMenuItemLink>
-    </>
-  );
-};
-Socials.displayName = "Socials";
 
 export const LiveCollaborationTrigger = ({
   onSelect,

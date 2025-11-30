@@ -1,8 +1,4 @@
-import {
-  loginIcon,
-  ExcalLogo,
-  eyeIcon,
-} from "@xcalidraw/xcalidraw/components/icons";
+import { eyeIcon } from "@xcalidraw/xcalidraw/components/icons";
 import { MainMenu } from "@xcalidraw/xcalidraw/index";
 import React from "react";
 
@@ -11,12 +7,8 @@ import { isDevEnv } from "@xcalidraw/common";
 import type { Theme } from "@xcalidraw/element/types";
 
 import { LanguageList } from "../app-language/LanguageList";
-import { isXcalidrawPlusSignedUser } from "../app_constants";
 
 import { saveDebugState } from "./DebugCanvas";
-
-const PLUS_LP_URL = import.meta.env.VITE_APP_PLUS_LP;
-const PLUS_APP_URL = import.meta.env.VITE_APP_PLUS_APP;
 
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
@@ -43,23 +35,6 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
-      <MainMenu.ItemLink
-        icon={ExcalLogo}
-        href={`${PLUS_LP_URL}/plus?utm_source=xcalidraw&utm_medium=app&utm_content=hamburger`}
-        className=""
-      >
-        Xcalidraw+
-      </MainMenu.ItemLink>
-      <MainMenu.DefaultItems.Socials />
-      <MainMenu.ItemLink
-        icon={loginIcon}
-        href={`${PLUS_APP_URL}${
-          isXcalidrawPlusSignedUser ? "" : "/sign-up"
-        }?utm_source=signin&utm_medium=app&utm_content=hamburger`}
-        className="highlighted"
-      >
-        {isXcalidrawPlusSignedUser ? "Sign in" : "Sign up"}
-      </MainMenu.ItemLink>
       {isDevEnv() && (
         <MainMenu.Item
           icon={eyeIcon}

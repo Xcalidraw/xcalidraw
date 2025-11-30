@@ -10,15 +10,18 @@ import {
   isWritableElement,
 } from "@xcalidraw/common";
 
-import { actionToggleShapeSwitch } from "@xcalidraw/xcalidraw/actions/actionToggleShapeSwitch";
+import type { MarkRequired } from "@xcalidraw/common/utility-types";
 
-import { getShortcutKey } from "@xcalidraw/xcalidraw/shortcut";
+import { actionToggleShapeSwitch } from "../../actions/actionToggleShapeSwitch";
+
+import { getShortcutKey } from "../../shortcut";
 
 import {
   actionClearCanvas,
   actionLink,
   actionToggleSearchMenu,
 } from "../../actions";
+
 import {
   actionCopyElementLink,
   actionLinkToElement,
@@ -73,8 +76,6 @@ import {
 import * as defaultItems from "./defaultCommandPaletteItems";
 import "./CommandPalette.scss";
 
-import type { MarkRequired } from "@xcalidraw/common/utility-types";
-
 import type { CommandPaletteItem } from "./types";
 import type { AppProps, AppState, LibraryItem, UIAppState } from "../../types";
 import type { ShortcutName } from "../../actions/shortcuts";
@@ -89,7 +90,6 @@ export const DEFAULT_CATEGORIES = {
   tools: "Tools",
   editor: "Editor",
   elements: "Elements",
-  links: "Links",
   library: "Library",
 };
 
@@ -105,8 +105,6 @@ const getCategoryOrder = (category: string) => {
       return 4;
     case DEFAULT_CATEGORIES.elements:
       return 5;
-    case DEFAULT_CATEGORIES.links:
-      return 6;
     default:
       return 10;
   }
