@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@excalidraw/random-username": "1.0.0",
+    "@radix-ui/react-slot": "1.2.4",
+    "@radix-ui/react-tooltip": "1.2.8",
     "@sentry/browser": "9.0.1",
     "@tabler/icons-react": "3.35.0",
     "callsites": "4.2.0",

@@ -1,6 +1,8 @@
 import React from "react";
 import { Bell, Search, User } from "lucide-react";
 
+import { Button } from "../../../../components/ui/button";
+
 import "./Header.scss";
 
 export const Header = () => {
@@ -13,10 +15,10 @@ export const Header = () => {
 
         {/* Right Side Actions */}
         <div className="header-right">
-          <button className="header-btn invite-btn">
-            <User size={16} className="icon-plus" />
+          <Button variant="outline" size="default">
+            <User size={16} />
             <span>Invite members</span>
-          </button>
+          </Button>
 
           <button className="header-icon-btn">
             <Search size={20} />

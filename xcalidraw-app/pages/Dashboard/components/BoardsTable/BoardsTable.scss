@@ -5,6 +5,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: white;
 
   .section-header {
     display: flex;
@@ -22,29 +23,6 @@
     .header-actions {
       display: flex;
       gap: 12px;
-
-      .action-btn {
-        padding: 8px 16px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-
-        &.primary-action {
-          background: transparent;
-          border: 1px solid var(--color-gray-30);
-          color: var(--color-on-surface);
-          &:hover { background-color: var(--color-surface-high); }
-        }
-
-        &.primary-create {
-          background-color: #0052cc;
-          border: none;
-          color: white;
-          &:hover { background-color: darken(#0052cc, 5%); }
-        }
-      }
     }
   }
 
@@ -76,8 +54,10 @@
           color: var(--color-on-surface);
           font-weight: 500;
           cursor: pointer;
-          
-          &:hover { opacity: 0.8; }
+
+          &:hover {
+            opacity: 0.8;
+          }
         }
       }
     }
@@ -101,7 +81,7 @@
         &.active {
           background-color: white;
           color: var(--color-on-surface);
-          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
       }
     }
@@ -150,20 +130,35 @@
           align-items: center;
           justify-content: center;
           color: white;
-          
-          &.icon-orange { background-color: #ffa500; }
-          &.icon-blue { background-color: #0052cc; }
-          &.icon-pink { background-color: #ff69b4; }
-          &.icon-purple { background-color: #800080; }
-          &.icon-green { background-color: #28a745; }
+
+          &.icon-orange {
+            background-color: #ffa500;
+          }
+          &.icon-blue {
+            background-color: #0052cc;
+          }
+          &.icon-pink {
+            background-color: #ff69b4;
+          }
+          &.icon-purple {
+            background-color: #800080;
+          }
+          &.icon-green {
+            background-color: #28a745;
+          }
         }
 
         .board-details {
           display: flex;
           flex-direction: column;
-          
-          .name-text { font-weight: 500; }
-          .sub-text { font-size: 12px; color: var(--color-gray-60); }
+
+          .name-text {
+            font-weight: 500;
+          }
+          .sub-text {
+            font-size: 12px;
+            color: var(--color-gray-60);
+          }
         }
       }
 
@@ -184,10 +179,13 @@
         opacity: 0;
         transition: opacity 0.2s;
 
-        .star-icon, .more-icon {
+        .star-icon,
+        .more-icon {
           cursor: pointer;
           color: var(--color-gray-60);
-          &:hover { color: var(--color-on-surface); }
+          &:hover {
+            color: var(--color-on-surface);
+          }
         }
 
         .star-icon.active {
@@ -219,7 +217,7 @@
       flex-direction: column;
 
       &:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
       }
 
@@ -227,6 +225,36 @@
         height: 140px;
         background-color: var(--color-surface-high);
         border-bottom: 1px solid var(--color-border-outline-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .preview-placeholder {
+          width: 64px;
+          height: 64px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          opacity: 0.8;
+
+          &.bg-orange {
+            background-color: #ffa500;
+          }
+          &.bg-blue {
+            background-color: var(--color-primary);
+          } // Fixed blue to teal
+          &.bg-pink {
+            background-color: #ff69b4;
+          }
+          &.bg-purple {
+            background-color: #800080;
+          }
+          &.bg-green {
+            background-color: #28a745;
+          }
+        }
       }
 
       .board-footer {
@@ -234,29 +262,91 @@
         display: flex;
         align-items: flex-start;
         gap: 12px;
+        position: relative;
 
         .board-icon {
           width: 24px;
           height: 24px;
-          color: var(--color-gray-60);
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          flex-shrink: 0;
+
+          &.icon-orange {
+            background-color: #ffa500;
+          }
+          &.icon-blue {
+            background-color: var(--color-primary);
+          }
+          &.icon-pink {
+            background-color: #ff69b4;
+          }
+          &.icon-purple {
+            background-color: #800080;
+          }
+          &.icon-green {
+            background-color: #28a745;
+          }
         }
 
         .board-info {
           display: flex;
           flex-direction: column;
           gap: 4px;
+          flex: 1;
+          overflow: hidden;
 
           .board-name {
             font-size: 14px;
             font-weight: 500;
             color: var(--color-on-surface);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
-          .board-date {
+          .board-meta {
+            display: flex;
+            align-items: center;
+            gap: 4px;
             font-size: 12px;
             color: var(--color-gray-60);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .board-space-dot {
+              color: var(--color-gray-50);
+            }
           }
         }
+
+        .card-actions {
+          display: flex;
+          gap: 8px;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          .star-icon,
+          .more-icon {
+            cursor: pointer;
+            color: var(--color-gray-60);
+            &:hover {
+              color: var(--color-on-surface);
+            }
+          }
+
+          .star-icon.active {
+            color: #f5c354;
+            opacity: 1;
+          }
+        }
+      }
+
+      &:hover .card-actions {
+        opacity: 1;
       }
     }
   }

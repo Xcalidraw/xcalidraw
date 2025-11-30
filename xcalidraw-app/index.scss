@@ -1,6 +1,8 @@
 @import "../packages/xcalidraw/css/variables.module.scss";
 
 .xcalidraw {
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   --color-primary-contrast-offset: #625ee0; // to offset Chubb illusion
 
   &.theme--dark {

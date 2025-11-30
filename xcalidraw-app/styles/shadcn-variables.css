@@ -1,0 +1,46 @@
+/* Map shadcn-ui CSS variables to existing theme variables */
+/* Values are in HSL format without hsl() wrapper: H S% L% */
+:root {
+  /* Background: #f8f9fa (Technical Grey) = hsl(210, 17%, 97%) */
+  --background: 210 17% 97%;
+  /* Foreground: #1b1b1f = hsl(240, 4%, 12%) */
+  --foreground: 240 4% 12%;
+  
+  /* Primary: #087f5b (Teal) = hsl(164, 88%, 26%) */
+  --primary: 164 88% 26%;
+  --primary-foreground: 0 0% 100%; /* white */
+  
+  /* Secondary: #f1f3f5 = hsl(210, 14%, 95%) */
+  --secondary: 210 14% 95%;
+  --secondary-foreground: 240 4% 12%; /* same as foreground */
+  
+  /* Destructive: #db6965 = hsl(3, 60%, 63%) */
+  --destructive: 3 60% 63%;
+  --destructive-foreground: 0 0% 0%; /* black */
+  
+  /* Muted: #f1f3f5 = hsl(210, 14%, 95%) */
+  --muted: 210 14% 95%;
+  /* Muted foreground: #7a7a7a = hsl(0, 0%, 48%) */
+  --muted-foreground: 0 0% 48%;
+  
+  /* Accent: #f1f3f5 = hsl(210, 14%, 95%) */
+  --accent: 210 14% 95%;
+  --accent-foreground: 240 4% 12%; /* same as foreground */
+  
+  /* Border: #c5c5d0 = hsl(240, 10%, 78%) */
+  --border: 240 10% 78%;
+  --input: 240 10% 78%; /* same as border */
+  /* Ring: #087f5b (Teal) = hsl(164, 88%, 26%) */
+  --ring: 164 88% 26%;
+  
+  /* Card: white = hsl(0, 0%, 100%) */
+  --card: 0 0% 100%;
+  --card-foreground: 240 4% 12%; /* same as foreground */
+  
+  /* Popover: white = hsl(0, 0%, 100%) */
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 4% 12%; /* same as foreground */
+  
+  /* Radius: 0.375rem */
+  --radius: 0.375rem;
+}

@@ -1,15 +1,84 @@
 @import "../../../../../packages/xcalidraw/css/theme.scss";
 
 .dashboard-templates {
-  padding: 24px 32px;
-  
-  .templates-scroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 30px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border-outline-variant);
+  overscroll-behavior-x: contain;
+
+  /* ---------------------------------- */
+  /* Header                             */
+  /* ---------------------------------- */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .header-icon {
+        color: var(--color-primary); // Teal
+      }
+
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-on-surface);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .view-all-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-gray-60);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+
+      &:hover {
+        color: var(--color-primary);
+        background: var(--color-surface-high);
+      }
+    }
+  }
+
+  /* ---------------------------------- */
+  /* Scroll Track                       */
+  /* ---------------------------------- */
+  .templates-track {
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    padding-bottom: 12px; // Space for scrollbar if any
-    
-    /* Hide scrollbar for cleaner look, or style it */
+    overflow-y: hidden;
+    padding: 8px 30px 16px 30px;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: none;
+    overscroll-behavior: contain;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+    scroll-padding: 0 30px;
+
+    /* Scrollbar styling */
     &::-webkit-scrollbar {
       height: 6px;
     }
@@ -17,55 +86,49 @@
       background: transparent;
     }
     &::-webkit-scrollbar-thumb {
-      background: var(--color-gray-30);
-      border-radius: 3px;
+      background: transparent;
     }
   }
 
+  .divider-vertical {
+    width: 1px;
+    background: var(--color-border-outline-variant);
+    margin: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ---------------------------------- */
+  /* Card Base                          */
+  /* ---------------------------------- */
   .template-card {
-    flex: 0 0 180px; // Fixed width cards
+    flex: 0 0 160px; // Fixed width
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
+    scroll-snap-align: start;
 
     .card-preview {
       height: 100px;
-      background-color: white;
+      width: 100%;
+      border-radius: 8px;
       border: 1px solid var(--color-border-outline-variant);
-      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      background-color: var(--island-bg-color); // White/Slate
+    }
+
+    .card-footer {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      transition: box-shadow 0.2s;
+      justify-content: space-between;
+      padding: 0 2px;
+      width: 100%;
 
-      &.new-board {
-        background-color: var(--color-primary); // Teal ? No, Miro uses blue/white for add
-      }
-
-      .preview-tag {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        background-color: #dbe4ff; // Light blue tag
-        color: #0052cc;
-        font-size: 10px;
-        padding: 2px 6px;
-        border-radius: 2px;
-        font-weight: 600;
-      }
-    }
-
-    &.new-board {
-      .card-preview {
-        background-color: var(--color-primary-light); // Light teal
-        border-color: transparent;
-        color: var(--color-primary);
-      }
-    }
-
-    .card-info {
       .template-name {
         font-size: 13px;
         font-weight: 500;
@@ -73,14 +136,242 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: block;
+      }
+
+      .template-tag {
+        font-size: 10px;
+        color: var(--color-gray-50);
+        background: var(--color-surface-high);
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+    }
+
+    /* Hover Effects */
+    &:hover {
+      .card-preview {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); // Subtle lift
+        border-color: var(--color-primary-hover);
+      }
+
+      .template-name {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  /* ---------------------------------- */
+  /* Specific Card Styles               */
+  /* ---------------------------------- */
+
+  /* 1. Create New (Primary) */
+  .template-card.create-new {
+    .card-preview {
+      background: var(--color-surface-high); // Slight grey bg
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-style: dashed; // Architectural feel
+      border-width: 1px;
+      border-color: var(--color-gray-40);
+
+      .plus-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        transition: transform 0.2s;
+      }
+
+      .cta-text {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--color-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    &:hover {
+      .card-preview {
+        background: var(--color-primary-light);
+        border-color: var(--color-primary);
+        border-style: solid;
+
+        .plus-icon-wrapper {
+          transform: scale(1.1);
+          color: var(--color-primary-darker);
+        }
+      }
+    }
+  }
+
+  /* 2. Ghost / More Card */
+  .template-card.ghost-card {
+    flex: 0 0 80px; // Narrower
+
+    .card-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-gray-50);
+
+      span {
+        font-size: 11px;
+        font-weight: 500;
       }
     }
 
     &:hover .card-preview {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-color: var(--color-primary);
+      background: var(--color-surface-high);
+      color: var(--color-on-surface);
+      border-color: var(--color-border-outline-variant);
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  /* ---------------------------------- */
+  /* CSS Generated Patterns (Creative)  */
+  /* ---------------------------------- */
+
+  // Base pattern logic
+  .pattern-grid,
+  .pattern-dots,
+  .pattern-lines {
+    position: relative;
+
+    // The "Fake UI" Header inside the preview
+    .fake-ui-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    // The "Fake UI" Sidebar inside the preview
+    .fake-ui-sidebar {
+      position: absolute;
+      top: 12px;
+      left: 0;
+      bottom: 0;
+      width: 20px;
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    // The "Fake UI" content blocks
+    .fake-ui-content {
+      position: absolute;
+      top: 20px;
+      left: 28px;
+      display: flex;
+      gap: 4px;
+
+      .fake-block {
+        width: 30px;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 2px;
+        &.short {
+          width: 15px;
+        }
+      }
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0; // Hidden by default
+      background: rgba(255, 255, 255, 0.6);
+      transition: opacity 0.2s;
+      color: var(--color-primary-darker);
+    }
+
+    &:hover .preview-overlay {
+      opacity: 1;
+    }
+  }
+
+  // A. Dot Pattern (Simulates Board)
+  .pattern-dots {
+    background-image: radial-gradient(
+      var(--color-gray-30) 1px,
+      transparent 1px
+    );
+    background-size: 10px 10px;
+  }
+
+  // B. Grid Pattern (Simulates Excel/Table)
+  .pattern-grid {
+    background-size: 14px 14px;
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.04) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  }
+
+  // C. Diagonal Lines (Simulates Draft)
+  .pattern-lines {
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0, 0, 0, 0.02) 10px,
+      rgba(0, 0, 0, 0.02) 11px
+    );
+  }
+
+  /* Dark Mode Adjustments for Patterns */
+  :global(.theme--dark) {
+    .pattern-dots {
+      background-image: radial-gradient(
+        var(--color-gray-70) 1px,
+        transparent 1px
+      );
+    }
+    .pattern-grid {
+      background-image: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px
+        );
+    }
+    .pattern-lines {
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.03) 10px,
+        rgba(255, 255, 255, 0.03) 11px
+      );
+    }
+
+    .template-card.create-new .card-preview {
+      background: rgba(255, 255, 255, 0.03);
+      .plus-icon-wrapper {
+        background: var(--color-surface-mid);
+      }
     }
   }
 }
-

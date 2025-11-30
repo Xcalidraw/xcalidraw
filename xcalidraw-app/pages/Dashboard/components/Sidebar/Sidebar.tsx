@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
+import { useState, useRef, useEffect } from "react";
 import {
   Home,
   Clock,
@@ -20,6 +21,21 @@ import {
   yourSpacesExpandedAtom,
   spacesExpandedAtom,
 } from "../../store";
+import { Input } from "../../../../components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../../../../components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../../../components/ui/tooltip";
+import { Button } from "../../../../components/ui/button";
 
 import "./Sidebar.scss";
 
@@ -31,6 +47,21 @@ export const Sidebar = () => {
     yourSpacesExpandedAtom,
   );
   const [spacesExpanded, setSpacesExpanded] = useAtom(spacesExpandedAtom);
+  const [searchValue, setSearchValue] = useState("");
+  const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const NavItem = ({
     icon: Icon,
@@ -99,60 +130,124 @@ export const Sidebar = () => {
         </button>
       </header>
 
-      {/* 2. Search (Visual Fake Input) */}
+      {/* 2. Search Input */}
       <div className="sidebar-search-container">
-        <button className="search-btn">
+        <div className="search-input-wrapper">
           <Search size={16} strokeWidth={2} className="search-icon" />
-          <span className="placeholder">Search...</span>
+          <Input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search..."
+            value={searchValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchValue(e.target.value)
+            }
+            className="search-input"
+          />
           <div className="shortcut">
             <Command size={10} />K
           </div>
-        </button>
-      </div>
-
-      <div className="sidebar-scrollable">
-        {/* 3. Main Navigation */}
-        <nav className="nav-section">
-          <NavItem icon={Home} label="Home" active />
-          <NavItem icon={Clock} label="Recent" />
-          <NavItem icon={Star} label="Starred" badge="3" />
-        </nav>
-
-        {/* 4. Spaces */}
-        <div className="spaces-section">
-          <div className="spaces-section-header">
-            <span className="spaces-section-title">Spaces</span>
-            <button className="spaces-add-btn" onClick={() => {}}>
-              <Plus size={16} strokeWidth={2} />
-            </button>
-          </div>
-          <SpaceGroup
-            title="Your Spaces"
-            expanded={yourSpacesExpanded}
-            onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
-          >
-            {yourSpaces.map((space) => (
-              <button key={space.id} className="space-item">
-                <span className="space-indicator dot" />
-                <span className="space-name">{space.name}</span>
-              </button>
-            ))}
-          </SpaceGroup>
-
-          <SpaceGroup
-            title="Team Spaces"
-            expanded={spacesExpanded}
-            onToggle={() => setSpacesExpanded(!spacesExpanded)}
-          >
-            {spaces.map((space) => (
-              <button key={space.id} className="space-item">
-                <Hash size={14} className="space-indicator hash" />
-                <span className="space-name">{space.name}</span>
-              </button>
-            ))}
-          </SpaceGroup>
         </div>
       </div>
+
+      <TooltipProvider>
+        <div className="sidebar-scrollable">
+          {/* 3. Main Navigation */}
+          <nav className="nav-section">
+            <NavItem icon={Home} label="Home" active />
+            <NavItem icon={Clock} label="Recent" />
+            <NavItem icon={Star} label="Starred" badge="3" />
+          </nav>
+
+          {/* 4. Spaces */}
+          <div className="spaces-section">
+            <div className="spaces-section-header">
+              <span className="spaces-section-title">Spaces</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="spaces-add-btn"
+                    onClick={() => setIsCreateSpaceDialogOpen(true)}
+                  >
+                    <Plus size={18} strokeWidth={2} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Create Space</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <SpaceGroup
+              title="Your Spaces"
+              expanded={yourSpacesExpanded}
+              onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
+            >
+              {yourSpaces.map((space) => (
+                <button key={space.id} className="space-item">
+                  <span className="space-indicator dot" />
+                  <span className="space-name">{space.name}</span>
+                </button>
+              ))}
+            </SpaceGroup>
+
+            <SpaceGroup
+              title="Team Spaces"
+              expanded={spacesExpanded}
+              onToggle={() => setSpacesExpanded(!spacesExpanded)}
+            >
+              {spaces.map((space) => (
+                <button key={space.id} className="space-item">
+                  <Hash size={14} className="space-indicator hash" />
+                  <span className="space-name">{space.name}</span>
+                </button>
+              ))}
+            </SpaceGroup>
+          </div>
+        </div>
+      </TooltipProvider>
+
+      {/* Create Space Dialog */}
+      <Dialog
+        open={isCreateSpaceDialogOpen}
+        onOpenChange={setIsCreateSpaceDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Space</DialogTitle>
+            <DialogDescription>
+              Create a new space to organize your boards.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="dialog-body">
+            <div className="form-group">
+              <label htmlFor="space-name">Space Name</label>
+              <Input
+                id="space-name"
+                type="text"
+                placeholder="Enter space name..."
+                autoFocus
+              />
+            </div>
+            <div className="dialog-actions">
+              <Button
+                variant="secondary"
+                onClick={() => setIsCreateSpaceDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                onClick={() => {
+                  // TODO: Handle space creation
+                  setIsCreateSpaceDialogOpen(false);
+                }}
+              >
+                Create
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </aside>
   );
 };

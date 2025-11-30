@@ -11,8 +11,8 @@
   border-right: 1px solid var(--color-border-outline-variant);
   color: var(--color-on-surface);
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   user-select: none;
   padding: 16px;
   gap: 16px;
@@ -92,33 +92,43 @@
   }
 
   /* ------------------------------------------- */
-  /* 2. Search Bar                               */
+  /* 2. Search Input                              */
   /* ------------------------------------------- */
   .sidebar-search-container {
-    .search-btn {
+    width: 100%;
+    box-sizing: border-box;
+
+    .search-input-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
       width: 100%;
-      padding: 10px 12px;
-      border-radius: var(--border-radius-md);
-      background-color: var(--color-surface-high); /* Light Grey */
-      border: 1px solid transparent;
-      gap: 10px;
-      color: var(--color-gray-60);
-      transition: all 0.2s ease;
+      box-sizing: border-box;
 
       .search-icon {
+        position: absolute;
+        left: 12px;
         width: 16px;
         height: 16px;
         color: var(--color-gray-50);
+        pointer-events: none;
+        z-index: 1;
       }
 
-      .placeholder {
-        flex: 1;
+      .search-input {
+        padding-left: 36px;
+        padding-right: 60px;
+        height: 38px;
         font-size: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        background-color: var(--color-surface-high) !important;
       }
 
       .shortcut {
+        position: absolute;
+        right: 8px;
         display: flex;
         align-items: center;
         gap: 2px;
@@ -128,16 +138,8 @@
         border-radius: 3px;
         color: var(--color-gray-50);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      }
-
-      &:hover {
-        background-color: var(--color-gray-20);
-        color: var(--color-on-surface);
-      }
-
-      /* Optional: mimic focus ring using your teal var */
-      &:active {
-        border-color: var(--color-primary);
+        pointer-events: none;
+        z-index: 1;
       }
     }
   }
@@ -237,13 +239,17 @@
 
       .spaces-add-btn {
         color: var(--color-gray-50);
-        padding: 4px;
+        padding: 6px;
         border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.15s ease;
         opacity: 0.7;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
 
         &:hover {
           color: var(--color-primary);

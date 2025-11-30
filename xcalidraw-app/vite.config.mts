@@ -79,6 +79,10 @@ export default defineConfig(({ mode }) => {
           find: /^xcalidraw-app\/(.*?)/,
           replacement: path.resolve(__dirname, "./$1"),
         },
+        {
+          find: /^@\/(.*?)/,
+          replacement: path.resolve(__dirname, "./$1"),
+        },
       ],
     },
     build: {

@@ -1,28 +1,33 @@
-import React from "react";
+// eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   List,
   MoreHorizontal,
   Star,
   ChevronDown,
-  FileIcon
+  FileIcon,
 } from "lucide-react";
 import clsx from "clsx";
-import {
-  currentTeamAtom,
-  filteredBoardsAtom,
-  viewModeAtom,
-  sortByAtom,
-  filterBoardsAtom,
-  filterOwnerAtom
-} from "../../store";
+
+import { filteredBoardsAtom, viewModeAtom } from "../../store";
+import { Button } from "../../../../components/ui/button";
+
 import "./BoardsTable.scss";
 
 export const BoardsTable = () => {
   const [boards] = useAtom(filteredBoardsAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
-  const [sortBy] = useAtom(sortByAtom);
+  const navigate = useNavigate();
+
+  const handleNewBoard = () => {
+    // Generate a unique ID for the new board
+    const boardId = `board-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+    navigate(`/board/${boardId}`);
+  };
 
   return (
     <div className="boards-table-section">
@@ -31,8 +36,12 @@ export const BoardsTable = () => {
           <h2>Boards in this team</h2>
         </div>
         <div className="header-actions">
-          <button className="action-btn primary-action">Explore templates</button>
-          <button className="action-btn primary-create">+ Create new</button>
+          <Button variant="secondary" size="default">
+            Explore templates
+          </Button>
+          <Button variant="outline" size="default" onClick={handleNewBoard}>
+            + Create new
+          </Button>
         </div>
       </div>
 
@@ -45,7 +54,7 @@ export const BoardsTable = () => {
               <ChevronDown size={14} />
             </div>
           </div>
-          
+
           <div className="filter-group">
             <div className="filter-select">
               <span>Owned by anyone</span>
@@ -63,13 +72,13 @@ export const BoardsTable = () => {
         </div>
 
         <div className="view-toggles">
-          <button 
+          <button
             className={clsx("view-btn", { active: viewMode === "grid" })}
             onClick={() => setViewMode("grid")}
           >
             <Grid size={18} />
           </button>
-          <button 
+          <button
             className={clsx("view-btn", { active: viewMode === "list" })}
             onClick={() => setViewMode("list")}
           >
@@ -93,7 +102,11 @@ export const BoardsTable = () => {
             </thead>
             <tbody>
               {boards.map((board) => (
-                <tr key={board.id}>
+                <tr
+                  key={board.id}
+                  onClick={() => navigate(`/board/${board.id}`)}
+                  className="board-row"
+                >
                   <td className="col-name">
                     <div className="board-name-wrapper">
                       <div className={`board-icon icon-${board.icon}`}>
@@ -101,7 +114,9 @@ export const BoardsTable = () => {
                       </div>
                       <div className="board-details">
                         <span className="name-text">{board.name}</span>
-                        <span className="sub-text">Modified by {board.modifiedBy}, {board.modifiedDate}</span>
+                        <span className="sub-text">
+                          Modified by {board.modifiedBy}, {board.modifiedDate}
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -109,13 +124,23 @@ export const BoardsTable = () => {
                     {/* Placeholder for online users */}
                   </td>
                   <td className="col-space">
-                    {board.space ? <span className="space-tag">{board.space}</span> : null}
+                    {board.space ? (
+                      <span className="space-tag">{board.space}</span>
+                    ) : null}
                   </td>
                   <td className="col-date">{board.lastOpened}</td>
                   <td className="col-owner">{board.owner}</td>
                   <td className="col-actions">
-                    <div className="action-icons">
-                      <Star size={16} className={clsx("star-icon", { active: board.isStarred })} />
+                    <div
+                      className="action-icons"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Star
+                        size={16}
+                        className={clsx("star-icon", {
+                          active: board.isStarred,
+                        })}
+                      />
                       <MoreHorizontal size={16} className="more-icon" />
                     </div>
                   </td>
@@ -128,15 +153,45 @@ export const BoardsTable = () => {
         <div className="boards-grid-container">
           {/* Grid View Implementation */}
           {boards.map((board) => (
-            <div key={board.id} className="board-card">
-               <div className="board-preview"></div>
-               <div className="board-footer">
-                 <div className="board-icon"><FileIcon size={16} /></div>
-                 <div className="board-info">
-                   <span className="board-name">{board.name}</span>
-                   <span className="board-date">Opened {board.lastOpened}</span>
-                 </div>
-               </div>
+            <div
+              key={board.id}
+              className="board-card"
+              onClick={() => navigate(`/board/${board.id}`)}
+            >
+              <div className="board-preview">
+                {/* Visual placeholder matching the icon color/theme */}
+                <div className={`preview-placeholder bg-${board.icon}`}>
+                  <FileIcon size={32} />
+                </div>
+              </div>
+              <div className="board-footer">
+                <div className={`board-icon icon-${board.icon}`}>
+                  <FileIcon size={16} />
+                </div>
+                <div className="board-info">
+                  <span className="board-name">{board.name}</span>
+                  <div className="board-meta">
+                    <span className="board-date">
+                      Opened {board.lastOpened}
+                    </span>
+                    {board.space && (
+                      <span className="board-space-dot">• {board.space}</span>
+                    )}
+                  </div>
+                </div>
+                <div
+                  className="card-actions"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Star
+                    size={14}
+                    className={clsx("star-icon", {
+                      active: board.isStarred,
+                    })}
+                  />
+                  <MoreHorizontal size={14} className="more-icon" />
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -144,4 +199,3 @@ export const BoardsTable = () => {
     </div>
   );
 };
-

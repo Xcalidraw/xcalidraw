@@ -1,0 +1,103 @@
+@import "../../../packages/xcalidraw/css/theme.scss";
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: var(--border-radius-md);
+  font-family: var(--ui-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  padding: 8px 16px;
+  height: 36px;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &.variant-default {
+    background-color: var(--color-primary);
+    color: white;
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    &:active {
+      background-color: var(--color-primary-darker);
+    }
+  }
+
+  &.variant-destructive {
+    background-color: var(--color-danger);
+    color: var(--color-danger-text);
+
+    &:hover {
+      background-color: var(--color-danger-darker);
+    }
+  }
+
+  &.variant-outline {
+    border: 1px solid var(--color-primary);
+    background-color: var(--island-bg-color);
+    color: var(--color-primary);
+
+    &:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    &:active {
+      background-color: var(--color-primary-darker);
+      color: white;
+    }
+  }
+
+  &.variant-secondary {
+    background-color: var(--color-surface-high);
+    color: var(--color-on-surface);
+
+    &:hover {
+      background-color: var(--color-gray-20);
+    }
+  }
+
+  &.variant-ghost {
+    background-color: transparent;
+    color: var(--color-on-surface);
+
+    &:hover {
+      background-color: var(--color-surface-high);
+      color: var(--color-on-surface);
+    }
+  }
+
+  &.size-sm {
+    height: 32px;
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  &.size-lg {
+    height: 40px;
+    padding: 8px 32px;
+  }
+
+  &.size-icon {
+    height: 36px;
+    width: 36px;
+    padding: 0;
+  }
+}

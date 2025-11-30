@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import { registerSW } from "virtual:pwa-register";
 
 import "./sentry";
+import "./styles/shadcn-variables.css";
+import "./styles/tailwind.css";
 
 import { AppRoutes } from "./routes";
 
