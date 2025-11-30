@@ -7,8 +7,9 @@ export const Header = () => {
   return (
     <div className="dashboard-header">
       <div className="header-content">
-        {/* Placeholder for symmetry or left-aligned items if needed */}
-        <div className="header-left"></div>
+        <div className="header-left">
+          <span className="xcalidraw-logo">Xcalidraw</span>
+        </div>
 
         {/* Right Side Actions */}
         <div className="header-right">

@@ -1,18 +1,48 @@
 @import "../../../../../packages/xcalidraw/css/theme.scss";
 
+@font-face {
+  font-family: "Excalifont";
+  src: url("../../../../../packages/xcalidraw/fonts/Excalifont/Excalifont-Regular-a88b72a24fb54c9f94e3b5fdaa7481c9.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 .dashboard-header {
   height: 64px;
   padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--default-bg-color); // Transparent or same as bg
+  background-color: white;
+  border-bottom: 1px solid var(--color-border-outline-variant);
 
   .header-content {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .xcalidraw-logo {
+    font-family: "Excalifont", "Xiaolai", sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--color-primary);
+    user-select: none;
+    white-space: nowrap;
+    letter-spacing: -0.5px;
+
+    &::first-letter {
+      font-size: 1.2em;
+      font-weight: 800;
+    }
   }
 
   .header-right {
@@ -73,4 +103,3 @@
     }
   }
 }
-
