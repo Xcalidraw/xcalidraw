@@ -36,6 +36,8 @@ type ToolPopoverProps = {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   suppressActiveState?: boolean;
+  triggerIcon?: React.ReactNode;
+  horizontal?: boolean;
 };
 
 export const ToolPopover = ({
@@ -53,6 +55,8 @@ export const ToolPopover = ({
   isOpen: controlledIsOpen,
   onOpenChange: controlledOnOpenChange,
   suppressActiveState = false,
+  triggerIcon,
+  horizontal = false,
 }: ToolPopoverProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -99,7 +103,7 @@ export const ToolPopover = ({
               options.some((o) => o.type === activeTool.type),
           })}
           type="radio"
-          icon={displayedOption.icon}
+          icon={triggerIcon || displayedOption.icon}
           checked={isActive && !suppressActiveState}
           name="editor-current-shape"
           title={title}
@@ -113,8 +117,10 @@ export const ToolPopover = ({
       </Popover.Trigger>
 
       <Popover.Content
-        className="tool-popover-content"
-        side="right"
+        className={clsx("tool-popover-content", {
+          "tool-popover-content--horizontal": horizontal,
+        })}
+        side={horizontal ? "top" : "right"}
         align="center"
         sideOffset={SIDE_OFFSET}
         collisionBoundary={container ?? undefined}

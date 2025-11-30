@@ -23,6 +23,7 @@ import {
   RectangleIcon,
   ArrowIcon,
   moreToolsIcon,
+  shapesIcon,
   DiamondIcon,
   EllipseIcon,
   LineIcon,
@@ -216,6 +217,7 @@ export const MobileToolBar = ({
         namePrefix="selectionType"
         title={capitalizeString(t("toolBar.selection"))}
         data-testid="toolbar-selection"
+        horizontal
         onToolChange={(type: string) => {
           if (type === "selection" || type === "lasso") {
             app.setActiveTool({ type });
@@ -268,18 +270,10 @@ export const MobileToolBar = ({
         activeTool={activeTool}
         defaultOption={lastActiveGenericShape}
         namePrefix="shapeType"
-        title={capitalizeString(
-          t(
-            lastActiveGenericShape === "rectangle"
-              ? "toolBar.rectangle"
-              : lastActiveGenericShape === "diamond"
-              ? "toolBar.diamond"
-              : lastActiveGenericShape === "ellipse"
-              ? "toolBar.ellipse"
-              : "toolBar.rectangle",
-          ),
-        )}
+        title={t("toolBar.shapes")}
         data-testid="toolbar-rectangle"
+        triggerIcon={shapesIcon}
+        horizontal
         onToolChange={(type: string) => {
           if (
             type === "rectangle" ||
@@ -312,6 +306,7 @@ export const MobileToolBar = ({
         )}
         data-testid="toolbar-arrow"
         fillable={true}
+        horizontal
         onToolChange={(type: string) => {
           if (type === "arrow" || type === "line") {
             setLastActiveLinearElement(type);

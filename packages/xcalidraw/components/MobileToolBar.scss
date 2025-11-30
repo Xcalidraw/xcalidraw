@@ -54,6 +54,8 @@
   .mobile-toolbar .App-toolbar__extra-tools-dropdown {
     min-width: 160px;
     z-index: var(--zIndex-layerUI);
+    right: 0;
+    left: auto;
   }
 
   .mobile-toolbar-separator {
