@@ -97,6 +97,7 @@ interface LayerUIProps {
   app: AppClassProperties;
   isCollaborating: boolean;
   generateLinkForSelection?: AppProps["generateLinkForSelection"];
+  onHomeClick?: () => void;
 }
 
 const DefaultMainMenu: React.FC<{
@@ -152,6 +153,7 @@ const LayerUI = ({
   app,
   isCollaborating,
   generateLinkForSelection,
+  onHomeClick,
 }: LayerUIProps) => {
   const editorInterface = useEditorInterface();
   const stylesPanelMode = useStylesPanelMode();
@@ -223,6 +225,7 @@ const LayerUI = ({
     <HeaderBar
       boardName={app.getName()}
       onBoardNameChange={(name) => setAppState({ name })}
+      onHomeClick={onHomeClick}
     />
   );
 

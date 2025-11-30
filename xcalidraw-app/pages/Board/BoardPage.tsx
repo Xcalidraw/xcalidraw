@@ -33,6 +33,7 @@ import {
 } from "@xcalidraw/common";
 import polyfill from "@xcalidraw/xcalidraw/polyfill";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { loadFromBlob } from "@xcalidraw/xcalidraw/data/blob";
 import { useCallbackRefState } from "@xcalidraw/xcalidraw/hooks/useCallbackRefState";
 import { t } from "@xcalidraw/xcalidraw/i18n";
@@ -65,73 +66,74 @@ import type {
   UIAppState,
 } from "@xcalidraw/xcalidraw/types";
 
-import CustomStats from "./CustomStats";
+import CustomStats from "../../CustomStats";
 import {
   Provider,
   useAtom,
   useAtomValue,
   useAtomWithInitialValue,
   appJotaiStore,
-} from "./app-jotai";
+} from "../../app-jotai";
 import {
   FIREBASE_STORAGE_PREFIXES,
   STORAGE_KEYS,
   SYNC_BROWSER_TABS_TIMEOUT,
-} from "./app_constants";
+} from "../../app_constants";
 
 import Collab, {
   collabAPIAtom,
   isCollaboratingAtom,
   isOfflineAtom,
-} from "./collab/Collab";
-import { AppFooter } from "./components/AppFooter";
-import { AppMainMenu } from "./components/AppMainMenu";
-import { AppWelcomeScreen } from "./components/AppWelcomeScreen";
+} from "../../collab/Collab";
+import { AppFooter } from "../../components/AppFooter";
+import { AppMainMenu } from "../../components/AppMainMenu";
+import { AppWelcomeScreen } from "../../components/AppWelcomeScreen";
 import {
   ExportToXcalidrawPlus,
   exportToXcalidrawPlus,
-} from "./components/ExportToXcalidrawPlus";
-import { TopErrorBoundary } from "./components/TopErrorBoundary";
+} from "../../components/ExportToXcalidrawPlus";
+import { TopErrorBoundary } from "../../components/TopErrorBoundary";
 
 import {
   exportToBackend,
   getCollaborationLinkData,
   isCollaborationLink,
   loadScene,
-} from "./data";
+} from "../../data";
 
-import { updateStaleImageStatuses } from "./data/FileManager";
+import { updateStaleImageStatuses } from "../../data/FileManager";
 import {
   importFromLocalStorage,
   importUsernameFromLocalStorage,
-} from "./data/localStorage";
+} from "../../data/localStorage";
 
-import { loadFilesFromFirebase } from "./data/firebase";
+import { loadFilesFromFirebase } from "../../data/firebase";
 import {
   LibraryIndexedDBAdapter,
   LibraryLocalStorageMigrationAdapter,
   LocalData,
   localStorageQuotaExceededAtom,
-} from "./data/LocalData";
-import { isBrowserStorageStateNewer } from "./data/tabSync";
-import { ShareDialog, shareDialogStateAtom } from "./share/ShareDialog";
-import CollabError, { collabErrorIndicatorAtom } from "./collab/CollabError";
-import { useHandleAppTheme } from "./useHandleAppTheme";
-import { getPreferredLanguage } from "./app-language/language-detector";
-import { useAppLangCode } from "./app-language/language-state";
+} from "../../data/LocalData";
+import { isBrowserStorageStateNewer } from "../../data/tabSync";
+import { ShareDialog, shareDialogStateAtom } from "../../share/ShareDialog";
+import CollabError, {
+  collabErrorIndicatorAtom,
+} from "../../collab/CollabError";
+import { useHandleAppTheme } from "../../useHandleAppTheme";
+import { getPreferredLanguage } from "../../app-language/language-detector";
+import { useAppLangCode } from "../../app-language/language-state";
 import DebugCanvas, {
   debugRenderer,
   isVisualDebuggerEnabled,
   loadSavedDebugState,
-} from "./components/DebugCanvas";
-import { AIComponents } from "./components/AI";
-import { XcalidrawPlusIframeExport } from "./XcalidrawPlusIframeExport";
+} from "../../components/DebugCanvas";
+import { AIComponents } from "../../components/AI";
 
-import "./index.scss";
+import "../../index.scss";
 
-import { AppSidebar } from "./components/AppSidebar";
+import { AppSidebar } from "../../components/AppSidebar";
 
-import type { CollabAPI } from "./collab/Collab";
+import type { CollabAPI } from "../../collab/Collab";
 
 polyfill();
 
@@ -150,21 +152,18 @@ declare global {
   interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
   }
+
+  interface Window {
+    __XCALIDRAW_BOARD_ID__?: string;
+  }
 }
 
 let pwaEvent: BeforeInstallPromptEvent | null = null;
 
-// Adding a listener outside of the component as it may (?) need to be
-// subscribed early to catch the event.
-//
-// Also note that it will fire only if certain heuristics are met (user has
-// used the app for some time, etc.)
 window.addEventListener(
   "beforeinstallprompt",
   (event: BeforeInstallPromptEvent) => {
-    // prevent Chrome <= 67 from automatically showing the prompt
     event.preventDefault();
-    // cache for later use
     pwaEvent = event;
   },
 );
@@ -199,6 +198,7 @@ const shareableLinkConfirmDialog = {
 const initializeScene = async (opts: {
   collabAPI: CollabAPI | null;
   xcalidrawAPI: XcalidrawImperativeAPI;
+  boardId?: string;
 }): Promise<
   { scene: XcalidrawInitialDataState | null } & (
     | { isExternalScene: true; id: string; key: string }
@@ -222,11 +222,8 @@ const initializeScene = async (opts: {
   const isExternalScene = !!(id || jsonBackendMatch || roomLinkData);
   if (isExternalScene) {
     if (
-      // don't prompt if scene is empty
       !scene.elements.length ||
-      // don't prompt for collab scenes because we don't override local storage
       roomLinkData ||
-      // otherwise, prompt whether user wants to override current scene
       (await openConfirmModal(shareableLinkConfirmDialog))
     ) {
       if (jsonBackendMatch) {
@@ -241,7 +238,6 @@ const initializeScene = async (opts: {
         window.history.replaceState({}, APP_NAME, window.location.origin);
       }
     } else {
-      // https://github.com/xcalidraw/xcalidraw/issues/1919
       if (document.hidden) {
         return new Promise((resolve, reject) => {
           window.addEventListener(
@@ -288,9 +284,6 @@ const initializeScene = async (opts: {
     const scene = await opts.collabAPI.startCollaboration(roomLinkData);
 
     return {
-      // when collaborating, the state may have already been updated at this
-      // point (we may have received updates from other clients), so reconcile
-      // elements and appState with existing state
       scene: {
         ...scene,
         appState: {
@@ -301,8 +294,6 @@ const initializeScene = async (opts: {
             },
             xcalidrawAPI.getAppState(),
           ),
-          // necessary if we're invoking from a hashchange handler which doesn't
-          // go through App.initializeScene() that resets this flag
           isLoading: false,
         },
         elements: reconcileElements(
@@ -328,7 +319,13 @@ const initializeScene = async (opts: {
   return { scene: null, isExternalScene: false };
 };
 
-const XcalidrawWrapper = () => {
+const XcalidrawWrapper = ({
+  boardId,
+  onHomeClick,
+}: {
+  boardId?: string;
+  onHomeClick?: () => void;
+}) => {
   const [errorMessage, setErrorMessage] = useState("");
   const isCollabDisabled = isRunningInIframe();
 
@@ -338,8 +335,16 @@ const XcalidrawWrapper = () => {
 
   const editorInterface = useEditorInterface();
 
-  // initial state
-  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (boardId) {
+      window.__XCALIDRAW_BOARD_ID__ = boardId;
+    } else {
+      delete window.__XCALIDRAW_BOARD_ID__;
+    }
+    return () => {
+      delete window.__XCALIDRAW_BOARD_ID__;
+    };
+  }, [boardId]);
 
   const initialStatePromiseRef = useRef<{
     promise: ResolvablePromise<XcalidrawInitialDataState | null>;
@@ -353,7 +358,6 @@ const XcalidrawWrapper = () => {
 
   useEffect(() => {
     trackEvent("load", "frame", getFrame());
-    // Delayed so that the app has a time to load the latest SW
     setTimeout(() => {
       trackEvent("load", "version", getVersion());
     }, VERSION_TIMEOUT);
@@ -372,7 +376,6 @@ const XcalidrawWrapper = () => {
   useHandleLibrary({
     xcalidrawAPI,
     adapter: LibraryIndexedDBAdapter,
-    // TODO maybe remove this in several months (shipped: 24-03-11)
     migrationAdapter: LibraryLocalStorageMigrationAdapter,
   });
 
@@ -458,15 +461,13 @@ const XcalidrawWrapper = () => {
                 });
               });
           }
-          // on fresh load, clear unused files from IDB (from previous
-          // session)
           LocalData.fileStorage.clearObsoleteFiles({ currentFileIds: fileIds });
         }
       }
     };
 
-    initializeScene({ collabAPI, xcalidrawAPI }).then(async (data) => {
-      loadImages(data, /* isInitialLoad */ true);
+    initializeScene({ collabAPI, xcalidrawAPI, boardId }).then(async (data) => {
+      loadImages(data, true);
       initialStatePromiseRef.current.promise.resolve(data.scene);
     });
 
@@ -482,7 +483,7 @@ const XcalidrawWrapper = () => {
         }
         xcalidrawAPI.updateScene({ appState: { isLoading: true } });
 
-        initializeScene({ collabAPI, xcalidrawAPI }).then((data) => {
+        initializeScene({ collabAPI, xcalidrawAPI, boardId }).then((data) => {
           loadImages(data);
           if (data.scene) {
             xcalidrawAPI.updateScene({
@@ -503,7 +504,6 @@ const XcalidrawWrapper = () => {
         !document.hidden &&
         ((collabAPI && !collabAPI.isCollaborating()) || isCollabDisabled)
       ) {
-        // don't sync if local state is newer or identical to browser state
         if (isBrowserStorageStateNewer(STORAGE_KEYS.VERSION_DATA_STATE)) {
           const localDataState = importFromLocalStorage();
           const username = importUsernameFromLocalStorage();
@@ -529,7 +529,6 @@ const XcalidrawWrapper = () => {
             elements?.reduce((acc, element) => {
               if (
                 isInitializedImageElement(element) &&
-                // only load and update images that aren't already loaded
                 !currFiles[element.fileId]
               ) {
                 return acc.concat(element.fileId);
@@ -586,7 +585,7 @@ const XcalidrawWrapper = () => {
         false,
       );
     };
-  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode]);
+  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode, boardId]);
 
   useEffect(() => {
     const unloadHandler = (event: BeforeUnloadEvent) => {
@@ -622,8 +621,6 @@ const XcalidrawWrapper = () => {
       collabAPI.syncElements(elements);
     }
 
-    // this check is redundant, but since this is a hot path, it's best
-    // not to evaludate the nested expression every time
     if (!LocalData.isSavePaused()) {
       LocalData.save(elements, appState, files, () => {
         if (xcalidrawAPI) {
@@ -654,7 +651,6 @@ const XcalidrawWrapper = () => {
       });
     }
 
-    // Render the debug scene if the debug canvas is available
     if (debugCanvasRef.current && xcalidrawAPI) {
       debugRenderer(
         debugCanvasRef.current,
@@ -731,9 +727,6 @@ const XcalidrawWrapper = () => {
     [setShareDialogState],
   );
 
-  // browsers generally prevent infinite self-embedding, there are
-  // cases where it still happens, and while we disallow self-embedding
-  // by not whitelisting our own origin, this serves as an additional guard
   if (isSelfEmbedding) {
     return (
       <div
@@ -825,6 +818,7 @@ const XcalidrawWrapper = () => {
             xcalidrawAPI?.scrollToContent(element.link, { animate: true });
           }
         }}
+        onHomeClick={onHomeClick}
       >
         <AppMainMenu
           onCollabDialogOpen={onCollabDialogOpen}
@@ -863,7 +857,7 @@ const XcalidrawWrapper = () => {
 
         <TTDDialogTrigger />
         {isCollaborating && isOffline && (
-          <div className="alertalert--warning">
+          <div className="alert alert--warning">
             {t("alerts.collabOfflineWarning")}
           </div>
         )}
@@ -987,8 +981,6 @@ const XcalidrawWrapper = () => {
                 if (pwaEvent) {
                   pwaEvent.prompt();
                   pwaEvent.userChoice.then(() => {
-                    // event cannot be reused, but we'll hopefully
-                    // grab new one as the event should be fired again
                     pwaEvent = null;
                   });
                 }
@@ -1008,20 +1000,21 @@ const XcalidrawWrapper = () => {
   );
 };
 
-const XcalidrawApp = () => {
-  const isCloudExportWindow =
-    window.location.pathname === "/xcalidraw-plus-export";
-  if (isCloudExportWindow) {
-    return <XcalidrawPlusIframeExport />;
-  }
+const BoardPage = () => {
+  const { boardId } = useParams<{ boardId?: string }>();
+  const navigate = useNavigate();
+
+  const handleHomeClick = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
 
   return (
     <TopErrorBoundary>
       <Provider store={appJotaiStore}>
-        <XcalidrawWrapper />
+        <XcalidrawWrapper boardId={boardId} onHomeClick={handleHomeClick} />
       </Provider>
     </TopErrorBoundary>
   );
 };
 
-export default XcalidrawApp;
+export default BoardPage;

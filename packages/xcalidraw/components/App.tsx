@@ -242,6 +242,35 @@ import {
   positionElementsOnGrid,
 } from "@xcalidraw/element";
 
+import type {
+  XcalidrawElement,
+  XcalidrawFreeDrawElement,
+  XcalidrawGenericElement,
+  XcalidrawLinearElement,
+  XcalidrawTextElement,
+  NonDeleted,
+  InitializedXcalidrawImageElement,
+  XcalidrawImageElement,
+  FileId,
+  NonDeletedXcalidrawElement,
+  XcalidrawTextContainer,
+  XcalidrawFrameLikeElement,
+  XcalidrawMagicFrameElement,
+  XcalidrawIframeLikeElement,
+  IframeData,
+  XcalidrawIframeElement,
+  XcalidrawEmbeddableElement,
+  Ordered,
+  MagicGenerationData,
+  XcalidrawArrowElement,
+  XcalidrawElbowArrowElement,
+  SceneElementsMap,
+} from "@xcalidraw/element/types";
+
+import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
+
+import type { LocalPoint, Radians } from "@xcalidraw/math";
+
 import {
   actionAddToLibrary,
   actionBringForward,
@@ -407,33 +436,6 @@ import { Toast } from "./Toast";
 import { findShapeByKey } from "./shapes";
 
 import UnlockPopup from "./UnlockPopup";
-
-import type {
-  XcalidrawElement,
-  XcalidrawFreeDrawElement,
-  XcalidrawGenericElement,
-  XcalidrawLinearElement,
-  XcalidrawTextElement,
-  NonDeleted,
-  InitializedXcalidrawImageElement,
-  XcalidrawImageElement,
-  FileId,
-  NonDeletedXcalidrawElement,
-  XcalidrawTextContainer,
-  XcalidrawFrameLikeElement,
-  XcalidrawMagicFrameElement,
-  XcalidrawIframeLikeElement,
-  IframeData,
-  XcalidrawIframeElement,
-  XcalidrawEmbeddableElement,
-  Ordered,
-  MagicGenerationData,
-  XcalidrawArrowElement,
-  XcalidrawElbowArrowElement,
-  SceneElementsMap,
-} from "@xcalidraw/element/types";
-import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
-import type { LocalPoint, Radians } from "@xcalidraw/math";
 
 import type { XcalidrawLibraryIds } from "../data/types";
 
@@ -1637,6 +1639,7 @@ class App extends React.Component<AppProps, AppState> {
                           generateLinkForSelection={
                             this.props.generateLinkForSelection
                           }
+                          onHomeClick={this.props.onHomeClick}
                         >
                           {this.props.children}
                         </LayerUI>

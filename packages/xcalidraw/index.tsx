@@ -56,6 +56,7 @@ const XcalidrawBase = (props: XcalidrawProps) => {
     aiEnabled,
     showDeprecatedFonts,
     renderScrollbars,
+    onHomeClick,
   } = props;
 
   const canvasActions = props.UIOptions?.canvasActions;
@@ -149,6 +150,7 @@ const XcalidrawBase = (props: XcalidrawProps) => {
           aiEnabled={aiEnabled !== false}
           showDeprecatedFonts={showDeprecatedFonts}
           renderScrollbars={renderScrollbars}
+          onHomeClick={onHomeClick}
         >
           {children}
         </App>

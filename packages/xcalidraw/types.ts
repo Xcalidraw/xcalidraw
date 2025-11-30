@@ -630,6 +630,7 @@ export interface XcalidrawProps {
   aiEnabled?: boolean;
   showDeprecatedFonts?: boolean;
   renderScrollbars?: boolean;
+  onHomeClick?: () => void;
 }
 
 export type SceneData = {

@@ -12,7 +12,7 @@ import { StoreIncrement } from "@xcalidraw/element";
 
 import type { DurableIncrement, EphemeralIncrement } from "@xcalidraw/element";
 
-import XcalidrawApp from "../App";
+import XcalidrawApp from "../pages/Board/BoardPage";
 
 const { h } = window;
 

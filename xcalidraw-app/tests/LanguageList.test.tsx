@@ -7,7 +7,7 @@ import {
   render,
 } from "@xcalidraw/xcalidraw/tests/test-utils";
 
-import XcalidrawApp from "../App";
+import XcalidrawApp from "../pages/Board/BoardPage";
 
 describe("Test LanguageList", () => {
   it("rerenders UI on language change", async () => {

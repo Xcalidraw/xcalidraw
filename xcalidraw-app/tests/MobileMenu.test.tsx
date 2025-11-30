@@ -5,7 +5,7 @@ import {
   restoreOriginalGetBoundingClientRect,
 } from "@xcalidraw/xcalidraw/tests/test-utils";
 
-import XcalidrawApp from "../App";
+import XcalidrawApp from "../pages/Board/BoardPage";
 
 describe("Test MobileMenu", () => {
   const { h } = window;
