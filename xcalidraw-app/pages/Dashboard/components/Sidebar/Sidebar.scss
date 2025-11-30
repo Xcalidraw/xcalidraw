@@ -1,0 +1,368 @@
+.dashboard-sidebar {
+  /* Dimensions & Layout */
+  width: 256px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  /* Theme Integration - Using your variables */
+  background-color: var(--island-bg-color); /* Maps to #ffffff */
+  border-right: 1px solid var(--color-border-outline-variant);
+  color: var(--color-on-surface);
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  user-select: none;
+  padding: 16px;
+  gap: 16px;
+
+  /* Typography Reset */
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  /* ------------------------------------------- */
+  /* 1. Workspace Header                         */
+  /* ------------------------------------------- */
+  .sidebar-header {
+    .workspace-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--border-radius-md);
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: var(--color-surface-high);
+      }
+
+      .workspace-avatar {
+        width: 32px;
+        height: 32px;
+        background-color: var(--color-primary); /* Teal */
+        color: var(--color-white, #fff);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .workspace-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+
+        .name {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--color-on-surface);
+          line-height: 1.4;
+        }
+
+        .role {
+          font-size: 12px;
+          color: var(--color-gray-60);
+          line-height: 1.4;
+        }
+      }
+
+      .workspace-options {
+        opacity: 0;
+        color: var(--color-gray-50);
+        transition: opacity 0.2s;
+      }
+
+      &:hover .workspace-options {
+        opacity: 1;
+      }
+    }
+  }
+
+  /* ------------------------------------------- */
+  /* 2. Search Bar                               */
+  /* ------------------------------------------- */
+  .sidebar-search-container {
+    .search-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--border-radius-md);
+      background-color: var(--color-surface-high); /* Light Grey */
+      border: 1px solid transparent;
+      gap: 10px;
+      color: var(--color-gray-60);
+      transition: all 0.2s ease;
+
+      .search-icon {
+        width: 16px;
+        height: 16px;
+        color: var(--color-gray-50);
+      }
+
+      .placeholder {
+        flex: 1;
+        font-size: 14px;
+      }
+
+      .shortcut {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 10px;
+        padding: 2px 4px;
+        background-color: var(--island-bg-color);
+        border-radius: 3px;
+        color: var(--color-gray-50);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      &:hover {
+        background-color: var(--color-gray-20);
+        color: var(--color-on-surface);
+      }
+
+      /* Optional: mimic focus ring using your teal var */
+      &:active {
+        border-color: var(--color-primary);
+      }
+    }
+  }
+
+  /* ------------------------------------------- */
+  /* 3. Navigation Items                         */
+  /* ------------------------------------------- */
+  .sidebar-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+
+    /* Hide Scrollbar */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+
+  .nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--border-radius-md);
+    color: var(--color-gray-70);
+    transition: all 0.1s ease-in-out;
+    font-size: 14px;
+    font-weight: 500;
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-badge {
+      font-size: 10px;
+      background-color: var(--color-gray-20);
+      padding: 1px 6px;
+      border-radius: 8px;
+      color: var(--color-gray-80);
+    }
+
+    &:hover {
+      background-color: var(--color-surface-high);
+      color: var(--color-on-surface);
+    }
+
+    /* ACTIVE STATE - Using your Teal Theme */
+    &.active {
+      background-color: var(--color-primary-light); /* e.g. #e6fcf5 */
+      color: var(--color-primary-darker); /* Darker Teal Text */
+      font-weight: 600;
+
+      .nav-icon {
+        color: var(--color-primary); /* Teal Icon */
+      }
+
+      .nav-badge {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: var(--color-primary-darker);
+      }
+    }
+  }
+
+  /* ------------------------------------------- */
+  /* 4. Spaces Groups                            */
+  /* ------------------------------------------- */
+  .spaces-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .spaces-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 4px 4px;
+
+      .spaces-section-title {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--color-gray-60);
+        letter-spacing: 0.5px;
+      }
+
+      .spaces-add-btn {
+        color: var(--color-gray-50);
+        padding: 4px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+        opacity: 0.7;
+
+        &:hover {
+          color: var(--color-primary);
+          background: var(--color-surface-high);
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .sidebar-group {
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 10px 4px;
+
+      .header-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--color-gray-60);
+        letter-spacing: 0.03em;
+
+        .arrow {
+          transition: transform 0.2s;
+          &.expanded {
+            transform: rotate(90deg);
+          }
+        }
+
+        &:hover {
+          color: var(--color-on-surface);
+        }
+      }
+
+      .header-action {
+        color: var(--color-gray-50);
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        &:hover {
+          color: var(--color-primary);
+        }
+      }
+
+      &:hover .header-action {
+        opacity: 1;
+      }
+    }
+
+    .group-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+
+  .space-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--border-radius-md);
+    color: var(--color-gray-70);
+    font-size: 14px;
+    transition: background-color 0.1s;
+
+    .space-indicator {
+      flex-shrink: 0;
+
+      &.dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--color-gray-40);
+      }
+
+      &.hash {
+        color: var(--color-gray-40);
+      }
+    }
+
+    .space-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .archived-pill {
+      margin-left: auto;
+      font-size: 9px;
+      background: var(--color-gray-20);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    &:hover {
+      background-color: var(--color-surface-high);
+      color: var(--color-on-surface);
+
+      .space-indicator.dot {
+        background-color: var(--color-gray-60);
+      }
+      .space-indicator.hash {
+        color: var(--color-gray-60);
+      }
+    }
+  }
+
+  /* ------------------------------------------- */
+  /* 5. Footer                                   */
+  /* ------------------------------------------- */
+  .sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid var(--color-surface-high);
+  }
+}

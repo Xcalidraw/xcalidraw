@@ -1,0 +1,86 @@
+@import "../../../../../packages/xcalidraw/css/theme.scss";
+
+.dashboard-templates {
+  padding: 24px 32px;
+  
+  .templates-scroll-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 12px; // Space for scrollbar if any
+    
+    /* Hide scrollbar for cleaner look, or style it */
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-gray-30);
+      border-radius: 3px;
+    }
+  }
+
+  .template-card {
+    flex: 0 0 180px; // Fixed width cards
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+
+    .card-preview {
+      height: 100px;
+      background-color: white;
+      border: 1px solid var(--color-border-outline-variant);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: box-shadow 0.2s;
+
+      &.new-board {
+        background-color: var(--color-primary); // Teal ? No, Miro uses blue/white for add
+      }
+
+      .preview-tag {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background-color: #dbe4ff; // Light blue tag
+        color: #0052cc;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 2px;
+        font-weight: 600;
+      }
+    }
+
+    &.new-board {
+      .card-preview {
+        background-color: var(--color-primary-light); // Light teal
+        border-color: transparent;
+        color: var(--color-primary);
+      }
+    }
+
+    .card-info {
+      .template-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--color-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+      }
+    }
+
+    &:hover .card-preview {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-color: var(--color-primary);
+    }
+  }
+}
+
