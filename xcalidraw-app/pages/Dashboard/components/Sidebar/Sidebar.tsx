@@ -7,7 +7,6 @@ import {
   Search,
   Plus,
   ChevronRight,
-  Settings,
   MoreHorizontal,
   Command,
   Hash, // Used for spaces
@@ -154,11 +153,6 @@ export const Sidebar = () => {
           </SpaceGroup>
         </div>
       </div>
-
-      {/* 5. Footer */}
-      <footer className="sidebar-footer">
-        <NavItem icon={Settings} label="Settings" />
-      </footer>
     </aside>
   );
 };
