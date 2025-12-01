@@ -1,18 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import {
-  Grid,
-  List,
-  MoreHorizontal,
-  Star,
-  ChevronDown,
-  FileIcon,
-} from "lucide-react";
+import { Grid, List, MoreHorizontal, Star, FileIcon } from "lucide-react";
 import clsx from "clsx";
+import { useState } from "react";
 
 import { filteredBoardsAtom, viewModeAtom } from "../../store";
 import { Button } from "../../../../components/ui/button";
+import { Select } from "../../../../components/ui/select";
 
 import "./BoardsTable.scss";
 
@@ -21,6 +16,10 @@ export const BoardsTable = () => {
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const navigate = useNavigate();
 
+  const [filterBy, setFilterBy] = useState("all");
+  const [ownedBy, setOwnedBy] = useState("anyone");
+  const [sortBy, setSortBy] = useState("last-opened");
+
   const handleNewBoard = () => {
     // Generate a unique ID for the new board
     const boardId = `board-${Date.now()}-${Math.random()
@@ -28,6 +27,26 @@ export const BoardsTable = () => {
       .substr(2, 9)}`;
     navigate(`/board/${boardId}`);
   };
+
+  const filterOptions = [
+    { value: "all", label: "All boards" },
+    { value: "recent", label: "Recent" },
+    { value: "starred", label: "Starred" },
+    { value: "archived", label: "Archived" },
+  ];
+
+  const ownedByOptions = [
+    { value: "anyone", label: "Owned by anyone" },
+    { value: "me", label: "Owned by me" },
+    { value: "others", label: "Owned by others" },
+  ];
+
+  const sortOptions = [
+    { value: "last-opened", label: "Last opened" },
+    { value: "name", label: "Name" },
+    { value: "modified", label: "Last modified" },
+    { value: "created", label: "Date created" },
+  ];
 
   return (
     <div className="boards-table-section">
@@ -49,25 +68,24 @@ export const BoardsTable = () => {
         <div className="filters-left">
           <div className="filter-group">
             <span className="filter-label">Filter by</span>
-            <div className="filter-select">
-              <span>All boards</span>
-              <ChevronDown size={14} />
-            </div>
+            <Select
+              options={filterOptions}
+              value={filterBy}
+              onChange={setFilterBy}
+            />
           </div>
 
           <div className="filter-group">
-            <div className="filter-select">
-              <span>Owned by anyone</span>
-              <ChevronDown size={14} />
-            </div>
+            <Select
+              options={ownedByOptions}
+              value={ownedBy}
+              onChange={setOwnedBy}
+            />
           </div>
 
           <div className="filter-group">
             <span className="filter-label">Sort by</span>
-            <div className="filter-select">
-              <span>Last opened</span>
-              <ChevronDown size={14} />
-            </div>
+            <Select options={sortOptions} value={sortBy} onChange={setSortBy} />
           </div>
         </div>
 
