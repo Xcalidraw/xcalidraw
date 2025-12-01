@@ -1,15 +1,25 @@
-import { Provider } from "../../app-jotai";
+import { Provider, useAtom } from "../../app-jotai";
 
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Header } from "./components/Header/Header";
 import { Templates } from "./components/Templates/Templates";
 import { BoardsTable } from "./components/BoardsTable/BoardsTable";
+import { sidebarOpenAtom } from "./store";
 
 import "./DashboardPage.scss";
 
-export const DashboardPage = () => {
+const DashboardContent = () => {
+  const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
+
   return (
-    <Provider>
+    <>
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <div className="xcalidraw dashboard-layout">
         <Sidebar />
         <div className="dashboard-main">
@@ -20,6 +30,14 @@ export const DashboardPage = () => {
           </div>
         </div>
       </div>
+    </>
+  );
+};
+
+export const DashboardPage = () => {
+  return (
+    <Provider>
+      <DashboardContent />
     </Provider>
   );
 };

@@ -20,6 +20,7 @@ import {
   spacesAtom,
   yourSpacesExpandedAtom,
   spacesExpandedAtom,
+  sidebarOpenAtom,
 } from "../../store";
 import { Input } from "../../../../components/ui/input";
 import {
@@ -47,6 +48,7 @@ export const Sidebar = () => {
     yourSpacesExpandedAtom,
   );
   const [spacesExpanded, setSpacesExpanded] = useAtom(spacesExpandedAtom);
+  const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
   const [searchValue, setSearchValue] = useState("");
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -117,7 +119,7 @@ export const Sidebar = () => {
   );
 
   return (
-    <aside className="dashboard-sidebar">
+    <aside className={clsx("dashboard-sidebar", { open: sidebarOpen })}>
       {/* 1. Workspace Header */}
       <header className="sidebar-header">
         <button className="workspace-btn">

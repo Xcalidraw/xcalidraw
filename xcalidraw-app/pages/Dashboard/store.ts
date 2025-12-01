@@ -42,6 +42,7 @@ export const viewModeAtom = atom<"grid" | "list">("list");
 export const yourSpacesExpandedAtom = atom<boolean>(true);
 export const spacesExpandedAtom = atom<boolean>(true);
 export const createWorkspaceModalOpenAtom = atom<boolean>(false);
+export const sidebarOpenAtom = atom<boolean>(false);
 
 export const yourSpacesAtom = atom<Space[]>([
   { id: "1", name: "TPS TRSTD Login" },

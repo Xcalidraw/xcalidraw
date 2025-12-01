@@ -8,6 +8,11 @@
   width: auto;
   min-width: 120px;
 
+  @media (max-width: 480px) {
+    min-width: 0;
+    flex: 1;
+  }
+
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -34,6 +39,12 @@
     text-align: left;
     line-height: 1.5;
     transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    @media (max-width: 480px) {
+      height: 36px;
+      font-size: 14px;
+      padding: 0 32px 0 12px;
+    }
 
     &:focus {
       outline: none;
@@ -74,6 +85,10 @@
     color: var(--color-gray-60);
     flex-shrink: 0;
 
+    @media (max-width: 480px) {
+      right: 12px;
+    }
+
     &.open {
       transform: translateY(-50%) rotate(180deg);
     }
@@ -94,7 +109,7 @@
     position: absolute !important;
     top: 100% !important;
     left: 0 !important;
-    margin-top: 0 !important;
+    margin-top: 5px !important;
     max-width: 16rem;
     min-width: 100%;
     z-index: 1000;

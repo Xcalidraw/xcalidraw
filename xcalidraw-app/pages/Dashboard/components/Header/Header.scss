@@ -18,6 +18,11 @@
   background-color: white;
   border-bottom: 1px solid var(--color-border-outline-variant);
 
+  @media (max-width: 768px) {
+    padding: 0 16px;
+    height: 56px;
+  }
+
   .header-content {
     width: 100%;
     display: flex;
@@ -28,6 +33,29 @@
   .header-left {
     display: flex;
     align-items: center;
+    gap: 12px;
+
+    .mobile-menu-btn {
+      display: none;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--color-on-surface);
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 0;
+
+      @media (max-width: 768px) {
+        display: flex;
+      }
+
+      &:hover {
+        background-color: var(--color-surface-high);
+      }
+    }
   }
 
   .xcalidraw-logo {
@@ -38,6 +66,10 @@
     user-select: none;
     white-space: nowrap;
     letter-spacing: -0.5px;
+
+    @media (max-width: 768px) {
+      font-size: 22px;
+    }
 
     &::first-letter {
       font-size: 1.2em;
@@ -50,6 +82,24 @@
     align-items: center;
     gap: 16px;
 
+    @media (max-width: 768px) {
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      gap: 4px;
+
+      .header-icon-btn:not(:last-child) {
+        display: none;
+      }
+
+      .button {
+        span {
+          display: none;
+        }
+      }
+    }
+
     .header-icon-btn {
       width: 32px;
       height: 32px;
@@ -61,6 +111,11 @@
       color: var(--color-on-surface);
       cursor: pointer;
       border-radius: 50%;
+
+      @media (max-width: 768px) {
+        width: 28px;
+        height: 28px;
+      }
 
       &:hover {
         background-color: var(--color-surface-high);
@@ -75,6 +130,11 @@
       cursor: pointer;
       border: 2px solid white;
       box-shadow: 0 0 0 1px var(--color-gray-20);
+
+      @media (max-width: 768px) {
+        width: 28px;
+        height: 28px;
+      }
 
       img {
         width: 100%;

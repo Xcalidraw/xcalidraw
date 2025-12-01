@@ -11,6 +11,18 @@
   border-bottom: 1px solid var(--color-border-outline-variant);
   overscroll-behavior-x: contain;
 
+  @media (max-width: 768px) {
+    padding-top: 20px;
+    padding-bottom: 16px;
+    gap: 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding-top: 16px;
+    padding-bottom: 12px;
+    gap: 12px;
+  }
+
   /* ---------------------------------- */
   /* Header                             */
   /* ---------------------------------- */
@@ -19,6 +31,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 30px;
+
+    @media (max-width: 768px) {
+      padding: 0 16px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0 12px;
+    }
 
     .header-title {
       display: flex;
@@ -77,6 +97,18 @@
     -webkit-overflow-scrolling: touch;
     will-change: scroll-position;
     scroll-padding: 0 30px;
+
+    @media (max-width: 768px) {
+      padding: 8px 16px 16px 16px;
+      scroll-padding: 0 16px;
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 8px 12px 16px 12px;
+      scroll-padding: 0 12px;
+      gap: 8px;
+    }
 
     /* Scrollbar styling */
     &::-webkit-scrollbar {

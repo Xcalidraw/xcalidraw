@@ -6,6 +6,10 @@
   background: var(--default-bg-color);
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .dashboard-main {
@@ -19,6 +23,30 @@
 .dashboard-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: visible;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-overlay {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

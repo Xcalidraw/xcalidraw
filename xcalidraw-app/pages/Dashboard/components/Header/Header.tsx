@@ -1,15 +1,26 @@
 import React from "react";
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search, User, Menu } from "lucide-react";
+import { useAtom } from "jotai";
 
 import { Button } from "../../../../components/ui/button";
+import { sidebarOpenAtom } from "../../store";
 
 import "./Header.scss";
 
 export const Header = () => {
+  const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
+
   return (
     <div className="dashboard-header">
       <div className="header-content">
         <div className="header-left">
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Toggle sidebar"
+          >
+            <Menu size={20} />
+          </button>
           <span className="xcalidraw-logo">Xcalidraw</span>
         </div>
 
