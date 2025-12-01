@@ -15,14 +15,13 @@ interface DialogContentProps {
 }
 
 const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
-  if (!open) return null;
+  if (!open) {
+    return null;
+  }
 
   return (
     <div className="dialog-overlay" onClick={() => onOpenChange(false)}>
-      <div
-        className="dialog-content"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>
@@ -32,7 +31,11 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={clsx("dialog-content-wrapper", className)} {...props}>
+      <div
+        ref={ref}
+        className={clsx("dialog-content-wrapper", className)}
+        {...props}
+      >
         {children}
       </div>
     );
@@ -67,10 +70,7 @@ const DialogDescription = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  return (
-    <p className={clsx("dialog-description", className)}>{children}</p>
-  );
+  return <p className={clsx("dialog-description", className)}>{children}</p>;
 };
 
 export { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription };
-

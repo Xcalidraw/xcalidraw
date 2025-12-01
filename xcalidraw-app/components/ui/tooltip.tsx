@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-
-import { cn } from "../../lib/utils";
+import clsx from "clsx";
 
 import "./tooltip.scss";
 
@@ -18,7 +17,7 @@ const TooltipContent = React.forwardRef<
   <TooltipPrimitive.Content
     ref={ref}
     sideOffset={sideOffset}
-    className={cn("tooltip-content", className)}
+    className={clsx("tooltip-content", className)}
     {...props}
   />
 ));
