@@ -14,17 +14,22 @@ interface DialogContentProps {
   className?: string;
 }
 
+import { createPortal } from "react-dom";
+
 const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
   if (!open) {
     return null;
   }
 
-  return (
-    <div className="dialog-overlay" onClick={() => onOpenChange(false)}>
-      <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
-        {children}
+  return createPortal(
+    <div className="xcalidraw">
+      <div className="dialog-overlay" onClick={() => onOpenChange(false)}>
+        <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
+          {children}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

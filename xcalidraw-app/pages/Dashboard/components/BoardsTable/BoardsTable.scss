@@ -203,8 +203,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: var(--color-gray-30) transparent;
+    scrollbar-color: var(--color-gray-30) transparent;
     position: relative;
-    touch-action: pan-x;
     overscroll-behavior-x: contain;
     flex-shrink: 0;
 
@@ -227,7 +227,6 @@
       margin-right: -12px;
       padding-left: 12px;
       padding-right: 12px;
-      touch-action: pan-x pinch-zoom;
       -webkit-overflow-scrolling: touch;
       overflow-x: auto;
       overflow-y: auto;
