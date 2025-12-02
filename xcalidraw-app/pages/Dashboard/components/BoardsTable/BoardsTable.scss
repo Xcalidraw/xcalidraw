@@ -270,24 +270,22 @@
 
       th {
         text-align: left;
-        font-weight: 400;
-        font-size: 14px;
-        color: var(--color-on-surface);
-        padding: 16px;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-gray-60);
+        padding: 12px 16px;
         background-color: transparent;
-        border-bottom: 1px solid var(--color-surface-high);
-        text-transform: none;
-        letter-spacing: normal;
+        border-bottom: 1px solid var(--color-gray-20);
         vertical-align: middle;
 
         @media (max-width: 1024px) {
           padding: 12px 10px;
-          font-size: 13px;
         }
 
         @media (max-width: 768px) {
           padding: 12px 8px;
-          font-size: 13px;
         }
 
         &.col-name {
@@ -338,10 +336,10 @@
       td {
         padding: 16px;
         vertical-align: middle;
-        border-bottom: 1px solid var(--color-surface-high);
+        border-bottom: 1px solid var(--color-gray-10);
         font-size: 14px;
         color: var(--color-on-surface);
-        transition: background-color 0.15s ease;
+        transition: background-color 0.2s ease;
 
         @media (max-width: 1024px) {
           padding: 12px 10px;
@@ -408,10 +406,10 @@
 
       tbody tr {
         cursor: pointer;
-        transition: background-color 0.15s ease;
+        transition: all 0.2s ease;
 
         &:hover td {
-          background-color: var(--color-surface-high);
+          background-color: var(--color-gray-10);
         }
 
         &:last-child td {
@@ -434,22 +432,26 @@
           justify-content: center;
           color: white;
           flex-shrink: 0;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
           &.icon-orange {
-            background-color: #ffa500;
+            background-color: #fff7e6;
+            color: #ffa500;
           }
           &.icon-blue {
-            background-color: var(--color-primary);
+            background-color: #e6f7ff;
+            color: var(--color-primary);
           }
           &.icon-pink {
-            background-color: #ff69b4;
+            background-color: #fff0f6;
+            color: #ff69b4;
           }
           &.icon-purple {
-            background-color: #800080;
+            background-color: #f9f0ff;
+            color: #800080;
           }
           &.icon-green {
-            background-color: #28a745;
+            background-color: #f6ffed;
+            color: #28a745;
           }
         }
 
@@ -567,87 +569,102 @@
 
     .board-card {
       background-color: white;
-      border: 1px solid var(--color-border-outline-variant);
-      border-radius: 8px;
+      border: 1px solid var(--color-gray-20);
+      border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.1s;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
+      position: relative;
 
       &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04);
       }
 
       .board-preview {
-        height: 140px;
-        background-color: var(--color-surface-high);
-        border-bottom: 1px solid var(--color-border-outline-variant);
+        height: 160px;
+        background: linear-gradient(180deg, var(--color-gray-10) 0%, white 100%);
+        border-bottom: 1px solid var(--color-gray-10);
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        overflow: hidden;
+
+        // Add a subtle pattern or decoration
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: radial-gradient(var(--color-gray-20) 1px, transparent 1px);
+          background-size: 20px 20px;
+          opacity: 0.3;
+        }
 
         .preview-placeholder {
           width: 64px;
           height: 64px;
-          border-radius: 8px;
+          border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-          opacity: 0.8;
+          opacity: 1;
+          z-index: 1;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
 
           &.bg-orange {
-            background-color: #ffa500;
+            background: linear-gradient(135deg, #ffd591 0%, #ffa940 100%);
+            color: #873800;
           }
           &.bg-blue {
-            background-color: var(--color-primary);
-          } // Fixed blue to teal
+            background: linear-gradient(135deg, #91caff 0%, #40a9ff 100%);
+            color: #003a8c;
+          }
           &.bg-pink {
-            background-color: #ff69b4;
+            background: linear-gradient(135deg, #ffadd2 0%, #ff85c0 100%);
+            color: #780650;
           }
           &.bg-purple {
-            background-color: #800080;
+            background: linear-gradient(135deg, #d3adf7 0%, #b37feb 100%);
+            color: #391085;
           }
           &.bg-green {
-            background-color: #28a745;
+            background: linear-gradient(135deg, #b7eb8f 0%, #73d13d 100%);
+            color: #135200;
           }
         }
       }
 
       .board-footer {
-        padding: 12px;
+        padding: 16px;
         display: flex;
         align-items: flex-start;
         gap: 12px;
         position: relative;
+        background-color: white;
 
         .board-icon {
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
           flex-shrink: 0;
+          font-size: 14px;
 
-          &.icon-orange {
-            background-color: #ffa500;
-          }
-          &.icon-blue {
-            background-color: var(--color-primary);
-          }
-          &.icon-pink {
-            background-color: #ff69b4;
-          }
-          &.icon-purple {
-            background-color: #800080;
-          }
-          &.icon-green {
-            background-color: #28a745;
-          }
+          // Use the same refined styles as the list view
+          &.icon-orange { background-color: #fff7e6; color: #ffa500; }
+          &.icon-blue { background-color: #e6f7ff; color: var(--color-primary); }
+          &.icon-pink { background-color: #fff0f6; color: #ff69b4; }
+          &.icon-purple { background-color: #f9f0ff; color: #800080; }
+          &.icon-green { background-color: #f6ffed; color: #28a745; }
         }
 
         .board-info {
@@ -656,44 +673,55 @@
           gap: 4px;
           flex: 1;
           overflow: hidden;
+          padding-top: 2px;
 
           .board-name {
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 600;
             color: var(--color-on-surface);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.2;
           }
 
           .board-meta {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 12px;
+            gap: 6px;
+            font-size: 13px;
             color: var(--color-gray-60);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
 
             .board-space-dot {
-              color: var(--color-gray-50);
+              color: var(--color-gray-40);
             }
           }
         }
 
         .card-actions {
           display: flex;
-          gap: 8px;
+          gap: 4px;
           opacity: 0;
           transition: opacity 0.2s;
+          position: absolute;
+          top: 16px;
+          right: 12px;
+          background: white;
+          padding-left: 8px;
 
           .star-icon,
           .more-icon {
             cursor: pointer;
-            color: var(--color-gray-60);
+            color: var(--color-gray-50);
+            padding: 4px;
+            border-radius: 4px;
+            
             &:hover {
               color: var(--color-on-surface);
+              background-color: var(--color-gray-10);
             }
           }
 

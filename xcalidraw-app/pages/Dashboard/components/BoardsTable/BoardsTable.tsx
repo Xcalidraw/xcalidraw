@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { Grid, List, MoreHorizontal, Star, FileIcon } from "lucide-react";
+import { Grid, List, MoreHorizontal, Star, Layout } from "lucide-react";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -128,7 +128,7 @@ export const BoardsTable = () => {
                   <td className="col-name">
                     <div className="board-name-wrapper">
                       <div className={`board-icon icon-${board.icon}`}>
-                        <FileIcon size={16} />
+                        <Layout size={16} />
                       </div>
                       <div className="board-details">
                         <span className="name-text">{board.name}</span>
@@ -182,12 +182,12 @@ export const BoardsTable = () => {
               <div className="board-preview">
                 {/* Visual placeholder matching the icon color/theme */}
                 <div className={`preview-placeholder bg-${board.icon}`}>
-                  <FileIcon size={32} />
+                  <Layout size={32} />
                 </div>
               </div>
               <div className="board-footer">
                 <div className={`board-icon icon-${board.icon}`}>
-                  <FileIcon size={16} />
+                  <Layout size={16} />
                 </div>
                 <div className="board-info">
                   <span className="board-name">{board.name}</span>
@@ -217,6 +217,7 @@ export const BoardsTable = () => {
           ))}
         </div>
       )}
+      <div style={{ height: "50px", flexShrink: 0 }} />
     </div>
   );
 };
