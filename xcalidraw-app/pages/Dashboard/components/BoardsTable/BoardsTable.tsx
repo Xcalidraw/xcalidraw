@@ -132,8 +132,11 @@ export const BoardsTable = () => {
                       </div>
                       <div className="board-details">
                         <span className="name-text">{board.name}</span>
-                        <span className="sub-text">
+                        <span className="sub-text desktop-only">
                           Modified by {board.modifiedBy}, {board.modifiedDate}
+                        </span>
+                        <span className="sub-text mobile-only">
+                          {board.modifiedBy} &bull; {board.space ? <>{board.space} &bull; </> : null} {board.lastOpened}
                         </span>
                       </div>
                     </div>

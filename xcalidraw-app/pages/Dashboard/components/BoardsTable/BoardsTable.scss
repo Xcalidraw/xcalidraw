@@ -260,24 +260,12 @@
 
     .boards-table {
       border-collapse: collapse;
-      min-width: 800px;
-      table-layout: auto;
-      display: table;
-      width: max-content;
+      width: 100%;
+      table-layout: fixed;
+      min-width: 1100px;
 
       @media (max-width: 1024px) {
-        min-width: 700px;
-      }
-
-      @media (max-width: 768px) {
-        min-width: 500px;
-      }
-
-      @media (max-width: 480px) {
-        min-width: 450px;
-        display: table;
-        width: auto;
-        table-layout: auto;
+        min-width: 0;
       }
 
       th {
@@ -302,17 +290,47 @@
           font-size: 13px;
         }
 
+        &.col-name {
+          width: auto;
+        }
+
         &.col-users {
+          width: 100px;
+
           @media (max-width: 1024px) {
             display: none;
           }
         }
 
-        &.col-space,
-        &.col-date,
-        &.col-owner {
+        &.col-space {
+          width: 140px;
+
           @media (max-width: 1024px) {
             display: none;
+          }
+        }
+
+        &.col-date {
+          width: 160px;
+
+          @media (max-width: 1024px) {
+            display: none;
+          }
+        }
+
+        &.col-owner {
+          width: 160px;
+
+          @media (max-width: 1024px) {
+            display: none;
+          }
+        }
+
+        &.col-actions {
+          width: 60px;
+
+          @media (max-width: 1024px) {
+            width: 50px;
           }
         }
       }
@@ -336,24 +354,17 @@
         }
 
         &.col-name {
-          width: 40%;
+          width: auto;
+          min-width: 300px;
 
           @media (max-width: 1024px) {
-            width: 50%;
-          }
-
-          @media (max-width: 768px) {
-            width: 50%;
-          }
-
-          @media (max-width: 480px) {
             width: auto;
-            min-width: 200px;
+            min-width: 0;
           }
         }
 
         &.col-users {
-          width: 12%;
+          width: 100px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -361,7 +372,7 @@
         }
 
         &.col-space {
-          width: 15%;
+          width: 140px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -369,7 +380,7 @@
         }
 
         &.col-date {
-          width: 15%;
+          width: 160px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -377,7 +388,7 @@
         }
 
         &.col-owner {
-          width: 15%;
+          width: 160px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -385,20 +396,12 @@
         }
 
         &.col-actions {
-          width: 8%;
+          width: 60px;
           text-align: right;
+          padding-right: 8px;
 
           @media (max-width: 1024px) {
-            width: 50%;
-          }
-
-          @media (max-width: 768px) {
-            width: 30%;
-          }
-
-          @media (max-width: 480px) {
-            width: 120px;
-            min-width: 120px;
+            width: 50px;
           }
         }
       }
@@ -420,6 +423,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        width: 100%;
 
         .board-icon {
           width: 40px;
@@ -470,6 +474,20 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            &.desktop-only {
+              display: block;
+              @media (max-width: 1024px) {
+                display: none;
+              }
+            }
+
+            &.mobile-only {
+              display: none;
+              @media (max-width: 1024px) {
+                display: block;
+              }
+            }
           }
         }
       }
