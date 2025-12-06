@@ -1,0 +1,112 @@
+.user-dropdown-container {
+  position: relative;
+  
+  .user-avatar {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: ring 0.2s;
+
+    &:hover {
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: var(--island-bg-color);
+    border: 1px solid var(--default-border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 4px;
+    z-index: 50;
+    animation: slideIn 0.2s ease-out;
+
+    .dropdown-header {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .user-name {
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--color-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .user-email {
+        font-size: 12px;
+        color: var(--color-muted-darker);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--default-border-color);
+      margin: 4px 0;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 14px;
+      color: var(--color-on-surface);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: var(--color-surface-high);
+        color: var(--color-on-surface);
+      }
+
+      &.text-red {
+        color: #ef4444;
+        
+        &:hover {
+          background-color: #fef2f2;
+        }
+      }
+
+      svg {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

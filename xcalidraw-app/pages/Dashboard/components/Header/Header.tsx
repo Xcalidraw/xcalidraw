@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { Button } from "../../../../components/ui/button";
 import { sidebarOpenAtom } from "../../store";
 
+import { UserDropdown } from "./UserDropdown";
 import "./Header.scss";
 
 export const Header = () => {
@@ -39,12 +40,7 @@ export const Header = () => {
             <Bell size={20} />
           </button>
 
-          <div className="user-avatar">
-            <img
-              src="https://ui-avatars.com/api/?name=Nadeem+Ahmad&background=random"
-              alt="User"
-            />
-          </div>
+          <UserDropdown />
         </div>
       </div>
     </div>
