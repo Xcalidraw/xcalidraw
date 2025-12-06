@@ -22,7 +22,7 @@ export const Header = () => {
           >
             <Menu size={20} />
           </button>
-          <span className="xcalidraw-logo">Xcalidraw</span>
+          <span className="text-red-500 font-bold">Xcalidraw</span>
         </div>
 
         {/* Right Side Actions */}

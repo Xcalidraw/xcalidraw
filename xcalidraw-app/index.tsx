@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 
 import "./sentry";
+import "./tailwind.css";
 import "./styles/shadcn-variables.css";
 
 import { AppRoutes } from "./routes";

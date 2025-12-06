@@ -29,7 +29,8 @@
       "@xcalidraw/math/*": ["./packages/math/src/*"],
       "@xcalidraw/utils": ["./packages/utils/src/index.ts"],
       "@xcalidraw/utils/*": ["./packages/utils/src/*"],
-      "xcalidraw-app/*": ["./xcalidraw-app/*"]
+      "xcalidraw-app/*": ["./xcalidraw-app/*"],
+      "@tailwindcss/vite": ["./node_modules/@tailwindcss/vite/dist/index.d.mts"]
     }
   },
   "include": ["packages", "xcalidraw-app"],
