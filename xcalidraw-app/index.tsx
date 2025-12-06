@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 
 import "./sentry";
 import "./tailwind.css";
-import "./styles/shadcn-variables.css";
+
 
 import { AppRoutes } from "./routes";
 import { amplifyConfig } from "./amplify-config";
@@ -23,11 +23,11 @@ const root = createRoot(rootElement);
 registerSW();
 root.render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppRoutes />
-        <Toaster />
-      </BrowserRouter>
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AppRoutes />
+          <Toaster />
+        </BrowserRouter>
+      </QueryClientProvider>
   </StrictMode>,
 );

@@ -1,8 +1,6 @@
-@import "../../styles/shadcn-variables.css";
-
 .ui-separator {
   flex-shrink: 0;
-  background-color: hsl(var(--border)); /* bg-border */
+  background-color: var(--color-border-outline); /* bg-border */
 
   &.horizontal {
     height: 1px;
