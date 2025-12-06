@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { LogOut, User, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import clsx from "clsx";
 import { useLogout, useGetUser } from "../../../../hooks/auth.hooks";
 import "./UserDropdown.scss";
 
@@ -39,11 +40,14 @@ export const UserDropdown = () => {
 
   const displayName = user?.name || user?.email || "User";
   const displayEmail = user?.email || "";
-  const avatarUrl = user?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
+  const avatarUrl = user?.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=087f5b&color=fff`;
 
   return (
     <div className="user-dropdown-container" ref={dropdownRef}>
-      <div className="user-avatar" onClick={toggleDropdown}>
+      <div 
+        className={clsx("user-avatar", { active: isOpen })} 
+        onClick={toggleDropdown}
+      >
         <img
           src={avatarUrl}
           alt="User"

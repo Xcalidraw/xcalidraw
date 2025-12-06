@@ -27,7 +27,7 @@ const ProtectedLayout = () => {
   if (isAuthenticated === null) {
     return (
       <div style={{ display: 'flex', height: '100vh', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-        <IconLoader2 className="animate-spin" style={{ color: 'var(--muted-foreground)' }} size={32} />
+        <IconLoader2 className="animate-spin" style={{ color: 'var(--color-gray-60)' }} size={32} />
       </div>
     );
   }
