@@ -6,7 +6,7 @@ import "./button.scss";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline" | "ghost" | "secondary" | "destructive";
+  variant?: "default" | "outline" | "ghost" | "secondary" | "destructive" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   asChild?: boolean;
 }

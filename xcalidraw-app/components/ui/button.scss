@@ -90,6 +90,19 @@
     }
   }
 
+  &.variant-link {
+    background-color: transparent;
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: 0;
+    height: auto;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+
   &.size-sm {
     height: 32px;
     padding: 4px 12px;

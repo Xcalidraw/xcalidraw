@@ -1,0 +1,124 @@
+@import "../../styles/shadcn-variables.css";
+
+.auth-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* h-screen in original, but inside layout it should be 100% */
+  width: 100%;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 28rem; /* max-w-md */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* space-y-6 */
+
+  .header {
+    text-align: center;
+
+    h1 {
+      font-size: 1.875rem; /* text-3xl */
+      line-height: 2.25rem;
+      font-weight: 700; /* font-bold */
+      letter-spacing: -0.025em; /* tracking-tight */
+    }
+
+    p {
+      margin-top: 0.5rem; /* mt-2 */
+      color: hsl(var(--muted-foreground));
+    }
+  }
+
+  .social-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem; /* gap-3 */
+
+    @media (min-width: 640px) { /* sm */
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .full-width {
+      grid-column: span 1;
+      @media (min-width: 640px) {
+        grid-column: span 2;
+      }
+    }
+  }
+
+  .separator-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    
+    .ui-separator {
+      flex: 1;
+      width: auto; /* Override 100% width from component style */
+    }
+
+    span {
+      padding: 0 1rem; /* px-4 */
+      font-size: 0.75rem; /* text-xs */
+      text-transform: uppercase;
+      color: hsl(var(--muted-foreground));
+    }
+  }
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+
+    .form-group {
+      display: grid;
+      gap: 0.5rem; /* gap-2 */
+
+      .label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .footer-text {
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Custom Input Styles override */
+  .custom-input-lg {
+    height: 3.5rem; /* h-14 */
+    padding: 0 1rem; /* px-4 */
+    font-size: 1.125rem !important; /* !text-lg */
+  }
+
+  .custom-input-xl {
+    height: 3.5rem; /* h-14 */
+    padding: 0 1rem; /* px-4 */
+    font-size: 1.5rem !important; /* !text-2xl */
+  }
+
+  .custom-input-code {
+    height: 3.5rem; /* h-14 */
+    padding: 0 1rem; /* px-4 */
+    font-size: 1.5rem !important; /* !text-2xl */
+    letter-spacing: 0.1em; /* tracking-widest */
+    text-align: center;
+  }
+
+  .btn-full {
+    width: 100%;
+    height: 3rem; /* h-12 */
+    font-size: 1rem; /* text-base */
+  }
+
+  .btn-link {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+  }
+}

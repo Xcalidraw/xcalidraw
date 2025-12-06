@@ -1,0 +1,16 @@
+@import "../../styles/shadcn-variables.css";
+
+.ui-separator {
+  flex-shrink: 0;
+  background-color: hsl(var(--border)); /* bg-border */
+
+  &.horizontal {
+    height: 1px;
+    width: 100%;
+  }
+
+  &.vertical {
+    height: 100%;
+    width: 1px;
+  }
+}

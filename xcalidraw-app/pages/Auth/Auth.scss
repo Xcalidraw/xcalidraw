@@ -1,0 +1,177 @@
+@import "../../styles/shadcn-variables.css";
+
+.auth-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+
+  .auth-content {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem; /* p-6 */
+
+    @media (min-width: 1024px) { /* lg */
+      width: 50%;
+      padding: 0;
+    }
+  }
+
+  .auth-panel-container {
+    display: none;
+
+    @media (min-width: 1024px) { /* lg */
+      display: flex;
+      flex: 1;
+      width: 50%;
+      height: 100%;
+    }
+  }
+}
+
+.auth-right-panel {
+  width: 100%;
+  height: 100%;
+  background-color: hsl(var(--background));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground));
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid hsl(var(--border));
+
+  /* Floating Shapes Container */
+  .shapes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .shape {
+
+    position: absolute;
+    opacity: 0.15;
+    animation: float 20s infinite ease-in-out;
+    
+    /* Circles */
+    &.shape-1 { width: 300px; height: 300px; background: hsl(var(--primary)); top: -10%; right: -10%; animation-delay: 0s; border-radius: 50%; }
+    &.shape-5 { width: 80px; height: 80px; background: hsl(var(--primary)); top: 40%; left: 45%; animation-delay: -8s; opacity: 0.1; border-radius: 50%; }
+    &.shape-8 { width: 250px; height: 250px; background: hsl(var(--muted)); bottom: -5%; right: 30%; animation-delay: -14s; opacity: 0.05; border-radius: 50%; }
+    &.shape-12 { width: 130px; height: 130px; background: hsl(var(--accent)); top: 60%; left: -5%; animation-delay: -3s; border-radius: 50%; }
+
+    /* Squares & Rectangles */
+    &.shape-2 { width: 180px; height: 180px; background: hsl(var(--secondary)); bottom: 10%; left: 5%; animation-delay: -2s; border-radius: var(--radius); transform: rotate(15deg); }
+    &.shape-7 { width: 60px; height: 60px; background: hsl(var(--accent)); bottom: 40%; left: 20%; animation-delay: -12s; border-radius: 4px; transform: rotate(45deg); }
+    &.shape-10 { width: 160px; height: 100px; background: hsl(var(--primary)); top: -5%; left: 30%; animation-delay: -18s; opacity: 0.08; border-radius: var(--radius); }
+    &.shape-13 { width: 70px; height: 70px; background: hsl(var(--destructive)); top: 25%; right: 40%; animation-delay: -5s; border-radius: 8px; transform: rotate(-10deg); }
+    &.shape-14 { width: 220px; height: 140px; background: hsl(var(--muted)); bottom: 5%; left: -10%; animation-delay: -7s; opacity: 0.05; border-radius: var(--radius); transform: rotate(-5deg); }
+
+    /* Triangles */
+    &.shape-3 { 
+      width: 140px; height: 140px; background: hsl(var(--accent)); top: 15%; left: 15%; animation-delay: -4s; 
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    &.shape-9 { 
+      width: 50px; height: 50px; background: hsl(var(--destructive)); top: 50%; right: 10%; animation-delay: -16s; 
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      transform: rotate(180deg);
+    }
+    &.shape-15 { 
+      width: 100px; height: 100px; background: hsl(var(--primary)); top: 80%; right: 45%; animation-delay: -9s; 
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      transform: rotate(30deg);
+    }
+
+    /* Arrows / Complex Shapes */
+    &.shape-4 { 
+      width: 120px; height: 120px; background: hsl(var(--destructive)); bottom: 20%; right: 15%; animation-delay: -6s; 
+      clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+      transform: rotate(-15deg);
+    }
+    &.shape-6 { 
+      width: 120px; height: 120px; background: hsl(var(--secondary)); top: 10%; right: 30%; animation-delay: -10s; 
+      clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); /* Octagon-ish */
+    }
+    &.shape-11 { 
+      width: 100px; height: 100px; background: hsl(var(--secondary)); bottom: 30%; right: 5%; animation-delay: -1s; 
+      clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%); /* Arrow pointing left */
+    }
+  }
+
+  .panel-content {
+    position: relative;
+    z-index: 1;
+    max-width: 32rem;
+    text-align: center;
+
+    h2 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to bottom right, hsl(var(--foreground)), hsl(var(--muted-foreground)));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      text-align: left;
+      margin-top: 3rem;
+
+      .feature-item {
+        background: hsl(var(--card) / 0.5);
+        backdrop-filter: blur(8px);
+        padding: 1rem;
+        border-radius: var(--radius);
+        border: 1px solid hsl(var(--border));
+        
+        h3 {
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          color: hsl(var(--foreground));
+        }
+
+        p {
+          font-size: 0.875rem;
+          margin: 0;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -50px) rotate(10deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(-5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}

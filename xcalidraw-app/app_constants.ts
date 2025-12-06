@@ -58,3 +58,9 @@ export const COOKIES = {
 export const isXcalidrawPlusSignedUser = document.cookie.includes(
   COOKIES.AUTH_STATE_COOKIE,
 );
+
+export const AMPLIFY_CONSTANTS = {
+  REGION: "us-east-1",
+  USER_POOL_ID: "us-east-1_Bl0nv5rEB",
+  USER_POOL_CLIENT_ID: "1g67koatd9mupqonp4pm0eo2aq",
+} as const;
