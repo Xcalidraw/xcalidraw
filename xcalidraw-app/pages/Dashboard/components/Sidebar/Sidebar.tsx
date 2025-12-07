@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "sonner";
 import { useCreateWorkspaceMutation, useWorkspacesQuery } from "../../../../hooks/api.hooks";
 
 import {
@@ -64,7 +65,7 @@ export const Sidebar = () => {
   useEffect(() => {
     if (workspacesData?.items) {
       setYourSpaces(workspacesData.items.map((ws: any) => ({
-        id: ws.workspace_id,
+        id: ws.space_id,  // Changed from workspace_id to space_id
         name: ws.name,
       })));
     }
@@ -77,13 +78,17 @@ export const Sidebar = () => {
     }
 
     setCreateSpaceError("");
-    createWorkspace.mutate(newSpaceName, {
+    createWorkspace.mutate({ teamId: currentTeam.id, name: newSpaceName }, {
       onSuccess: () => {
         setIsCreateSpaceDialogOpen(false);
         setNewSpaceName("");
+        toast.success("Workspace created successfully");
       },
       onError: () => {
         setCreateSpaceError("Failed to create space. Please try again.");
+        toast.error("Failed to create workspace", {
+          description: "Please try again later",
+        });
       },
     });
   };

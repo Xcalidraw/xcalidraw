@@ -6,7 +6,7 @@ export const useWorkspacesQuery = () => {
   return useQuery({
     queryKey: ['workspaces'],
     queryFn: async () => {
-      const response = await client.listWorkspaces()
+      const response = await client.listSpaces()
       
       return response.data;
     },
@@ -19,10 +19,10 @@ export const useCreateWorkspaceMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (name: string) => {
-      const response = await client.createWorkspace(null, {
+    mutationFn: async ({ teamId, name }: { teamId: string; name: string }) => {
+      const response = await client.createSpace(teamId, {
         name,
-       } as any);
+      } as any);
       return response.data;
     },
     onSuccess: () => {
