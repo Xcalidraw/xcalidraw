@@ -11,8 +11,10 @@ import {
   MoreHorizontal,
   Command,
   Hash, // Used for spaces
+  Loader2,
 } from "lucide-react";
 import clsx from "clsx";
+import { useCreateWorkspaceMutation, useWorkspacesQuery } from "../../../../hooks/api.hooks";
 
 import {
   currentTeamAtom,
@@ -42,7 +44,7 @@ import "./Sidebar.scss";
 
 export const Sidebar = () => {
   const [currentTeam] = useAtom(currentTeamAtom);
-  const [yourSpaces] = useAtom(yourSpacesAtom);
+  const [yourSpaces, setYourSpaces] = useAtom(yourSpacesAtom);
   const [spaces] = useAtom(spacesAtom);
   const [yourSpacesExpanded, setYourSpacesExpanded] = useAtom(
     yourSpacesExpandedAtom,
@@ -51,7 +53,40 @@ export const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
   const [searchValue, setSearchValue] = useState("");
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
+  const [newSpaceName, setNewSpaceName] = useState("");
+  const [createSpaceError, setCreateSpaceError] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const createWorkspace = useCreateWorkspaceMutation();
+  const { data: workspacesData, isLoading } = useWorkspacesQuery();
+
+  // Update yourSpaces when workspaces are fetched
+  useEffect(() => {
+    if (workspacesData?.items) {
+      setYourSpaces(workspacesData.items.map((ws: any) => ({
+        id: ws.workspace_id,
+        name: ws.name,
+      })));
+    }
+  }, [workspacesData, setYourSpaces]);
+
+  const handleCreateSpace = () => {
+    if (!newSpaceName.trim()) {
+      setCreateSpaceError("Space name cannot be empty");
+      return;
+    }
+
+    setCreateSpaceError("");
+    createWorkspace.mutate(newSpaceName, {
+      onSuccess: () => {
+        setIsCreateSpaceDialogOpen(false);
+        setNewSpaceName("");
+      },
+      onError: () => {
+        setCreateSpaceError("Failed to create space. Please try again.");
+      },
+    });
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -217,7 +252,7 @@ export const Sidebar = () => {
           <DialogHeader>
             <DialogTitle>Create Space</DialogTitle>
             <DialogDescription>
-              Create a new space to organize your boards.
+              Organize related boards into a single project area, so you can find, share and collaborate easily.
             </DialogDescription>
           </DialogHeader>
           <div className="dialog-body">
@@ -227,24 +262,41 @@ export const Sidebar = () => {
                 id="space-name"
                 type="text"
                 placeholder="Enter space name..."
+                value={newSpaceName}
+                onChange={(e) => {
+                  setNewSpaceName(e.target.value);
+                  if (createSpaceError) setCreateSpaceError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleCreateSpace();
+                }}
                 autoFocus
               />
+              {createSpaceError && (
+                <span className="text-red-500 text-xs mt-1">{createSpaceError}</span>
+              )}
             </div>
             <div className="dialog-actions">
               <Button
                 variant="secondary"
                 onClick={() => setIsCreateSpaceDialogOpen(false)}
+                disabled={createWorkspace.isPending}
               >
                 Cancel
               </Button>
               <Button
                 variant="default"
-                onClick={() => {
-                  // TODO: Handle space creation
-                  setIsCreateSpaceDialogOpen(false);
-                }}
+                onClick={handleCreateSpace}
+                disabled={createWorkspace.isPending}
               >
-                Create
+                {createWorkspace.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Create"
+                )}
               </Button>
             </div>
           </div>
