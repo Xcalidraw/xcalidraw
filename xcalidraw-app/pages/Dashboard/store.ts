@@ -44,9 +44,7 @@ export const spacesExpandedAtom = atom<boolean>(true);
 export const createWorkspaceModalOpenAtom = atom<boolean>(false);
 export const sidebarOpenAtom = atom<boolean>(false);
 
-export const yourSpacesAtom = atom<Space[]>([
-  { id: "1", name: "TPS TRSTD Login" },
-]);
+export const yourSpacesAtom = atom<Space[]>([]);
 
 export const spacesAtom = atom<Space[]>([
   { id: "2", name: "[archiv] Consumer Domain", isArchived: true },
