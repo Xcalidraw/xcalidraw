@@ -1,81 +1,104 @@
 import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 import clsx from "clsx";
 
 import "./dialog.scss";
 
-interface DialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children: React.ReactNode;
-}
+const Dialog = DialogPrimitive.Root;
 
-interface DialogContentProps {
-  children: React.ReactNode;
-  className?: string;
-}
+const DialogTrigger = DialogPrimitive.Trigger;
 
-import { createPortal } from "react-dom";
+const DialogPortal = DialogPrimitive.Portal;
 
-const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
-  if (!open) {
-    return null;
-  }
+const DialogClose = DialogPrimitive.Close;
 
-  return createPortal(
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={clsx("dialog-overlay", className)}
+    {...props}
+  />
+));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const DialogContent = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DialogPortal>
     <div className="xcalidraw">
-      <div className="dialog-overlay" onClick={() => onOpenChange(false)}>
-        <div className="dialog-content" onClick={(e) => e.stopPropagation()}>
-          {children}
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-};
-
-const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, className, ...props }, ref) => {
-    return (
-      <div
+      <DialogOverlay />
+      <DialogPrimitive.Content
         ref={ref}
-        className={clsx("dialog-content-wrapper", className)}
+        className={clsx("dialog-content", className)}
         {...props}
       >
-        {children}
-      </div>
-    );
-  },
-);
-DialogContent.displayName = "DialogContent";
+        <div className="dialog-content-wrapper">
+          {children}
+        </div>
+        <DialogPrimitive.Close className="dialog-close">
+          <X size={16} />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Content>
+    </div>
+  </DialogPortal>
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
-  children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return <div className={clsx("dialog-header", className)}>{children}</div>;
-};
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={clsx("dialog-header", className)} {...props} />
+);
+DialogHeader.displayName = "DialogHeader";
 
-const DialogTitle = ({
-  children,
+const DialogFooter = ({
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return <h2 className={clsx("dialog-title", className)}>{children}</h2>;
-};
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={clsx("dialog-footer", className)} {...props} />
+);
+DialogFooter.displayName = "DialogFooter";
 
-const DialogDescription = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return <p className={clsx("dialog-description", className)}>{children}</p>;
-};
+const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Title
+    ref={ref}
+    className={clsx("dialog-title", className)}
+    {...props}
+  />
+));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription };
+const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={clsx("dialog-description", className)}
+    {...props}
+  />
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+};
