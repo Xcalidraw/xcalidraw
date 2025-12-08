@@ -80,22 +80,51 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 8px;
 
       @media (max-width: 768px) {
         gap: 8px;
       }
 
+      // Invite button - reduce padding for more compact look
+      .button {
+        padding: 6px 12px;
+        height: 32px;
+        font-size: 13px;
+      }
+
       @media (max-width: 480px) {
-        gap: 4px;
+        gap: 8px;
 
         .header-icon-btn:not(:last-child) {
           display: none;
         }
 
+        // Invite members button on mobile
         .button {
+          min-width: 28px;
+          width: 28px;
+          height: 28px;
+          padding: 0;
+          border-radius: 50%;
+          background-color: var(--color-surface-high);
+          border-color: var(--color-border-outline-variant);
+          color: var(--color-gray-60);
+
+          &:hover {
+            background-color: var(--color-surface-high);
+            border-color: var(--color-gray-40);
+            color: var(--color-on-surface);
+          }
+
           span {
             display: none;
+          }
+
+          svg {
+            margin: 0;
+            width: 16px;
+            height: 16px;
           }
         }
       }
