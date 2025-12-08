@@ -413,14 +413,15 @@ export const Sidebar = () => {
                 onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
               >
                 {dummyYourSpaces.map((space) => (
-                  <div key={space.id} className="space-item-wrapper">
-                    <button 
-                      className={clsx("space-item", { active: activeSpaceId === space.id })}
-                      onClick={() => {
-                        setActiveSpaceId(space.id);
-                        setActiveNavItem(null as any);
-                      }}
-                    >
+                  <div 
+                    key={space.id} 
+                    className="space-item-wrapper"
+                    onClick={() => {
+                      setActiveSpaceId(space.id);
+                      setActiveNavItem(null as any);
+                    }}
+                  >
+                    <div className={clsx("space-item", { active: activeSpaceId === space.id })}>
                       <span className="space-indicator dot" />
                       <span className="space-name">{space.name}</span>
                       <div className="space-actions">
@@ -477,7 +478,7 @@ export const Sidebar = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                    </button>
+                    </div>
                   </div>
                 ))}
                 <div className="extra-space-item" />
@@ -489,14 +490,15 @@ export const Sidebar = () => {
                 onToggle={() => setSpacesExpanded(!spacesExpanded)}
               >
                 {spaces.map((space) => (
-                  <div key={space.id} className="space-item-wrapper">
-                    <button 
-                      className={clsx("space-item", { active: activeSpaceId === space.id })}
-                      onClick={() => {
-                        setActiveSpaceId(space.id);
-                        setActiveNavItem(null as any);
-                      }}
-                    >
+                  <div 
+                    key={space.id} 
+                    className="space-item-wrapper"
+                    onClick={() => {
+                      setActiveSpaceId(space.id);
+                      setActiveNavItem(null as any);
+                    }}
+                  >
+                    <div className={clsx("space-item", { active: activeSpaceId === space.id })}>
                       <Hash size={14} className="space-indicator hash" />
                       <span className="space-name">{space.name}</span>
                       <div className="space-actions">
@@ -553,7 +555,7 @@ export const Sidebar = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                    </button>
+                    </div>
                   </div>
                 ))}
                 <div className="extra-space-item" />
