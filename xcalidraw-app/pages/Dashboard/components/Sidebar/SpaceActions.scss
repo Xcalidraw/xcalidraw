@@ -1,0 +1,95 @@
+// Space item wrapper and actions styling
+.space-item-wrapper {
+  position: relative;
+
+  .space-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden; // Ensure text doesn't overflow the item
+    
+    &:hover,
+    &:has([data-state="open"]) {
+      .space-actions {
+        width: auto;
+        opacity: 1;
+      }
+    }
+
+    .space-name {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; // Always ellipse when too long
+    }
+
+    .space-actions {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: width 0.15s ease, opacity 0.15s ease;
+      flex-shrink: 0;
+      margin-left: auto;
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  .space-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    color: var(--color-gray-60);
+    background-color: transparent;
+    transition: all 0.15s ease;
+    
+    &:hover,
+    &[data-state="open"] {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-darker);
+    }
+
+    &.pin-btn {
+      &:hover {
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+// Space menu dropdown
+.space-menu {
+  min-width: 180px;
+
+  .dropdown-menu-item {
+    gap: 12px;
+    padding: 8px 12px;
+    cursor: pointer;
+
+    &.danger {
+      color: var(--color-error, #dc2626);
+
+      &:hover {
+        background-color: rgba(220, 38, 38, 0.1);
+      }
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      font-size: 14px;
+    }
+  }
+}

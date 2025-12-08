@@ -434,7 +434,8 @@
     align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 10px 12px;
+    padding: 8px 12px;
+    height: 40px;
     border-radius: var(--border-radius-md);
     color: var(--color-gray-70);
     font-size: 14px;
@@ -455,11 +456,7 @@
       }
     }
 
-    .space-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    // .space-name ellipsis is handled in SpaceActions.scss on hover
 
     .archived-pill {
       margin-left: auto;
@@ -469,7 +466,8 @@
       border-radius: 4px;
     }
 
-    &:hover {
+    &:hover,
+    &:has([data-state="open"]) {
       background-color: var(--color-surface-high);
       color: var(--color-on-surface);
 
