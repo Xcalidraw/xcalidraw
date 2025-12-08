@@ -1,7 +1,7 @@
 @import "../../../packages/xcalidraw/css/theme.scss";
 
 .dropdown-menu-content {
-  z-index: 50;
+  z-index: 9999;
   min-width: 280px;
   overflow: hidden;
   border-radius: var(--border-radius-lg);
