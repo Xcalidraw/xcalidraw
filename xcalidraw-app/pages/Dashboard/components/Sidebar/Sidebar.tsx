@@ -445,20 +445,32 @@ export const Sidebar = () => {
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="space-menu">
-                            <DropdownMenuItem onClick={() => toast.success('Link copied')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Link copied');
+                            }}>
                               <Link2 size={14} />
                               <span>Copy link</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast.success('Share dialog')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Share dialog');
+                            }}>
                               <Share2 size={14} />
                               <span>Share</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast.success('Rename dialog')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Rename dialog');
+                            }}>
                               <Edit2 size={14} />
                               <span>Rename</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="danger" onClick={() => toast.error('Delete confirmation')}>
+                            <DropdownMenuItem className="danger" onClick={(e) => {
+                              e.stopPropagation();
+                              toast.error('Delete confirmation');
+                            }}>
                               <Trash2 size={14} />
                               <span>Delete</span>
                             </DropdownMenuItem>
@@ -509,20 +521,32 @@ export const Sidebar = () => {
                             </button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="space-menu">
-                            <DropdownMenuItem onClick={() => toast.success('Link copied')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Link copied');
+                            }}>
                               <Link2 size={14} />
                               <span>Copy link</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast.success('Share dialog')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Share dialog');
+                            }}>
                               <Share2 size={14} />
                               <span>Share</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toast.success('Rename dialog')}>
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              toast.success('Rename dialog');
+                            }}>
                               <Edit2 size={14} />
                               <span>Rename</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="danger" onClick={() => toast.error('Delete confirmation')}>
+                            <DropdownMenuItem className="danger" onClick={(e) => {
+                              e.stopPropagation();
+                              toast.error('Delete confirmation');
+                            }}>
                               <Trash2 size={14} />
                               <span>Delete</span>
                             </DropdownMenuItem>
