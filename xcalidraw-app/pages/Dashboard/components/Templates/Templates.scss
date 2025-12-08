@@ -70,13 +70,10 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 4px;
       transition: all 0.2s;
 
       &:hover {
         color: var(--color-primary);
-        background: var(--color-surface-high);
       }
     }
   }
@@ -125,7 +122,15 @@
 
   .divider-vertical {
     width: 1px;
-    background: var(--color-border-outline-variant);
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--color-border-outline-variant) 20%,
+      var(--color-gray-40) 50%,
+      var(--color-border-outline-variant) 80%,
+      transparent 100%
+    );
     margin: 0 8px;
     flex-shrink: 0;
   }
