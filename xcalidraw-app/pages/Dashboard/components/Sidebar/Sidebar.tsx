@@ -14,6 +14,12 @@ import {
   Loader2,
   Check,
   Users,
+  Pin,
+  MoreVertical,
+  Link2,
+  Share2,
+  Edit2,
+  Trash2,
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
@@ -52,6 +58,7 @@ import {
 
 import "./Sidebar.scss";
 import "./TeamSearchDialog.scss";
+import "./SpaceActions.scss";
 
 // Dummy teams data
 const DUMMY_TEAMS = [
@@ -406,18 +413,62 @@ export const Sidebar = () => {
                 onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
               >
                 {dummyYourSpaces.map((space) => (
-                  <button 
-                    key={space.id} 
-                    className={clsx("space-item", { active: activeSpaceId === space.id })}
-                    onClick={() => {
-                      setActiveSpaceId(space.id);
-                      setActiveNavItem(null as any); // Deselect nav items
-                    }}
-                  >
-                    <span className="space-indicator dot" />
-                    <span className="space-name">{space.name}</span>
-                  </button>
+                  <div key={space.id} className="space-item-wrapper">
+                    <button 
+                      className={clsx("space-item", { active: activeSpaceId === space.id })}
+                      onClick={() => {
+                        setActiveSpaceId(space.id);
+                        setActiveNavItem(null as any);
+                      }}
+                    >
+                      <span className="space-indicator dot" />
+                      <span className="space-name">{space.name}</span>
+                      <div className="space-actions">
+                        <button 
+                          className="space-action-btn pin-btn" 
+                          title="Pin"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toast.success('Pinned');
+                          }}
+                        >
+                          <Pin size={14} />
+                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button 
+                              className="space-action-btn more-btn" 
+                              title="More options"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical size={14} />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent side="right" align="start" className="space-menu">
+                            <DropdownMenuItem onClick={() => toast.success('Link copied')}>
+                              <Link2 size={14} />
+                              <span>Copy link</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast.success('Share dialog')}>
+                              <Share2 size={14} />
+                              <span>Share</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast.success('Rename dialog')}>
+                              <Edit2 size={14} />
+                              <span>Rename</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="danger" onClick={() => toast.error('Delete confirmation')}>
+                              <Trash2 size={14} />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </button>
+                  </div>
                 ))}
+                <div className="extra-space-item" />
               </SpaceGroup>
 
               <SpaceGroup
@@ -426,17 +477,60 @@ export const Sidebar = () => {
                 onToggle={() => setSpacesExpanded(!spacesExpanded)}
               >
                 {spaces.map((space) => (
-                  <button 
-                    key={space.id} 
-                    className={clsx("space-item", { active: activeSpaceId === space.id })}
-                    onClick={() => {
-                      setActiveSpaceId(space.id);
-                      setActiveNavItem(null as any); // Deselect nav items
-                    }}
-                  >
-                    <Hash size={14} className="space-indicator hash" />
-                    <span className="space-name">{space.name}</span>
-                  </button>
+                  <div key={space.id} className="space-item-wrapper">
+                    <button 
+                      className={clsx("space-item", { active: activeSpaceId === space.id })}
+                      onClick={() => {
+                        setActiveSpaceId(space.id);
+                        setActiveNavItem(null as any);
+                      }}
+                    >
+                      <Hash size={14} className="space-indicator hash" />
+                      <span className="space-name">{space.name}</span>
+                      <div className="space-actions">
+                        <button 
+                          className="space-action-btn pin-btn" 
+                          title="Pin"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toast.success('Pinned');
+                          }}
+                        >
+                          <Pin size={14} />
+                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button 
+                              className="space-action-btn more-btn" 
+                              title="More options"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical size={14} />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent side="right" align="start" className="space-menu">
+                            <DropdownMenuItem onClick={() => toast.success('Link copied')}>
+                              <Link2 size={14} />
+                              <span>Copy link</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast.success('Share dialog')}>
+                              <Share2 size={14} />
+                              <span>Share</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => toast.success('Rename dialog')}>
+                              <Edit2 size={14} />
+                              <span>Rename</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="danger" onClick={() => toast.error('Delete confirmation')}>
+                              <Trash2 size={14} />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </button>
+                  </div>
                 ))}
                 <div className="extra-space-item" />
               </SpaceGroup>
