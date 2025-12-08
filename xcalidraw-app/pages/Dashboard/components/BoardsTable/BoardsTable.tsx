@@ -157,12 +157,12 @@ export const BoardsTable = () => {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Star
-                        size={16}
+                        size={18}
                         className={clsx("star-icon", {
                           active: board.isStarred,
                         })}
                       />
-                      <MoreHorizontal size={16} className="more-icon" />
+                      <MoreHorizontal size={18} className="more-icon" />
                     </div>
                   </td>
                 </tr>
