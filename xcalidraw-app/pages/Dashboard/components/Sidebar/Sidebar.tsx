@@ -8,10 +8,12 @@ import {
   Search,
   Plus,
   ChevronRight,
-  MoreHorizontal,
+  ChevronDown,
   Command,
-  Hash, // Used for spaces
+  Hash,
   Loader2,
+  Check,
+  Users,
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
@@ -40,11 +42,34 @@ import {
   TooltipTrigger,
 } from "../../../../components/ui/tooltip";
 import { Button } from "../../../../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../../components/ui/dropdown-menu";
 
 import "./Sidebar.scss";
+import "./TeamSearchDialog.scss";
+
+// Dummy teams data
+const DUMMY_TEAMS = [
+  { id: '1', name: 'Acme Corp', initials: 'AC', colorClass: 'color-teal' },
+  { id: '2', name: 'Design Studio', initials: 'DS', colorClass: 'color-purple' },
+  { id: '3', name: 'Marketing Team', initials: 'MT', colorClass: 'color-orange' },
+];
+
+// Dummy searchable teams (teams user can join)
+const SEARCHABLE_TEAMS = [
+  { id: '4', name: 'Engineering Team', initials: 'ET', colorClass: 'color-teal', members: 12 },
+  { id: '5', name: 'Product Design', initials: 'PD', colorClass: 'color-purple', members: 8 },
+  { id: '6', name: 'Sales & Marketing', initials: 'SM', colorClass: 'color-orange', members: 15 },
+  { id: '7', name: 'Customer Success', initials: 'CS', colorClass: 'color-teal', members: 6 },
+];
 
 export const Sidebar = () => {
-  const [currentTeam] = useAtom(currentTeamAtom);
+  const [currentTeam, setCurrentTeam] = useAtom(currentTeamAtom);
   const [yourSpaces, setYourSpaces] = useAtom(yourSpacesAtom);
   const [spaces] = useAtom(spacesAtom);
   const [yourSpacesExpanded, setYourSpacesExpanded] = useAtom(
@@ -56,10 +81,33 @@ export const Sidebar = () => {
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState("");
   const [createSpaceError, setCreateSpaceError] = useState("");
+  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
+  const [isTeamSearchOpen, setIsTeamSearchOpen] = useState(false);
+  const [teamSearchQuery, setTeamSearchQuery] = useState("");
+  const [activeNavItem, setActiveNavItem] = useState<'home' | 'recent' | 'starred'>('home');
+  const [activeSpaceId, setActiveSpaceId] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const teamSearchInputRef = useRef<HTMLInputElement>(null);
+
+  // Dummy spaces for "Your Spaces"
+  const dummyYourSpaces = [
+    { id: 'space-1', name: 'Product Design' },
+    { id: 'space-2', name: 'Engineering' },
+    { id: 'space-3', name: 'Marketing' },
+  ];
 
   const createWorkspace = useCreateWorkspaceMutation();
   const { data: workspacesData, isLoading } = useWorkspacesQuery();
+
+  // Focus team search input when dialog opens
+  useEffect(() => {
+    if (isTeamSearchOpen && teamSearchInputRef.current) {
+      // Small delay to ensure dialog is fully rendered
+      setTimeout(() => {
+        teamSearchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isTeamSearchOpen]);
 
   // Update yourSpaces when workspaces are fetched
   useEffect(() => {
@@ -110,13 +158,19 @@ export const Sidebar = () => {
     label,
     active = false,
     badge,
+    onClick,
   }: {
     icon: any;
     label: string;
     active?: boolean;
     badge?: string;
+    onClick?: () => void;
   }) => (
-    <button type="button" className={clsx("sidebar-nav-item", { active })}>
+    <button 
+      type="button" 
+      className={clsx("sidebar-nav-item", { active })}
+      onClick={onClick}
+    >
       <div className="nav-content">
         <Icon className="nav-icon" size={18} strokeWidth={1.5} />
         <span className="nav-label">{label}</span>
@@ -160,17 +214,116 @@ export const Sidebar = () => {
 
   return (
     <aside className={clsx("dashboard-sidebar", { open: sidebarOpen })}>
-      {/* 1. Workspace Header */}
+      {/* 1. Team Selector */}
       <header className="sidebar-header">
-        <button className="workspace-btn">
-          <span className="workspace-avatar">{currentTeam.initials}</span>
-          <div className="workspace-details">
-            <span className="name">{currentTeam.name}</span>
-            <span className="role">Free Plan</span>
-          </div>
-          <MoreHorizontal size={16} className="workspace-options" />
-        </button>
+        <DropdownMenu open={isTeamDropdownOpen} onOpenChange={setIsTeamDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <button className={clsx("workspace-btn", { active: isTeamDropdownOpen || isTeamSearchOpen })}>
+              <span className={clsx("workspace-avatar", currentTeam.colorClass)}>
+                {currentTeam.initials}
+              </span>
+              <div className="workspace-details">
+                <span className="name">{currentTeam.name}</span>
+              </div>
+              <ChevronDown size={16} className="workspace-chevron" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="dropdown-menu-width">
+            {/* Search Input */}
+            <div className="dropdown-search-wrapper">
+              <button
+                className="dropdown-search-input"
+                onClick={() => {
+                  setIsTeamDropdownOpen(false);
+                  setIsTeamSearchOpen(true);
+                }}
+              >
+                <Search size={14} className="search-icon" />
+                <span className="search-placeholder">Search teams...</span>
+              </button>
+            </div>
+            
+            <div className="dropdown-menu-header">
+              Your Teams
+            </div>
+            {DUMMY_TEAMS.map((team) => (
+              <DropdownMenuItem
+                key={team.id}
+                onClick={() => setCurrentTeam(team)}
+                className={clsx({ selected: currentTeam.id === team.id })}
+              >
+                <span className={clsx("workspace-avatar-small", team.colorClass)}>
+                  {team.initials}
+                </span>
+                <span className="team-name">{team.name}</span>
+                {currentTeam.id === team.id && (
+                  <Check size={16} className="team-check" />
+                )}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="create-team-item">
+              <Plus size={16} />
+              <span>Create Team</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </header>
+
+      {/* Team Search Dialog */}
+      <Dialog open={isTeamSearchOpen} onOpenChange={setIsTeamSearchOpen}>
+        <DialogContent className="team-search-dialog">
+          <DialogHeader>
+            <DialogTitle>Search Teams</DialogTitle>
+          </DialogHeader>
+          
+          <div className="team-search-input-wrapper">
+            <Search size={20} className="search-icon" />
+            <Input
+              ref={teamSearchInputRef}
+              placeholder="Search teams"
+              value={teamSearchQuery}
+              onChange={(e) => setTeamSearchQuery(e.target.value)}
+              className="team-search-input"
+            />
+          </div>
+
+          <div className="team-search-results">
+            {SEARCHABLE_TEAMS
+              .filter(team => 
+                team.name.toLowerCase().includes(teamSearchQuery.toLowerCase())
+              )
+              .map((team) => (
+                <div key={team.id} className="team-search-item">
+                  <span className={clsx("workspace-avatar-small", team.colorClass)}>
+                    {team.initials}
+                  </span>
+                  <div className="team-info">
+                    <span className="team-name">{team.name}</span>
+                    <span className="team-members">{team.members} members</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      toast.success(`Joined ${team.name}`);
+                      setIsTeamSearchOpen(false);
+                    }}
+                  >
+                    Join
+                  </Button>
+                </div>
+              ))}
+            {teamSearchQuery && SEARCHABLE_TEAMS.filter(team => 
+              team.name.toLowerCase().includes(teamSearchQuery.toLowerCase())
+            ).length === 0 && (
+              <div className="no-results">
+                <Users size={32} className="no-results-icon" />
+                <p>No teams found</p>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* 2. Search Input */}
       <div className="sidebar-search-container">
@@ -193,13 +346,39 @@ export const Sidebar = () => {
       </div>
 
       <TooltipProvider>
-        <div className="sidebar-scrollable">
-          {/* 3. Main Navigation */}
-          <nav className="nav-section">
-            <NavItem icon={Home} label="Home" active />
-            <NavItem icon={Clock} label="Recent" />
-            <NavItem icon={Star} label="Starred" badge="3" />
+        {/* 3. Main Navigation */}
+        <nav className="nav-section">
+            <NavItem 
+              icon={Home} 
+              label="Home" 
+              active={activeNavItem === 'home'}
+              onClick={() => {
+                setActiveNavItem('home');
+                setActiveSpaceId(null); // Deselect spaces
+              }}
+            />
+            <NavItem 
+              icon={Clock} 
+              label="Recent" 
+              active={activeNavItem === 'recent'}
+              onClick={() => {
+                setActiveNavItem('recent');
+                setActiveSpaceId(null); // Deselect spaces
+              }}
+            />
+            <NavItem 
+              icon={Star} 
+              label="Starred" 
+              badge="3"
+              active={activeNavItem === 'starred'}
+              onClick={() => {
+                setActiveNavItem('starred');
+                setActiveSpaceId(null); // Deselect spaces
+              }}
+            />
           </nav>
+
+          <div className="sidebar-spacer" />
 
           {/* 4. Spaces */}
           <div className="spaces-section">
@@ -219,34 +398,51 @@ export const Sidebar = () => {
                 </TooltipContent>
               </Tooltip>
             </div>
-            <SpaceGroup
-              title="Your Spaces"
-              expanded={yourSpacesExpanded}
-              onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
-            >
-              {yourSpaces.map((space) => (
-                <button key={space.id} className="space-item">
-                  <span className="space-indicator dot" />
-                  <span className="space-name">{space.name}</span>
-                </button>
-              ))}
-            </SpaceGroup>
+            
+            <div className="spaces-groups-container">
+              <SpaceGroup
+                title="Your Spaces"
+                expanded={yourSpacesExpanded}
+                onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
+              >
+                {dummyYourSpaces.map((space) => (
+                  <button 
+                    key={space.id} 
+                    className={clsx("space-item", { active: activeSpaceId === space.id })}
+                    onClick={() => {
+                      setActiveSpaceId(space.id);
+                      setActiveNavItem(null as any); // Deselect nav items
+                    }}
+                  >
+                    <span className="space-indicator dot" />
+                    <span className="space-name">{space.name}</span>
+                  </button>
+                ))}
+              </SpaceGroup>
 
-            <SpaceGroup
-              title="Team Spaces"
-              expanded={spacesExpanded}
-              onToggle={() => setSpacesExpanded(!spacesExpanded)}
-            >
-              {spaces.map((space) => (
-                <button key={space.id} className="space-item">
-                  <Hash size={14} className="space-indicator hash" />
-                  <span className="space-name">{space.name}</span>
-                </button>
-              ))}
-            </SpaceGroup>
+              <SpaceGroup
+                title="Team Spaces"
+                expanded={spacesExpanded}
+                onToggle={() => setSpacesExpanded(!spacesExpanded)}
+              >
+                {spaces.map((space) => (
+                  <button 
+                    key={space.id} 
+                    className={clsx("space-item", { active: activeSpaceId === space.id })}
+                    onClick={() => {
+                      setActiveSpaceId(space.id);
+                      setActiveNavItem(null as any); // Deselect nav items
+                    }}
+                  >
+                    <Hash size={14} className="space-indicator hash" />
+                    <span className="space-name">{space.name}</span>
+                  </button>
+                ))}
+                <div className="extra-space-item" />
+              </SpaceGroup>
+            </div>
           </div>
-        </div>
-      </TooltipProvider>
+        </TooltipProvider>
 
       {/* Create Space Dialog */}
       <Dialog

@@ -23,6 +23,7 @@ export interface Team {
   id: string;
   name: string;
   initials: string;
+  colorClass: string;
 }
 
 // Atoms
@@ -30,6 +31,7 @@ export const currentTeamAtom = atom<Team>({
   id: "1",
   name: "TPS Board",
   initials: "TB",
+  colorClass: "color-teal",
 });
 
 export const searchQueryAtom = atom<string>("");
