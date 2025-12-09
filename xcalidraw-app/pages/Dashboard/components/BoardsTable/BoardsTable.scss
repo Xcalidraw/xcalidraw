@@ -293,7 +293,8 @@
         }
 
         &.col-users {
-          width: 120px;
+          width: 200px;
+          min-width: 200px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -364,7 +365,8 @@
         }
 
         &.col-users {
-          width: 120px;
+          width: 200px;
+          min-width: 200px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -397,12 +399,14 @@
 
         &.col-actions {
           width: 80px;
+          min-width: 80px;
           text-align: right;
           padding-right: 8px;
-          white-space: normal;
+          white-space: nowrap;
 
           @media (max-width: 1024px) {
             width: 60px;
+            min-width: 60px;
           }
         }
       }
