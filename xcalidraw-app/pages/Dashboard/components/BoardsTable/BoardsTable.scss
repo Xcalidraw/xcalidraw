@@ -415,7 +415,8 @@
         cursor: pointer;
         transition: all 0.2s ease;
 
-        &:hover td {
+        &:hover td,
+        &:has([data-state="open"]) td {
           background-color: var(--color-gray-10);
         }
 
@@ -547,7 +548,8 @@
           height: 24px;
           padding: 5px;
 
-          &:hover {
+          &:hover,
+          &[data-state="open"] {
             color: var(--color-on-surface);
             background-color: var(--color-gray-20);
           }
@@ -555,11 +557,14 @@
 
         .star-icon.active {
           color: #f5c354;
+          fill: #f5c354;
           opacity: 1;
         }
       }
 
-      tr:hover .action-icons {
+      tr:hover .action-icons,
+      tr:has([data-state="open"]) .action-icons,
+      .action-icons:has([data-state="open"]) {
         opacity: 1;
       }
     }
@@ -733,7 +738,8 @@
             padding: 4px;
             border-radius: 4px;
             
-            &:hover {
+            &:hover,
+            &[data-state="open"] {
               color: var(--color-on-surface);
               background-color: var(--color-gray-10);
             }
@@ -741,12 +747,14 @@
 
           .star-icon.active {
             color: #f5c354;
+            fill: #f5c354;
             opacity: 1;
           }
         }
       }
 
-      &:hover .card-actions {
+      &:hover .card-actions,
+      &:has([data-state="open"]) .card-actions {
         opacity: 1;
       }
     }
