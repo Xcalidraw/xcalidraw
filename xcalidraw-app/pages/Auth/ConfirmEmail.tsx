@@ -1,14 +1,14 @@
 import { IconCheck, IconLoader2, IconX } from '@tabler/icons-react'
 import { motion, type Variants } from 'framer-motion'
 import { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Label } from '../../components/ui/label'
 
-import { useConfirmSignUp, useResendSignUpCode } from '../../hooks/auth.hooks'
+import { useConfirmSignUp, useResendSignUpCode, useLoginWithEmail } from '../../hooks/auth.hooks'
 import './AuthForms.scss'
 
 const containerVariants: Variants = {
@@ -36,11 +36,14 @@ const itemVariants: Variants = {
 
 export default function ConfirmEmailPage() {
   const [searchParams] = useSearchParams()
+  const location = useLocation()
   const email = searchParams.get('email') || ''
+  const password = location.state?.password
   const [code, setCode] = useState('')
   const navigate = useNavigate()
   const confirmSignUp = useConfirmSignUp()
   const resendCode = useResendSignUpCode()
+  const loginWithEmail = useLoginWithEmail()
 
   const handleConfirm = () => {
     confirmSignUp.mutate(
@@ -48,7 +51,24 @@ export default function ConfirmEmailPage() {
       {
         onSuccess: () => {
           toast.success('Email confirmed successfully')
-          navigate('/auth/login')
+          
+          if (password) {
+            loginWithEmail.mutate(
+              { email, password },
+              {
+                onSuccess: () => {
+                  toast.success('Logged in successfully')
+                  navigate('/dashboard')
+                },
+                onError: (error) => {
+                  console.error('Auto-login failed:', error)
+                  navigate('/auth/login')
+                }
+              }
+            )
+          } else {
+            navigate('/auth/login')
+          }
         },
         onError: (error) => {
           toast.error('Confirmation failed', {
@@ -121,11 +141,11 @@ export default function ConfirmEmailPage() {
         <motion.div variants={itemVariants}>
           <Button
             className="btn-full"
-            disabled={code.length !== 6 || confirmSignUp.isPending}
+            disabled={code.length !== 6 || confirmSignUp.isPending || loginWithEmail.isPending}
             size="lg"
             onClick={handleConfirm}
           >
-            {confirmSignUp.isPending ? (
+            {confirmSignUp.isPending || loginWithEmail.isPending ? (
               <IconLoader2 className="mr-2 animate-spin" size={18} />
             ) : (
               <IconCheck className="mr-2" size={18} />

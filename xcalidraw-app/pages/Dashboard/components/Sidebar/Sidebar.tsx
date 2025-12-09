@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { useCreateWorkspaceMutation, useWorkspacesQuery } from "../../../../hooks/api.hooks";
+import { useCreateWorkspaceMutation, useWorkspacesQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
 
 import {
   currentTeamAtom,
@@ -60,13 +60,6 @@ import "./Sidebar.scss";
 import "./TeamSearchDialog.scss";
 import "./SpaceActions.scss";
 
-// Dummy teams data
-const DUMMY_TEAMS = [
-  { id: '1', name: 'Acme Corp', initials: 'AC', colorClass: 'color-teal' },
-  { id: '2', name: 'Design Studio', initials: 'DS', colorClass: 'color-purple' },
-  { id: '3', name: 'Marketing Team', initials: 'MT', colorClass: 'color-orange' },
-];
-
 // Dummy searchable teams (teams user can join)
 const SEARCHABLE_TEAMS = [
   { id: '4', name: 'Engineering Team', initials: 'ET', colorClass: 'color-teal', members: 12 },
@@ -96,15 +89,31 @@ export const Sidebar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const teamSearchInputRef = useRef<HTMLInputElement>(null);
 
-  // Dummy spaces for "Your Spaces"
-  const dummyYourSpaces = [
-    { id: 'space-1', name: 'Product Design' },
-    { id: 'space-2', name: 'Engineering' },
-    { id: 'space-3', name: 'Marketing' },
-  ];
+
 
   const createWorkspace = useCreateWorkspaceMutation();
   const { data: workspacesData, isLoading } = useWorkspacesQuery();
+  const { data: teamsData } = useListTeamsQuery();
+
+  const teams = teamsData?.items?.map((team: any, index: number) => ({
+    id: team.team_id,
+    name: team.name,
+    initials: team.name.substring(0, 2).toUpperCase(),
+    colorClass: ['color-teal', 'color-purple', 'color-orange'][index % 3]
+  })) || [];
+
+  // Add default "Workspace" team if list is empty or just to ensure it exists
+  // For now, let's assume the API returns at least one team or we treat the Org as a team
+  // If the API returns empty, we might want to show a placeholder or the Org itself
+  
+  useEffect(() => {
+    if (teams.length > 0) {
+       // If currentTeam is not set, select the first one
+       if (!currentTeam.id) {
+           setCurrentTeam(teams[0]);
+       }
+    }
+  }, [teams, currentTeam.id, setCurrentTeam]);
 
   // Focus team search input when dialog opens
   useEffect(() => {
@@ -253,10 +262,12 @@ export const Sidebar = () => {
             <div className="dropdown-menu-header">
               Your Teams
             </div>
-            {DUMMY_TEAMS.map((team) => (
+            {teams.map((team: any) => (
               <DropdownMenuItem
                 key={team.id}
-                onClick={() => setCurrentTeam(team)}
+                onClick={() => {
+                  setCurrentTeam(team);
+                }}
                 className={clsx({ selected: currentTeam.id === team.id })}
               >
                 <span className={clsx("workspace-avatar-small", team.colorClass)}>
@@ -412,7 +423,7 @@ export const Sidebar = () => {
                 expanded={yourSpacesExpanded}
                 onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
               >
-                {dummyYourSpaces.map((space) => (
+                {yourSpaces.map((space) => (
                   <div 
                     key={space.id} 
                     className="space-item-wrapper"

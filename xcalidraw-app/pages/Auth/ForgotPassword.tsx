@@ -45,9 +45,7 @@ export default function ForgotPasswordPage() {
       {
         onSuccess: () => {
           toast.success('Reset code sent')
-          // Navigate to a reset password confirmation page (not implemented yet, or reuse confirm email logic)
-          // For now, just go back to login
-          navigate('/auth/login') 
+          navigate('/auth/reset-password', { state: { email } })
         },
         onError: (error) => {
           toast.error('Failed to send reset code', {

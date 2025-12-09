@@ -6,7 +6,7 @@ import {
   IconMail,
   IconX
 } from '@tabler/icons-react'
-import { motion, type Variants } from 'framer-motion'
+import { motion, type Variants, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -60,12 +60,19 @@ const itemVariants: Variants = {
 
 export default function SignupPage() {
   const [showAppleLogin, setShowAppleLogin] = useState(false)
+  const [accountType, setAccountType] = useState<'individual' | 'organization'>('individual')
   const [name, setName] = useState('')
+  const [orgName, setOrgName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+  
   const isFormValid =
-    name.trim() !== '' && email.trim() !== '' && password.trim() !== ''
+    name.trim() !== '' && 
+    email.trim() !== '' && 
+    password.trim() !== '' &&
+    (accountType === 'individual' || orgName.trim() !== '')
+
   const loginWithGoogle = useLoginWithGoogle()
   const signUpWithEmail = useSignUpWithEmail()
 
@@ -75,11 +82,20 @@ export default function SignupPage() {
   }, [])
 
   const handleSignup = () => {
+    if (accountType === 'organization' && orgName) {
+      localStorage.setItem('xcalidraw_signup_org_name', orgName)
+    } else {
+      // For individual accounts, create a default organization
+      localStorage.setItem('xcalidraw_signup_org_name', `${name}'s Workspace`)
+    }
+
     signUpWithEmail.mutate(
       { email, password, name },
       {
         onSuccess: () => {
-          navigate(`/auth/confirm-email?email=${encodeURIComponent(email)}`)
+          navigate(`/auth/confirm-email?email=${encodeURIComponent(email)}`, {
+            state: { password }
+          })
         },
         onError: (error) => {
           toast.error('Signup failed', {
@@ -143,6 +159,24 @@ export default function SignupPage() {
         </motion.div>
 
         <motion.div className="form-fields" variants={itemVariants}>
+          {/* Account Type Toggle */}
+          <div className="account-type-toggle">
+            <button
+              className={accountType === 'individual' ? 'active' : ''}
+              onClick={() => setAccountType('individual')}
+              type="button"
+            >
+              Individual
+            </button>
+            <button
+              className={accountType === 'organization' ? 'active' : ''}
+              onClick={() => setAccountType('organization')}
+              type="button"
+            >
+              Organization
+            </button>
+          </div>
+
           <motion.div className="form-group" variants={itemVariants}>
             <Label htmlFor="name">Full Name</Label>
             <Input
@@ -155,6 +189,30 @@ export default function SignupPage() {
               onChange={(e) => setName(e.target.value)}
             />
           </motion.div>
+
+          <AnimatePresence>
+            {accountType === 'organization' && (
+              <motion.div
+                className="form-group"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Label htmlFor="orgName">Organization Name</Label>
+                <Input
+                  required
+                  className="custom-input-lg"
+                  id="orgName"
+                  placeholder="Acme Corp"
+                  type="text"
+                  value={orgName}
+                  onChange={(e) => setOrgName(e.target.value)}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.div className="form-group" variants={itemVariants}>
             <Label htmlFor="email">Email</Label>
             <Input
