@@ -268,22 +268,7 @@ export const BoardsTable = () => {
                 <div className={`preview-placeholder bg-${board.icon}`}>
                   <Layout size={32} />
                 </div>
-              </div>
-              <div className="board-footer">
-                <div className={`board-icon icon-${board.icon}`}>
-                  <Layout size={16} />
-                </div>
-                <div className="board-info">
-                  <span className="board-name">{board.name}</span>
-                  <div className="board-meta">
-                    <span className="board-date">
-                      Opened {board.lastOpened}
-                    </span>
-                    {board.space && (
-                      <span className="board-space-dot">• {board.space}</span>
-                    )}
-                  </div>
-                </div>
+                
                 <div
                   className="card-actions"
                   onClick={(e) => e.stopPropagation()}
@@ -355,6 +340,19 @@ export const BoardsTable = () => {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                </div>
+              </div>
+              <div className="board-footer">
+                <div className="board-info">
+                  <span className="board-name">{board.name}</span>
+                  <div className="board-meta">
+                    <span className="board-date">
+                      Opened {board.lastOpened}
+                    </span>
+                    {board.space && (
+                      <span className="board-space-dot">• {board.space}</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
