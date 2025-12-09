@@ -56,32 +56,6 @@
     box-shadow: var(--shadow-dropdown);
     border: 1px solid var(--color-border-outline-variant);
     z-index: 3000;
-
-    &[data-state="open"] {
-      animation: slideDownAndFade 0.05s ease-out;
-    }
-
-    &[data-state="closed"] {
-      animation: slideUpAndFade 0.05s ease-out;
-    }
-  }
-
-  @keyframes slideDownAndFade {
-    from {
-      transform: translateY(-4px);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideUpAndFade {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-4px);
-    }
   }
 
   .select-viewport {
@@ -90,14 +64,14 @@
 
   .select-item {
     all: unset;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1;
     color: var(--color-on-surface);
     border-radius: var(--border-radius-sm);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 10px 14px;
     position: relative;
     user-select: none;
     cursor: pointer;
