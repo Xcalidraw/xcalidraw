@@ -164,3 +164,11 @@ export const filteredBoardsAtom = atom((get) => {
     return matchesSearch && matchesFilter;
   });
 });
+
+export const toggleStarAtom = atom(null, (get, set, boardId: string) => {
+  const boards = get(boardsAtom);
+  const updatedBoards = boards.map((board) =>
+    board.id === boardId ? { ...board, isStarred: !board.isStarred } : board
+  );
+  set(boardsAtom, updatedBoards);
+});

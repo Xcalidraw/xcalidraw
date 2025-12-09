@@ -119,6 +119,30 @@
       background-color: var(--color-primary-light, #e6fcf5);
     }
   }
+
+  &.danger {
+    color: var(--color-danger-darker);
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &[data-highlighted] {
+      background-color: var(--color-danger-background);
+      color: var(--color-danger-darker);
+    }
+  }
+
+  &.warning {
+    color: var(--color-warning-darkest);
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &[data-highlighted] {
+      background-color: var(--color-warning-background);
+      color: var(--color-warning-darkest);
+    }
+  }
 }
 
 .dropdown-menu-checkbox-item,
