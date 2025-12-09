@@ -6,6 +6,7 @@ import { Button } from "../../../../components/ui/button";
 import { sidebarOpenAtom } from "../../store";
 
 import { UserDropdown } from "./UserDropdown";
+import { OrgSwitcher } from "./OrgSwitcher";
 import "./Header.scss";
 
 export const Header = () => {
@@ -40,6 +41,9 @@ export const Header = () => {
             <Bell size={20} />
           </button>
 
+          <div className="h-6 w-px bg-border mx-2" /> {/* Divider */}
+          
+          <OrgSwitcher />
           <UserDropdown />
         </div>
       </div>

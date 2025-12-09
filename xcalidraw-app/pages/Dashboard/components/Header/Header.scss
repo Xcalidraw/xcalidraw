@@ -171,5 +171,11 @@
           object-fit: cover;
         }
       }
+
+      // Org Switcher Trigger Active State
+      .org-switcher-trigger[data-state="open"] {
+        background-color: var(--color-surface-high) !important;
+        color: var(--color-on-surface) !important;
+      }
     }
   }
