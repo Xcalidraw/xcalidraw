@@ -10,18 +10,6 @@
   padding: 4px;
   color: var(--color-on-surface);
   box-shadow: var(--shadow-dropdown);
-  animation: slideIn 0.2s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .dropdown-menu-width {
@@ -49,7 +37,6 @@
   gap: 8px;
   padding: 8px 12px;
   background-color: var(--color-surface-high);
-  border: 1px solid var(--color-border-outline-variant);
   border-radius: var(--border-radius-md);
   font-size: 14px;
   color: var(--color-on-surface);
@@ -81,15 +68,19 @@
   border-radius: var(--border-radius-sm);
   padding: 8px 12px;
   font-size: 14px;
-  outline: none;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
   transition: background-color 0.2s;
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &[data-highlighted] {
     background-color: var(--color-surface-high);
-  }
-
-  &:focus {
-    background-color: var(--color-surface-high);
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   &[data-disabled] {
