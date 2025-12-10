@@ -6,7 +6,9 @@ export interface Board {
   name: string;
   modifiedBy: string;
   modifiedDate: string;
-  space?: string;
+  team: string;              // NEW: Always know the parent team
+  space?: string;            // UPDATED: Now optional
+  parentType: 'TEAM' | 'SPACE'; // NEW: Track where board lives
   lastOpened: string;
   owner: string;
   icon: "orange" | "blue" | "pink" | "purple" | "green";
@@ -24,14 +26,16 @@ export interface Team {
   name: string;
   initials: string;
   colorClass: string;
+  isDefault?: boolean;       // NEW: For solo user's default team
+  canDelete?: boolean;       // NEW: Solo users can't delete default team
 }
 
 // Atoms
 export const currentTeamAtom = atom<Team>({
-  id: "1",
-  name: "TPS Board",
-  initials: "TB",
-  colorClass: "color-teal",
+  id: "",
+  name: "",
+  initials: "",
+  colorClass: "",
 });
 
 export const searchQueryAtom = atom<string>("");
@@ -66,7 +70,9 @@ export const boardsAtom = atom<Board[]>([
     name: "trstd login User Flow",
     modifiedBy: "Oliver Wehrens",
     modifiedDate: "Jul 21",
+    team: "design-team",
     space: "CoT Switch Gate",
+    parentType: 'SPACE',
     lastOpened: "Today",
     owner: "Oliver Wehrens",
     icon: "orange",
@@ -77,7 +83,9 @@ export const boardsAtom = atom<Board[]>([
     name: "Architecture Redefined",
     modifiedBy: "nadeem.ahmad",
     modifiedDate: "Today",
+    team: "engineering-team",
     space: "CoT Switch Gate",
+    parentType: 'SPACE',
     lastOpened: "Today",
     owner: "nadeem.ahmad",
     icon: "blue",
@@ -88,7 +96,9 @@ export const boardsAtom = atom<Board[]>([
     name: "Tech Radar - Board Meeting",
     modifiedBy: "Leo",
     modifiedDate: "Nov 17",
+    team: "engineering-team",
     space: undefined,
+    parentType: 'TEAM',
     lastOpened: "Nov 25",
     owner: "Leo",
     icon: "pink",
@@ -96,32 +106,38 @@ export const boardsAtom = atom<Board[]>([
   },
   {
     id: "4",
-    name: "Discovery Workshop: Integration Experience",
-    modifiedBy: "Sascha Jan Born",
-    modifiedDate: "Nov 21",
-    space: undefined,
-    lastOpened: "Nov 21",
-    owner: "Sascha Jan Born",
-    icon: "blue",
+    name: "xDRG - Delivery Review",
+    modifiedBy: "Justyna Stanowska",
+    modifiedDate: "Jan 19",
+    team: "leadership-team",
+    space: "CoT Switch Gate",
+    parentType: 'SPACE',
+    lastOpened: "Jan 20",
+    owner: "Justyna Stanowska",
+    icon: "purple",
     isStarred: false,
   },
   {
     id: "5",
-    name: "trstd login architecture",
-    modifiedBy: "Selim",
-    modifiedDate: "Nov 24",
-    space: "CoT Switch Gate",
-    lastOpened: "Nov 18",
-    owner: "Selim",
-    icon: "pink",
-    isStarred: false,
+    name: "New Board",
+    modifiedBy: "Niklas Hanft",
+    modifiedDate: "Dec 5",
+    team: "design-team",
+    space: undefined,
+    parentType: 'TEAM',
+    lastOpened: "Dec 5",
+    owner: "Niklas Hanft",
+    icon: "green",
+    isStarred: true,
   },
   {
     id: "6",
     name: "Retro trstd login until nxt25",
     modifiedBy: "Cara",
     modifiedDate: "Nov 10",
+    team: "engineering-team",
     space: "TPS TRSTD Login",
+    parentType: 'SPACE',
     lastOpened: "Nov 10",
     owner: "Marieke Schaefer",
     icon: "orange",
@@ -132,7 +148,9 @@ export const boardsAtom = atom<Board[]>([
     name: "Secret hiding brainstorming",
     modifiedBy: "Selim",
     modifiedDate: "Nov 11",
+    team: "design-team",
     space: undefined,
+    parentType: 'TEAM',
     lastOpened: "Nov 8",
     owner: "Selim",
     icon: "purple",
