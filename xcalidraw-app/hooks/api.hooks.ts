@@ -70,3 +70,131 @@ export const useListTeamsQuery = () => {
     enabled: !!client,
   });
 };
+
+// Onboarding hooks
+export const useOnboardingStatusQuery = () => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['onboarding'],
+    queryFn: async () => {
+      const response = await client.getUserOnboarding();
+      return response.data
+    },
+    enabled: !!client,
+  });
+};
+
+export const useCompleteTeamSetupMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ teamName, orgId }: { teamName: string; orgId: string }) => {
+      const response = await client.completeTeamSetup(undefined, {
+        team_name: teamName,
+        org_id: orgId,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['onboarding'] });
+      queryClient.invalidateQueries({ queryKey: ['teams'] });
+    },
+  });
+};
+
+// Board movement hook
+export const useMoveBoardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      orgId,
+      boardId,
+      targetType,
+      targetId,
+      teamId,
+    }: {
+      orgId: string;
+      boardId: string;
+      targetType: 'TEAM' | 'SPACE';
+      targetId: string;
+      teamId: string;
+    }) => {
+      const response = await client.moveBoard({
+          boardId,
+      },{
+        target_id: targetId,
+        target_type: targetType,
+        team_id: teamId,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      queryClient.invalidateQueries({ queryKey: ['teams'] });
+    },
+  });
+};
+
+// Org upgrade hook
+export const useUpgradeOrgMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ orgId }: { orgId: string }) => {
+      const response = await client.upgradeOrg(orgId);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['USER'] });
+      queryClient.invalidateQueries({ queryKey: ['orgs'] });
+      queryClient.invalidateQueries({ queryKey: ['onboarding'] });
+    },
+  });
+};
+
+// Team members hooks
+export const useTeamMembersQuery = (orgId: string, teamId: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['team-members', orgId, teamId],
+    queryFn: async () => {
+      const response = await client.getTeam(orgId, teamId);
+      return response.data;
+    },
+    enabled: !!client && !!orgId && !!teamId,
+  });
+};
+
+export const useAddTeamMemberMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      orgId,
+      teamId,
+      userId,
+      role,
+    }: {
+      orgId: string;
+      teamId: string;
+      userId: string;
+      role?: 'owner' | 'member';
+    }) => {
+      const response = await client.addTeamMember({
+        teamId
+      }, {
+        user_id: userId,
+        role,
+      });
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['team-members', variables.orgId, variables.teamId] });
+    },
+  });
+};

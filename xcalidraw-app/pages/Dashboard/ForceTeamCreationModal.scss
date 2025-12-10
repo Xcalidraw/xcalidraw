@@ -1,0 +1,153 @@
+.force-team-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+.force-team-modal-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 38px -10px rgba(22, 23, 24, 0.35),
+    0 10px 20px -15px rgba(22, 23, 24, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 450px;
+  max-height: 85vh;
+  padding: 25px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1001;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.force-team-modal-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+
+.force-team-modal-description {
+  margin: 12px 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.force-team-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.force-team-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.force-team-modal-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.force-team-modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  &:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.force-team-modal-error {
+  padding: 10px 12px;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.force-team-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.force-team-modal-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background-color: #6366f1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #4f46e5;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
