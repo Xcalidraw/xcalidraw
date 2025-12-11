@@ -7,7 +7,7 @@ export const useWorkspacesQuery = () => {
     queryKey: ['workspaces'],
     queryFn: async () => {
       const response = await client.listSpaces()
-      
+
       return response.data;
     },
     enabled: !!client,
@@ -72,7 +72,7 @@ export const useListTeamsQuery = () => {
 };
 
 // Onboarding hooks
-export const useOnboardingStatusQuery = () => {
+export const useOnboardingStatusQuery = (options?: { enabled?: boolean }) => {
   const client = useClient();
   return useQuery({
     queryKey: ['onboarding'],
@@ -80,9 +80,8 @@ export const useOnboardingStatusQuery = () => {
       const response = await client.getUserOnboarding();
       return response.data
     },
-    enabled: !!client,
-    retry: false,  // Don't retry on failure
-    staleTime: 5 * 60 * 1000,  // Cache for 5 minutes
+    enabled: !!client && (options?.enabled ?? true),
+    retry: false
   });
 };
 
@@ -124,8 +123,8 @@ export const useMoveBoardMutation = () => {
       teamId: string;
     }) => {
       const response = await client.moveBoard({
-          boardId,
-      },{
+        boardId,
+      }, {
         target_id: targetId,
         target_type: targetType,
         team_id: teamId,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCompleteTeamSetupMutation } from '../../hooks/api.hooks';
 import { useGetUser } from '../../hooks/auth.hooks';
@@ -12,28 +12,37 @@ export const SoloUserFlow = ({ defaultOrgId }: SoloUserFlowProps) => {
   const [status, setStatus] = useState('Setting up your workspace...');
   const createTeam = useCompleteTeamSetupMutation();
   const { user } = useGetUser();
+  const setupStartedRef = useRef(false);
 
   useEffect(() => {
     const autoSetup = async () => {
-      if (!user) return;
+      if (!user || setupStartedRef.current) return;
+
+      setupStartedRef.current = true;
 
       try {
         // Auto-create team with user's name
         const teamName = `${user.name}'s Team`;
-        
+
+        // Explicitly set the org ID context for the API client
+        if (defaultOrgId) {
+          localStorage.setItem('currentOrgId', defaultOrgId);
+        }
+
         setStatus('Creating your team...');
-        const result = await createTeam.mutateAsync({ teamName });
-        
+        await createTeam.mutateAsync({ teamName });
+
         setStatus('Finalizing...');
-        
+
         // Small delay for UX (so user sees the messages)
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Navigate to the dashboard
-        // TODO: Navigate to /dashboard/team/:teamId once route is implemented
         navigate('/dashboard');
       } catch (error: any) {
         setStatus(`Error: ${error.message || 'Failed to set up workspace'}`);
+        // Allow retry on error? Maybe specific button. 
+        // For now, failure stops the loop because ref is true.
       }
     };
 
