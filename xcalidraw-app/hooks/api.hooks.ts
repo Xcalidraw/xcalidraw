@@ -81,6 +81,8 @@ export const useOnboardingStatusQuery = () => {
       return response.data
     },
     enabled: !!client,
+    retry: false,  // Don't retry on failure
+    staleTime: 5 * 60 * 1000,  // Cache for 5 minutes
   });
 };
 
@@ -89,10 +91,9 @@ export const useCompleteTeamSetupMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ teamName, orgId }: { teamName: string; orgId: string }) => {
+    mutationFn: async ({ teamName }: { teamName: string }) => {
       const response = await client.completeTeamSetup(undefined, {
         team_name: teamName,
-        org_id: orgId,
       });
       return response.data;
     },

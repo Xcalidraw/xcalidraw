@@ -5,10 +5,9 @@ import './ForceTeamCreationModal.scss';
 
 interface ForceTeamCreationModalProps {
   open: boolean;
-  orgId: string;
 }
 
-export const ForceTeamCreationModal = ({ open, orgId }: ForceTeamCreationModalProps) => {
+export const ForceTeamCreationModal = ({ open }: ForceTeamCreationModalProps) => {
   const [teamName, setTeamName] = useState('');
   const [error, setError] = useState('');
   const completeSetup = useCompleteTeamSetupMutation();
@@ -22,7 +21,7 @@ export const ForceTeamCreationModal = ({ open, orgId }: ForceTeamCreationModalPr
     }
 
     try {
-      await completeSetup.mutateAsync({ teamName: teamName.trim(), orgId });
+      await completeSetup.mutateAsync({ teamName: teamName.trim() });
       // Modal will close automatically when onboarding status updates
     } catch (err: any) {
       setError(err.message || 'Failed to create team');

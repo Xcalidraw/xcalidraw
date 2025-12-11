@@ -58,7 +58,7 @@ export default function ConfirmEmailPage() {
               {
                 onSuccess: () => {
                   toast.success('Logged in successfully')
-                  navigate('/dashboard')
+                  navigate('/onboarding')
                 },
                 onError: (error) => {
                   console.error('Auto-login failed:', error)

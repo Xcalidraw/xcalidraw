@@ -41,8 +41,7 @@
   padding: 2.5rem;
   position: relative;
   overflow: hidden;
-  border-left: 1px solid hsl(var(--border));
-  border-left: 1px solid var(--color-border-outline);
+  background: #efefef;
 
   /* Floating Shapes Container */
   .shapes-container {

@@ -4,19 +4,12 @@ import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Header } from "./components/Header/Header";
 import { Templates } from "./components/Templates/Templates";
 import { BoardsTable } from "./components/BoardsTable/BoardsTable";
-import { ForceTeamCreationModal } from "./ForceTeamCreationModal";
 import { sidebarOpenAtom } from "./store";
-import { useOnboardingStatusQuery } from "../../hooks/api.hooks";
 
 import "./DashboardPage.scss";
 
 const DashboardContent = () => {
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
-  const { data: onboardingStatus, isLoading } = useOnboardingStatusQuery();
-
-  const needsTeamSetup = !isLoading && 
-    onboardingStatus && 
-    !onboardingStatus.has_created_first_team;
 
   return (
     <>
@@ -37,14 +30,6 @@ const DashboardContent = () => {
           </div>
         </div>
       </div>
-
-      {/* Force team creation modal for new users */}
-      {needsTeamSetup && onboardingStatus.default_org_id && (
-        <ForceTeamCreationModal 
-          open={true} 
-          orgId={onboardingStatus.default_org_id}
-        />
-      )}
     </>
   );
 };

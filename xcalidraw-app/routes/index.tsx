@@ -6,6 +6,7 @@ import { IconLoader2 } from "@tabler/icons-react";
 import { DashboardPage } from "../pages/Dashboard/DashboardPage";
 import BoardPage from "../pages/Board/BoardPage";
 import { XcalidrawPlusIframeExport } from "../XcalidrawPlusIframeExport";
+import { OnboardingPage } from "../pages/Onboarding/OnboardingPage";
 
 import Auth from "../pages/Auth/Auth";
 import LoginPage from "../pages/Auth/Login";
@@ -14,14 +15,15 @@ import ConfirmEmailPage from "../pages/Auth/ConfirmEmail";
 import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import ResetPasswordPage from "../pages/Auth/ResetPassword";
 
-import { useSyncUserMutation, useListUserOrgsQuery } from "../hooks/api.hooks";
+import { useSyncUserMutation, useListUserOrgsQuery, useOnboardingStatusQuery } from "../hooks/api.hooks";
 
 const ProtectedLayout = () => {
   const checkUser = useUserLoggedIn();
   const syncUser = useSyncUserMutation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const { data: orgs } = useListUserOrgsQuery();
 
+  // We call syncUser once on mount if authenticated to ensure DB record exists
+  // but we don't retry infinitely if orgs are missing
   useEffect(() => {
     checkUser.mutate(undefined, {
       onSuccess: () => {
@@ -38,28 +40,6 @@ const ProtectedLayout = () => {
       onError: () => setIsAuthenticated(false),
     });
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated && orgs && orgs.items) {
-      if (orgs.items.length > 0) {
-        const currentOrgId = localStorage.getItem('currentOrgId');
-        if (!currentOrgId) {
-          // Default to the first organization
-          const firstOrg = orgs.items[0];
-          if (firstOrg && firstOrg.org_id) {
-            localStorage.setItem('currentOrgId', firstOrg.org_id);
-          }
-          // We might want to reload the page to ensure all components pick up the new org ID
-          // window.location.reload(); 
-          // For now, let's rely on the fact that subsequent queries will pick it up.
-        }
-      } else if (!syncUser.isPending) {
-        // Recovery: If user has no organizations, create a default one
-        // This handles the case where "Individual" signup previously didn't create an org
-        syncUser.mutate({ orgName: "My Workspace" });
-      }
-    }
-  }, [isAuthenticated, orgs, syncUser.isPending]);
 
   if (isAuthenticated === null) {
     return (
@@ -80,6 +60,9 @@ const PublicLayout = () => {
   const checkUser = useUserLoggedIn();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+  // Check onboarding status to decide where to redirect
+  const { data: onboardingStatus, isLoading: isOnboardingLoading } = useOnboardingStatusQuery();
+
   useEffect(() => {
     checkUser.mutate(undefined, {
       onSuccess: () => setIsAuthenticated(true),
@@ -87,7 +70,7 @@ const PublicLayout = () => {
     });
   }, []);
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || (isAuthenticated && isOnboardingLoading)) {
     return (
       <div style={{ display: 'flex', height: '100vh', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
         <IconLoader2 className="animate-spin" style={{ color: 'var(--muted-foreground)' }} size={32} />
@@ -96,7 +79,12 @@ const PublicLayout = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    // If user has created their first team, go to dashboard
+    if (onboardingStatus?.has_created_first_team) {
+      return <Navigate to="/dashboard" replace />;
+    }
+    // Otherwise go to onboarding
+    return <Navigate to="/onboarding" replace />;
   }
 
   return <Outlet />;
@@ -119,6 +107,7 @@ export const AppRoutes = () => {
 
       {/* Protected Routes */}
       <Route element={<ProtectedLayout />}>
+        <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/board/create" element={<BoardPage />} />
         <Route path="/board/:boardId" element={<BoardPage />} />
