@@ -16,6 +16,7 @@ import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import ResetPasswordPage from "../pages/Auth/ResetPassword";
 
 import { useListUserOrgsQuery, useOnboardingStatusQuery } from "../hooks/api.hooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ProtectedLayout = () => {
   const checkUser = useUserLoggedIn();
@@ -34,18 +35,33 @@ const ProtectedLayout = () => {
     });
   }, []);
 
+  const queryClient = useQueryClient();
   const { data: orgs } = useListUserOrgsQuery();
 
-  // Set default currentOrgId if missing
+  // Validate and Set default currentOrgId
   useEffect(() => {
     if (orgs?.items && orgs.items.length > 0) {
       const currentOrgId = localStorage.getItem('currentOrgId');
-      const firstOrg = orgs.items[0];
-      if (!currentOrgId && firstOrg?.org_id) {
-        localStorage.setItem('currentOrgId', firstOrg.org_id);
+
+      // Check if the stored Org ID actually belongs to this user
+      const isValid = currentOrgId && orgs.items.some(o => o.org_id === currentOrgId);
+
+      if (!isValid) {
+        // If missing or invalid (stale), switch to the default or first available org
+        // Cast to any because is_default might be missing from the generated client type
+        const bestOrg = orgs.items.find(o => (o as any).is_default) || orgs.items[0];
+        if (bestOrg && bestOrg.org_id) {
+          console.log(`Auto-switching organization from ${currentOrgId} to ${bestOrg.org_id}`);
+          localStorage.setItem('currentOrgId', bestOrg.org_id);
+
+          // Invalidate queries to ensure they retry with the new correct header
+          queryClient.invalidateQueries({ queryKey: ['teams'] });
+          queryClient.invalidateQueries({ queryKey: ['boards'] });
+          queryClient.invalidateQueries({ queryKey: ['onboarding'] });
+        }
       }
     }
-  }, [orgs]);
+  }, [orgs, queryClient]);
 
   if (isAuthenticated === null) {
     return (
