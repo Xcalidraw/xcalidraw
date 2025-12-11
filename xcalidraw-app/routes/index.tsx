@@ -15,11 +15,10 @@ import ConfirmEmailPage from "../pages/Auth/ConfirmEmail";
 import ForgotPasswordPage from "../pages/Auth/ForgotPassword";
 import ResetPasswordPage from "../pages/Auth/ResetPassword";
 
-import { useSyncUserMutation, useListUserOrgsQuery, useOnboardingStatusQuery } from "../hooks/api.hooks";
+import { useListUserOrgsQuery, useOnboardingStatusQuery } from "../hooks/api.hooks";
 
 const ProtectedLayout = () => {
   const checkUser = useUserLoggedIn();
-  const syncUser = useSyncUserMutation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // We call syncUser once on mount if authenticated to ensure DB record exists
@@ -28,18 +27,25 @@ const ProtectedLayout = () => {
     checkUser.mutate(undefined, {
       onSuccess: () => {
         setIsAuthenticated(true);
-        const orgName = localStorage.getItem('xcalidraw_signup_org_name');
-        syncUser.mutate({ orgName: orgName || undefined }, {
-          onSuccess: () => {
-            if (orgName) {
-              localStorage.removeItem('xcalidraw_signup_org_name');
-            }
-          }
-        });
+        // Clean up signup artifact
+        localStorage.removeItem('xcalidraw_signup_org_name');
       },
       onError: () => setIsAuthenticated(false),
     });
   }, []);
+
+  const { data: orgs } = useListUserOrgsQuery();
+
+  // Set default currentOrgId if missing
+  useEffect(() => {
+    if (orgs?.items && orgs.items.length > 0) {
+      const currentOrgId = localStorage.getItem('currentOrgId');
+      const firstOrg = orgs.items[0];
+      if (!currentOrgId && firstOrg?.org_id) {
+        localStorage.setItem('currentOrgId', firstOrg.org_id);
+      }
+    }
+  }, [orgs]);
 
   if (isAuthenticated === null) {
     return (
@@ -61,7 +67,9 @@ const PublicLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // Check onboarding status to decide where to redirect
-  const { data: onboardingStatus, isLoading: isOnboardingLoading } = useOnboardingStatusQuery();
+  const { data: onboardingStatus, isLoading: isOnboardingLoading } = useOnboardingStatusQuery({
+    enabled: isAuthenticated === true
+  });
 
   useEffect(() => {
     checkUser.mutate(undefined, {
