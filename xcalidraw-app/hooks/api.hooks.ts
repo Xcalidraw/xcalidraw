@@ -47,7 +47,7 @@ export const useSyncUserMutation = () => {
   });
 };
 
-export const useListUserOrgsQuery = () => {
+export const useListUserOrgsQuery = (options?: { enabled?: boolean }) => {
   const client = useClient();
   return useQuery({
     queryKey: ['orgs'],
@@ -55,7 +55,7 @@ export const useListUserOrgsQuery = () => {
       const response = await client.listUserOrgs();
       return response.data;
     },
-    enabled: !!client,
+    enabled: !!client && (options?.enabled ?? true),
   });
 };
 
@@ -99,6 +99,37 @@ export const useCompleteTeamSetupMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['onboarding'] });
       queryClient.invalidateQueries({ queryKey: ['teams'] });
+    },
+  });
+};
+
+// New onboarding hooks
+export const useCheckOnboardingQuery = () => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['onboarding-check'],
+    queryFn: async () => {
+      const response = await client.checkOnboarding();
+      return response.data;
+    },
+    enabled: !!client,
+    retry: false,
+  });
+};
+
+export const useOnboardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await client.onboardUser();
+      return response.data;
+    },
+    onSuccess: () => {
+      // Only invalidate onboarding checks - let the dashboard load orgs/teams naturally
+      queryClient.invalidateQueries({ queryKey: ['onboarding-check'] });
+      queryClient.invalidateQueries({ queryKey: ['onboarding'] });
     },
   });
 };
