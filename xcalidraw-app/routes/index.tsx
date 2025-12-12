@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useUserLoggedIn } from "../hooks/auth.hooks";
 import { useEffect, useState } from "react";
 import { IconLoader2 } from "@tabler/icons-react";
@@ -6,7 +6,7 @@ import { IconLoader2 } from "@tabler/icons-react";
 import { DashboardPage } from "../pages/Dashboard/DashboardPage";
 import BoardPage from "../pages/Board/BoardPage";
 import { XcalidrawPlusIframeExport } from "../XcalidrawPlusIframeExport";
-import { OnboardingPage } from "../pages/Onboarding/OnboardingPage";
+import { NewOnboardingPage as OnboardingPage } from "../pages/Onboarding/NewOnboardingPage";
 
 import Auth from "../pages/Auth/Auth";
 import LoginPage from "../pages/Auth/Login";
@@ -36,7 +36,11 @@ const ProtectedLayout = () => {
   }, []);
 
   const queryClient = useQueryClient();
-  const { data: orgs } = useListUserOrgsQuery();
+  const location = useLocation();
+  
+  // Don't fetch orgs during onboarding - they're being created!
+  const isOnboarding = location.pathname === '/onboarding';
+  const { data: orgs } = useListUserOrgsQuery({ enabled: !isOnboarding });
 
   // Validate and Set default currentOrgId
   useEffect(() => {
