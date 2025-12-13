@@ -33,6 +33,10 @@ export const DashboardPage = () => {
       }));
       setBoards(mappedBoards);
     }
+    
+    return () => {
+       setBoards([]);
+    };
   }, [boardsData, setBoards]);
 
   if (isLoading) {

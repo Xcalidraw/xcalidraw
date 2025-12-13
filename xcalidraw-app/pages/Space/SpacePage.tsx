@@ -32,7 +32,15 @@ export const SpacePage = () => {
         isStarred: false
       }));
       setBoards(mappedBoards);
+    } else if (boardsData && !boardsData.items) {
+      // Explicitly clear if items is falsy but data exists (e.g. empty list from API)
+      setBoards([]);
     }
+    
+    // Cleanup on unmount/change
+    return () => {
+        setBoards([]);
+    };
   }, [boardsData, setBoards, space]);
 
   if (isSpaceLoading) {
