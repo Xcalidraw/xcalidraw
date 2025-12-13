@@ -60,6 +60,8 @@ import {
 import "./Sidebar.scss";
 import "./TeamSearchDialog.scss";
 import "./SpaceActions.scss";
+import { SidebarSpacesSkeleton } from "./SidebarSpacesSkeleton";
+import { SidebarTeamTriggerSkeleton } from "./SidebarTeamTriggerSkeleton";
 
 // Dummy searchable teams (teams user can join)
 const SEARCHABLE_TEAMS = [
@@ -95,7 +97,7 @@ export const Sidebar = () => {
 
   const createWorkspace = useCreateWorkspaceMutation();
   const { data: workspacesData, isLoading } = useWorkspacesQuery();
-  const { data: teamsData } = useListTeamsQuery();
+  const { data: teamsData, isLoading: isTeamsLoading } = useListTeamsQuery();
 
   const teams = teamsData?.items?.map((team: any, index: number) => ({
     id: team.team_id,
@@ -234,6 +236,9 @@ export const Sidebar = () => {
     <aside className={clsx("dashboard-sidebar", { open: sidebarOpen })}>
       {/* 1. Team Selector */}
       <header className="sidebar-header">
+        {isTeamsLoading ? (
+            <SidebarTeamTriggerSkeleton />
+        ) : (
         <DropdownMenu open={isTeamDropdownOpen} onOpenChange={setIsTeamDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <button className={clsx("workspace-btn", { active: isTeamDropdownOpen || isTeamSearchOpen })}>
@@ -288,6 +293,7 @@ export const Sidebar = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
       </header>
 
       {/* Team Search Dialog */}
@@ -426,7 +432,10 @@ export const Sidebar = () => {
                 expanded={yourSpacesExpanded}
                 onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}
               >
-                {yourSpaces.map((space) => (
+                {isLoading ? (
+                  <SidebarSpacesSkeleton />
+                ) : (
+                  yourSpaces.map((space) => (
                   <div 
                     key={space.id} 
                     className="space-item-wrapper"
@@ -495,7 +504,7 @@ export const Sidebar = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                )))}
                 <div className="extra-space-item" />
               </SpaceGroup>
 
@@ -504,7 +513,10 @@ export const Sidebar = () => {
                 expanded={spacesExpanded}
                 onToggle={() => setSpacesExpanded(!spacesExpanded)}
               >
-                {spaces.map((space) => (
+                {isLoading ? (
+                  <SidebarSpacesSkeleton />
+                ) : (
+                  spaces.map((space) => (
                   <div 
                     key={space.id} 
                     className="space-item-wrapper"
@@ -573,7 +585,7 @@ export const Sidebar = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                )))}
                 <div className="extra-space-item" />
               </SpaceGroup>
             </div>

@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { IconLoader2 } from "@tabler/icons-react";
+import { DashboardSkeleton } from "./components/Skeleton/DashboardSkeleton";
 
 import { Header } from "./components/Header/Header";
 import { Templates } from "./components/Templates/Templates";
@@ -35,11 +36,7 @@ export const DashboardPage = () => {
   }, [boardsData, setBoards]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <IconLoader2 className="animate-spin text-gray-500" size={32} />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

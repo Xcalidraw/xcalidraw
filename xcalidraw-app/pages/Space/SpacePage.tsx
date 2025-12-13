@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { Header } from "../Dashboard/components/Header/Header";
 import { BoardsTable } from "../Dashboard/components/BoardsTable/BoardsTable";
 import { boardsAtom } from "../Dashboard/store";
 import { useListBoardsQuery, useSpaceQuery } from "../../hooks/api.hooks";
-import { IconLoader2 } from "@tabler/icons-react";
+import { SpaceSkeleton } from "./SpaceSkeleton";
 
 import "../Dashboard/DashboardPage.scss";
 
@@ -37,11 +36,7 @@ export const SpacePage = () => {
   }, [boardsData, setBoards, space]);
 
   if (isSpaceLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <IconLoader2 className="animate-spin text-gray-500" size={32} />
-      </div>
-    );
+    return <SpaceSkeleton />;
   }
 
   return (
