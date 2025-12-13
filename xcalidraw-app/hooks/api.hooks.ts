@@ -14,6 +14,35 @@ export const useWorkspacesQuery = () => {
   });
 };
 
+export const useSpaceQuery = (spaceId: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['space', spaceId],
+    queryFn: async () => {
+      const response = await client.getSpace(spaceId);
+      return response.data;
+    },
+    enabled: !!client && !!spaceId,
+  });
+};
+
+export const useListBoardsQuery = (spaceId?: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['boards', spaceId],
+    queryFn: async () => {
+      if (spaceId) {
+        const response = await client.listBoardsInSpace(spaceId);
+        return response.data;
+      } else {
+        const response = await client.listBoards();
+        return response.data;
+      }
+    },
+    enabled: !!client,
+  });
+};
+
 export const useCreateWorkspaceMutation = () => {
   const client = useClient();
   const queryClient = useQueryClient();
@@ -226,6 +255,37 @@ export const useAddTeamMemberMutation = () => {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['team-members', variables.orgId, variables.teamId] });
+    },
+  });
+};
+
+export const useCreateBoardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      title,
+      teamId,
+      spaceId,
+      thumbnail
+    }: {
+      title: string;
+      teamId: string;
+      spaceId?: string;
+      thumbnail?: string;
+    }) => {
+      const response = await client.createBoard(null, {
+        title,
+        team_id: teamId,
+        space_id: spaceId,
+        thumbnail
+      });
+
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
     },
   });
 };

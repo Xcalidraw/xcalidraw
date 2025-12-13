@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Grid,
   List,
@@ -11,12 +11,19 @@ import {
   Link,
   Pencil,
   Copy,
-  Image,
+  Image as ImageIcon,
   Info,
   ArrowRightLeft,
   Users,
   Trash2,
   LogOut,
+  Square,
+  Circle,
+  Triangle,
+  Hexagon,
+  Component,
+  Box,
+  Layers,
 } from "lucide-react";
 import clsx from "clsx";
 import { useState } from "react";
@@ -33,23 +40,64 @@ import {
 } from "../../../../components/ui/dropdown-menu";
 
 import "./BoardsTable.scss";
+import { CreateBoardModal } from "../CreateBoardModal/CreateBoardModal";
+import { useCreateBoardMutation, useSpaceQuery } from "../../../../hooks/api.hooks";
 
-export const BoardsTable = () => {
+interface BoardsTableProps {
+  title?: string;
+  hideTemplatesBtn?: boolean;
+}
+
+export const BoardsTable = ({ 
+  title = "Boards in this team", 
+  hideTemplatesBtn = false 
+}: BoardsTableProps) => {
   const [boards] = useAtom(filteredBoardsAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [, toggleStar] = useAtom(toggleStarAtom);
   const navigate = useNavigate();
+  const { spaceId } = useParams<{ spaceId: string }>();
+
+  // Need org/team context. For now, assume current space's team or default
+  // Ideally, useSpaceQuery(spaceId) can give us team_id
+  const { data: space } = useSpaceQuery(spaceId || "");
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const createBoardMutation = useCreateBoardMutation();
 
   const [filterBy, setFilterBy] = useState("all");
   const [ownedBy, setOwnedBy] = useState("anyone");
   const [sortBy, setSortBy] = useState("last-opened");
 
-  const handleNewBoard = () => {
-    // Generate a unique ID for the new board
-    const boardId = `board-${Date.now()}-${Math.random()
-      .toString(36)
-      .substr(2, 9)}`;
-    navigate(`/board/${boardId}`);
+  const handleCreateBoard = async (name: string, icon: string) => {
+    try {
+        // If we act in a space context, we use the space's IDs.
+        // If on dashboard (no spaceId), we might need a fallback team ID or prompt user (dashboard usually shows "Your Boards" across teams?)
+        // For this specific request "When I am on the Space page", we rely on spaceId.
+        
+        let teamId = space?.team_id;
+        
+        // Fallback: If no space (Dashboard), use user's default team? 
+        // This part requires getting the current user's default team if not in a space.
+        // Since the requirement focuses on "Space page", we prioritize that.
+        if (!teamId) {
+            // TODO: Handle dashboard (non-space) creation logic if needed
+            console.error("No team context found for board creation");
+            return;
+        }
+
+        const newBoard = await createBoardMutation.mutateAsync({
+            title: name,
+            teamId: teamId,
+            spaceId: spaceId,
+            thumbnail: icon
+        });
+        
+        setIsCreateModalOpen(false);
+        navigate(`/board/${newBoard.board_id}`);
+    } catch (error) {
+        console.error("Failed to create board:", error);
+    }
   };
 
   const filterOptions = [
@@ -74,15 +122,23 @@ export const BoardsTable = () => {
 
   return (
     <div className="boards-table-section">
+      <CreateBoardModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        onCreate={handleCreateBoard}
+        isLoading={createBoardMutation.isPending}
+      />
       <div className="section-header">
         <div className="header-left">
-          <h2>Boards in this team</h2>
+          <h2>{title}</h2>
         </div>
         <div className="header-actions">
-          <Button variant="secondary" size="default">
-            Explore templates
-          </Button>
-          <Button variant="outline" size="default" onClick={handleNewBoard}>
+          {!hideTemplatesBtn && (
+            <Button variant="secondary" size="default">
+              Explore templates
+            </Button>
+          )}
+          <Button variant="outline" size="default" onClick={() => setIsCreateModalOpen(true)}>
             + Create new
           </Button>
         </div>
@@ -143,7 +199,22 @@ export const BoardsTable = () => {
               </tr>
             </thead>
             <tbody>
-              {boards.map((board) => (
+              {boards.map((board) => {
+                // Map icon name to Lucide component
+                // Default to Layout if not found
+                const IconComponent = {
+                   layout: Layout,
+                   orange: Layout,
+                   blue: Square,
+                   pink: Circle,
+                   purple: Triangle,
+                   green: Hexagon,
+                   red: Component,
+                   cyan: Box,
+                   yellow: Layers,
+                }[board.icon] || Layout;
+
+                return (
                 <tr
                   key={board.id}
                   onClick={() => navigate(`/board/${board.id}`)}
@@ -152,7 +223,7 @@ export const BoardsTable = () => {
                   <td className="col-name">
                     <div className="board-name-wrapper">
                       <div className={`board-icon icon-${board.icon}`}>
-                        <Layout size={16} />
+                        <IconComponent size={16} />
                       </div>
                       <div className="board-details">
                         <span className="name-text">{board.name}</span>
@@ -214,7 +285,7 @@ export const BoardsTable = () => {
                             Duplicate
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Image size={14} />
+                            <ImageIcon size={14} />
                             Change thumbnail
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
@@ -250,14 +321,27 @@ export const BoardsTable = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>
       ) : (
         <div className="boards-grid-container">
           {/* Grid View Implementation */}
-          {boards.map((board) => (
+          {boards.map((board) => {
+             const IconComponent = {
+                layout: Layout,
+                orange: Layout,
+                blue: Square,
+                pink: Circle,
+                purple: Triangle,
+                green: Hexagon,
+                red: Component,
+                cyan: Box,
+                yellow: Layers,
+             }[board.icon] || Layout;
+
+             return (
             <div
               key={board.id}
               className="board-card"
@@ -266,7 +350,7 @@ export const BoardsTable = () => {
               <div className="board-preview">
                 {/* Visual placeholder matching the icon color/theme */}
                 <div className={`preview-placeholder bg-${board.icon}`}>
-                  <Layout size={32} />
+                  <IconComponent size={32} />
                 </div>
                 
                 <div
@@ -307,7 +391,7 @@ export const BoardsTable = () => {
                         Duplicate
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                        <Image size={14} />
+                        <ImageIcon size={14} />
                         Change thumbnail
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
@@ -356,7 +440,7 @@ export const BoardsTable = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
       <div style={{ height: "50px", flexShrink: 0 }} />
