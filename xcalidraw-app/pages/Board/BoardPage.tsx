@@ -319,6 +319,8 @@ const initializeScene = async (opts: {
   return { scene: null, isExternalScene: false };
 };
 
+import { useBoardQuery } from "../../hooks/api.hooks";
+
 const XcalidrawWrapper = ({
   boardId,
   onHomeClick,
@@ -326,6 +328,7 @@ const XcalidrawWrapper = ({
   boardId?: string;
   onHomeClick?: () => void;
 }) => {
+  const { data: boardData } = useBoardQuery(boardId);
   const [errorMessage, setErrorMessage] = useState("");
   const isCollabDisabled = isRunningInIframe();
 
@@ -399,6 +402,18 @@ const XcalidrawWrapper = ({
   useEffect(() => {
     if (!xcalidrawAPI || (!isCollabDisabled && !collabAPI)) {
       return;
+    }
+
+    if (boardData?.title && xcalidrawAPI) {
+      // Sync board name from API to AppState
+       const currentName = xcalidrawAPI.getAppState().name;
+       if (currentName !== boardData.title && (!currentName || currentName.startsWith("Untitled"))) {
+          xcalidrawAPI.updateScene({
+            appState: {
+              name: boardData.title
+            }
+          });
+       }
     }
 
     const loadImages = (
@@ -585,7 +600,7 @@ const XcalidrawWrapper = ({
         false,
       );
     };
-  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode, boardId]);
+  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode, boardId, boardData]);
 
   useEffect(() => {
     const unloadHandler = (event: BeforeUnloadEvent) => {
