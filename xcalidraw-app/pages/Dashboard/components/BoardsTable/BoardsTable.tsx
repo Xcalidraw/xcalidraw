@@ -28,7 +28,7 @@ import {
 import clsx from "clsx";
 import { useState } from "react";
 
-import { filteredBoardsAtom, viewModeAtom, toggleStarAtom } from "../../store";
+import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom } from "../../store";
 import { Button } from "../../../../components/ui/button";
 import { Select } from "../../../../components/ui/select";
 import {
@@ -42,6 +42,7 @@ import {
 import "./BoardsTable.scss";
 import { CreateBoardModal } from "../CreateBoardModal/CreateBoardModal";
 import { useCreateBoardMutation, useSpaceQuery } from "../../../../hooks/api.hooks";
+import { EmptyState } from "../EmptyState/EmptyState";
 
 interface BoardsTableProps {
   title?: string;
@@ -53,6 +54,7 @@ export const BoardsTable = ({
   hideTemplatesBtn = false 
 }: BoardsTableProps) => {
   const [boards] = useAtom(filteredBoardsAtom);
+  const [allBoards] = useAtom(boardsAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
   const [, toggleStar] = useAtom(toggleStarAtom);
   const navigate = useNavigate();
@@ -119,6 +121,8 @@ export const BoardsTable = ({
     { value: "modified", label: "Last modified" },
     { value: "created", label: "Date created" },
   ];
+  
+  const isFiltersDisabled = allBoards.length === 0;
 
   return (
     <div className="boards-table-section">
@@ -152,6 +156,7 @@ export const BoardsTable = ({
               options={filterOptions}
               value={filterBy}
               onChange={setFilterBy}
+              disabled={isFiltersDisabled}
             />
           </div>
 
@@ -160,12 +165,18 @@ export const BoardsTable = ({
               options={ownedByOptions}
               value={ownedBy}
               onChange={setOwnedBy}
+              disabled={isFiltersDisabled}
             />
           </div>
 
           <div className="filter-group">
             <span className="filter-label">Sort by</span>
-            <Select options={sortOptions} value={sortBy} onChange={setSortBy} />
+            <Select 
+              options={sortOptions} 
+              value={sortBy} 
+              onChange={setSortBy} 
+              disabled={isFiltersDisabled}
+            />
           </div>
         </div>
 
@@ -185,7 +196,14 @@ export const BoardsTable = ({
         </div>
       </div>
 
-      {viewMode === "list" ? (
+      {boards.length === 0 ? (
+         <EmptyState 
+            title="No boards found"
+            description={spaceId ? "This space doesn't have any boards yet. Create one to get started." : "You don't have any boards yet. Create one to get started."}
+            actionLabel="Create board"
+            onAction={() => setIsCreateModalOpen(true)}
+          />
+      ) : viewMode === "list" ? (
         <div className="boards-table-container">
           <table className="boards-table">
             <thead>
