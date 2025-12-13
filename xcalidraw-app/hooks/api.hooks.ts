@@ -289,3 +289,16 @@ export const useCreateBoardMutation = () => {
     },
   });
 };
+
+export const useBoardQuery = (boardId?: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['board', boardId],
+    queryFn: async () => {
+      if (!boardId) return null;
+      const response = await client.getBoard(boardId);
+      return response.data;
+    },
+    enabled: !!client && !!boardId,
+  });
+};
