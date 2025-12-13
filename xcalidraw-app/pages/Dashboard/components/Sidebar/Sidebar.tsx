@@ -24,7 +24,7 @@ import {
 import clsx from "clsx";
 import { toast } from "sonner";
 import { useCreateWorkspaceMutation, useWorkspacesQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, matchPath } from "react-router-dom";
 
 import {
   currentTeamAtom,
@@ -92,12 +92,29 @@ export const Sidebar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const teamSearchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-
+  
 
   const createWorkspace = useCreateWorkspaceMutation();
   const { data: workspacesData, isLoading } = useWorkspacesQuery();
   const { data: teamsData, isLoading: isTeamsLoading } = useListTeamsQuery();
+
+  // Sync active state with URL
+  useEffect(() => {
+    const pathname = location.pathname;
+    
+    if (pathname === '/dashboard' || pathname === '/dashboard/') {
+        setActiveNavItem('home');
+        setActiveSpaceId(null);
+    } else {
+        const spaceMatch = matchPath('/dashboard/space/:spaceId', pathname);
+        if (spaceMatch && spaceMatch.params.spaceId) {
+            setActiveSpaceId(spaceMatch.params.spaceId);
+            setActiveNavItem(null as any);
+        }
+    }
+  }, [location.pathname]);
 
   const teams = teamsData?.items?.map((team: any, index: number) => ({
     id: team.team_id,
