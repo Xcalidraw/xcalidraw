@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { IconLoader2 } from "@tabler/icons-react";
 
 import { DashboardPage } from "../pages/Dashboard/DashboardPage";
+import { SpacePage } from "../pages/Space/SpacePage";
+import { DashboardLayout } from "../pages/Dashboard/DashboardLayout";
 import BoardPage from "../pages/Board/BoardPage";
 import { XcalidrawPlusIframeExport } from "../XcalidrawPlusIframeExport";
 import { NewOnboardingPage as OnboardingPage } from "../pages/Onboarding/NewOnboardingPage";
@@ -136,7 +138,12 @@ export const AppRoutes = () => {
       {/* Protected Routes */}
       <Route element={<ProtectedLayout />}>
         <Route path="/onboarding" element={<OnboardingPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/space/:spaceId" element={<SpacePage />} />
+        </Route>
+
         <Route path="/board/create" element={<BoardPage />} />
         <Route path="/board/:boardId" element={<BoardPage />} />
         <Route

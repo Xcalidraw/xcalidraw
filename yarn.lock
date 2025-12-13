@@ -5038,10 +5038,10 @@
     "@webassemblyjs/ast" "1.14.1"
     "@xtuc/long" "4.2.2"
 
-"@xcalidraw/client@./xcalidraw-client-1.0.7.tgz":
-  version "1.0.7"
-  resolved "file:xcalidraw-app/xcalidraw-client-1.0.7.tgz"
-  integrity sha512-Cn1xV+sc0BocqSKUXwshNEzIDOZCB0SGHlhZDsvcHNqqYUJ0Xn3cq22ZZu+Mi3EP7EM1cNYMH+Cm0f3Bw1+npw==
+"@xcalidraw/client@./xcalidraw-client-1.0.9.tgz":
+  version "1.0.9"
+  resolved "file:xcalidraw-app/xcalidraw-client-1.0.9.tgz"
+  integrity sha512-Lms2c464FGI/XkTU6nhuKH+bYZeYKaaE1knMa+5EKWEU6Z9pfMotL7G9Fv5McuDluEAyicdZA8hHxULvdPme/g==
   dependencies:
     axios "^1.6.2"
     openapi-client-axios "^7.5.1"

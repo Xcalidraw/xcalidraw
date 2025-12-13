@@ -24,6 +24,7 @@ import {
 import clsx from "clsx";
 import { toast } from "sonner";
 import { useCreateWorkspaceMutation, useWorkspacesQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
+import { useNavigate } from "react-router-dom";
 
 import {
   currentTeamAtom,
@@ -88,6 +89,7 @@ export const Sidebar = () => {
   const [activeSpaceId, setActiveSpaceId] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const teamSearchInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
 
 
@@ -373,6 +375,7 @@ export const Sidebar = () => {
               onClick={() => {
                 setActiveNavItem('home');
                 setActiveSpaceId(null); // Deselect spaces
+                navigate('/dashboard');
               }}
             />
             <NavItem 
@@ -430,6 +433,7 @@ export const Sidebar = () => {
                     onClick={() => {
                       setActiveSpaceId(space.id);
                       setActiveNavItem(null as any);
+                      navigate(`/dashboard/space/${space.id}`);
                     }}
                   >
                     <div className={clsx("space-item", { active: activeSpaceId === space.id })}>
@@ -507,6 +511,7 @@ export const Sidebar = () => {
                     onClick={() => {
                       setActiveSpaceId(space.id);
                       setActiveNavItem(null as any);
+                      navigate(`/dashboard/space/${space.id}`);
                     }}
                   >
                     <div className={clsx("space-item", { active: activeSpaceId === space.id })}>
