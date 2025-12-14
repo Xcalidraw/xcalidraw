@@ -1,5 +1,5 @@
 import { atom } from "../../app-jotai";
-import { atomWithQuery, atomWithInfiniteQuery } from 'jotai-tanstack-query';
+import { atomWithQuery, atomWithInfiniteQuery, atomWithMutation } from 'jotai-tanstack-query';
 import { getClient } from '../../api/api-client';
 
 // Types
@@ -294,4 +294,28 @@ export const boardsTotalAtom = atom((get) => {
   const queryResult = get(boardsQueryAtom) as any;
   // Get total from the first page (it's consistent across pages)
   return queryResult.data?.pages?.[0]?.total || 0;
+});
+
+// Delete board mutation atom
+export const deleteBoardMutationAtom = atomWithMutation(() => {
+  const client = getClient();
+  return {
+    mutationKey: ['deleteBoard'],
+    mutationFn: async (boardId: string) => {
+      await client.deleteBoard({ boardId });
+      return boardId;
+    },
+  };
+});
+
+// Delete space mutation atom  
+export const deleteSpaceMutationAtom = atomWithMutation(() => {
+  const client = getClient();
+  return {
+    mutationKey: ['deleteSpace'],
+    mutationFn: async (spaceId: string) => {
+      await client.deleteSpace({ spaceId });
+      return spaceId;
+    },
+  };
 });
