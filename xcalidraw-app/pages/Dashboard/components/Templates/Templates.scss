@@ -121,7 +121,8 @@
 
   .divider-vertical {
     width: 1px;
-    height: 100%;
+    min-height: 100px; // Match approximate card height
+    align-self: stretch;
     background: linear-gradient(
       to bottom,
       transparent 0%,
