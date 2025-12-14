@@ -36,6 +36,7 @@ import {
   teamsAtom,
   teamsQueryAtom,
   workspacesQueryAtom,
+  deleteSpaceMutationAtom,
 } from "../../store";
 import { Input } from "../../../../components/ui/input";
 import {
@@ -99,6 +100,9 @@ export const Sidebar = () => {
   const location = useLocation();
 
   const createWorkspace = useCreateWorkspaceMutation();
+  const [{ mutateAsync: deleteSpace, isPending: isDeletePending }] = useAtom(deleteSpaceMutationAtom);
+  const [{ refetch: refetchWorkspaces }] = useAtom(workspacesQueryAtom) as any;
+  const [spaceToDelete, setSpaceToDelete] = useState<{ id: string; name: string } | null>(null);
   
   // Get loading states from query atoms
   const teamsQueryResult = useAtomValue(teamsQueryAtom);
@@ -494,7 +498,7 @@ export const Sidebar = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="danger" onClick={(e) => {
                               e.stopPropagation();
-                              toast.error('Delete confirmation');
+                              setSpaceToDelete({ id: space.id, name: space.name });
                             }}>
                               <Trash2 size={14} />
                               <span>Delete</span>
@@ -575,7 +579,7 @@ export const Sidebar = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="danger" onClick={(e) => {
                               e.stopPropagation();
-                              toast.error('Delete confirmation');
+                              setSpaceToDelete({ id: space.id, name: space.name });
                             }}>
                               <Trash2 size={14} />
                               <span>Delete</span>
@@ -648,6 +652,55 @@ export const Sidebar = () => {
                 )}
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Space Confirmation Dialog */}
+      <Dialog open={!!spaceToDelete} onOpenChange={(open) => !open && setSpaceToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Space</DialogTitle>
+            <DialogDescription className="space-y-2">
+              <p>Are you sure you want to delete "{spaceToDelete?.name}"?</p>
+              <p className="text-red-600 font-medium">
+                ⚠️ This will permanently delete all boards within this space. This action cannot be undone.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setSpaceToDelete(null)}
+              disabled={isDeletePending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (!spaceToDelete) return;
+                try {
+                  await deleteSpace(spaceToDelete.id);
+                  await refetchWorkspaces();
+                  toast.success("Space and all its boards deleted successfully");
+                  setSpaceToDelete(null);
+                  navigate('/dashboard');
+                } catch (error: any) {
+                  if (error?.response?.status === 403) {
+                    toast.error("You don't have permission to delete this space", {
+                      description: "Only the space owner can delete it."
+                    });
+                  } else {
+                    toast.error("Failed to delete space");
+                  }
+                  setSpaceToDelete(null);
+                }
+              }}
+              disabled={isDeletePending}
+            >
+              {isDeletePending ? "Deleting..." : "Delete Space"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

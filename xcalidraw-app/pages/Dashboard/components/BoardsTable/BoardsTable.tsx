@@ -88,7 +88,7 @@ const BOARD_ICON_MAP: Record<string, React.ElementType> = {
   clip: ClipboardList
 };
 
-import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom, sortByAtom, boardsPaginationAtom, boardsTotalAtom, Board, boardsLoadingAtom, boardsQueryAtom } from "../../store";
+import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom, sortByAtom, boardsPaginationAtom, boardsTotalAtom, Board, boardsLoadingAtom, boardsQueryAtom, deleteBoardMutationAtom } from "../../store";
 import { Skeleton } from "../../../../components/ui/skeleton";
 import { Button } from "../../../../components/ui/button";
 import { Select } from "../../../../components/ui/select";
@@ -104,6 +104,14 @@ import "./BoardsTable.scss";
 import { CreateBoardModal } from "../CreateBoardModal/CreateBoardModal";
 import { useCreateBoardMutation, useSpaceQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
 import { EmptyState } from "../EmptyState/EmptyState";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../../../../components/ui/dialog";
+import { toast } from "sonner";
 
 interface BoardsTableProps {
   title?: string;
@@ -135,6 +143,9 @@ export const BoardsTable = ({
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const createBoardMutation = useCreateBoardMutation();
+  const [{ mutateAsync: deleteBoard, isPending: isDeleting }] = useAtom(deleteBoardMutationAtom);
+  const [{ refetch: refetchBoards }] = useAtom(boardsQueryAtom) as any;
+  const [boardToDelete, setBoardToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const [filterBy, setFilterBy] = useState("all");
   const [ownedBy, setOwnedBy] = useState("anyone");
@@ -391,7 +402,10 @@ export const BoardsTable = ({
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 className="danger"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setBoardToDelete({ id: board.id, name: board.name });
+                                }}
                               >
                                 <Trash2 size={14} />
                                 Delete
@@ -502,7 +516,10 @@ export const BoardsTable = ({
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="danger"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setBoardToDelete({ id: board.id, name: board.name });
+                        }}
                       >
                         <Trash2 size={14} />
                         Delete
@@ -578,6 +595,51 @@ export const BoardsTable = ({
         {boards.length} of {total} boards
       </div>
       <div style={{ height: "50px", flexShrink: 0 }} />
+      
+      {/* Delete Board Confirmation Dialog */}
+      <Dialog open={!!boardToDelete} onOpenChange={(open) => !open && setBoardToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Board</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{boardToDelete?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setBoardToDelete(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (!boardToDelete) return;
+                try {
+                  await deleteBoard(boardToDelete.id);
+                  await refetchBoards();
+                  toast.success("Board deleted successfully");
+                  setBoardToDelete(null);
+                } catch (error: any) {
+                  if (error?.response?.status === 403) {
+                    toast.error("You don't have permission to delete this board", {
+                      description: "Only the board owner can delete it."
+                    });
+                  } else {
+                    toast.error("Failed to delete board");
+                  }
+                  setBoardToDelete(null);
+                }
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

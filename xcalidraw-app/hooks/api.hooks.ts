@@ -358,3 +358,35 @@ export const useUpdateBoardMutation = () => {
      },
   });
 };
+
+// Delete board mutation
+export const useDeleteBoardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boardId: string) => {
+      await client.deleteBoard({ boardId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+    },
+  });
+};
+
+// Delete space mutation (cascade deletes all boards in the space)
+export const useDeleteSpaceMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (spaceId: string) => {
+      await client.deleteSpace({ spaceId });
+    },
+    onSuccess: () => {
+      // Invalidate both boards and workspaces since cascade delete affects both
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      queryClient.invalidateQueries({ queryKey: ['workspaces'] });
+    },
+  });
+};
