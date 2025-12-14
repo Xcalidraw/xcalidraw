@@ -41,7 +41,7 @@ import {
 
 import "./BoardsTable.scss";
 import { CreateBoardModal } from "../CreateBoardModal/CreateBoardModal";
-import { useCreateBoardMutation, useSpaceQuery } from "../../../../hooks/api.hooks";
+import { useCreateBoardMutation, useSpaceQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
 import { EmptyState } from "../EmptyState/EmptyState";
 
 interface BoardsTableProps {
@@ -60,9 +60,11 @@ export const BoardsTable = ({
   const navigate = useNavigate();
   const { spaceId } = useParams<{ spaceId: string }>();
 
-  // Need org/team context. For now, assume current space's team or default
-  // Ideally, useSpaceQuery(spaceId) can give us team_id
+  // Get space data if we're in a space context
   const { data: space } = useSpaceQuery(spaceId || "");
+  
+  // Get user's teams as fallback when not in a space context
+  const { data: teamsData } = useListTeamsQuery();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const createBoardMutation = useCreateBoardMutation();
@@ -73,17 +75,16 @@ export const BoardsTable = ({
 
   const handleCreateBoard = async (name: string, icon: string) => {
     try {
-        // If we act in a space context, we use the space's IDs.
-        // If on dashboard (no spaceId), we might need a fallback team ID or prompt user (dashboard usually shows "Your Boards" across teams?)
-        // For this specific request "When I am on the Space page", we rely on spaceId.
-        
+        // Priority 1: Use space's team_id if we're in a space context
         let teamId = space?.team_id;
         
-        // Fallback: If no space (Dashboard), use user's default team? 
-        // This part requires getting the current user's default team if not in a space.
-        // Since the requirement focuses on "Space page", we prioritize that.
+        // Priority 2: If no space (Dashboard), use user's first team
+        if (!teamId && teamsData?.items && teamsData.items.length > 0) {
+            teamId = teamsData.items[0].team_id;
+        }
+        
+        // If still no teamId, we can't create a board
         if (!teamId) {
-            // TODO: Handle dashboard (non-space) creation logic if needed
             console.error("No team context found for board creation");
             return;
         }

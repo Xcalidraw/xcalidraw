@@ -6,51 +6,34 @@ import { DashboardSkeleton } from "./components/Skeleton/DashboardSkeleton";
 import { Header } from "./components/Header/Header";
 import { Templates } from "./components/Templates/Templates";
 import { BoardsTable } from "./components/BoardsTable/BoardsTable";
-import { boardsAtom } from "./store";
-import { useListBoardsQuery } from "../../hooks/api.hooks";
+import { boardsContextAtom, boardsLoadingAtom } from "./store";
+import { useListTeamsQuery } from "../../hooks/api.hooks";
 
 import "./DashboardPage.scss";
 
 export const DashboardPage = () => {
-  const [, setBoards] = useAtom(boardsAtom);
-  const { data: boardsData, isLoading } = useListBoardsQuery();
-
+  const { data: teamsData, isLoading: isTeamsLoading } = useListTeamsQuery();
+  const teamId = teamsData?.items?.[0]?.team_id;
+  
+  const [, setBoardsContext] = useAtom(boardsContextAtom);
+  const [isBoardsLoading] = useAtom(boardsLoadingAtom);
+  
+  // Set context when teamId is available
   useEffect(() => {
-    if (boardsData?.items) {
-      // Map API boards to Store boards
-      const mappedBoards = boardsData.items.map((board: any) => ({
-        id: board.board_id,
-        name: board.title,
-        modifiedBy: board.created_by, // TODO: Resolve user name
-        modifiedDate: new Date(board.updated_at).toLocaleDateString(),
-        team: "Main Team", // TODO: Resolve team name
-        space: undefined,
-        parentType: 'TEAM' as const, // Dashboard shows root/team boards? Or all boards?
-        lastOpened: new Date(board.updated_at).toLocaleDateString(),
-        owner: board.created_by,
-        icon: "blue" as "orange" | "blue" | "pink" | "purple" | "green", // Default icon
-        isStarred: false
-      }));
-      setBoards(mappedBoards);
+    if (teamId) {
+      setBoardsContext({ teamId });
     }
-    
-    return () => {
-       setBoards([]);
-    };
-  }, [boardsData, setBoards]);
-
-  if (isLoading) {
+  }, [teamId, setBoardsContext]);
+  
+  // Show loading if teams or boards are loading
+  if (isTeamsLoading || isBoardsLoading) {
     return <DashboardSkeleton />;
   }
-
+  
   return (
-    <>
-      <div className="dashboard-content-inner">
-        <Templates />
-        <BoardsTable />
-      </div>
-    </>
+    <div className="dashboard-content-inner">
+      <Templates />
+      <BoardsTable />
+    </div>
   );
 };
-
-
