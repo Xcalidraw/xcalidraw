@@ -461,6 +461,17 @@
             background-color: #f6ffed;
             color: #28a745;
           }
+          &.icon-red { background-color: #fff1f0; color: #e74c3c; }
+          &.icon-cyan { background-color: #e6fffa; color: #1abc9c; }
+          &.icon-yellow { background-color: #fffbe6; color: #f39c12; }
+          &.icon-indigo { background-color: #eef2ff; color: #6366f1; }
+          &.icon-teal { background-color: #f0fdfa; color: #14b8a6; }
+          &.icon-lime { background-color: #f7fee7; color: #84cc16; }
+          &.icon-rose { background-color: #fff1f2; color: #f43f5e; }
+          &.icon-violet { background-color: #f5f3ff; color: #8b5cf6; }
+          &.icon-amber { background-color: #fffbeb; color: #f59e0b; }
+          &.icon-emerald { background-color: #ecfdf5; color: #10b981; }
+          &.icon-sky { background-color: #f0f9ff; color: #0ea5e9; }
         }
 
         .board-details {
@@ -652,6 +663,17 @@
               background: linear-gradient(135deg, #b7eb8f 0%, #73d13d 100%);
               color: #135200;
             }
+            &.bg-red { background: linear-gradient(135deg, #ffccc7 0%, #ff7875 100%); color: #a8071a; }
+            &.bg-cyan { background: linear-gradient(135deg, #b5f5ec 0%, #36cfc9 100%); color: #006d75; }
+            &.bg-yellow { background: linear-gradient(135deg, #fffb8f 0%, #ffec3d 100%); color: #ad8b00; }
+            &.bg-indigo { background: linear-gradient(135deg, #d3adf7 0%, #85a5ff 100%); color: #10239e; }
+            &.bg-teal { background: linear-gradient(135deg, #87e8de 0%, #5cdbd3 100%); color: #006d75; }
+            &.bg-lime { background: linear-gradient(135deg, #d9f7be 0%, #b7eb8f 100%); color: #3f6600; }
+            &.bg-rose { background: linear-gradient(135deg, #ffd6e7 0%, #ff85c0 100%); color: #9e1068; }
+            &.bg-violet { background: linear-gradient(135deg, #d3adf7 0%, #9254de 100%); color: #391085; }
+            &.bg-amber { background: linear-gradient(135deg, #ffe58f 0%, #ffc53d 100%); color: #d46b08; }
+            &.bg-emerald { background: linear-gradient(135deg, #95de64 0%, #73d13d 100%); color: #237804; }
+            &.bg-sky { background: linear-gradient(135deg, #91caff 0%, #40a9ff 100%); color: #003a8c; }
           }
 
           .card-actions {
