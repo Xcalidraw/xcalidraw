@@ -40,6 +40,58 @@ export const currentTeamAtom = atom<Team>({
   colorClass: "",
 });
 
+// Teams query atom
+export const teamsQueryAtom = atomWithQuery(() => {
+  const client = getClient();
+  
+  return {
+    queryKey: ['teams'],
+    queryFn: async () => {
+      const response = await client.listTeams();
+      return response.data;
+    },
+  };
+});
+
+// Derived atom for teams with UI formatting
+export const teamsAtom = atom((get) => {
+  const queryResult = get(teamsQueryAtom);
+  
+  if (!queryResult.data?.items) return [];
+  
+  return queryResult.data.items.map((team: any, index: number) => ({
+    id: team.team_id,
+    name: team.name,
+    initials: team.name.substring(0, 2).toUpperCase(),
+    colorClass: ['color-teal', 'color-purple', 'color-orange'][index % 3]
+  }));
+});
+
+// Workspaces/Spaces query atom
+export const workspacesQueryAtom = atomWithQuery(() => {
+  const client = getClient();
+  
+  return {
+    queryKey: ['workspaces'],
+    queryFn: async () => {
+      const response = await client.listSpaces();
+      return response.data;
+    },
+  };
+});
+
+// Derived atom for your spaces
+export const yourSpacesAtom = atom((get) => {
+  const queryResult = get(workspacesQueryAtom);
+  
+  if (!queryResult.data?.items) return [];
+  
+  return queryResult.data.items.map((ws: any) => ({
+    id: ws.space_id,
+    name: ws.name,
+  }));
+});
+
 // Context atom to store current teamId or spaceId
 export interface BoardsContext {
   teamId?: string;
@@ -131,7 +183,6 @@ export const spacesExpandedAtom = atom<boolean>(true);
 export const createWorkspaceModalOpenAtom = atom<boolean>(false);
 export const sidebarOpenAtom = atom<boolean>(false);
 
-export const yourSpacesAtom = atom<Space[]>([]);
 
 export const spacesAtom = atom<Space[]>([
   { id: "2", name: "[archiv] Consumer Domain", isArchived: true },
