@@ -88,7 +88,8 @@ const BOARD_ICON_MAP: Record<string, React.ElementType> = {
   clip: ClipboardList
 };
 
-import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom } from "../../store";
+import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom, sortByAtom, boardsPaginationAtom, boardsTotalAtom, Board, boardsLoadingAtom, boardsQueryAtom } from "../../store";
+import { Skeleton } from "../../../../components/ui/skeleton";
 import { Button } from "../../../../components/ui/button";
 import { Select } from "../../../../components/ui/select";
 import {
@@ -116,6 +117,12 @@ export const BoardsTable = ({
   const [boards] = useAtom(filteredBoardsAtom);
   const [allBoards] = useAtom(boardsAtom);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
+  const [pagination, setPagination] = useAtom(boardsPaginationAtom);
+  const [total] = useAtom(boardsTotalAtom);
+  const [isLoading] = useAtom(boardsLoadingAtom);
+  const [{ fetchNextPage, hasNextPage }] = useAtom(boardsQueryAtom) as any;
+  const hasMore = hasNextPage;
+  const [sortBy, setSortBy] = useAtom(sortByAtom); // Connected to store
   const [, toggleStar] = useAtom(toggleStarAtom);
   const navigate = useNavigate();
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -131,7 +138,7 @@ export const BoardsTable = ({
 
   const [filterBy, setFilterBy] = useState("all");
   const [ownedBy, setOwnedBy] = useState("anyone");
-  const [sortBy, setSortBy] = useState("last-opened");
+  // sortBy removed from local state
 
   const handleCreateBoard = async (name: string, icon: string) => {
     try {
@@ -235,7 +242,7 @@ export const BoardsTable = ({
             <Select 
               options={sortOptions} 
               value={sortBy} 
-              onChange={setSortBy} 
+              onChange={(val) => setSortBy(val as any)} 
               disabled={isFiltersDisabled}
             />
           </div>
@@ -257,7 +264,7 @@ export const BoardsTable = ({
         </div>
       </div>
 
-      {boards.length === 0 ? (
+      {!isLoading && boards.length === 0 ? (
          <EmptyState 
             title="No boards found"
             description={spaceId ? "This space doesn't have any boards yet. Create one to get started." : "You don't have any boards yet. Create one to get started."}
@@ -278,125 +285,153 @@ export const BoardsTable = ({
               </tr>
             </thead>
             <tbody>
-              {boards.map((board) => {
-                const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
+              {isLoading && boards.length === 0 ? (
+                // Skeleton Rows
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={`skeleton-${i}`}>
+                    <td className="col-name"><Skeleton className="h-6 w-48" /></td>
+                    <td className="col-users"><Skeleton className="h-6 w-8" /></td>
+                    <td className="col-space"><Skeleton className="h-6 w-24" /></td>
+                    <td className="col-date"><Skeleton className="h-6 w-32" /></td>
+                    <td className="col-owner"><Skeleton className="h-6 w-24" /></td>
+                    <td className="col-actions"></td>
+                  </tr>
+                ))
+              ) : (
+                boards.map((board: Board) => {
+                  const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
 
-                return (
-                <tr
-                  key={board.id}
-                  onClick={() => navigate(`/board/${board.id}`)}
-                  className="board-row"
-                >
-                  <td className="col-name">
-                    <div className="board-name-wrapper">
-                      <div className={`board-icon icon-${board.icon}`}>
-                        <IconComponent size={16} />
-                      </div>
-                      <div className="board-details">
-                        <span className="name-text">{board.name}</span>
-                        <span className="sub-text desktop-only">
-                          Modified by {board.modifiedBy}, {board.modifiedDate}
-                        </span>
-                        <span className="sub-text mobile-only">
-                          {board.modifiedBy} &bull; {board.space ? <>{board.space} &bull; </> : null} {board.lastOpened}
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="col-users">
-                    {/* Placeholder for online users */}
-                  </td>
-                  <td className="col-space">
-                    {board.space ? (
-                      <span className="space-tag">{board.space}</span>
-                    ) : null}
-                  </td>
-                  <td className="col-date">{board.lastOpened}</td>
-                  <td className="col-owner">{board.owner}</td>
-                  <td className="col-actions">
-                    <div
-                      className="action-icons"
-                      onClick={(e) => e.stopPropagation()}
+                  return (
+                    <tr
+                      key={board.id}
+                      onClick={() => navigate(`/board/${board.id}`)}
+                      className="board-row"
                     >
-                      <Star
-                        size={18}
-                        className={clsx("star-icon", {
-                          active: board.isStarred,
-                        })}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleStar(board.id);
-                        }}
-                      />
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <div className="more-icon" onClick={(e) => e.stopPropagation()}>
-                            <MoreHorizontal size={18} />
+                      <td className="col-name">
+                        <div className="board-name-wrapper">
+                          <div className={`board-icon icon-${board.icon}`}>
+                            <IconComponent size={16} />
                           </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="dropdown-menu-width">
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Share2 size={14} />
-                            Share
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Link size={14} />
-                            Copy board link
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Pencil size={14} />
-                            Rename
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Copy size={14} />
-                            Duplicate
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <ImageIcon size={14} />
-                            Change thumbnail
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Info size={14} />
-                            Board Details
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <ArrowRightLeft size={14} />
-                            Move to Space
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                            <Users size={14} />
-                            Move to Team
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="danger"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Trash2 size={14} />
-                            Delete
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="warning"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <LogOut size={14} />
-                            Leave
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </td>
-                </tr>
-              )})}
+                          <div className="board-details">
+                            <span className="name-text">{board.name}</span>
+                            <span className="sub-text desktop-only">
+                              Modified by {board.modifiedBy}, {board.modifiedDate}
+                            </span>
+                            <span className="sub-text mobile-only">
+                              {board.modifiedBy} &bull; {board.space ? <>{board.space} &bull; </> : null} {board.lastOpened}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="col-users">
+                        {/* Placeholder for online users */}
+                      </td>
+                      <td className="col-space">
+                        {board.space ? (
+                          <span className="space-tag">{board.space}</span>
+                        ) : null}
+                      </td>
+                      <td className="col-date">{board.lastOpened}</td>
+                      <td className="col-owner">{board.owner}</td>
+                      <td className="col-actions">
+                        <div
+                          className="action-icons"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Star
+                            size={18}
+                            className={clsx("star-icon", {
+                              active: board.isStarred,
+                            })}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleStar(board.id);
+                            }}
+                          />
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <div className="more-icon" onClick={(e) => e.stopPropagation()}>
+                                <MoreHorizontal size={18} />
+                              </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="dropdown-menu-width">
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Share2 size={14} />
+                                Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Link size={14} />
+                                Copy board link
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Pencil size={14} />
+                                Rename
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Copy size={14} />
+                                Duplicate
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <ImageIcon size={14} />
+                                Change thumbnail
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Info size={14} />
+                                Board Details
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <ArrowRightLeft size={14} />
+                                Move to Space
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                                <Users size={14} />
+                                Move to Team
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="danger"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Trash2 size={14} />
+                                Delete
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="warning"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <LogOut size={14} />
+                                Leave
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
       ) : (
         <div className="boards-grid-container">
-          {/* Grid View Implementation */}
-          {boards.map((board) => {
-             const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
+          {isLoading && boards.length === 0 ? (
+             Array.from({ length: 8 }).map((_, i) => (
+                <div key={`skeleton-grid-${i}`} className="board-card">
+                   <div className="board-preview">
+                      <Skeleton className="h-20 w-20 rounded-xl" />
+                   </div>
+                   <div className="board-footer p-4">
+                      <Skeleton className="h-4 w-3/4 mb-2" />
+                      <Skeleton className="h-3 w-1/2" />
+                   </div>
+                </div>
+             ))
+          ) : (
+          /* Grid View Implementation */
+           boards.map((board: Board) => {
+              const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
              
              return (
             <div
@@ -497,9 +532,51 @@ export const BoardsTable = ({
                 </div>
               </div>
             </div>
-          )})}
+            );
+          })
+          )}
         </div>
       )}
+      {/* Infinite Scroll Sentinel */}
+      <div 
+        className="infinite-scroll-sentinel"
+        ref={(node) => {
+          if (!node || isLoading || !hasMore) return;
+          
+          const observer = new IntersectionObserver(
+            (entries) => {
+              if (entries[0].isIntersecting && hasMore && !isLoading) {
+                fetchNextPage();
+              }
+            },
+            { threshold: 0.5, rootMargin: '100px' }
+          );
+          
+          observer.observe(node);
+          return () => observer.disconnect();
+        }}
+        style={{ height: '20px', width: '100%' }}
+      />
+      
+      {/* Loading More Indicator */}
+      {(isLoading && boards.length > 0) && (
+        <div className="flex justify-center p-4 w-full">
+           {viewMode === "list" ? (
+             <div className="w-full space-y-2">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+             </div>
+           ) : (
+             <div className="flex gap-4">
+                <Skeleton className="h-32 w-48 rounded-xl" />
+                <Skeleton className="h-32 w-48 rounded-xl" />
+             </div>
+           )}
+        </div>
+      )}
+      <div className="text-center text-xs text-muted-foreground py-2">
+        {boards.length} of {total} boards
+      </div>
       <div style={{ height: "50px", flexShrink: 0 }} />
     </div>
   );
