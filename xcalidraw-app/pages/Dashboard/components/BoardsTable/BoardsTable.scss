@@ -453,7 +453,7 @@
         .board-icon {
           width: 40px;
           height: 40px;
-          border-radius: var(--border-radius-md);
+          border-radius: var(--border-radius-lg);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -461,67 +461,67 @@
           flex-shrink: 0;
 
           &.icon-orange {
-            background-color: #fff7e6;
-            color: #ffa500;
+            background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+            color: #d46b08; // Darker orange for text contrast
           }
           &.icon-blue {
-            background-color: #e6f7ff;
-            color: var(--color-primary);
+            background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+            color: #0050b3;
           }
           &.icon-pink {
-            background-color: #fff0f6;
-            color: #ff69b4;
+            background: linear-gradient(135deg, #fff0f6 0%, #ffd6e7 100%);
+            color: #c41d7f;
           }
           &.icon-purple {
-            background-color: #f9f0ff;
-            color: #800080;
+            background: linear-gradient(135deg, #f9f0ff 0%, #efdbff 100%);
+            color: #531dab;
           }
           &.icon-green {
-            background-color: #f6ffed;
-            color: #28a745;
+            background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
+            color: #389e0d;
           }
-          &.icon-red { background-color: #fff1f0; color: #e74c3c; }
-          &.icon-cyan { background-color: #e6fffa; color: #1abc9c; }
-          &.icon-yellow { background-color: #fffbe6; color: #f39c12; }
-          &.icon-indigo { background-color: #eef2ff; color: #6366f1; }
-          &.icon-teal { background-color: #f0fdfa; color: #14b8a6; }
-          &.icon-lime { background-color: #f7fee7; color: #84cc16; }
-          &.icon-rose { background-color: #fff1f2; color: #f43f5e; }
-          &.icon-violet { background-color: #f5f3ff; color: #8b5cf6; }
-          &.icon-amber { background-color: #fffbeb; color: #f59e0b; }
-          &.icon-emerald { background-color: #ecfdf5; color: #10b981; }
-          &.icon-sky { background-color: #f0f9ff; color: #0ea5e9; }
-
-          /* New Icons - List View */
-          &.icon-pen { background-color: #fff1f2; color: #f43f5e; }     /* Rose */
-          &.icon-user { background-color: #f5f3ff; color: #8b5cf6; }    /* Violet */
-          &.icon-bulb { background-color: #fffbeb; color: #f59e0b; }    /* Amber */
-          &.icon-plant { background-color: #f0fdf4; color: #2ecc71; }   /* Green */
-          &.icon-file { background-color: #f0f9ff; color: #0ea5e9; }    /* Sky */
-          &.icon-pin { background-color: #fef2f2; color: #e74c3c; }     /* Red */
-          &.icon-search { background-color: #fffbeb; color: #f59e0b; }  /* Amber */
-          &.icon-calendar { background-color: #ecfdf5; color: #10b981; }/* Emerald */
-          &.icon-coffee { background-color: #efebe9; color: #795548; }  /* Brown */
-          &.icon-mail { background-color: #f0fdf4; color: #16a34a; }    /* Green */
-          &.icon-chart { background-color: #ecfdf5; color: #10b981; }   /* Emerald */
-          &.icon-share { background-color: #fff7ed; color: #f97316; }   /* Orange */
-          &.icon-shield { background-color: #f5f3ff; color: #8b5cf6; }  /* Violet */
-          &.icon-clock { background-color: #f0fdfa; color: #14b8a6; }   /* Teal */
-          &.icon-folder { background-color: #fffbeb; color: #f59e0b; }  /* Amber */
-          &.icon-rocket { background-color: #f0f9ff; color: #0ea5e9; }  /* Sky */
-          &.icon-files { background-color: #f1f5f9; color: #64748b; }   /* Slate */
-          &.icon-check { background-color: #f0fdf4; color: #16a34a; }   /* Green */
-          &.icon-book { background-color: #f0f9ff; color: #0ea5e9; }    /* Sky */
-          &.icon-card { background-color: #f0fdf4; color: #16a34a; }    /* Green */
-          &.icon-compass { background-color: #eef2ff; color: #6366f1; } /* Indigo */
-          &.icon-flask { background-color: #fdf2f8; color: #ec4899; }   /* Pink */
-          &.icon-party { background-color: #f5f3ff; color: #8b5cf6; }   /* Violet */
-          &.icon-message { background-color: #f0f9ff; color: #0ea5e9; } /* Sky */
-          &.icon-grad { background-color: #ecfdf5; color: #10b981; }    /* Emerald */
-          &.icon-globe { background-color: #eff6ff; color: #3b82f6; }   /* Blue */
-          &.icon-calc { background-color: #f0fdf4; color: #16a34a; }    /* Green */
-          &.icon-cursor { background-color: #fefce8; color: #eab308; }  /* Yellow */
-          &.icon-clip { background-color: #f0fdfa; color: #14b8a6; }    /* Teal */
+          &.icon-red { background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%); color: #cf1322; }
+          &.icon-cyan { background: linear-gradient(135deg, #e6fffa 0%, #b5f5ec 100%); color: #08979c; }
+          &.icon-yellow { background: linear-gradient(135deg, #fffbe6 0%, #fff1b8 100%); color: #d48806; }
+          &.icon-indigo { background: linear-gradient(135deg, #eef2ff 0%, #d6e4ff 100%); color: #2f54eb; }
+          &.icon-teal { background: linear-gradient(135deg, #f0fdfa 0%, #b5f5ec 100%); color: #13c2c2; }
+          &.icon-lime { background: linear-gradient(135deg, #f7fee7 0%, #d9f7be 100%); color: #7cb305; }
+          &.icon-rose { background: linear-gradient(135deg, #fff1f2 0%, #ffd6e7 100%); color: #eb2f96; }
+          &.icon-violet { background: linear-gradient(135deg, #f5f3ff 0%, #d3adf7 100%); color: #722ed1; }
+          &.icon-amber { background: linear-gradient(135deg, #fffbeb 0%, #ffe58f 100%); color: #d46b08; }
+          &.icon-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-sky { background: linear-gradient(135deg, #f0f9ff 0%, #bae0ff 100%); color: #096dd9; }
+          
+          /* New Icons - List View (Lighter Gradients) */
+          &.icon-pen { background: linear-gradient(135deg, #fff1f2 0%, #ffd6e7 100%); color: #eb2f96; }
+          &.icon-user { background: linear-gradient(135deg, #f5f3ff 0%, #d3adf7 100%); color: #722ed1; }
+          &.icon-bulb { background: linear-gradient(135deg, #fffbeb 0%, #ffe58f 100%); color: #d46b08; }
+          &.icon-plant { background: linear-gradient(135deg, #f0fdf4 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-file { background: linear-gradient(135deg, #f0f9ff 0%, #bae0ff 100%); color: #096dd9; }
+          &.icon-pin { background: linear-gradient(135deg, #fef2f2 0%, #ffccc7 100%); color: #cf1322; }
+          &.icon-search { background: linear-gradient(135deg, #fffbeb 0%, #ffe58f 100%); color: #d46b08; }
+          &.icon-calendar { background: linear-gradient(135deg, #ecfdf5 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-coffee { background: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%); color: #5d4037; }
+          &.icon-mail { background: linear-gradient(135deg, #f0fdf4 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-chart { background: linear-gradient(135deg, #ecfdf5 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-share { background: linear-gradient(135deg, #fff7ed 0%, #ffbb96 100%); color: #d46b08; }
+          &.icon-shield { background: linear-gradient(135deg, #f5f3ff 0%, #d3adf7 100%); color: #722ed1; }
+          &.icon-clock { background: linear-gradient(135deg, #f0fdfa 0%, #b5f5ec 100%); color: #13c2c2; }
+          &.icon-folder { background: linear-gradient(135deg, #fffbeb 0%, #ffe58f 100%); color: #d46b08; }
+          &.icon-rocket { background: linear-gradient(135deg, #f0f9ff 0%, #bae0ff 100%); color: #096dd9; }
+          &.icon-files { background: linear-gradient(135deg, #f1f5f9 0%, #dbeafe 100%); color: #334155; }
+          &.icon-check { background: linear-gradient(135deg, #f0fdf4 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-book { background: linear-gradient(135deg, #f0f9ff 0%, #bae0ff 100%); color: #096dd9; }
+          &.icon-card { background: linear-gradient(135deg, #f0fdf4 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-compass { background: linear-gradient(135deg, #eef2ff 0%, #d6e4ff 100%); color: #2f54eb; }
+          &.icon-flask { background: linear-gradient(135deg, #fdf2f8 0%, #ffd6e7 100%); color: #c41d7f; }
+          &.icon-party { background: linear-gradient(135deg, #f5f3ff 0%, #d3adf7 100%); color: #722ed1; }
+          &.icon-message { background: linear-gradient(135deg, #f0f9ff 0%, #bae0ff 100%); color: #096dd9; }
+          &.icon-grad { background: linear-gradient(135deg, #ecfdf5 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-globe { background: linear-gradient(135deg, #eff6ff 0%, #bae0ff 100%); color: #096dd9; }
+          &.icon-calc { background: linear-gradient(135deg, #f0fdf4 0%, #b7eb8f 100%); color: #389e0d; }
+          &.icon-cursor { background: linear-gradient(135deg, #fefce8 0%, #fff1b8 100%); color: #d48806; }
+          &.icon-clip { background: linear-gradient(135deg, #f0fdfa 0%, #b5f5ec 100%); color: #13c2c2; }
         }
 
         .board-details {
