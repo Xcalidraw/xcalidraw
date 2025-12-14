@@ -1,5 +1,5 @@
 import { atom } from "../../app-jotai";
-import { atomWithQuery } from 'jotai-tanstack-query';
+import { atomWithQuery, atomWithInfiniteQuery } from 'jotai-tanstack-query';
 import { getClient } from '../../api/api-client';
 
 // Types
@@ -15,6 +15,8 @@ export interface Board {
   owner: string;
   icon: string;
   isStarred: boolean;
+  createdAt: string; // NEW: For sorting
+  updatedAt: string; // NEW: For sorting
 }
 
 export interface Space {
@@ -101,24 +103,56 @@ export interface BoardsContext {
 
 export const boardsContextAtom = atom<BoardsContext>({});
 
-// Query atom that automatically fetches boards based on context
-export const boardsQueryAtom = atomWithQuery((get) => {
+// Pagination atom
+export const boardsPaginationAtom = atom<{ limit: number; offset: number; total: number }>({
+  limit: 50,
+  offset: 0,
+  total: 0,
+});
+
+// Infinite Query atom
+export const boardsQueryAtom = atomWithInfiniteQuery((get) => {
   const context = get(boardsContextAtom);
   const client = getClient();
+  const sortBy = get(sortByAtom);
+  const search = get(searchQueryAtom);
+  const pagination = get(boardsPaginationAtom);
   
   return {
-    queryKey: ['boards', context.spaceId, context.teamId],
-    queryFn: async () => {
+    queryKey: ['boards', context.spaceId, context.teamId, sortBy, search, pagination.limit],
+    queryFn: async ({ pageParam = 0 }: { pageParam?: number }) => {
+      const params = {
+        limit: pagination.limit,
+        offset: pageParam,
+        sortBy,
+        search
+      };
+
       if (context.spaceId) {
-        const response = await client.listBoardsInSpace(context.spaceId);
+        const response = await client.listBoardsInSpace({
+          spaceId: context.spaceId,
+          ...params
+        });
         return response.data;
       } else if (context.teamId) {
-        const response = await client.listBoardsInTeam(context.teamId);
+        const response = await client.listBoardsInTeam({
+          teamId: context.teamId,
+          ...params
+        });
         return response.data;
       }
-      return { items: [] };
+      return { items: [], total: 0 };
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+      // Calculate next offset
+      const nextOffset = allPages.length * pagination.limit;
+      // If we've fetched all items, return undefined to stop
+      if (nextOffset >= lastPage.total) return undefined;
+      return nextOffset;
     },
     enabled: !!(context.spaceId || context.teamId),
+    keepPreviousData: true, 
   };
 });
 
@@ -146,13 +180,17 @@ const formatDate = (dateString: string) => {
 // derived atom to map API data to UI format with local modifications
 export const boardsAtom = atom(
   (get) => {
-    const queryResult = get(boardsQueryAtom);
+    const queryResult = get(boardsQueryAtom) as any;
     const context = get(boardsContextAtom);
     const localMods = get(boardsLocalModificationsAtom);
     
-    if (!queryResult.data?.items) return [];
+    // Check if we have pages
+    if (!queryResult.data?.pages) return [];
     
-    return queryResult.data.items.map((board: any) => {
+    // Flatten pages into a single array
+    const allItems = queryResult.data.pages.flatMap((page: any) => page.items || []);
+    
+    return allItems.map((board: any) => {
       const baseBoard = {
         id: board.board_id,
         name: board.title || "Untitled Board",
@@ -165,6 +203,8 @@ export const boardsAtom = atom(
         owner: board.owner_name || board.created_by,
         icon: (board.thumbnail || "blue") as any,
         isStarred: false,
+        createdAt: board.created_at,
+        updatedAt: board.updated_at,
       };
       
       // Apply local modifications
@@ -185,15 +225,15 @@ export const boardsAtom = atom(
 
 // Loading state atom
 export const boardsLoadingAtom = atom((get) => {
-  const queryResult = get(boardsQueryAtom);
-  return queryResult.isLoading;
+  const queryResult = get(boardsQueryAtom) as any;
+  return queryResult.isLoading || queryResult.isFetchingNextPage;
 });
 
 export const searchQueryAtom = atom<string>("");
 
 export const filterBoardsAtom = atom<"all" | "starred">("all");
 export const filterOwnerAtom = atom<"anyone" | "me">("anyone");
-export const sortByAtom = atom<"lastOpened" | "name" | "created">("lastOpened");
+export const sortByAtom = atom<"last-opened" | "name" | "modified" | "created">("last-opened");
 export const viewModeAtom = atom<"grid" | "list">("list");
 
 export const yourSpacesExpandedAtom = atom<boolean>(true);
@@ -228,21 +268,30 @@ export const templatesAtom = atom([
 // Derived atoms
 export const filteredBoardsAtom = atom((get) => {
   const boards = get(boardsAtom);
-  const searchQuery = get(searchQueryAtom).toLowerCase();
+  // Search and Sort are now backend driven
+  
   const filterBoards = get(filterBoardsAtom);
-
-  return boards.filter((board) => {
-    const matchesSearch = board.name.toLowerCase().includes(searchQuery);
+  
+  // Only apply client-side filters for Starred
+  const filtered = boards.filter((board: Board) => {
     const matchesFilter =
       filterBoards === "all" || (filterBoards === "starred" && board.isStarred);
-    return matchesSearch && matchesFilter;
+    return matchesFilter;
   });
+
+  return filtered;
 });
 
 export const toggleStarAtom = atom(null, (get, set, boardId: string) => {
   const boards = get(boardsAtom);
-  const updatedBoards = boards.map((board) =>
+  const updatedBoards = boards.map((board: Board) =>
     board.id === boardId ? { ...board, isStarred: !board.isStarred } : board
   );
   set(boardsAtom, updatedBoards);
+});
+
+export const boardsTotalAtom = atom((get) => {
+  const queryResult = get(boardsQueryAtom) as any;
+  // Get total from the first page (it's consistent across pages)
+  return queryResult.data?.pages?.[0]?.total || 0;
 });

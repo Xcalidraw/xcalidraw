@@ -25,8 +25,8 @@ export const DashboardPage = () => {
     }
   }, [teamId, setBoardsContext]);
   
-  // Show loading if teams or boards are loading
-  if (isTeamsLoading || isBoardsLoading) {
+  // Show loading only if teams are loading (initial state)
+  if (isTeamsLoading) {
     return <DashboardSkeleton />;
   }
   
