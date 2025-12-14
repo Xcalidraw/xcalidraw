@@ -31,28 +31,61 @@ import {
   Target,
   Award,
   Bookmark,
+  PenTool, User, Lightbulb, Sprout, File, MapPin, Search, Calendar,
+  Coffee, Mail, BarChart, Shield, Clock, Folder, Rocket,
+  Files, CheckCircle, Book, CreditCard, Compass, FlaskConical,
+  PartyPopper, MessageCircle, GraduationCap, Globe, Calculator,
+  MousePointer2, ClipboardList
 } from "lucide-react";
 import clsx from "clsx";
 import { useState } from "react";
 
 const BOARD_ICON_MAP: Record<string, React.ElementType> = {
-  layout: Layout,
-  orange: Layout,
-  blue: Square,
-  pink: Circle,
-  purple: Triangle,
-  green: Hexagon,
-  red: Component,
-  cyan: Box,
-  yellow: Layers,
-  indigo: Star,
-  teal: Heart,
-  lime: Zap,
-  rose: Flame,
-  violet: Sparkles,
-  amber: Target,
-  emerald: Award,
+  // Geometric
+  layout: Layout, orange: Layout,
+  blue: Square, pink: Circle, purple: Triangle, green: Hexagon,
+  red: Component, cyan: Box, yellow: Layers,
+  
+  // Status/Action
+  indigo: Star, 
+  teal: Heart, 
+  lime: Zap, 
+  rose: Flame, 
+  violet: Sparkles, 
+  amber: Target, 
+  emerald: Award, 
   sky: Bookmark,
+  
+  // New Icons
+  pen: PenTool,
+  user: User,
+  bulb: Lightbulb,
+  plant: Sprout,
+  file: File,
+  pin: MapPin,
+  search: Search,
+  calendar: Calendar,
+  coffee: Coffee,
+  mail: Mail,
+  chart: BarChart,
+  share: Share2,
+  shield: Shield,
+  clock: Clock,
+  folder: Folder,
+  rocket: Rocket,
+  files: Files,
+  check: CheckCircle,
+  book: Book,
+  card: CreditCard,
+  compass: Compass,
+  flask: FlaskConical,
+  party: PartyPopper,
+  message: MessageCircle,
+  grad: GraduationCap,
+  globe: Globe,
+  calc: Calculator,
+  cursor: MousePointer2,
+  clip: ClipboardList
 };
 
 import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom } from "../../store";

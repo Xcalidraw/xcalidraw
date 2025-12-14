@@ -472,6 +472,37 @@
           &.icon-amber { background-color: #fffbeb; color: #f59e0b; }
           &.icon-emerald { background-color: #ecfdf5; color: #10b981; }
           &.icon-sky { background-color: #f0f9ff; color: #0ea5e9; }
+
+          /* New Icons - List View */
+          &.icon-pen { background-color: #fff1f2; color: #f43f5e; }     /* Rose */
+          &.icon-user { background-color: #f5f3ff; color: #8b5cf6; }    /* Violet */
+          &.icon-bulb { background-color: #fffbeb; color: #f59e0b; }    /* Amber */
+          &.icon-plant { background-color: #f0fdf4; color: #2ecc71; }   /* Green */
+          &.icon-file { background-color: #f0f9ff; color: #0ea5e9; }    /* Sky */
+          &.icon-pin { background-color: #fef2f2; color: #e74c3c; }     /* Red */
+          &.icon-search { background-color: #fffbeb; color: #f59e0b; }  /* Amber */
+          &.icon-calendar { background-color: #ecfdf5; color: #10b981; }/* Emerald */
+          &.icon-coffee { background-color: #efebe9; color: #795548; }  /* Brown */
+          &.icon-mail { background-color: #f0fdf4; color: #16a34a; }    /* Green */
+          &.icon-chart { background-color: #ecfdf5; color: #10b981; }   /* Emerald */
+          &.icon-share { background-color: #fff7ed; color: #f97316; }   /* Orange */
+          &.icon-shield { background-color: #f5f3ff; color: #8b5cf6; }  /* Violet */
+          &.icon-clock { background-color: #f0fdfa; color: #14b8a6; }   /* Teal */
+          &.icon-folder { background-color: #fffbeb; color: #f59e0b; }  /* Amber */
+          &.icon-rocket { background-color: #f0f9ff; color: #0ea5e9; }  /* Sky */
+          &.icon-files { background-color: #f1f5f9; color: #64748b; }   /* Slate */
+          &.icon-check { background-color: #f0fdf4; color: #16a34a; }   /* Green */
+          &.icon-book { background-color: #f0f9ff; color: #0ea5e9; }    /* Sky */
+          &.icon-card { background-color: #f0fdf4; color: #16a34a; }    /* Green */
+          &.icon-compass { background-color: #eef2ff; color: #6366f1; } /* Indigo */
+          &.icon-flask { background-color: #fdf2f8; color: #ec4899; }   /* Pink */
+          &.icon-party { background-color: #f5f3ff; color: #8b5cf6; }   /* Violet */
+          &.icon-message { background-color: #f0f9ff; color: #0ea5e9; } /* Sky */
+          &.icon-grad { background-color: #ecfdf5; color: #10b981; }    /* Emerald */
+          &.icon-globe { background-color: #eff6ff; color: #3b82f6; }   /* Blue */
+          &.icon-calc { background-color: #f0fdf4; color: #16a34a; }    /* Green */
+          &.icon-cursor { background-color: #fefce8; color: #eab308; }  /* Yellow */
+          &.icon-clip { background-color: #f0fdfa; color: #14b8a6; }    /* Teal */
         }
 
         .board-details {
@@ -674,6 +705,37 @@
             &.bg-amber { background: linear-gradient(135deg, #ffe58f 0%, #ffc53d 100%); color: #d46b08; }
             &.bg-emerald { background: linear-gradient(135deg, #95de64 0%, #73d13d 100%); color: #237804; }
             &.bg-sky { background: linear-gradient(135deg, #91caff 0%, #40a9ff 100%); color: #003a8c; }
+            
+            /* New Icons - Grid View */
+            &.bg-pen { background: linear-gradient(135deg, #ffadd2 0%, #f43f5e 100%); color: #881337; }
+            &.bg-user { background: linear-gradient(135deg, #d8b4fe 0%, #8b5cf6 100%); color: #4c1d95; }
+            &.bg-bulb { background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%); color: #78350f; }
+            &.bg-plant { background: linear-gradient(135deg, #86efac 0%, #2ecc71 100%); color: #14532d; }
+            &.bg-file { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+            &.bg-pin { background: linear-gradient(135deg, #fca5a5 0%, #e74c3c 100%); color: #7f1d1d; }
+            &.bg-search { background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%); color: #78350f; }
+            &.bg-calendar { background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%); color: #064e3b; }
+            &.bg-coffee { background: linear-gradient(135deg, #d7ccc8 0%, #795548 100%); color: #3e2723; }
+            &.bg-mail { background: linear-gradient(135deg, #86efac 0%, #16a34a 100%); color: #14532d; }
+            &.bg-chart { background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%); color: #064e3b; }
+            &.bg-share { background: linear-gradient(135deg, #fdba74 0%, #f97316 100%); color: #7c2d12; }
+            &.bg-shield { background: linear-gradient(135deg, #d8b4fe 0%, #8b5cf6 100%); color: #4c1d95; }
+            &.bg-clock { background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%); color: #134e4a; }
+            &.bg-folder { background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%); color: #78350f; }
+            &.bg-rocket { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+            &.bg-files { background: linear-gradient(135deg, #cbd5e1 0%, #64748b 100%); color: #1e293b; }
+            &.bg-check { background: linear-gradient(135deg, #86efac 0%, #16a34a 100%); color: #14532d; }
+            &.bg-book { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+            &.bg-card { background: linear-gradient(135deg, #86efac 0%, #16a34a 100%); color: #14532d; }
+            &.bg-compass { background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%); color: #312e81; }
+            &.bg-flask { background: linear-gradient(135deg, #f9a8d4 0%, #ec4899 100%); color: #831843; }
+            &.bg-party { background: linear-gradient(135deg, #d8b4fe 0%, #8b5cf6 100%); color: #4c1d95; }
+            &.bg-message { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+            &.bg-grad { background: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%); color: #064e3b; }
+            &.bg-globe { background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%); color: #1e3a8a; }
+            &.bg-calc { background: linear-gradient(135deg, #86efac 0%, #16a34a 100%); color: #14532d; }
+            &.bg-cursor { background: linear-gradient(135deg, #fde047 0%, #eab308 100%); color: #713f12; }
+            &.bg-clip { background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%); color: #134e4a; }
           }
 
           .card-actions {

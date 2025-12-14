@@ -13,7 +13,7 @@ export interface Board {
   parentType: 'TEAM' | 'SPACE'; // NEW: Track where board lives
   lastOpened: string;
   owner: string;
-  icon: "orange" | "blue" | "pink" | "purple" | "green";
+  icon: string;
   isStarred: boolean;
 }
 
