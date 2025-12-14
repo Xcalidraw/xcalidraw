@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useState, useRef, useEffect } from "react";
 import {
   Home,
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { useCreateWorkspaceMutation, useWorkspacesQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
+import { useCreateWorkspaceMutation } from "../../../../hooks/api.hooks";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 
 import {
@@ -33,6 +33,9 @@ import {
   yourSpacesExpandedAtom,
   spacesExpandedAtom,
   sidebarOpenAtom,
+  teamsAtom,
+  teamsQueryAtom,
+  workspacesQueryAtom,
 } from "../../store";
 import { Input } from "../../../../components/ui/input";
 import {
@@ -73,13 +76,14 @@ const SEARCHABLE_TEAMS = [
 
 export const Sidebar = () => {
   const [currentTeam, setCurrentTeam] = useAtom(currentTeamAtom);
-  const [yourSpaces, setYourSpaces] = useAtom(yourSpacesAtom);
+  const [yourSpaces] = useAtom(yourSpacesAtom);
   const [spaces] = useAtom(spacesAtom);
   const [yourSpacesExpanded, setYourSpacesExpanded] = useAtom(
     yourSpacesExpandedAtom,
   );
   const [spacesExpanded, setSpacesExpanded] = useAtom(spacesExpandedAtom);
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
+  const [teams] = useAtom(teamsAtom);
   const [searchValue, setSearchValue] = useState("");
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState("");
@@ -94,11 +98,13 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  
-
   const createWorkspace = useCreateWorkspaceMutation();
-  const { data: workspacesData, isLoading } = useWorkspacesQuery();
-  const { data: teamsData, isLoading: isTeamsLoading } = useListTeamsQuery();
+  
+  // Get loading states from query atoms
+  const teamsQueryResult = useAtomValue(teamsQueryAtom);
+  const workspacesQueryResult = useAtomValue(workspacesQueryAtom);
+  const isTeamsLoading = teamsQueryResult.isLoading;
+  const isLoading = workspacesQueryResult.isLoading;
 
   // Sync active state with URL
   useEffect(() => {
@@ -116,23 +122,10 @@ export const Sidebar = () => {
     }
   }, [location.pathname]);
 
-  const teams = teamsData?.items?.map((team: any, index: number) => ({
-    id: team.team_id,
-    name: team.name,
-    initials: team.name.substring(0, 2).toUpperCase(),
-    colorClass: ['color-teal', 'color-purple', 'color-orange'][index % 3]
-  })) || [];
-
-  // Add default "Workspace" team if list is empty or just to ensure it exists
-  // For now, let's assume the API returns at least one team or we treat the Org as a team
-  // If the API returns empty, we might want to show a placeholder or the Org itself
-  
+  // Set default team if not set
   useEffect(() => {
-    if (teams.length > 0) {
-       // If currentTeam is not set, select the first one
-       if (!currentTeam.id) {
-           setCurrentTeam(teams[0]);
-       }
+    if (teams.length > 0 && !currentTeam.id) {
+      setCurrentTeam(teams[0]);
     }
   }, [teams, currentTeam.id, setCurrentTeam]);
 
@@ -145,16 +138,6 @@ export const Sidebar = () => {
       }, 100);
     }
   }, [isTeamSearchOpen]);
-
-  // Update yourSpaces when workspaces are fetched
-  useEffect(() => {
-    if (workspacesData?.items) {
-      setYourSpaces(workspacesData.items.map((ws: any) => ({
-        id: ws.space_id,  // Changed from workspace_id to space_id
-        name: ws.name,
-      })));
-    }
-  }, [workspacesData, setYourSpaces]);
 
   const handleCreateSpace = () => {
     if (!newSpaceName.trim()) {
