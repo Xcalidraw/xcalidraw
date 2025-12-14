@@ -24,9 +24,36 @@ import {
   Component,
   Box,
   Layers,
+  Heart,
+  Zap,
+  Flame,
+  Sparkles,
+  Target,
+  Award,
+  Bookmark,
 } from "lucide-react";
 import clsx from "clsx";
 import { useState } from "react";
+
+const BOARD_ICON_MAP: Record<string, React.ElementType> = {
+  layout: Layout,
+  orange: Layout,
+  blue: Square,
+  pink: Circle,
+  purple: Triangle,
+  green: Hexagon,
+  red: Component,
+  cyan: Box,
+  yellow: Layers,
+  indigo: Star,
+  teal: Heart,
+  lime: Zap,
+  rose: Flame,
+  violet: Sparkles,
+  amber: Target,
+  emerald: Award,
+  sky: Bookmark,
+};
 
 import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom } from "../../store";
 import { Button } from "../../../../components/ui/button";
@@ -219,19 +246,7 @@ export const BoardsTable = ({
             </thead>
             <tbody>
               {boards.map((board) => {
-                // Map icon name to Lucide component
-                // Default to Layout if not found
-                const IconComponent = {
-                   layout: Layout,
-                   orange: Layout,
-                   blue: Square,
-                   pink: Circle,
-                   purple: Triangle,
-                   green: Hexagon,
-                   red: Component,
-                   cyan: Box,
-                   yellow: Layers,
-                }[board.icon] || Layout;
+                const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
 
                 return (
                 <tr
@@ -348,18 +363,8 @@ export const BoardsTable = ({
         <div className="boards-grid-container">
           {/* Grid View Implementation */}
           {boards.map((board) => {
-             const IconComponent = {
-                layout: Layout,
-                orange: Layout,
-                blue: Square,
-                pink: Circle,
-                purple: Triangle,
-                green: Hexagon,
-                red: Component,
-                cyan: Box,
-                yellow: Layers,
-             }[board.icon] || Layout;
-
+             const IconComponent = BOARD_ICON_MAP[board.icon] || Layout;
+             
              return (
             <div
               key={board.id}

@@ -145,7 +145,7 @@ export const boardsAtom = atom(
         parentType: context.spaceId ? 'SPACE' as const : 'TEAM' as const,
         lastOpened: new Date(board.updated_at).toLocaleDateString(),
         owner: board.created_by,
-        icon: "blue" as const,
+        icon: (board.thumbnail || "blue") as any,
         isStarred: false,
       };
       
