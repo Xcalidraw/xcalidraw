@@ -332,11 +332,20 @@ export const useUpdateBoardMutation = () => {
       const response = await client.updateBoard(boardId, payload);
       return response.data;
     },
-    onSuccess: (_, variables) => {
-       // We might want to optimistically update or just invalidate.
-       // invalidating 'board' query might cause a refetch while user is editing, which is bad (cursor jumps).
-       // So we might NOT invalidate, or only invalidate list queries.
+    onSuccess: (data, variables) => {
+       // Update the specific board's cache with the new data to prevent stale cache
+       // We use setQueryData instead of invalidateQueries to avoid refetching while editing
+       queryClient.setQueryData(['board', variables.boardId], (oldData: any) => {
+         if (!oldData) return data;
+         
+         return {
+           ...oldData,
+           elements: variables.elements ?? oldData.elements,
+           title: variables.appState?.name ?? oldData.title,
+         };
+       });
+       // Also invalidate the boards list to update thumbnails, titles, etc.
        queryClient.invalidateQueries({ queryKey: ['boards'] });
-    },
+     },
   });
 };
