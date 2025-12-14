@@ -1,4 +1,6 @@
 import { atom } from "../../app-jotai";
+import { atomWithQuery } from 'jotai-tanstack-query';
+import { getClient } from '../../api/api-client';
 
 // Types
 export interface Board {
@@ -38,6 +40,85 @@ export const currentTeamAtom = atom<Team>({
   colorClass: "",
 });
 
+// Context atom to store current teamId or spaceId
+export interface BoardsContext {
+  teamId?: string;
+  spaceId?: string;
+  spaceName?: string;
+}
+
+export const boardsContextAtom = atom<BoardsContext>({});
+
+// Query atom that automatically fetches boards based on context
+export const boardsQueryAtom = atomWithQuery((get) => {
+  const context = get(boardsContextAtom);
+  const client = getClient();
+  
+  return {
+    queryKey: ['boards', context.spaceId, context.teamId],
+    queryFn: async () => {
+      if (context.spaceId) {
+        const response = await client.listBoardsInSpace(context.spaceId);
+        return response.data;
+      } else if (context.teamId) {
+        const response = await client.listBoardsInTeam(context.teamId);
+        return response.data;
+      }
+      return { items: [] };
+    },
+    enabled: !!(context.spaceId || context.teamId),
+  };
+});
+
+// Local modifications atom (for starred state, etc.)
+const boardsLocalModificationsAtom = atom<Record<string, Partial<Board>>>({});
+
+// Derived atom to map API data to UI format with local modifications
+export const boardsAtom = atom(
+  (get) => {
+    const queryResult = get(boardsQueryAtom);
+    const context = get(boardsContextAtom);
+    const localMods = get(boardsLocalModificationsAtom);
+    
+    if (!queryResult.data?.items) return [];
+    
+    return queryResult.data.items.map((board: any) => {
+      const baseBoard = {
+        id: board.board_id,
+        name: board.title || "Untitled Board",
+        modifiedBy: board.created_by,
+        modifiedDate: new Date(board.updated_at).toLocaleDateString(),
+        team: "Main Team",
+        space: context.spaceName,
+        parentType: context.spaceId ? 'SPACE' as const : 'TEAM' as const,
+        lastOpened: new Date(board.updated_at).toLocaleDateString(),
+        owner: board.created_by,
+        icon: "blue" as const,
+        isStarred: false,
+      };
+      
+      // Apply local modifications
+      return localMods[board.board_id] 
+        ? { ...baseBoard, ...localMods[board.board_id] }
+        : baseBoard;
+    });
+  },
+  (get, set, update: Board[]) => {
+    // Store local modifications
+    const mods: Record<string, Partial<Board>> = {};
+    update.forEach(board => {
+      mods[board.id] = { isStarred: board.isStarred };
+    });
+    set(boardsLocalModificationsAtom, mods);
+  }
+);
+
+// Loading state atom
+export const boardsLoadingAtom = atom((get) => {
+  const queryResult = get(boardsQueryAtom);
+  return queryResult.isLoading;
+});
+
 export const searchQueryAtom = atom<string>("");
 
 export const filterBoardsAtom = atom<"all" | "starred">("all");
@@ -62,100 +143,6 @@ export const spacesAtom = atom<Space[]>([
   { id: "8", name: "Architecture Team" },
   { id: "9", name: "Booking and Billing" },
   { id: "10", name: "Business Domain" },
-]);
-
-export const boardsAtom = atom<Board[]>([
-  {
-    id: "1",
-    name: "trstd login User Flow",
-    modifiedBy: "Oliver Wehrens",
-    modifiedDate: "Jul 21",
-    team: "design-team",
-    space: "CoT Switch Gate",
-    parentType: 'SPACE',
-    lastOpened: "Today",
-    owner: "Oliver Wehrens",
-    icon: "orange",
-    isStarred: false,
-  },
-  {
-    id: "2",
-    name: "Architecture Redefined",
-    modifiedBy: "nadeem.ahmad",
-    modifiedDate: "Today",
-    team: "engineering-team",
-    space: "CoT Switch Gate",
-    parentType: 'SPACE',
-    lastOpened: "Today",
-    owner: "nadeem.ahmad",
-    icon: "blue",
-    isStarred: false,
-  },
-  {
-    id: "3",
-    name: "Tech Radar - Board Meeting",
-    modifiedBy: "Leo",
-    modifiedDate: "Nov 17",
-    team: "engineering-team",
-    space: undefined,
-    parentType: 'TEAM',
-    lastOpened: "Nov 25",
-    owner: "Leo",
-    icon: "pink",
-    isStarred: false,
-  },
-  {
-    id: "4",
-    name: "xDRG - Delivery Review",
-    modifiedBy: "Justyna Stanowska",
-    modifiedDate: "Jan 19",
-    team: "leadership-team",
-    space: "CoT Switch Gate",
-    parentType: 'SPACE',
-    lastOpened: "Jan 20",
-    owner: "Justyna Stanowska",
-    icon: "purple",
-    isStarred: false,
-  },
-  {
-    id: "5",
-    name: "New Board",
-    modifiedBy: "Niklas Hanft",
-    modifiedDate: "Dec 5",
-    team: "design-team",
-    space: undefined,
-    parentType: 'TEAM',
-    lastOpened: "Dec 5",
-    owner: "Niklas Hanft",
-    icon: "green",
-    isStarred: true,
-  },
-  {
-    id: "6",
-    name: "Retro trstd login until nxt25",
-    modifiedBy: "Cara",
-    modifiedDate: "Nov 10",
-    team: "engineering-team",
-    space: "TPS TRSTD Login",
-    parentType: 'SPACE',
-    lastOpened: "Nov 10",
-    owner: "Marieke Schaefer",
-    icon: "orange",
-    isStarred: false,
-  },
-  {
-    id: "7",
-    name: "Secret hiding brainstorming",
-    modifiedBy: "Selim",
-    modifiedDate: "Nov 11",
-    team: "design-team",
-    space: undefined,
-    parentType: 'TEAM',
-    lastOpened: "Nov 8",
-    owner: "Selim",
-    icon: "purple",
-    isStarred: false,
-  },
 ]);
 
 export const templatesAtom = atom([

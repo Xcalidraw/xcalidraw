@@ -26,20 +26,29 @@ export const useSpaceQuery = (spaceId: string) => {
   });
 };
 
-export const useListBoardsQuery = (spaceId?: string) => {
+export const useListBoardsQuery = (params?: { spaceId?: string; teamId?: string }) => {
   const client = useClient();
+  const spaceId = params?.spaceId;
+  const teamId = params?.teamId;
+  
   return useQuery({
-    queryKey: ['boards', spaceId],
+    queryKey: ['boards', spaceId, teamId],
     queryFn: async () => {
       if (spaceId) {
+        // List boards in a specific space
         const response = await client.listBoardsInSpace(spaceId);
         return response.data;
+      } else if (teamId) {
+        // List boards in a team (team-level boards)
+        const response = await client.listBoardsInTeam(teamId);
+        return response.data;
       } else {
+        // Fallback to listing all boards
         const response = await client.listBoards();
         return response.data;
       }
     },
-    enabled: !!client,
+    enabled: !!client && (!!spaceId || !!teamId),
   });
 };
 
