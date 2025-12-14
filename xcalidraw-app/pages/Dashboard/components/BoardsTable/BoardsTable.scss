@@ -260,7 +260,7 @@
     .boards-table {
       border-collapse: collapse;
       width: 100%;
-      table-layout: fixed;
+      table-layout: auto; // Changed from fixed to auto to respect max-width flexibility
       min-width: 1100px;
 
       @media (max-width: 1024px) {
@@ -289,12 +289,12 @@
         }
 
         &.col-name {
-          width: auto;
+          // Flexible width
         }
 
         &.col-users {
-          width: 200px;
           min-width: 200px;
+          max-width: 300px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -302,7 +302,8 @@
         }
 
         &.col-space {
-          width: 150px;
+          min-width: 150px;
+          max-width: 300px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -310,7 +311,8 @@
         }
 
         &.col-date {
-          width: 140px;
+          min-width: 140px;
+          max-width: 300px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -318,7 +320,8 @@
         }
 
         &.col-owner {
-          width: 140px;
+          min-width: 140px;
+          max-width: 300px;
 
           @media (max-width: 1024px) {
             display: none;
@@ -354,19 +357,25 @@
         }
 
         &.col-name {
-          width: auto;
           min-width: 300px;
-          white-space: normal;
 
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          
           @media (max-width: 1024px) {
-            width: auto;
             min-width: 0;
+            max-width: none;
+            white-space: normal; // Allow wrapping on mobile for name?
           }
         }
 
         &.col-users {
-          width: 200px;
           min-width: 200px;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           @media (max-width: 1024px) {
             display: none;
@@ -374,7 +383,11 @@
         }
 
         &.col-space {
-          width: 150px;
+          min-width: 150px;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           @media (max-width: 1024px) {
             display: none;
@@ -382,7 +395,11 @@
         }
 
         &.col-date {
-          width: 140px;
+          min-width: 140px;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           @media (max-width: 1024px) {
             display: none;
@@ -390,7 +407,11 @@
         }
 
         &.col-owner {
-          width: 140px;
+          min-width: 140px;
+          max-width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           @media (max-width: 1024px) {
             display: none;

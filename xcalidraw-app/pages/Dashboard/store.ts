@@ -125,7 +125,25 @@ export const boardsQueryAtom = atomWithQuery((get) => {
 // Local modifications atom (for starred state, etc.)
 const boardsLocalModificationsAtom = atom<Record<string, Partial<Board>>>({});
 
-// Derived atom to map API data to UI format with local modifications
+// Helper for date formatting
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const dayStr = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).replace(/\//g, '.');
+  
+  const timeStr = date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+  
+  return `${dayStr} at ${timeStr}`;
+};
+
+// derived atom to map API data to UI format with local modifications
 export const boardsAtom = atom(
   (get) => {
     const queryResult = get(boardsQueryAtom);
@@ -138,13 +156,13 @@ export const boardsAtom = atom(
       const baseBoard = {
         id: board.board_id,
         name: board.title || "Untitled Board",
-        modifiedBy: board.created_by,
-        modifiedDate: new Date(board.updated_at).toLocaleDateString(),
+        modifiedBy: board.last_modified_by_name || board.created_by,
+        modifiedDate: formatDate(board.updated_at),
         team: "Main Team",
         space: context.spaceName,
         parentType: context.spaceId ? 'SPACE' as const : 'TEAM' as const,
-        lastOpened: new Date(board.updated_at).toLocaleDateString(),
-        owner: board.created_by,
+        lastOpened: formatDate(board.updated_at),
+        owner: board.owner_name || board.created_by,
         icon: (board.thumbnail || "blue") as any,
         isStarred: false,
       };
