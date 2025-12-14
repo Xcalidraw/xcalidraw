@@ -302,3 +302,41 @@ export const useBoardQuery = (boardId?: string) => {
     enabled: !!client && !!boardId,
   });
 };
+
+export const useUpdateBoardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      elements,
+      appState,
+      thumbnail
+    }: {
+      boardId: string;
+      elements?: any[];
+      appState?: any;
+      thumbnail?: string;
+    }) => {
+      // Note: Backend currently might only support elements. passing appState just in case or for future support.
+      // We map appState name to title if present.
+      const payload: any = {
+          elements,
+          thumbnail
+      };
+      if (appState?.name) {
+          payload.title = appState.name;
+      }
+      
+      const response = await client.updateBoard(boardId, payload);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+       // We might want to optimistically update or just invalidate.
+       // invalidating 'board' query might cause a refetch while user is editing, which is bad (cursor jumps).
+       // So we might NOT invalidate, or only invalidate list queries.
+       queryClient.invalidateQueries({ queryKey: ['boards'] });
+    },
+  });
+};

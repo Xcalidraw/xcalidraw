@@ -5,6 +5,7 @@ import {
   CaptureUpdateAction,
   reconcileElements,
   useEditorInterface,
+  hashElementsVersion,
 } from "@xcalidraw/xcalidraw";
 import { trackEvent } from "@xcalidraw/xcalidraw/analytics";
 import { getDefaultAppState } from "@xcalidraw/xcalidraw/appState";
@@ -32,7 +33,7 @@ import {
   isDevEnv,
 } from "@xcalidraw/common";
 import polyfill from "@xcalidraw/xcalidraw/polyfill";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadFromBlob } from "@xcalidraw/xcalidraw/data/blob";
 import { useCallbackRefState } from "@xcalidraw/xcalidraw/hooks/useCallbackRefState";
@@ -42,12 +43,13 @@ import { usersIcon, share } from "@xcalidraw/xcalidraw/components/icons";
 import { isElementLink } from "@xcalidraw/element";
 import { restore, restoreAppState } from "@xcalidraw/xcalidraw/data/restore";
 import { newElementWith } from "@xcalidraw/element";
-import { isInitializedImageElement } from "@xcalidraw/element";
+import { isInitializedImageElement, getSceneVersion } from "@xcalidraw/element";
 import clsx from "clsx";
 import {
   parseLibraryTokensFromUrl,
   useHandleLibrary,
 } from "@xcalidraw/xcalidraw/data/library";
+import { useUpdateBoardMutation, useBoardQuery } from "../../hooks/api.hooks";
 
 import type { ResolvablePromise } from "@xcalidraw/common/utils";
 import type { ResolutionType } from "@xcalidraw/common/utility-types";
@@ -67,13 +69,7 @@ import type {
 } from "@xcalidraw/xcalidraw/types";
 
 import CustomStats from "../../CustomStats";
-import {
-  Provider,
-  useAtom,
-  useAtomValue,
-  useAtomWithInitialValue,
-  appJotaiStore,
-} from "../../app-jotai";
+import { appJotaiStore, atom, Provider, useAtom, useAtomValue, useAtomWithInitialValue } from "../../app-jotai";
 import {
   FIREBASE_STORAGE_PREFIXES,
   STORAGE_KEYS,
@@ -199,6 +195,7 @@ const initializeScene = async (opts: {
   collabAPI: CollabAPI | null;
   xcalidrawAPI: XcalidrawImperativeAPI;
   boardId?: string;
+  boardData?: any;
 }): Promise<
   { scene: XcalidrawInitialDataState | null } & (
     | { isExternalScene: true; id: string; key: string }
@@ -212,11 +209,24 @@ const initializeScene = async (opts: {
   );
   const externalUrlMatch = window.location.hash.match(/^#url=(.*)$/);
 
-  const localDataState = importFromLocalStorage();
+  const localDataState = opts.boardId ? null : importFromLocalStorage();
 
   let scene: RestoredDataState & {
     scrollToContent?: boolean;
   } = await loadScene(null, null, localDataState);
+
+  if (opts.boardData) {
+    scene = {
+      ...scene,
+      elements: opts.boardData.elements || [],
+      appState: {
+        ...scene.appState,
+        ...getDefaultAppState(),
+        name: opts.boardData.title,
+      },
+      scrollToContent: true,
+    };
+  }
 
   let roomLinkData = getCollaborationLinkData(window.location.href);
   const isExternalScene = !!(id || jsonBackendMatch || roomLinkData);
@@ -319,8 +329,6 @@ const initializeScene = async (opts: {
   return { scene: null, isExternalScene: false };
 };
 
-import { useBoardQuery } from "../../hooks/api.hooks";
-
 const XcalidrawWrapper = ({
   boardId,
   onHomeClick,
@@ -328,7 +336,40 @@ const XcalidrawWrapper = ({
   boardId?: string;
   onHomeClick?: () => void;
 }) => {
-  const { data: boardData } = useBoardQuery(boardId);
+  const { data: boardData, isLoading: isBoardLoading } = useBoardQuery(boardId);
+
+  const updateBoardMutation = useUpdateBoardMutation();
+  const updateBoardMutationRef = useRef(updateBoardMutation);
+  const lastSceneVersionRef = useRef(0);
+  const lastBoardTitleRef = useRef("");
+
+  useEffect(() => {
+    updateBoardMutationRef.current = updateBoardMutation;
+  });
+
+  const saveToBackend = useMemo(
+    () =>
+      debounce(async (elements: readonly OrderedXcalidrawElement[], appState: AppState, boardId: string) => {
+        if (!boardId) return;
+        try {
+            await updateBoardMutationRef.current.mutateAsync({
+                boardId,
+                elements: elements as any[],
+                appState,
+            });
+        } catch (e) {
+            console.error("Failed to save to backend", e);
+        }
+      }, 2000),
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      saveToBackend.cancel?.();
+    };
+  }, [saveToBackend]);
+
   const [errorMessage, setErrorMessage] = useState("");
   const isCollabDisabled = isRunningInIframe();
 
@@ -481,9 +522,15 @@ const XcalidrawWrapper = ({
       }
     };
 
-    initializeScene({ collabAPI, xcalidrawAPI, boardId }).then(async (data) => {
+    initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
       loadImages(data, true);
       initialStatePromiseRef.current.promise.resolve(data.scene);
+      if (data.scene?.elements) {
+        lastSceneVersionRef.current = hashElementsVersion(data.scene.elements);
+      }
+      if (data.scene?.appState?.name) {
+        lastBoardTitleRef.current = data.scene.appState.name;
+      }
     });
 
     const onHashChange = async (event: HashChangeEvent) => {
@@ -637,6 +684,18 @@ const XcalidrawWrapper = ({
     }
 
     if (!LocalData.isSavePaused()) {
+      if (boardId) {
+        const currentVersion = hashElementsVersion(elements);
+        const currentTitle = appState.name || "";
+        if (
+          currentVersion !== lastSceneVersionRef.current ||
+          currentTitle !== lastBoardTitleRef.current
+        ) {
+          lastSceneVersionRef.current = currentVersion;
+          lastBoardTitleRef.current = currentTitle;
+          saveToBackend(elements, appState, boardId);
+        }
+      }
       LocalData.save(elements, appState, files, () => {
         if (xcalidrawAPI) {
           let didChange = false;
@@ -741,6 +800,14 @@ const XcalidrawWrapper = ({
     () => setShareDialogState({ isOpen: true, type: "collaborationOnly" }),
     [setShareDialogState],
   );
+
+  if (boardId && isBoardLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full bg-muted">
+        <div className="text-muted-foreground animate-pulse">Loading board...</div>
+      </div>
+    );
+  }
 
   if (isSelfEmbedding) {
     return (
@@ -1011,6 +1078,7 @@ const XcalidrawWrapper = ({
           />
         )}
       </Xcalidraw>
+      {xcalidrawAPI && <Collab xcalidrawAPI={xcalidrawAPI} />}
     </div>
   );
 };
@@ -1026,7 +1094,11 @@ const BoardPage = () => {
   return (
     <TopErrorBoundary>
       <Provider store={appJotaiStore}>
-        <XcalidrawWrapper boardId={boardId} onHomeClick={handleHomeClick} />
+        <XcalidrawWrapper
+          key={boardId}
+          boardId={boardId}
+          onHomeClick={handleHomeClick}
+        />
       </Provider>
     </TopErrorBoundary>
   );
