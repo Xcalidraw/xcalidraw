@@ -213,7 +213,7 @@ export const boardsAtom = atom(
         : baseBoard;
     });
   },
-  (get, set, update: Board[]) => {
+  (_get, set, update: Board[]) => {
     // Store local modifications
     const mods: Record<string, Partial<Board>> = {};
     update.forEach(board => {
@@ -316,6 +316,18 @@ export const deleteSpaceMutationAtom = atomWithMutation(() => {
     mutationFn: async (spaceId: string) => {
       await client.deleteSpace({ spaceId });
       return spaceId;
+    },
+  };
+});
+
+// Create space mutation atom
+export const createSpaceMutationAtom = atomWithMutation(() => {
+  const client = getClient();
+  return {
+    mutationKey: ['createSpace'],
+    mutationFn: async ({ teamId, name }: { teamId: string; name: string }) => {
+      const response = await client.createSpace(teamId, { name } as any);
+      return response.data;
     },
   };
 });
