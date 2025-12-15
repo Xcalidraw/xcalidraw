@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { useCreateWorkspaceMutation } from "../../../../hooks/api.hooks";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 
 import {
@@ -37,6 +36,7 @@ import {
   teamsQueryAtom,
   workspacesQueryAtom,
   deleteSpaceMutationAtom,
+  createSpaceMutationAtom,
 } from "../../store";
 import { Input } from "../../../../components/ui/input";
 import {
@@ -99,7 +99,7 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const createWorkspace = useCreateWorkspaceMutation();
+  const [{ mutateAsync: createWorkspace, isPending: isCreatePending }] = useAtom(createSpaceMutationAtom);
   const [{ mutateAsync: deleteSpace, isPending: isDeletePending }] = useAtom(deleteSpaceMutationAtom);
   const [{ refetch: refetchWorkspaces }] = useAtom(workspacesQueryAtom) as any;
   const [spaceToDelete, setSpaceToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -143,26 +143,25 @@ export const Sidebar = () => {
     }
   }, [isTeamSearchOpen]);
 
-  const handleCreateSpace = () => {
+  const handleCreateSpace = async () => {
     if (!newSpaceName.trim()) {
       setCreateSpaceError("Space name cannot be empty");
       return;
     }
 
     setCreateSpaceError("");
-    createWorkspace.mutate({ teamId: currentTeam.id, name: newSpaceName }, {
-      onSuccess: () => {
-        setIsCreateSpaceDialogOpen(false);
-        setNewSpaceName("");
-        toast.success("Workspace created successfully");
-      },
-      onError: () => {
-        setCreateSpaceError("Failed to create space. Please try again.");
-        toast.error("Failed to create workspace", {
-          description: "Please try again later",
-        });
-      },
-    });
+    try {
+      await createWorkspace({ teamId: currentTeam.id, name: newSpaceName });
+      await refetchWorkspaces();
+      setIsCreateSpaceDialogOpen(false);
+      setNewSpaceName("");
+      toast.success("Workspace created successfully");
+    } catch (error) {
+      setCreateSpaceError("Failed to create space. Please try again.");
+      toast.error("Failed to create workspace", {
+        description: "Please try again later",
+      });
+    }
   };
 
   useEffect(() => {
@@ -633,16 +632,16 @@ export const Sidebar = () => {
               <Button
                 variant="secondary"
                 onClick={() => setIsCreateSpaceDialogOpen(false)}
-                disabled={createWorkspace.isPending}
+                disabled={isCreatePending}
               >
                 Cancel
               </Button>
               <Button
                 variant="default"
                 onClick={handleCreateSpace}
-                disabled={createWorkspace.isPending}
+                disabled={isCreatePending}
               >
-                {createWorkspace.isPending ? (
+                {isCreatePending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Creating...
