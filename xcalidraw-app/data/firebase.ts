@@ -33,7 +33,7 @@ import { getSyncableElements } from ".";
 
 import type { SyncableXcalidrawElement } from ".";
 import type Portal from "../collab/Portal";
-import type { Socket } from "socket.io-client";
+import type { CollabSocket } from "../collab/types";
 
 // private
 // -----------------------------------------------------------------------------
@@ -113,12 +113,12 @@ const decryptElements = async (
 };
 
 class FirebaseSceneVersionCache {
-  private static cache = new WeakMap<Socket, number>();
-  static get = (socket: Socket) => {
+  private static cache = new WeakMap<CollabSocket, number>();
+  static get = (socket: CollabSocket) => {
     return FirebaseSceneVersionCache.cache.get(socket);
   };
   static set = (
-    socket: Socket,
+    socket: CollabSocket,
     elements: readonly SyncableXcalidrawElement[],
   ) => {
     FirebaseSceneVersionCache.cache.set(socket, getSceneVersion(elements));
@@ -246,7 +246,7 @@ export const saveToFirebase = async (
 export const loadFromFirebase = async (
   roomId: string,
   roomKey: string,
-  socket: Socket | null,
+  socket: CollabSocket | null,
 ): Promise<readonly SyncableXcalidrawElement[] | null> => {
   const firestore = _getFirestore();
   const docRef = doc(firestore, "scenes", roomId);
