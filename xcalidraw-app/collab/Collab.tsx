@@ -498,9 +498,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     this.setIsCollaborating(true);
     LocalData.pauseSave("collaboration");
 
-    const { default: socketIOClient } = await import(
-      /* webpackChunkName: "socketIoClient" */ "socket.io-client"
-    );
+    // Import WebSocketClient instead of Socket.IO
+    const { default: WebSocketClient } = await import("./WebSocketClient");
 
     const fallbackInitializationHandler = () => {
       this.initializeRoom({
@@ -513,15 +512,17 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     this.fallbackInitializationHandler = fallbackInitializationHandler;
 
     try {
+      // Create WebSocket client and connect
+      const wsClient = new WebSocketClient();
+      wsClient.connect(import.meta.env.VITE_APP_WS_SERVER_URL, roomId);
+      
       this.portal.socket = this.portal.open(
-        socketIOClient(import.meta.env.VITE_APP_WS_SERVER_URL, {
-          transports: ["websocket", "polling"],
-        }),
+        wsClient,
         roomId,
         roomKey,
       );
 
-      this.portal.socket.once("connect_error", fallbackInitializationHandler);
+      this.portal.socket.on("connect_error", fallbackInitializationHandler);
     } catch (error: any) {
       console.error(error);
       this.setErrorDialog(error.message);
@@ -843,6 +844,18 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   };
 
   setCollaborators(sockets: SocketId[]) {
+    // Check if collaborators actually changed to prevent unnecessary re-renders
+    const existingSocketIds = Array.from(this.collaborators.keys()).sort();
+    const newSocketIds = [...sockets].sort();
+    
+    if (
+      existingSocketIds.length === newSocketIds.length &&
+      existingSocketIds.every((id, index) => id === newSocketIds[index])
+    ) {
+      // No change in collaborators, skip re-render
+      return;
+    }
+
     const collaborators: InstanceType<typeof Collab>["collaborators"] =
       new Map();
     for (const socketId of sockets) {

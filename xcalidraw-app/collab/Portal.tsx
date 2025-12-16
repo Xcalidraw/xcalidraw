@@ -20,11 +20,11 @@ import type {
   SyncableXcalidrawElement,
 } from "../data";
 import type { TCollabClass } from "./Collab";
-import type { Socket } from "socket.io-client";
+import type { CollabSocket } from "./types";
 
 class Portal {
   collab: TCollabClass;
-  socket: Socket | null = null;
+  socket: CollabSocket | null = null;
   socketInitialized: boolean = false; // we don't want the socket to emit any updates until it is fully initialized
   roomId: string | null = null;
   roomKey: string | null = null;
@@ -34,14 +34,19 @@ class Portal {
     this.collab = collab;
   }
 
-  open(socket: Socket, id: string, key: string) {
+  open(socket: CollabSocket, id: string, key: string) {
     this.socket = socket;
     this.roomId = id;
     this.roomKey = key;
+    // Generate a unique ID for this socket if it doesn't have one
+    if (!this.socket.id) {
+      this.socket.id = `socket-${Math.random().toString(36).substring(2, 15)}`;
+    }
 
     // Initialize socket listeners
     this.socket.on("init-room", () => {
       if (this.socket) {
+        this.socketInitialized = true;
         this.socket.emit("join-room", this.roomId);
         trackEvent("share", "room joined");
       }
@@ -92,11 +97,19 @@ class Portal {
       const encoded = new TextEncoder().encode(json);
       const { encryptedBuffer, iv } = await encryptData(this.roomKey!, encoded);
 
+      // Convert encrypted buffer to base64 for WebSocket transmission
+      const base64Data = btoa(String.fromCharCode(...new Uint8Array(encryptedBuffer)));
+      const base64Iv = btoa(String.fromCharCode(...new Uint8Array(iv)));
+
+      // Send encrypted data via WebSocket in expected format
       this.socket?.emit(
-        volatile ? WS_EVENTS.SERVER_VOLATILE : WS_EVENTS.SERVER,
-        roomId ?? this.roomId,
-        encryptedBuffer,
-        iv,
+        "message",
+        {
+          roomId: roomId ?? this.roomId,
+          encryptedBuffer: base64Data,
+          iv: base64Iv,
+          volatile,
+        }
       );
     }
   }
