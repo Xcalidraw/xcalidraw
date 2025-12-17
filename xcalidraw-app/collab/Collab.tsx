@@ -463,6 +463,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
   startCollaboration = async (
     existingRoomLinkData: null | { roomId: string; roomKey: string },
+    options?: { skipSceneReset?: boolean },
   ) => {
     if (!this.state.username) {
       import("@excalidraw/random-username").then(({ getRandomUsername }) => {
@@ -529,8 +530,9 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       return null;
     }
 
-    if (existingRoomLinkData) {
+    if (existingRoomLinkData && !options?.skipSceneReset) {
       // when joining existing room, don't merge it with current scene data
+      // (unless skipSceneReset is set, e.g., for always-on collaboration)
       this.xcalidrawAPI.resetScene();
     } else {
       const elements = this.xcalidrawAPI.getSceneElements().map((element) => {
