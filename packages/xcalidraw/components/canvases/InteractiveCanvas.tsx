@@ -16,6 +16,11 @@ import { t } from "../../i18n";
 
 import { AnimationController } from "../../renderer/animation";
 import { renderInteractiveScene } from "../../renderer/interactiveScene";
+import {
+  updateCursorPosition,
+  advanceCursorInterpolation,
+  getInterpolatedPosition,
+} from "../../cursorInterpolation";
 
 import type {
   InteractiveCanvasRenderConfig,
@@ -121,17 +126,25 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
       if (user.userState) {
         remotePointerUserStates.set(socketId, user.userState);
       }
-      remotePointerViewportCoords.set(
-        socketId,
-        sceneCoordsToViewportCoords(
-          {
-            sceneX: user.pointer.x,
-            sceneY: user.pointer.y,
-          },
-          props.appState,
-        ),
-      );
       remotePointerButton.set(socketId, user.button);
+
+      // Get target viewport coords
+      const targetCoords = sceneCoordsToViewportCoords(
+        {
+          sceneX: user.pointer.x,
+          sceneY: user.pointer.y,
+        },
+        props.appState,
+      );
+
+      // Apply interpolation for smooth cursor movement
+      const interpolatedCoords = updateCursorPosition(
+        socketId,
+        targetCoords.x,
+        targetCoords.y,
+      );
+
+      remotePointerViewportCoords.set(socketId, interpolatedCoords);
     });
 
     const selectionColor = props.containerRef?.current
@@ -176,6 +189,24 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
           deltaTime: number;
           state?: InteractiveSceneRenderAnimationState;
         }) => {
+          // Advance cursor interpolation each frame
+          advanceCursorInterpolation();
+
+          // Update remotePointerViewportCoords with latest interpolated positions
+          if (rendererParams.current?.renderConfig.remotePointerViewportCoords) {
+            rendererParams.current.renderConfig.remotePointerViewportCoords.forEach(
+              (_, socketId) => {
+                const interpolatedPos = getInterpolatedPosition(socketId);
+                if (interpolatedPos) {
+                  rendererParams.current!.renderConfig.remotePointerViewportCoords.set(
+                    socketId,
+                    interpolatedPos,
+                  );
+                }
+              },
+            );
+          }
+
           const nextAnimationState = renderInteractiveScene({
             ...rendererParams.current!,
             deltaTime,
