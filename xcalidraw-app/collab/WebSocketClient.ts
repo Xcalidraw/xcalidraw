@@ -131,7 +131,7 @@ export class WebSocketClient implements CollabSocket {
 
           case "first-in-room":
             // Fargate server sends this when user is first in room
-            console.log("[WebSocket] First in room - loading scene from Firebase");
+            console.log("[WebSocket] First in room - loading scene from backend");
             this.trigger("first-in-room");
             break;
 

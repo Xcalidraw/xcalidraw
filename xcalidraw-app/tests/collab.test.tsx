@@ -27,25 +27,25 @@ Object.defineProperty(window, "crypto", {
   },
 });
 
-vi.mock("../data/firebase.ts", () => {
-  const loadFromFirebase = async () => null;
-  const saveToFirebase = () => {};
-  const isSavedToFirebase = () => true;
-  const loadFilesFromFirebase = async () => ({
-    loadedFiles: [],
-    erroredFiles: [],
-  });
-  const saveFilesToFirebase = async () => ({
-    savedFiles: new Map(),
-    erroredFiles: new Map(),
-  });
-
+vi.mock("../data/files", () => {
   return {
-    loadFromFirebase,
-    saveToFirebase,
-    isSavedToFirebase,
-    loadFilesFromFirebase,
-    saveFilesToFirebase,
+    loadFilesFromBackend: async () => ({
+      loadedFiles: [],
+      erroredFiles: [],
+    }),
+    saveFilesToBackend: async () => ({
+      savedFiles: [],
+      erroredFiles: [],
+    }),
+  };
+});
+
+vi.mock("../api/api-client", () => {
+  return {
+    getClient: () => ({
+      getBoard: async () => ({ data: { elements: [] } }),
+      updateBoard: async () => {},
+    }),
   };
 });
 

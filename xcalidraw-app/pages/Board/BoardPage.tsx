@@ -75,7 +75,7 @@ import type {
 import CustomStats from "../../CustomStats";
 import { appJotaiStore, atom, Provider, useAtom, useAtomValue, useAtomWithInitialValue } from "../../app-jotai";
 import {
-  FIREBASE_STORAGE_PREFIXES,
+
   STORAGE_KEYS,
   SYNC_BROWSER_TABS_TIMEOUT,
 } from "../../app_constants";
@@ -88,10 +88,6 @@ import Collab, {
 import { AppFooter } from "../../components/AppFooter";
 import { AppMainMenu } from "../../components/AppMainMenu";
 import { AppWelcomeScreen } from "../../components/AppWelcomeScreen";
-import {
-  ExportToXcalidrawPlus,
-  exportToXcalidrawPlus,
-} from "../../components/ExportToXcalidrawPlus";
 import { TopErrorBoundary } from "../../components/TopErrorBoundary";
 
 import {
@@ -107,7 +103,7 @@ import {
   importUsernameFromLocalStorage,
 } from "../../data/localStorage";
 
-import { loadFilesFromFirebase } from "../../data/firebase";
+import { loadFilesFromBackend } from "../../data/files";
 import {
   LibraryIndexedDBAdapter,
   LibraryLocalStorageMigrationAdapter,
@@ -323,23 +319,24 @@ const initializeScene = async (opts: {
   if (roomLinkData && opts.collabAPI) {
     const { xcalidrawAPI } = opts;
 
-    const scene = await opts.collabAPI.startCollaboration(roomLinkData);
+    // Start collaboration - Collab.tsx handles scene preservation now
+    const collabScene = await opts.collabAPI.startCollaboration(roomLinkData);
 
     return {
       scene: {
-        ...scene,
+        ...collabScene,
         appState: {
           ...restoreAppState(
             {
-              ...scene?.appState,
-              theme: localDataState?.appState?.theme || scene?.appState?.theme,
+              ...collabScene?.appState,
+              theme: localDataState?.appState?.theme || collabScene?.appState?.theme,
             },
             xcalidrawAPI.getAppState(),
           ),
           isLoading: false,
         },
         elements: reconcileElements(
-          scene?.elements || [],
+          collabScene?.elements || [],
           xcalidrawAPI.getSceneElementsIncludingDeleted() as RemoteXcalidrawElement[],
           xcalidrawAPI.getAppState(),
         ),
@@ -533,7 +530,7 @@ const XcalidrawWrapper = ({
       if (collabAPI?.isCollaborating()) {
         if (data.scene.elements) {
           collabAPI
-            .fetchImageFilesFromFirebase({
+            .fetchImageFilesFromBackend({
               elements: data.scene.elements,
               forceFetchFiles: true,
             })
@@ -555,9 +552,9 @@ const XcalidrawWrapper = ({
             return acc;
           }, [] as FileId[]) || [];
 
-        if (data.isExternalScene) {
-          loadFilesFromFirebase(
-            `${FIREBASE_STORAGE_PREFIXES.shareLinkFiles}/${data.id}`,
+        if (data.isExternalScene && data.id) {
+          loadFilesFromBackend(
+            data.id,
             data.key,
             fileIds,
           ).then(({ loadedFiles, erroredFiles }) => {
@@ -920,30 +917,7 @@ const XcalidrawWrapper = ({
             toggleTheme: true,
             export: {
               onExportToBackend,
-              renderCustomUI: xcalidrawAPI
-                ? (elements, appState, files) => {
-                    return (
-                      <ExportToXcalidrawPlus
-                        elements={elements}
-                        appState={appState}
-                        files={files}
-                        name={xcalidrawAPI.getName()}
-                        onError={(error) => {
-                          xcalidrawAPI?.updateScene({
-                            appState: {
-                              errorMessage: error.message,
-                            },
-                          });
-                        }}
-                        onSuccess={() => {
-                          xcalidrawAPI.updateScene({
-                            appState: { openDialog: null },
-                          });
-                        }}
-                      />
-                    );
-                  }
-                : undefined,
+              renderCustomUI: undefined,
             },
           },
         }}
@@ -994,22 +968,6 @@ const XcalidrawWrapper = ({
         <OverwriteConfirmDialog>
           <OverwriteConfirmDialog.Actions.ExportToImage />
           <OverwriteConfirmDialog.Actions.SaveToDisk />
-          {xcalidrawAPI && (
-            <OverwriteConfirmDialog.Action
-              title={t("overwriteConfirm.action.xcalidrawPlus.title")}
-              actionLabel={t("overwriteConfirm.action.xcalidrawPlus.button")}
-              onClick={() => {
-                exportToXcalidrawPlus(
-                  xcalidrawAPI.getSceneElements(),
-                  xcalidrawAPI.getAppState(),
-                  xcalidrawAPI.getFiles(),
-                  xcalidrawAPI.getName(),
-                );
-              }}
-            >
-              {t("overwriteConfirm.action.xcalidrawPlus.description")}
-            </OverwriteConfirmDialog.Action>
-          )}
         </OverwriteConfirmDialog>
         <AppFooter onChange={() => xcalidrawAPI?.refresh()} />
         {xcalidrawAPI && <AIComponents xcalidrawAPI={xcalidrawAPI} />}
