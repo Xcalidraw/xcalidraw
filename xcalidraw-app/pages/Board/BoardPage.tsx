@@ -6,6 +6,8 @@ import {
   reconcileElements,
   useEditorInterface,
   hashElementsVersion,
+  sceneCoordsToViewportCoords,
+  viewportCoordsToSceneCoords,
 } from "@xcalidraw/xcalidraw";
 import { trackEvent } from "@xcalidraw/xcalidraw/analytics";
 import { getDefaultAppState } from "@xcalidraw/xcalidraw/appState";
@@ -50,6 +52,8 @@ import {
   useHandleLibrary,
 } from "@xcalidraw/xcalidraw/data/library";
 import { useUpdateBoardMutation, useBoardQuery } from "../../hooks/api.hooks";
+import { CommentsLayer } from "../../components/Comments";
+import { useGetUser } from "../../hooks/auth.hooks";
 
 import type { ResolvablePromise } from "@xcalidraw/common/utils";
 import type { ResolutionType } from "@xcalidraw/common/utility-types";
@@ -453,6 +457,12 @@ const XcalidrawWrapper = ({
 
   const [, forceRefresh] = useState(false);
 
+  // Comments feature
+  const [isCommentMode, setIsCommentMode] = useState(false);
+  const { user: currentUser } = useGetUser();
+  const [renderKey, setRenderKey] = useState(0); // Used to trigger re-renders on scroll/zoom
+  const lastViewRef = useRef({ scrollX: 0, scrollY: 0, zoom: 1 });
+
   // Always-on collaboration: Auto-start collaboration when viewing a saved board
   // This allows multiple users viewing the same board to see each other automatically
   useEffect(() => {
@@ -789,6 +799,17 @@ const XcalidrawWrapper = ({
         window.devicePixelRatio,
       );
     }
+
+    // Trigger re-render for comments only when scroll/zoom changes
+    const zoomValue = typeof appState.zoom === 'object' ? appState.zoom.value : appState.zoom;
+    if (
+      appState.scrollX !== lastViewRef.current.scrollX ||
+      appState.scrollY !== lastViewRef.current.scrollY ||
+      zoomValue !== lastViewRef.current.zoom
+    ) {
+      lastViewRef.current = { scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: zoomValue };
+      setRenderKey((k) => k + 1);
+    }
   };
 
   const [latestShareableLink, setLatestShareableLink] = useState<string | null>(
@@ -1043,6 +1064,25 @@ const XcalidrawWrapper = ({
         <CommandPalette
           customCommandPaletteItems={[
             {
+              label: isCommentMode ? "Exit comment mode" : "Add comment",
+              category: DEFAULT_CATEGORIES.app,
+              keywords: [
+                "comment",
+                "note",
+                "feedback",
+                "annotation",
+                "discuss",
+              ],
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              ),
+              perform: () => {
+                setIsCommentMode(!isCommentMode);
+              },
+            },
+            {
               label: t("labels.liveCollaboration"),
               category: DEFAULT_CATEGORIES.app,
               keywords: [
@@ -1135,6 +1175,24 @@ const XcalidrawWrapper = ({
         )}
       </Xcalidraw>
       {xcalidrawAPI && <Collab xcalidrawAPI={xcalidrawAPI} />}
+      
+      {/* Comments Layer */}
+      {boardId && xcalidrawAPI && (
+        <CommentsLayer
+          boardId={boardId}
+          currentUserId={currentUser?.username}
+          isCommentMode={isCommentMode}
+          canvasToScreen={(x: number, y: number) => {
+            const appState = xcalidrawAPI.getAppState();
+            return sceneCoordsToViewportCoords({ sceneX: x, sceneY: y }, appState);
+          }}
+          screenToCanvas={(x: number, y: number) => {
+            const appState = xcalidrawAPI.getAppState();
+            return viewportCoordsToSceneCoords({ clientX: x, clientY: y }, appState);
+          }}
+          onCommentModeChange={setIsCommentMode}
+        />
+      )}
     </div>
   );
 };

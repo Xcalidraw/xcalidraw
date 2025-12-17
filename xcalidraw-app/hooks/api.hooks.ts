@@ -390,3 +390,148 @@ export const useDeleteSpaceMutation = () => {
     },
   });
 };
+
+// ============================================================================
+// COMMENTS HOOKS
+// ============================================================================
+
+export interface Comment {
+  comment_id: string;
+  board_id: string;
+  thread_id: string;
+  parent_id: string | null;
+  author_id: string;
+  author_name: string;
+  author_avatar?: string;
+  content: string;
+  x: number;
+  y: number;
+  resolved: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommentThread {
+  root: Comment;
+  replies: Comment[];
+}
+
+export const useCommentsQuery = (boardId?: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['comments', boardId],
+    queryFn: async () => {
+      if (!boardId) return { threads: [] };
+      const response = await client.listComments({ boardId });
+      return response.data as { threads: CommentThread[] };
+    },
+    enabled: !!client && !!boardId,
+  });
+};
+
+export const useCreateCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      content,
+      x,
+      y,
+      parentId,
+    }: {
+      boardId: string;
+      content: string;
+      x?: number;
+      y?: number;
+      parentId?: string;
+    }) => {
+      const response = await client.createComment(
+        { boardId },
+        {
+          content,
+          x,
+          y,
+          parent_id: parentId,
+        }
+      );
+      return response.data as Comment;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
+    },
+  });
+};
+
+export const useUpdateCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      commentId,
+      content,
+    }: {
+      boardId: string;
+      commentId: string;
+      content: string;
+    }) => {
+      const response = await client.updateComment(
+        { boardId, commentId },
+        { content }
+      );
+      return response.data as Comment;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
+    },
+  });
+};
+
+export const useDeleteCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      commentId,
+    }: {
+      boardId: string;
+      commentId: string;
+    }) => {
+      await client.deleteComment({ boardId, commentId });
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
+    },
+  });
+};
+
+export const useResolveCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      commentId,
+      resolved,
+    }: {
+      boardId: string;
+      commentId: string;
+      resolved: boolean;
+    }) => {
+      const response = await client.resolveComment(
+        { boardId, commentId },
+        { resolved }
+      );
+      return response.data as Comment;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
+    },
+  });
+};
