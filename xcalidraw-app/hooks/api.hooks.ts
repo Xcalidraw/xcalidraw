@@ -535,3 +535,62 @@ export const useResolveCommentMutation = () => {
     },
   });
 };
+// ============================================================================
+// FILES HOOKS
+// ============================================================================
+
+export const useUploadFileMutation = () => {
+  const client = useClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      fileId,
+      contentType,
+    }: {
+      boardId: string;
+      fileId: string;
+      contentType: string;
+    }) => {
+      const response = await client.getUploadUrl(
+        { boardId },
+        { fileId, contentType }
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useGetFileUrlQuery = (boardId: string, fileId: string | null) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['file', boardId, fileId],
+    queryFn: async () => {
+      if (!fileId) return null;
+      const response = await client.getFileUrl({ boardId, fileId });
+      return response.data;
+    },
+    enabled: !!client && !!boardId && !!fileId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useBatchGetFileUrlsMutation = () => {
+  const client = useClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      fileIds,
+    }: {
+      boardId: string;
+      fileIds: string[];
+    }) => {
+      const response = await client.getBatchFileUrls(
+        { boardId },
+        { fileIds }
+      );
+      return response.data;
+    },
+  });
+};
