@@ -213,6 +213,9 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
             animationState: state,
           }).animationState;
 
+          // IMPORTANT: Always return a state object to keep the animation loop running
+          // for smooth cursor interpolation. Previously this returned undefined when
+          // no animation state, which caused the RAF loop to stop.
           if (nextAnimationState) {
             for (const key in nextAnimationState) {
               if (
@@ -225,7 +228,8 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
             }
           }
 
-          return undefined;
+          // Return empty object to keep animation running for cursor interpolation
+          return {} as InteractiveSceneRenderAnimationState;
         },
       );
     }
