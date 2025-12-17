@@ -154,6 +154,34 @@ declare global {
   }
 }
 
+/**
+ * Derives a valid AES-128 encryption key from a boardId.
+ * This is used for always-on collaboration where we need a deterministic key
+ * based on the board ID, rather than generating random keys.
+ */
+const deriveKeyFromBoardId = async (boardId: string): Promise<string> => {
+  // Use SHA-256 to hash the boardId, then take first 16 bytes (128 bits)
+  const encoder = new TextEncoder();
+  const data = encoder.encode(boardId + "_xcalidraw_collab_key");
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  
+  // Take first 16 bytes (128 bits for AES-128)
+  const keyBytes = new Uint8Array(hashBuffer.slice(0, 16));
+  
+  // Import as a proper CryptoKey
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyBytes,
+    { name: "AES-GCM", length: 128 },
+    true, // extractable
+    ["encrypt", "decrypt"]
+  );
+  
+  // Export as JWK and return the 'k' property (this matches generateEncryptionKey format)
+  const jwk = await crypto.subtle.exportKey("jwk", cryptoKey);
+  return jwk.k!;
+};
+
 let pwaEvent: BeforeInstallPromptEvent | null = null;
 
 window.addEventListener(
@@ -424,6 +452,34 @@ const XcalidrawWrapper = ({
   });
 
   const [, forceRefresh] = useState(false);
+
+  // Always-on collaboration: Auto-start collaboration when viewing a saved board
+  // This allows multiple users viewing the same board to see each other automatically
+  useEffect(() => {
+    const startAlwaysOnCollab = async () => {
+      if (
+        boardId &&
+        collabAPI &&
+        !collabAPI.isCollaborating() &&
+        !isCollabDisabled &&
+        !isCollaborationLink(window.location.href) // Don't interfere with existing room links
+      ) {
+        // Derive a valid encryption key from boardId
+        const roomKey = await deriveKeyFromBoardId(boardId);
+        
+        // Use boardId as the room ID for always-on collaboration
+        collabAPI.startCollaboration(
+          {
+            roomId: boardId,
+            roomKey, // Properly derived AES-128 key
+          },
+          { skipSceneReset: true } // Don't reset scene since board data is already loaded
+        );
+      }
+    };
+    
+    startAlwaysOnCollab();
+  }, [boardId, collabAPI, isCollabDisabled]);
 
   useEffect(() => {
     if (isDevEnv()) {
