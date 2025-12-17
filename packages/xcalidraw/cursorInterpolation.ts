@@ -29,6 +29,11 @@ const SPRING_STIFFNESS = 0.08; // How hard spring pulls (0.05-0.2, lower = smoot
 // How long before we snap to target (ms)
 const SNAP_THRESHOLD = 500;
 
+// Performance debugging (set to true to debug cursor lag)
+const DEBUG_CURSOR_PERF = false;
+let lastFrameTime = 0;
+let frameCount = 0;
+
 /**
  * Spring-based interpolation for natural movement
  */
@@ -88,8 +93,25 @@ export function updateCursorPosition(
 export function advanceCursorInterpolation(): void {
   const now = Date.now();
 
+  // Performance logging: detect frame drops
+  if (DEBUG_CURSOR_PERF) {
+    frameCount++;
+    if (lastFrameTime > 0) {
+      const frameDelta = now - lastFrameTime;
+      if (frameDelta > 25) { // More than ~40fps should log
+        console.warn(`[Cursor Perf] Frame drop: ${frameDelta}ms gap (frame ${frameCount})`);
+      }
+    }
+    lastFrameTime = now;
+  }
+
   interpolatedPositions.forEach((pos, socketId) => {
     const timeSinceUpdate = now - pos.lastUpdate;
+
+    // Log if target hasn't been updated in a while (might indicate network issue)
+    if (DEBUG_CURSOR_PERF && timeSinceUpdate > 100 && timeSinceUpdate < SNAP_THRESHOLD) {
+      console.warn(`[Cursor Perf] No target update for ${timeSinceUpdate}ms (socket: ${socketId.slice(-8)})`);
+    }
 
     if (timeSinceUpdate > SNAP_THRESHOLD) {
       // Cursor hasn't moved in a while, snap to target
