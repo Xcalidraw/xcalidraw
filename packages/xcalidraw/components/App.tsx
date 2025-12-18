@@ -1591,7 +1591,26 @@ class App extends React.Component<AppProps, AppState> {
         }
         onPointerEnter={this.toggleOverscrollBehavior}
         onPointerLeave={this.toggleOverscrollBehavior}
+        onDragOver={this.handleAppOnDragOver}
+        onDragLeave={this.handleAppOnDragLeave}
       >
+        {this.state.dragDropFeedback && (
+          <div
+            className="drag-feedback"
+            style={{
+              top:
+                this.state.dragDropFeedback.y -
+                this.state.dragDropFeedback.height / 2,
+              left:
+                this.state.dragDropFeedback.x -
+                this.state.dragDropFeedback.width / 2,
+              width: this.state.dragDropFeedback.width,
+              height: this.state.dragDropFeedback.height,
+            }}
+          >
+            {t("labels.dropFiles")}
+          </div>
+        )}
         <AppContext.Provider value={this}>
           <AppPropsContext.Provider value={this.props}>
             <XcalidrawContainerContext.Provider
@@ -10527,7 +10546,44 @@ class App extends React.Component<AppProps, AppState> {
     });
   };
 
+  private handleAppOnDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    // we need to set this to allow dropping
+    if (event.dataTransfer.types.includes("Files")) {
+      event.dataTransfer.dropEffect = "copy";
+    }
+
+    if (!this.state.dragDropFeedback) {
+      this.setState({
+        dragDropFeedback: {
+          x: event.clientX,
+          y: event.clientY,
+          width: 200,
+          height: 200,
+        },
+      });
+    } else {
+       this.setState({
+        dragDropFeedback: {
+          ...this.state.dragDropFeedback,
+          x: event.clientX,
+          y: event.clientY,
+        },
+      });
+    }
+  };
+
+  private handleAppOnDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (this.state.dragDropFeedback) {
+        this.setState({ dragDropFeedback: null });
+    }
+  };
+
   private handleAppOnDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    this.setState({ dragDropFeedback: null });
+
     const { x: sceneX, y: sceneY } = viewportCoordsToSceneCoords(
       event,
       this.state,

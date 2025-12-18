@@ -443,6 +443,13 @@ export interface AppState {
     matches: readonly SearchMatch[];
   }> | null;
 
+  dragDropFeedback: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null;
+
   /** the locked element/group that's active and shows unlock popup */
   activeLockedId: string | null;
   // when locking multiple units of elements together, we assign a temporary

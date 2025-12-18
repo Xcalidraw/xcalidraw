@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { getElementAbsoluteCoords } from "@xcalidraw/element";
 
 import {
   CURSOR_TYPE,
@@ -165,6 +166,7 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
         remotePointerUserStates,
         selectionColor,
         renderScrollbars: props.renderScrollbars,
+        imageCache: props.app.imageCache,
       },
       editorInterface: props.editorInterface,
       callback: props.renderInteractiveSceneCallback,
@@ -207,7 +209,7 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
           );
         }
 
-        const nextAnimationState = renderInteractiveScene({
+        let nextAnimationState = renderInteractiveScene({
           ...rendererParams.current!,
           deltaTime,
           animationState: state,
@@ -216,6 +218,59 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
         // IMPORTANT: Always return a state object to keep the animation loop running
         // for smooth cursor interpolation. Previously this returned undefined when
         // no animation state, which caused the RAF loop to stop.
+        // Draw spinners for pending images
+        const context = rendererParams.current.canvas?.getContext("2d");
+        if (context) {
+          rendererParams.current.visibleElements.forEach((element) => {
+            if (
+              element.type === "image" &&
+              !element.isDeleted
+            ) {
+              if (!element.fileId) {
+                return;
+              }
+
+              if (
+                element.status === "pending" ||
+                (rendererParams.current?.renderConfig.imageCache &&
+                  !rendererParams.current.renderConfig.imageCache.has(
+                    element.fileId,
+                  ) &&
+                  element.status !== "error")
+              ) {
+                const [x1, y1, x2, y2] = getElementAbsoluteCoords(
+                  element,
+                  rendererParams.current!.elementsMap,
+                );
+                const cx = (x1 + x2) / 2 + rendererParams.current!.appState.scrollX;
+                const cy = (y1 + y2) / 2 + rendererParams.current!.appState.scrollY;
+
+                context.save();
+                context.translate(cx * window.devicePixelRatio, cy * window.devicePixelRatio);
+                
+                const time = performance.now();
+                const angle = (time / 1000) * Math.PI * 2; // 1 rotation per second
+                
+                context.rotate(angle);
+                
+                // Draw spinner
+                context.beginPath();
+                context.arc(0, 0, 20 * window.devicePixelRatio, 0, Math.PI * 1.5);
+                context.strokeStyle = "#868e96";
+                context.lineWidth = 4 * window.devicePixelRatio;
+                context.stroke();
+                
+                context.restore();
+                
+                // Ensure loop keeps running for spinner animation
+                nextAnimationState = (nextAnimationState || {
+                    bindingHighlight: undefined,
+                }) as InteractiveSceneRenderAnimationState;
+              }
+            }
+          });
+        }
+
         if (nextAnimationState) {
           for (const key in nextAnimationState) {
             if (
@@ -227,6 +282,7 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
             }
           }
         }
+
 
         // Return empty object to keep animation running for cursor interpolation
         return {} as InteractiveSceneRenderAnimationState;

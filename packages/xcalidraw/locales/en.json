@@ -171,7 +171,8 @@
     "linkToElement": "Link to object",
     "wrapSelectionInFrame": "Wrap selection in frame",
     "tab": "Tab",
-    "shapeSwitch": "Switch shape"
+    "shapeSwitch": "Switch shape",
+    "dropFiles": "Drop files here"
   },
   "elementLink": {
     "title": "Link to object",

@@ -169,4 +169,23 @@
       }
     }
   }
+
+  .drag-feedback {
+    position: absolute;
+    border: 4px dashed var(--color-primary);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 40px;
+    box-sizing: border-box;
+    color: var(--color-primary);
+    background-color: var(--island-bg-color);
+    opacity: 0.8;
+    font-family: var(--ui-font);
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
 }
