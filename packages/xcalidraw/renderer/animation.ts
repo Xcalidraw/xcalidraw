@@ -71,6 +71,8 @@ export class AnimationController {
       } else {
         setTimeout(AnimationController.tick, 0);
       }
+    } else {
+      AnimationController.isRunning = false;
     }
   }
 

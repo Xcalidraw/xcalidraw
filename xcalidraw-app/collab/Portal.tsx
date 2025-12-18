@@ -38,10 +38,8 @@ class Portal {
     this.socket = socket;
     this.roomId = id;
     this.roomKey = key;
-    // Generate a unique ID for this socket if it doesn't have one
-    if (!this.socket.id) {
-      this.socket.id = `socket-${Math.random().toString(36).substring(2, 15)}`;
-    }
+    // Socket ID is now assigned by the server via init-room message
+    // No need to generate a random ID here
 
     // Initialize socket listeners
     this.socket.on("init-room", () => {
@@ -216,24 +214,26 @@ class Portal {
     pointer: SocketUpdateDataSource["MOUSE_LOCATION"]["payload"]["pointer"];
     button: SocketUpdateDataSource["MOUSE_LOCATION"]["payload"]["button"];
   }) => {
-    if (this.socket?.id) {
-      const data: SocketUpdateDataSource["MOUSE_LOCATION"] = {
-        type: WS_SUBTYPES.MOUSE_LOCATION,
-        payload: {
-          socketId: this.socket.id as SocketId,
-          pointer: payload.pointer,
-          button: payload.button || "up",
-          selectedElementIds:
-            this.collab.xcalidrawAPI.getAppState().selectedElementIds,
-          username: this.collab.state.username,
-        },
-      };
-
-      return this._broadcastSocketData(
-        data as SocketUpdateData,
-        true, // volatile
-      );
+    if (!this.socket?.id) {
+      return;
     }
+    
+    const data: SocketUpdateDataSource["MOUSE_LOCATION"] = {
+      type: WS_SUBTYPES.MOUSE_LOCATION,
+      payload: {
+        socketId: this.socket.id as SocketId,
+        pointer: payload.pointer,
+        button: payload.button || "up",
+        selectedElementIds:
+          this.collab.xcalidrawAPI.getAppState().selectedElementIds,
+        username: this.collab.state.username,
+      },
+    };
+
+    return this._broadcastSocketData(
+      data as SocketUpdateData,
+      true, // volatile
+    );
   };
 
   broadcastVisibleSceneBounds = (

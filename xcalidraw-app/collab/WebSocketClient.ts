@@ -16,6 +16,7 @@ export class WebSocketClient implements CollabSocket {
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
   private reconnectTimer: number | null = null;
+  private intentionalClose = false; // Flag to prevent reconnect on intentional close
 
   constructor() {}
 
@@ -25,11 +26,13 @@ export class WebSocketClient implements CollabSocket {
    * @param boardId Board ID to join
    */
   connect(url: string, boardId: string): WebSocket {
+    // Reset intentional close flag for new connection
+    this.intentionalClose = false;
+    
     this.url = `${url}?boardId=${boardId}`;
     this.ws = new WebSocket(this.url);
 
     this.ws.onopen = () => {
-      console.log("[WebSocket] Connected");
       this.reconnectAttempts = 0;
       
       // Emit connect event to mimic Socket.IO
@@ -47,9 +50,11 @@ export class WebSocketClient implements CollabSocket {
     };
 
     this.ws.onclose = () => {
-      console.log("[WebSocket] Disconnected");
       this.trigger("disconnect");
-      this.attemptReconnect(boardId);
+      // Only attempt reconnect if this wasn't an intentional close
+      if (!this.intentionalClose) {
+        this.attemptReconnect(boardId);
+      }
     };
 
     return this.ws;
@@ -66,7 +71,6 @@ export class WebSocketClient implements CollabSocket {
     // Check data type FIRST before any parsing
     if (event.data instanceof ArrayBuffer) {
       // Binary encrypted data from backend - raw encrypted buffer
-      console.log("[WebSocket] Received binary data:", event.data.byteLength, "bytes");
       
       // Backend sends just the encrypted buffer
       // We need IV separately but for now, trigger the event
@@ -79,7 +83,6 @@ export class WebSocketClient implements CollabSocket {
     
     if (event.data instanceof Blob) {
       // Convert Blob to ArrayBuffer
-      console.log("[WebSocket] Received blob data:", event.data.size, "bytes");
       event.data.arrayBuffer().then(buffer => {
         const dummyIv = new Uint8Array(16);
         this.trigger("client-broadcast", buffer, dummyIv);
@@ -100,20 +103,18 @@ export class WebSocketClient implements CollabSocket {
 
         switch (type) {
           case "init-room":
-            console.log("[WebSocket] Room initialized");
+            // Use the server-assigned socket ID if provided
+            if (data.socketId) {
+              this.id = data.socketId;
+            }
             this.trigger("init-room");
             break;
 
           case "new-user":
-            console.log("[WebSocket] New user joined:", data.connectionId);
             this.trigger("new-user", data.connectionId);
             break;
 
           case "room-user-change":
-            // Only log occasionally to avoid spam
-            if (Math.random() < 0.1) {
-              console.log("[WebSocket] Room users updated, count:", data.connections?.length || 0);
-            }
             this.trigger("room-user-change", data.connections);
             break;
 
@@ -121,17 +122,10 @@ export class WebSocketClient implements CollabSocket {
             // Decode base64 encrypted data and IV
             const encryptedBuffer = Uint8Array.from(atob(data.encryptedBuffer), c => c.charCodeAt(0));
             const iv = Uint8Array.from(atob(data.iv), c => c.charCodeAt(0));
-            
-            // Only log occasionally to avoid spam
-            if (Math.random() < 0.01) {
-              console.log("[WebSocket] Encrypted message received");
-            }
             this.trigger("client-broadcast", encryptedBuffer.buffer, iv);
             break;
 
           case "first-in-room":
-            // Fargate server sends this when user is first in room
-            console.log("[WebSocket] First in room - loading scene from backend");
             this.trigger("first-in-room");
             break;
 
@@ -233,6 +227,9 @@ export class WebSocketClient implements CollabSocket {
    * Close WebSocket connection
    */
   close(): void {
+    // Set flag to prevent auto-reconnect
+    this.intentionalClose = true;
+    
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
@@ -258,8 +255,6 @@ export class WebSocketClient implements CollabSocket {
 
     this.reconnectAttempts++;
     const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-
-    console.log(`[WebSocket] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
 
     this.reconnectTimer = window.setTimeout(() => {
       const wsUrl = this.url.split("?")[0];

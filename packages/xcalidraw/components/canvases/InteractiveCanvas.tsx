@@ -37,6 +37,7 @@ import type {
 } from "../../types";
 import type { DOMAttributes } from "react";
 
+
 type InteractiveCanvasProps = {
   containerRef: React.RefObject<HTMLDivElement | null>;
   canvas: HTMLCanvasElement | null;
@@ -88,15 +89,9 @@ type InteractiveCanvasProps = {
 export const INTERACTIVE_SCENE_ANIMATION_KEY = "animateInteractiveScene";
 
 const InteractiveCanvas = (props: InteractiveCanvasProps) => {
-  const isComponentMounted = useRef(false);
   const rendererParams = useRef(null as InteractiveSceneRenderConfig | null);
 
   useEffect(() => {
-    if (!isComponentMounted.current) {
-      isComponentMounted.current = true;
-      return;
-    }
-
     const remotePointerButton: InteractiveCanvasRenderConfig["remotePointerButton"] =
       new Map();
     const remotePointerViewportCoords: InteractiveCanvasRenderConfig["remotePointerViewportCoords"] =
@@ -178,62 +173,70 @@ const InteractiveCanvas = (props: InteractiveCanvasProps) => {
       },
       deltaTime: 0,
     };
+  });
 
-    if (!AnimationController.running(INTERACTIVE_SCENE_ANIMATION_KEY)) {
-      AnimationController.start<InteractiveSceneRenderAnimationState>(
-        INTERACTIVE_SCENE_ANIMATION_KEY,
-        ({
-          deltaTime,
-          state,
-        }: {
-          deltaTime: number;
-          state?: InteractiveSceneRenderAnimationState;
-        }) => {
-          // Advance cursor interpolation each frame
-          advanceCursorInterpolation();
+  useEffect(() => {
+    AnimationController.start<InteractiveSceneRenderAnimationState>(
+      INTERACTIVE_SCENE_ANIMATION_KEY,
+      ({
+        deltaTime,
+        state,
+      }: {
+        deltaTime: number;
+        state?: InteractiveSceneRenderAnimationState;
+      }) => {
+        if (!rendererParams.current) {
+          return {} as InteractiveSceneRenderAnimationState;
+        }
 
-          // Update remotePointerViewportCoords with latest interpolated positions
-          if (rendererParams.current?.renderConfig.remotePointerViewportCoords) {
-            rendererParams.current.renderConfig.remotePointerViewportCoords.forEach(
-              (_, socketId) => {
-                const interpolatedPos = getInterpolatedPosition(socketId);
-                if (interpolatedPos) {
-                  rendererParams.current!.renderConfig.remotePointerViewportCoords.set(
-                    socketId,
-                    interpolatedPos,
-                  );
-                }
-              },
-            );
-          }
+        // Advance cursor interpolation each frame
+        advanceCursorInterpolation();
 
-          const nextAnimationState = renderInteractiveScene({
-            ...rendererParams.current!,
-            deltaTime,
-            animationState: state,
-          }).animationState;
-
-          // IMPORTANT: Always return a state object to keep the animation loop running
-          // for smooth cursor interpolation. Previously this returned undefined when
-          // no animation state, which caused the RAF loop to stop.
-          if (nextAnimationState) {
-            for (const key in nextAnimationState) {
-              if (
-                nextAnimationState[
-                  key as keyof InteractiveSceneRenderAnimationState
-                ] !== undefined
-              ) {
-                return nextAnimationState;
+        // Update remotePointerViewportCoords with latest interpolated positions
+        if (rendererParams.current?.renderConfig.remotePointerViewportCoords) {
+          rendererParams.current.renderConfig.remotePointerViewportCoords.forEach(
+            (_, socketId) => {
+              const interpolatedPos = getInterpolatedPosition(socketId);
+              if (interpolatedPos) {
+                rendererParams.current!.renderConfig.remotePointerViewportCoords.set(
+                  socketId,
+                  interpolatedPos,
+                );
               }
+            },
+          );
+        }
+
+        const nextAnimationState = renderInteractiveScene({
+          ...rendererParams.current!,
+          deltaTime,
+          animationState: state,
+        }).animationState;
+
+        // IMPORTANT: Always return a state object to keep the animation loop running
+        // for smooth cursor interpolation. Previously this returned undefined when
+        // no animation state, which caused the RAF loop to stop.
+        if (nextAnimationState) {
+          for (const key in nextAnimationState) {
+            if (
+              nextAnimationState[
+                key as keyof InteractiveSceneRenderAnimationState
+              ] !== undefined
+            ) {
+              return nextAnimationState;
             }
           }
+        }
 
-          // Return empty object to keep animation running for cursor interpolation
-          return {} as InteractiveSceneRenderAnimationState;
-        },
-      );
-    }
-  });
+        // Return empty object to keep animation running for cursor interpolation
+        return {} as InteractiveSceneRenderAnimationState;
+      },
+    );
+
+    return () => {
+      AnimationController.cancel(INTERACTIVE_SCENE_ANIMATION_KEY);
+    };
+  }, []);
 
   return (
     <canvas
