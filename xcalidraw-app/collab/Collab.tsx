@@ -590,6 +590,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
           this.portal.roomKey,
         );
 
+
+
         switch (decryptedData.type) {
           case WS_SUBTYPES.INVALID_RESPONSE:
             return;
@@ -621,6 +623,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
               decryptedData.payload.socketId ||
               // @ts-ignore legacy, see #2094 (#2097)
               decryptedData.payload.socketID;
+
+
 
             this.updateCollaborator(socketId, {
               pointer,
@@ -735,7 +739,6 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     // Just return current scene elements if any
     const existingElements = this.xcalidrawAPI.getSceneElements();
     if (existingElements.length > 0) {
-      console.log("[Collab] Room initialized with existing elements:", existingElements.length);
       this.setLastBroadcastedOrReceivedSceneVersion(
         getSceneVersion(existingElements as readonly OrderedXcalidrawElement[]),
       );
@@ -745,7 +748,6 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       };
     }
 
-    console.log("[Collab] Room initialized (no elements yet - will sync from peers or BoardPage)");
     return null;
   };
 
@@ -853,6 +855,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   };
 
   setCollaborators(sockets: SocketId[]) {
+    
     // Check if collaborators actually changed to prevent unnecessary re-renders
     const existingSocketIds = Array.from(this.collaborators.keys()).sort();
     const newSocketIds = [...sockets].sort();
@@ -891,6 +894,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     );
     collaborators.set(socketId, user);
     this.collaborators = collaborators;
+
+
 
     this.xcalidrawAPI.updateScene({
       collaborators,

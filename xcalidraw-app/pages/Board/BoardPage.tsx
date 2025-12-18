@@ -250,32 +250,63 @@ const XcalidrawWrapper = ({
   const [renderKey, setRenderKey] = useState(0); // Used to trigger re-renders on scroll/zoom
   const lastViewRef = useRef({ scrollX: 0, scrollY: 0, zoom: 1 });
 
+  // Track collab session to prevent cleanup race conditions
+  const collabSessionRef = useRef(0);
+
   // Always-on collaboration: Auto-start collaboration when viewing a saved board
-  // This allows multiple users viewing the same board to see each other automatically
   useEffect(() => {
-    const startAlwaysOnCollab = async () => {
-      if (
-        boardId &&
-        collabAPI &&
-        !collabAPI.isCollaborating() &&
-        !isCollabDisabled &&
-        !isCollaborationLink(window.location.href) // Don't interfere with existing room links
-      ) {
-        // Derive a valid encryption key from boardId
+    // Skip if missing required deps
+    if (!boardId || !collabAPI || isCollabDisabled) {
+      return;
+    }
+
+    // Skip if already collaborating (handles React StrictMode double-mount)
+    if (collabAPI.isCollaborating()) {
+      return;
+    }
+
+    // Don't interfere with explicit room links
+    if (isCollaborationLink(window.location.href)) {
+      return;
+    }
+
+    // Increment session counter - this instance "owns" this session number
+    const mySession = ++collabSessionRef.current;
+    let isCancelled = false;
+
+    const startCollab = async () => {
+      try {
         const roomKey = await deriveKeyFromBoardId(boardId);
         
-        // Use boardId as the room ID for always-on collaboration
-        collabAPI.startCollaboration(
-          {
-            roomId: boardId,
-            roomKey, // Properly derived AES-128 key
-          },
-          { skipSceneReset: true } // Don't reset scene since board data is already loaded
+        // Check again before starting (in case state changed during async)
+        if (isCancelled || collabAPI.isCollaborating()) {
+          return;
+        }
+        
+        await collabAPI.startCollaboration(
+          { roomId: boardId, roomKey },
+          { skipSceneReset: true }
         );
+      } catch (error) {
+        if (!isCancelled) {
+          console.error('[Collab] startCollaboration failed:', error);
+        }
       }
     };
-    
-    startAlwaysOnCollab();
+
+    startCollab();
+
+    // Cleanup: cancel pending start and stop collab on unmount
+    // BUT only if no newer session has started
+    return () => {
+      isCancelled = true;
+      
+      // Only stop if this is still the active session
+      // If a newer session has started, don't interfere with it
+      if (mySession === collabSessionRef.current && collabAPI.isCollaborating()) {
+        collabAPI.stopCollaboration(false);
+      }
+    };
   }, [boardId, collabAPI, isCollabDisabled]);
 
   useEffect(() => {
