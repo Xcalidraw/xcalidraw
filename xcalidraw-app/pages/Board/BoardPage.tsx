@@ -2,34 +2,25 @@ import {
   Xcalidraw,
   LiveCollaborationTrigger,
   TTDDialogTrigger,
-  CaptureUpdateAction,
-  reconcileElements,
   useEditorInterface,
   hashElementsVersion,
   sceneCoordsToViewportCoords,
   viewportCoordsToSceneCoords,
 } from "@xcalidraw/xcalidraw";
 import { trackEvent } from "@xcalidraw/xcalidraw/analytics";
-import { getDefaultAppState } from "@xcalidraw/xcalidraw/appState";
 import {
   CommandPalette,
   DEFAULT_CATEGORIES,
 } from "@xcalidraw/xcalidraw/components/CommandPalette/CommandPalette";
 import { ErrorDialog } from "@xcalidraw/xcalidraw/components/ErrorDialog";
 import { OverwriteConfirmDialog } from "@xcalidraw/xcalidraw/components/OverwriteConfirm/OverwriteConfirm";
-import { openConfirmModal } from "@xcalidraw/xcalidraw/components/OverwriteConfirm/OverwriteConfirmState";
 import { ShareableLinkDialog } from "@xcalidraw/xcalidraw/components/ShareableLinkDialog";
-import Trans from "@xcalidraw/xcalidraw/components/Trans";
 import {
-  APP_NAME,
-  EVENT,
   THEME,
   VERSION_TIMEOUT,
   debounce,
   getVersion,
   getFrame,
-  isTestEnv,
-  preventUnload,
   resolvablePromise,
   isRunningInIframe,
   isDevEnv,
@@ -37,18 +28,13 @@ import {
 import polyfill from "@xcalidraw/xcalidraw/polyfill";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { loadFromBlob } from "@xcalidraw/xcalidraw/data/blob";
 import { useCallbackRefState } from "@xcalidraw/xcalidraw/hooks/useCallbackRefState";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 
 import { usersIcon, share } from "@xcalidraw/xcalidraw/components/icons";
 import { isElementLink } from "@xcalidraw/element";
-import { restore, restoreAppState } from "@xcalidraw/xcalidraw/data/restore";
-import { newElementWith } from "@xcalidraw/element";
-import { isInitializedImageElement, getSceneVersion } from "@xcalidraw/element";
 import clsx from "clsx";
 import {
-  parseLibraryTokensFromUrl,
   useHandleLibrary,
 } from "@xcalidraw/xcalidraw/data/library";
 import { useUpdateBoardMutation, useBoardQuery } from "../../hooks/api.hooks";
@@ -56,29 +42,19 @@ import { CommentsLayer } from "../../components/Comments";
 import { useGetUser } from "../../hooks/auth.hooks";
 
 import type { ResolvablePromise } from "@xcalidraw/common/utils";
-import type { ResolutionType } from "@xcalidraw/common/utility-types";
-import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
-import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
 import type {
-  FileId,
   NonDeletedXcalidrawElement,
   OrderedXcalidrawElement,
 } from "@xcalidraw/element/types";
 import type {
   AppState,
   XcalidrawImperativeAPI,
-  BinaryFiles,
   XcalidrawInitialDataState,
   UIAppState,
 } from "@xcalidraw/xcalidraw/types";
 
 import CustomStats from "../../CustomStats";
-import { appJotaiStore, atom, Provider, useAtom, useAtomValue, useAtomWithInitialValue } from "../../app-jotai";
-import {
-
-  STORAGE_KEYS,
-  SYNC_BROWSER_TABS_TIMEOUT,
-} from "../../app_constants";
+import { appJotaiStore, Provider, useAtom, useAtomValue, useAtomWithInitialValue } from "../../app-jotai";
 
 import Collab, {
   collabAPIAtom,
@@ -91,35 +67,22 @@ import { AppWelcomeScreen } from "../../components/AppWelcomeScreen";
 import { TopErrorBoundary } from "../../components/TopErrorBoundary";
 
 import {
-  exportToBackend,
-  getCollaborationLinkData,
   isCollaborationLink,
-  loadScene,
 } from "../../data";
 
-import { updateStaleImageStatuses } from "../../data/FileManager";
-import {
-  importFromLocalStorage,
-  importUsernameFromLocalStorage,
-} from "../../data/localStorage";
 
-import { loadFilesFromBackend } from "../../data/files";
 import {
   LibraryIndexedDBAdapter,
   LibraryLocalStorageMigrationAdapter,
-  LocalData,
   localStorageQuotaExceededAtom,
 } from "../../data/LocalData";
-import { isBrowserStorageStateNewer } from "../../data/tabSync";
 import { ShareDialog, shareDialogStateAtom } from "../../share/ShareDialog";
 import CollabError, {
   collabErrorIndicatorAtom,
 } from "../../collab/CollabError";
 import { useHandleAppTheme } from "../../useHandleAppTheme";
-import { getPreferredLanguage } from "../../app-language/language-detector";
 import { useAppLangCode } from "../../app-language/language-state";
 import DebugCanvas, {
-  debugRenderer,
   isVisualDebuggerEnabled,
   loadSavedDebugState,
 } from "../../components/DebugCanvas";
@@ -129,7 +92,9 @@ import "../../index.scss";
 
 import { AppSidebar } from "../../components/AppSidebar";
 
-import type { CollabAPI } from "../../collab/Collab";
+
+// Import from extracted modules
+import { deriveKeyFromBoardId } from "./utils/deriveKey";
 
 polyfill();
 
@@ -151,36 +116,8 @@ declare global {
 
   interface Window {
     __XCALIDRAW_BOARD_ID__?: string;
-  }
+    }
 }
-
-/**
- * Derives a valid AES-128 encryption key from a boardId.
- * This is used for always-on collaboration where we need a deterministic key
- * based on the board ID, rather than generating random keys.
- */
-const deriveKeyFromBoardId = async (boardId: string): Promise<string> => {
-  // Use SHA-256 to hash the boardId, then take first 16 bytes (128 bits)
-  const encoder = new TextEncoder();
-  const data = encoder.encode(boardId + "_xcalidraw_collab_key");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  
-  // Take first 16 bytes (128 bits for AES-128)
-  const keyBytes = new Uint8Array(hashBuffer.slice(0, 16));
-  
-  // Import as a proper CryptoKey
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    keyBytes,
-    { name: "AES-GCM", length: 128 },
-    true, // extractable
-    ["encrypt", "decrypt"]
-  );
-  
-  // Export as JWK and return the 'k' property (this matches generateEncryptionKey format)
-  const jwk = await crypto.subtle.exportKey("jwk", cryptoKey);
-  return jwk.k!;
-};
 
 let pwaEvent: BeforeInstallPromptEvent | null = null;
 
@@ -206,157 +143,10 @@ if (window.self !== window.top) {
   }
 }
 
-const shareableLinkConfirmDialog = {
-  title: t("overwriteConfirm.modal.shareableLink.title"),
-  description: (
-    <Trans
-      i18nKey="overwriteConfirm.modal.shareableLink.description"
-      bold={(text) => <strong>{text}</strong>}
-      br={() => <br />}
-    />
-  ),
-  actionLabel: t("overwriteConfirm.modal.shareableLink.button"),
-  color: "danger",
-} as const;
-
-const initializeScene = async (opts: {
-  collabAPI: CollabAPI | null;
-  xcalidrawAPI: XcalidrawImperativeAPI;
-  boardId?: string;
-  boardData?: any;
-}): Promise<
-  { scene: XcalidrawInitialDataState | null } & (
-    | { isExternalScene: true; id: string; key: string }
-    | { isExternalScene: false; id?: null; key?: null }
-  )
-> => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const id = searchParams.get("id");
-  const jsonBackendMatch = window.location.hash.match(
-    /^#json=([a-zA-Z0-9_-]+),([a-zA-Z0-9_-]+)$/,
-  );
-  const externalUrlMatch = window.location.hash.match(/^#url=(.*)$/);
-
-  const localDataState = opts.boardId ? null : importFromLocalStorage();
-
-  let scene: RestoredDataState & {
-    scrollToContent?: boolean;
-  } = await loadScene(null, null, localDataState);
-
-  if (opts.boardData) {
-    scene = {
-      ...scene,
-      elements: opts.boardData.elements || [],
-      appState: {
-        ...scene.appState,
-        ...getDefaultAppState(),
-        name: opts.boardData.title,
-      },
-      scrollToContent: true,
-    };
-  }
-
-  let roomLinkData = getCollaborationLinkData(window.location.href);
-  const isExternalScene = !!(id || jsonBackendMatch || roomLinkData);
-  if (isExternalScene) {
-    if (
-      !scene.elements.length ||
-      roomLinkData ||
-      (await openConfirmModal(shareableLinkConfirmDialog))
-    ) {
-      if (jsonBackendMatch) {
-        scene = await loadScene(
-          jsonBackendMatch[1],
-          jsonBackendMatch[2],
-          localDataState,
-        );
-      }
-      scene.scrollToContent = true;
-      if (!roomLinkData) {
-        window.history.replaceState({}, APP_NAME, window.location.origin);
-      }
-    } else {
-      if (document.hidden) {
-        return new Promise((resolve, reject) => {
-          window.addEventListener(
-            "focus",
-            () => initializeScene(opts).then(resolve).catch(reject),
-            {
-              once: true,
-            },
-          );
-        });
-      }
-
-      roomLinkData = null;
-      window.history.replaceState({}, APP_NAME, window.location.origin);
-    }
-  } else if (externalUrlMatch) {
-    window.history.replaceState({}, APP_NAME, window.location.origin);
-
-    const url = externalUrlMatch[1];
-    try {
-      const request = await fetch(window.decodeURIComponent(url));
-      const data = await loadFromBlob(await request.blob(), null, null);
-      if (
-        !scene.elements.length ||
-        (await openConfirmModal(shareableLinkConfirmDialog))
-      ) {
-        return { scene: data, isExternalScene };
-      }
-    } catch (error: any) {
-      return {
-        scene: {
-          appState: {
-            errorMessage: t("alerts.invalidSceneUrl"),
-          },
-        },
-        isExternalScene,
-      };
-    }
-  }
-
-  if (roomLinkData && opts.collabAPI) {
-    const { xcalidrawAPI } = opts;
-
-    // Start collaboration - Collab.tsx handles scene preservation now
-    const collabScene = await opts.collabAPI.startCollaboration(roomLinkData);
-
-    return {
-      scene: {
-        ...collabScene,
-        appState: {
-          ...restoreAppState(
-            {
-              ...collabScene?.appState,
-              theme: localDataState?.appState?.theme || collabScene?.appState?.theme,
-            },
-            xcalidrawAPI.getAppState(),
-          ),
-          isLoading: false,
-        },
-        elements: reconcileElements(
-          collabScene?.elements || [],
-          xcalidrawAPI.getSceneElementsIncludingDeleted() as RemoteXcalidrawElement[],
-          xcalidrawAPI.getAppState(),
-        ),
-      },
-      isExternalScene: true,
-      id: roomLinkData.roomId,
-      key: roomLinkData.roomKey,
-    };
-  } else if (scene) {
-    return isExternalScene && jsonBackendMatch
-      ? {
-          scene,
-          isExternalScene,
-          id: jsonBackendMatch[1],
-          key: jsonBackendMatch[2],
-        }
-      : { scene, isExternalScene: false };
-  }
-  return { scene: null, isExternalScene: false };
-};
+// Extracted helpers and hooks
+import { initializeScene } from "./hooks/useSceneInitialization";
+import { useBoardHandlers } from "./hooks/useBoardHandlers";
+import { loadImages } from "./helpers";
 
 const XcalidrawWrapper = ({
   boardId,
@@ -503,6 +293,28 @@ const XcalidrawWrapper = ({
     }
   }, [xcalidrawAPI]);
 
+  // State for shareable link
+  const [latestShareableLink, setLatestShareableLink] = useState<string | null>(null);
+
+  // Use consolidated board handlers hook
+  const boardHandlers = useBoardHandlers({
+    xcalidrawAPI,
+    collabAPI,
+    isCollabDisabled,
+    boardId,
+    lastSceneVersionRef,
+    lastBoardTitleRef,
+    lastViewRef,
+    debugCanvasRef,
+    setLangCode,
+    setRenderKey,
+    setLatestShareableLink,
+    saveToBackend,
+  });
+
+  // Alias onChange and onExportToBackend for use elsewhere
+  const { onChange, onExportToBackend } = boardHandlers;
+
   useEffect(() => {
     if (!xcalidrawAPI || (!isCollabDisabled && !collabAPI)) {
       return;
@@ -520,73 +332,9 @@ const XcalidrawWrapper = ({
        }
     }
 
-    const loadImages = (
-      data: ResolutionType<typeof initializeScene>,
-      isInitialLoad = false,
-    ) => {
-      if (!data.scene) {
-        return;
-      }
-      if (collabAPI?.isCollaborating()) {
-        if (data.scene.elements) {
-          collabAPI
-            .fetchImageFilesFromBackend({
-              elements: data.scene.elements,
-              forceFetchFiles: true,
-            })
-            .then(({ loadedFiles, erroredFiles }) => {
-              xcalidrawAPI.addFiles(loadedFiles);
-              updateStaleImageStatuses({
-                xcalidrawAPI,
-                erroredFiles,
-                elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
-              });
-            });
-        }
-      } else {
-        const fileIds =
-          data.scene.elements?.reduce((acc, element) => {
-            if (isInitializedImageElement(element)) {
-              return acc.concat(element.fileId);
-            }
-            return acc;
-          }, [] as FileId[]) || [];
-
-        if (data.isExternalScene && data.id) {
-          loadFilesFromBackend(
-            data.id,
-            data.key,
-            fileIds,
-          ).then(({ loadedFiles, erroredFiles }) => {
-            xcalidrawAPI.addFiles(loadedFiles);
-            updateStaleImageStatuses({
-              xcalidrawAPI,
-              erroredFiles,
-              elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
-            });
-          });
-        } else if (isInitialLoad) {
-          if (fileIds.length) {
-            LocalData.fileStorage
-              .getFiles(fileIds)
-              .then(({ loadedFiles, erroredFiles }) => {
-                if (loadedFiles.length) {
-                  xcalidrawAPI.addFiles(loadedFiles);
-                }
-                updateStaleImageStatuses({
-                  xcalidrawAPI,
-                  erroredFiles,
-                  elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
-                });
-              });
-          }
-          LocalData.fileStorage.clearObsoleteFiles({ currentFileIds: fileIds });
-        }
-      }
-    };
-
+    // Initialize scene
     initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
-      loadImages(data, true);
+      loadImages({ data, isInitialLoad: true, xcalidrawAPI, collabAPI, boardId });
       initialStatePromiseRef.current.promise.resolve(data.scene);
       if (data.scene?.elements) {
         lastSceneVersionRef.current = hashElementsVersion(data.scene.elements);
@@ -596,262 +344,9 @@ const XcalidrawWrapper = ({
       }
     });
 
-    const onHashChange = async (event: HashChangeEvent) => {
-      event.preventDefault();
-      const libraryUrlTokens = parseLibraryTokensFromUrl();
-      if (!libraryUrlTokens) {
-        if (
-          collabAPI?.isCollaborating() &&
-          !isCollaborationLink(window.location.href)
-        ) {
-          collabAPI.stopCollaboration(false);
-        }
-        xcalidrawAPI.updateScene({ appState: { isLoading: true } });
-
-        initializeScene({ collabAPI, xcalidrawAPI, boardId }).then((data) => {
-          loadImages(data);
-          if (data.scene) {
-            xcalidrawAPI.updateScene({
-              ...data.scene,
-              ...restore(data.scene, null, null, { repairBindings: true }),
-              captureUpdate: CaptureUpdateAction.IMMEDIATELY,
-            });
-          }
-        });
-      }
-    };
-
-    const syncData = debounce(() => {
-      if (isTestEnv()) {
-        return;
-      }
-      if (
-        !document.hidden &&
-        ((collabAPI && !collabAPI.isCollaborating()) || isCollabDisabled)
-      ) {
-        if (isBrowserStorageStateNewer(STORAGE_KEYS.VERSION_DATA_STATE)) {
-          const localDataState = importFromLocalStorage();
-          const username = importUsernameFromLocalStorage();
-          setLangCode(getPreferredLanguage());
-          xcalidrawAPI.updateScene({
-            ...localDataState,
-            captureUpdate: CaptureUpdateAction.NEVER,
-          });
-          LibraryIndexedDBAdapter.load().then((data) => {
-            if (data) {
-              xcalidrawAPI.updateLibrary({
-                libraryItems: data.libraryItems,
-              });
-            }
-          });
-          collabAPI?.setUsername(username || "");
-        }
-
-        if (isBrowserStorageStateNewer(STORAGE_KEYS.VERSION_FILES)) {
-          const elements = xcalidrawAPI.getSceneElementsIncludingDeleted();
-          const currFiles = xcalidrawAPI.getFiles();
-          const fileIds =
-            elements?.reduce((acc, element) => {
-              if (
-                isInitializedImageElement(element) &&
-                !currFiles[element.fileId]
-              ) {
-                return acc.concat(element.fileId);
-              }
-              return acc;
-            }, [] as FileId[]) || [];
-          if (fileIds.length) {
-            LocalData.fileStorage
-              .getFiles(fileIds)
-              .then(({ loadedFiles, erroredFiles }) => {
-                if (loadedFiles.length) {
-                  xcalidrawAPI.addFiles(loadedFiles);
-                }
-                updateStaleImageStatuses({
-                  xcalidrawAPI,
-                  erroredFiles,
-                  elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
-                });
-              });
-          }
-        }
-      }
-    }, SYNC_BROWSER_TABS_TIMEOUT);
-
-    const onUnload = () => {
-      LocalData.flushSave();
-    };
-
-    const visibilityChange = (event: FocusEvent | Event) => {
-      if (event.type === EVENT.BLUR || document.hidden) {
-        LocalData.flushSave();
-      }
-      if (
-        event.type === EVENT.VISIBILITY_CHANGE ||
-        event.type === EVENT.FOCUS
-      ) {
-        syncData();
-      }
-    };
-
-    window.addEventListener(EVENT.HASHCHANGE, onHashChange, false);
-    window.addEventListener(EVENT.UNLOAD, onUnload, false);
-    window.addEventListener(EVENT.BLUR, visibilityChange, false);
-    document.addEventListener(EVENT.VISIBILITY_CHANGE, visibilityChange, false);
-    window.addEventListener(EVENT.FOCUS, visibilityChange, false);
-    return () => {
-      window.removeEventListener(EVENT.HASHCHANGE, onHashChange, false);
-      window.removeEventListener(EVENT.UNLOAD, onUnload, false);
-      window.removeEventListener(EVENT.BLUR, visibilityChange, false);
-      window.removeEventListener(EVENT.FOCUS, visibilityChange, false);
-      document.removeEventListener(
-        EVENT.VISIBILITY_CHANGE,
-        visibilityChange,
-        false,
-      );
-    };
-  }, [isCollabDisabled, collabAPI, xcalidrawAPI, setLangCode, boardId, boardData]);
-
-  useEffect(() => {
-    const unloadHandler = (event: BeforeUnloadEvent) => {
-      LocalData.flushSave();
-
-      if (
-        xcalidrawAPI &&
-        LocalData.fileStorage.shouldPreventUnload(
-          xcalidrawAPI.getSceneElements(),
-        )
-      ) {
-        if (import.meta.env.VITE_APP_DISABLE_PREVENT_UNLOAD !== "true") {
-          preventUnload(event);
-        } else {
-          console.warn(
-            "preventing unload disabled (VITE_APP_DISABLE_PREVENT_UNLOAD)",
-          );
-        }
-      }
-    };
-    window.addEventListener(EVENT.BEFORE_UNLOAD, unloadHandler);
-    return () => {
-      window.removeEventListener(EVENT.BEFORE_UNLOAD, unloadHandler);
-    };
-  }, [xcalidrawAPI]);
-
-  const onChange = (
-    elements: readonly OrderedXcalidrawElement[],
-    appState: AppState,
-    files: BinaryFiles,
-  ) => {
-    if (collabAPI?.isCollaborating()) {
-      collabAPI.syncElements(elements);
-    }
-
-    if (!LocalData.isSavePaused()) {
-      if (boardId) {
-        const currentVersion = hashElementsVersion(elements);
-        const currentTitle = appState.name || "";
-        if (
-          currentVersion !== lastSceneVersionRef.current ||
-          currentTitle !== lastBoardTitleRef.current
-        ) {
-          lastSceneVersionRef.current = currentVersion;
-          lastBoardTitleRef.current = currentTitle;
-          saveToBackend(elements, appState, boardId);
-        }
-      }
-      LocalData.save(elements, appState, files, () => {
-        if (xcalidrawAPI) {
-          let didChange = false;
-
-          const elements = xcalidrawAPI
-            .getSceneElementsIncludingDeleted()
-            .map((element) => {
-              if (
-                LocalData.fileStorage.shouldUpdateImageElementStatus(element)
-              ) {
-                const newElement = newElementWith(element, { status: "saved" });
-                if (newElement !== element) {
-                  didChange = true;
-                }
-                return newElement;
-              }
-              return element;
-            });
-
-          if (didChange) {
-            xcalidrawAPI.updateScene({
-              elements,
-              captureUpdate: CaptureUpdateAction.NEVER,
-            });
-          }
-        }
-      });
-    }
-
-    if (debugCanvasRef.current && xcalidrawAPI) {
-      debugRenderer(
-        debugCanvasRef.current,
-        appState,
-        elements,
-        window.devicePixelRatio,
-      );
-    }
-
-    // Trigger re-render for comments only when scroll/zoom changes
-    const zoomValue = typeof appState.zoom === 'object' ? appState.zoom.value : appState.zoom;
-    if (
-      appState.scrollX !== lastViewRef.current.scrollX ||
-      appState.scrollY !== lastViewRef.current.scrollY ||
-      zoomValue !== lastViewRef.current.zoom
-    ) {
-      lastViewRef.current = { scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: zoomValue };
-      setRenderKey((k) => k + 1);
-    }
-  };
-
-  const [latestShareableLink, setLatestShareableLink] = useState<string | null>(
-    null,
-  );
-
-  const onExportToBackend = async (
-    exportedElements: readonly NonDeletedXcalidrawElement[],
-    appState: Partial<AppState>,
-    files: BinaryFiles,
-  ) => {
-    if (exportedElements.length === 0) {
-      throw new Error(t("alerts.cannotExportEmptyCanvas"));
-    }
-    try {
-      const { url, errorMessage } = await exportToBackend(
-        exportedElements,
-        {
-          ...appState,
-          viewBackgroundColor: appState.exportBackground
-            ? appState.viewBackgroundColor
-            : getDefaultAppState().viewBackgroundColor,
-        },
-        files,
-      );
-
-      if (errorMessage) {
-        throw new Error(errorMessage);
-      }
-
-      if (url) {
-        setLatestShareableLink(url);
-      }
-    } catch (error: any) {
-      if (error.name !== "AbortError") {
-        const { width, height } = appState;
-        console.error(error, {
-          width,
-          height,
-          devicePixelRatio: window.devicePixelRatio,
-        });
-        throw new Error(error.message);
-      }
-    }
-  };
+    // Use boardHandlers for event setup
+    return boardHandlers.setupEventListeners();
+  }, [isCollabDisabled, collabAPI, xcalidrawAPI, boardId, boardData, boardHandlers]);
 
   const renderCustomStats = (
     elements: readonly NonDeletedXcalidrawElement[],
