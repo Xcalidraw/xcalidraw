@@ -77,8 +77,12 @@
 
       &--user {
         width: 40px;
-        border-radius: 50%;
         overflow: hidden;
+      }
+
+      &--users {
+        position: relative;
+        background-color: var(--button-hover-bg);
       }
     }
   }
