@@ -19,6 +19,7 @@ import {
 } from "../../../data";
 import { importFromLocalStorage } from "../../../data/localStorage";
 import { getRoomKey, setRoomKey } from "../utils/roomKeyCache";
+import { deriveKeyFromBoardId } from "../utils/deriveKey";
 import type { InitializeSceneOpts, InitializeSceneResult } from "../types";
 import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
 import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
@@ -181,6 +182,10 @@ export const initializeScene = async (
       key: roomLinkData.roomKey,
     };
   } else if (scene) {
+    let key: string | null = null;
+    if (opts.boardId) {
+        key = await deriveKeyFromBoardId(opts.boardId);
+    }
     return isExternalScene && jsonBackendMatch
       ? {
           scene,
@@ -188,7 +193,7 @@ export const initializeScene = async (
           id: jsonBackendMatch[1],
           key: jsonBackendMatch[2],
         }
-      : { scene, isExternalScene: false };
+      : { scene, isExternalScene: false, key: key || undefined };
   }
 
   return { scene: null, isExternalScene: false };

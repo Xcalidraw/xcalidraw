@@ -202,6 +202,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     window.addEventListener("online", this.onOfflineStatusToggle);
     window.addEventListener("offline", this.onOfflineStatusToggle);
     window.addEventListener(EVENT.UNLOAD, this.onUnload);
+    window.addEventListener(EVENT.VISIBILITY_CHANGE, this.onVisibilityChange);
 
     const unsubOnUserFollow = this.xcalidrawAPI.onUserFollow((payload) => {
       this.portal.socket && this.portal.broadcastUserFollowed(payload);
@@ -255,7 +256,7 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     window.removeEventListener(EVENT.BEFORE_UNLOAD, this.beforeUnload);
     window.removeEventListener(EVENT.UNLOAD, this.onUnload);
     window.removeEventListener(EVENT.POINTER_MOVE, this.onPointerMove);
-    window.removeEventListener(
+    window.addEventListener(
       EVENT.VISIBILITY_CHANGE,
       this.onVisibilityChange,
     );
@@ -833,6 +834,18 @@ class Collab extends PureComponent<CollabProps, CollabState> {
         this.reportActive,
         ACTIVE_THRESHOLD,
       );
+      this.onIdleStateChange(UserIdleState.ACTIVE);
+
+      // Wake up connection logic
+      if (this.isCollaborating() && this.portal.roomId) {
+        setTimeout(() => {
+             // If completely disconnected, the WebSocketClient should handle it via retry,
+             // but sending an update forces a check.
+             // If we are technically "connected" but the link is dead, this might throw or fail silently,
+             // but usually attempting to write will reveal the broken pipe.
+             this.portal.broadcastIdleChange(UserIdleState.ACTIVE);
+        }, 1000);
+      }
       this.onIdleStateChange(UserIdleState.ACTIVE);
     }
   };

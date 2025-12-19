@@ -298,7 +298,7 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
     };
   }, [onHashChange, onUnload, visibilityChange, onBeforeUnload]);
 
-  return {
+  return useMemo(() => ({
     onChange,
     onExportToBackend,
     onHashChange,
@@ -307,5 +307,14 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
     syncData,
     visibilityChange,
     setupEventListeners,
-  };
+  }), [
+    onChange,
+    onExportToBackend,
+    onHashChange,
+    onUnload,
+    onBeforeUnload,
+    syncData,
+    visibilityChange,
+    setupEventListeners,
+  ]);
 };

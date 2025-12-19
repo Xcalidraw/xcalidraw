@@ -20,7 +20,7 @@ export interface InitializeSceneOpts {
  */
 export type InitializeSceneResult = { scene: XcalidrawInitialDataState | null } & (
   | { isExternalScene: true; id: string; key: string }
-  | { isExternalScene: false; id?: null; key?: null }
+  | { isExternalScene: false; id?: null; key?: string | null }
 );
 
 /**

@@ -161,6 +161,7 @@ const XcalidrawWrapper = ({
   const updateBoardMutationRef = useRef(updateBoardMutation);
   const lastSceneVersionRef = useRef(0);
   const lastBoardTitleRef = useRef("");
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
     updateBoardMutationRef.current = updateBoardMutation;
@@ -364,20 +365,26 @@ const XcalidrawWrapper = ({
     }
 
     // Initialize scene
-    initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
-      loadImages({ data, isInitialLoad: true, xcalidrawAPI, collabAPI, boardId });
-      initialStatePromiseRef.current.promise.resolve(data.scene);
-      if (data.scene?.elements) {
-        lastSceneVersionRef.current = hashElementsVersion(data.scene.elements);
-      }
-      if (data.scene?.appState?.name) {
-        lastBoardTitleRef.current = data.scene.appState.name;
-      }
-    });
+    if (!hasInitializedRef.current) {
+        initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
+          loadImages({ data, isInitialLoad: true, xcalidrawAPI, collabAPI, boardId });
+          initialStatePromiseRef.current.promise.resolve(data.scene);
+          
+          if (data.scene?.elements) {
+            lastSceneVersionRef.current = hashElementsVersion(data.scene.elements);
+          }
+          if (data.scene?.appState?.name) {
+            lastBoardTitleRef.current = data.scene.appState.name;
+          }
+          hasInitializedRef.current = true;
+        });
+    }
+  }, [isCollabDisabled, collabAPI, xcalidrawAPI, boardId, boardData]);
 
+  useEffect(() => {
     // Use boardHandlers for event setup
     return boardHandlers.setupEventListeners();
-  }, [isCollabDisabled, collabAPI, xcalidrawAPI, boardId, boardData, boardHandlers]);
+  }, [boardHandlers]);
 
   const renderCustomStats = (
     elements: readonly NonDeletedXcalidrawElement[],
