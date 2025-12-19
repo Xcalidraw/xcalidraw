@@ -90,10 +90,21 @@ export class FileManager {
       const fileData =
         isInitializedImageElement(element) && files[element.fileId];
 
+      if (isInitializedImageElement(element) && (element.status === "saved" || element.status === "error")) {
+         if (fileData) {
+             this.savedFiles.set(element.fileId, this.getFileVersion(fileData));
+         }
+         continue; 
+      }
+      
+      if (element.isDeleted) {
+          continue;
+      }
+
       if (
         fileData &&
-        // NOTE if errored during save, won't retry due to this check
-        !this.isFileSavedOrBeingSaved(fileData)
+        !this.isFileSavedOrBeingSaved(fileData) &&
+        !this.fetchingFiles.has(element.fileId)
       ) {
         addedFiles.set(element.fileId, files[element.fileId]);
         this.savingFiles.set(element.fileId, this.getFileVersion(fileData));
@@ -187,6 +198,8 @@ export class FileManager {
       element.status === "pending"
     );
   };
+
+
 
   reset() {
     this.fetchingFiles.clear();

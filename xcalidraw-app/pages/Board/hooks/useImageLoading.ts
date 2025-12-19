@@ -51,10 +51,14 @@ export const createImageLoader = (opts: LoadImagesOpts) => {
     }
 
     // Priority 1: Direct backend loading for board pages (most reliable)
-    if (boardId && data.key) {
-      console.log("[BoardPage] Loading images from backend for boardId:", boardId);
-      loadFilesFromBackend(boardId, data.key, fileIds).then(
-        ({ loadedFiles, erroredFiles }) => {
+    if (boardId && data.key && collabAPI && data.scene.elements) {
+      // Use collabAPI to ensure FileManager knows files are saved, preventing re-uploads
+      collabAPI
+        .fetchImageFilesFromBackend({
+          elements: data.scene.elements,
+          forceFetchFiles: true,
+        })
+        .then(({ loadedFiles, erroredFiles }) => {
           if (loadedFiles.length) {
             xcalidrawAPI.addFiles(loadedFiles);
           }
@@ -63,8 +67,7 @@ export const createImageLoader = (opts: LoadImagesOpts) => {
             erroredFiles,
             elements: xcalidrawAPI.getSceneElementsIncludingDeleted(),
           });
-        }
-      );
+        });
       return;
     }
 
