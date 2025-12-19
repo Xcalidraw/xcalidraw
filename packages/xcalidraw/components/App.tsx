@@ -1525,8 +1525,9 @@ class App extends React.Component<AppProps, AppState> {
   private toggleOverscrollBehavior(event: React.PointerEvent) {
     // when pointer inside editor, disable overscroll behavior to prevent
     // panning to trigger history back/forward on MacOS Chrome
-    document.documentElement.style.overscrollBehaviorX =
-      event.type === "pointerenter" ? "none" : "auto";
+    const value = event.type === "pointerenter" ? "none" : "auto";
+    document.documentElement.style.overscrollBehaviorX = value;
+    document.body.style.overscrollBehaviorX = value;
   }
 
   public render() {
@@ -2646,6 +2647,7 @@ class App extends React.Component<AppProps, AppState> {
     selectGroupsForSelectedElements.clearCache();
     touchTimeout = 0;
     document.documentElement.style.overscrollBehaviorX = "";
+    document.body.style.overscrollBehaviorX = "";
   }
 
   private onResize = withBatchedUpdates(() => {
