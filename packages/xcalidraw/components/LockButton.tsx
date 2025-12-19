@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Tooltip } from "./Tooltip";
 
 import "./ToolIcon.scss";
 
@@ -23,28 +24,30 @@ const ICONS = {
 
 export const LockButton = (props: LockIconProps) => {
   return (
-    <label
-      className={clsx(
-        "ToolIcon ToolIcon__lock",
-        `ToolIcon_size_${DEFAULT_SIZE}`,
-        {
-          "is-mobile": props.isMobile,
-        },
-      )}
-      title={`${props.title} — Q`}
-    >
-      <input
-        className="ToolIcon_type_checkbox"
-        type="checkbox"
-        name={props.name}
-        onChange={props.onChange}
-        checked={props.checked}
-        aria-label={props.title}
-        data-testid="toolbar-lock"
-      />
-      <div className="ToolIcon__icon">
-        {props.checked ? ICONS.CHECKED : ICONS.UNCHECKED}
-      </div>
-    </label>
+    <Tooltip label={`${props.title} — Q`} position="right">
+      <label
+        className={clsx(
+          "ToolIcon ToolIcon__lock",
+          `ToolIcon_size_${DEFAULT_SIZE}`,
+          {
+            "is-mobile": props.isMobile,
+          },
+        )}
+        title={undefined}
+      >
+        <input
+          className="ToolIcon_type_checkbox"
+          type="checkbox"
+          name={props.name}
+          onChange={props.onChange}
+          checked={props.checked}
+          aria-label={props.title}
+          data-testid="toolbar-lock"
+        />
+        <div className="ToolIcon__icon">
+          {props.checked ? ICONS.CHECKED : ICONS.UNCHECKED}
+        </div>
+      </label>
+    </Tooltip>
   );
 };

@@ -22,7 +22,7 @@ export const updateTooltipPosition = (
     width: number;
     height: number;
   },
-  position: "bottom" | "top" = "bottom",
+  position: "bottom" | "top" | "right" = "bottom",
 ) => {
   const tooltipRect = tooltip.getBoundingClientRect();
 
@@ -31,24 +31,39 @@ export const updateTooltipPosition = (
 
   const margin = 5;
 
-  let left = item.left + item.width / 2 - tooltipRect.width / 2;
-  if (left < 0) {
-    left = margin;
-  } else if (left + tooltipRect.width >= viewportWidth) {
-    left = viewportWidth - tooltipRect.width - margin;
-  }
-
+  let left: number;
   let top: number;
 
-  if (position === "bottom") {
-    top = item.top + item.height + margin;
-    if (top + tooltipRect.height >= viewportHeight) {
-      top = item.top - tooltipRect.height - margin;
+  if (position === "right") {
+    left = item.left + item.width + margin;
+    top = item.top + item.height / 2 - tooltipRect.height / 2;
+
+    if (left + tooltipRect.width >= viewportWidth) {
+      left = item.left - tooltipRect.width - margin;
+    }
+    if (top < 0) {
+      top = margin;
+    } else if (top + tooltipRect.height >= viewportHeight) {
+      top = viewportHeight - tooltipRect.height - margin;
     }
   } else {
-    top = item.top - tooltipRect.height - margin;
-    if (top < 0) {
+    left = item.left + item.width / 2 - tooltipRect.width / 2;
+    if (left < 0) {
+      left = margin;
+    } else if (left + tooltipRect.width >= viewportWidth) {
+      left = viewportWidth - tooltipRect.width - margin;
+    }
+
+    if (position === "bottom") {
       top = item.top + item.height + margin;
+      if (top + tooltipRect.height >= viewportHeight) {
+        top = item.top - tooltipRect.height - margin;
+      }
+    } else {
+      top = item.top - tooltipRect.height - margin;
+      if (top < 0) {
+        top = item.top + item.height + margin;
+      }
     }
   }
 
@@ -62,32 +77,30 @@ const updateTooltip = (
   item: HTMLDivElement,
   tooltip: HTMLDivElement,
   label: string,
-  long: boolean,
+  position: "bottom" | "top" | "right",
 ) => {
   tooltip.classList.add("xcalidraw-tooltip--visible");
-  tooltip.style.minWidth = long ? "50ch" : "10ch";
-  tooltip.style.maxWidth = long ? "50ch" : "15ch";
 
   tooltip.textContent = label;
 
   const itemRect = item.getBoundingClientRect();
-  updateTooltipPosition(tooltip, itemRect);
+  updateTooltipPosition(tooltip, itemRect, position);
 };
 
 type TooltipProps = {
   children: React.ReactNode;
   label: string;
-  long?: boolean;
   style?: React.CSSProperties;
   disabled?: boolean;
+  position?: "bottom" | "top" | "right";
 };
 
 export const Tooltip = ({
   children,
   label,
-  long = false,
   style,
   disabled,
+  position = "bottom",
 }: TooltipProps) => {
   useEffect(() => {
     return () => getTooltipDiv().classList.remove("xcalidraw-tooltip--visible");
@@ -103,7 +116,7 @@ export const Tooltip = ({
           event.currentTarget as HTMLDivElement,
           getTooltipDiv(),
           label,
-          long,
+          position,
         )
       }
       onPointerLeave={() =>

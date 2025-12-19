@@ -47,6 +47,7 @@ const MainMenu = Object.assign(
               }}
               data-testid="main-menu-trigger"
               className={clsx("main-menu-trigger", { "is-open": isOpen })}
+              title={t("buttons.menu")}
             >
               {HamburgerMenuIcon}
             </DropdownMenu.Trigger>

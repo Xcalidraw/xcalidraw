@@ -1,6 +1,7 @@
 import clsx from "clsx";
 
 import { useEditorInterface } from "../App";
+import { Tooltip } from "../Tooltip";
 
 const MenuTrigger = ({
   className = "",
@@ -23,16 +24,18 @@ const MenuTrigger = ({
     },
   ).trim();
   return (
-    <button
-      className={classNames}
-      onClick={onToggle}
-      type="button"
-      data-testid="dropdown-menu-button"
-      title={title}
-      {...rest}
-    >
-      {children}
-    </button>
+    <Tooltip label={title || ""} position="right">
+      <button
+        className={classNames}
+        onClick={onToggle}
+        type="button"
+        data-testid="dropdown-menu-button"
+        title={undefined}
+        {...rest}
+      >
+        {children}
+      </button>
+    </Tooltip>
   );
 };
 

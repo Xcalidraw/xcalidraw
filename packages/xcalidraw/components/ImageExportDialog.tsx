@@ -140,7 +140,7 @@ const ImageExportModal = ({
       maxWidthOrHeight: Math.max(maxWidth, maxHeight),
       exportingFrame,
     })
-      .then((canvas) => {
+      .then((canvas: HTMLCanvasElement) => {
         setRenderError(null);
         // if converting to blob fails, there's some problem that will
         // likely prevent preview and export (e.g. canvas too big)
@@ -155,7 +155,7 @@ const ImageExportModal = ({
             throw e;
           });
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.error(error);
         setRenderError(error);
       });
@@ -357,7 +357,7 @@ const ExportSetting = ({
       >
         {label}
         {tooltip && (
-          <Tooltip label={tooltip} long={true}>
+          <Tooltip label={tooltip}>
             {helpIcon}
           </Tooltip>
         )}
