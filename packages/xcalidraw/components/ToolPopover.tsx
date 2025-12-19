@@ -80,9 +80,11 @@ export const ToolPopover = ({
   const { container } = useXcalidrawContainer();
 
   // if currentType is not in options, close popup
-  if (!options.some((o) => o.type === currentType) && isOpen) {
-    setIsOpen(false);
-  }
+  useEffect(() => {
+    if (!options.some((o) => o.type === currentType) && isOpen) {
+      setIsOpen(false);
+    }
+  }, [options, currentType, isOpen, setIsOpen]);
 
   // Close popover when user starts interacting with the canvas (pointer down)
   useEffect(() => {
