@@ -281,6 +281,17 @@ const LayerUI = ({
 
                             <div className="App-toolbar__divider" />
 
+                            <LaserPointerButton
+                              title={t("toolBar.laser")}
+                              checked={
+                                appState.activeTool.type === TOOL_TYPE.laser
+                              }
+                              onChange={() =>
+                                app.setActiveTool({ type: TOOL_TYPE.laser })
+                              }
+                              isMobile
+                            />
+
                             <HandButton
                               checked={isHandToolActive(appState)}
                               onChange={() => onHandToolToggle()}
@@ -296,26 +307,7 @@ const LayerUI = ({
                             />
                           </Stack.Row>
                         </Island>
-                        {isCollaborating && (
-                          <Island
-                            style={{
-                              marginLeft: spacing.collabMarginLeft,
-                              alignSelf: "center",
-                              height: "fit-content",
-                            }}
-                          >
-                            <LaserPointerButton
-                              title={t("toolBar.laser")}
-                              checked={
-                                appState.activeTool.type === TOOL_TYPE.laser
-                              }
-                              onChange={() =>
-                                app.setActiveTool({ type: TOOL_TYPE.laser })
-                              }
-                              isMobile
-                            />
-                          </Island>
-                        )}
+
                       </Stack.Row>
                     </Stack.Col>
                   </div>

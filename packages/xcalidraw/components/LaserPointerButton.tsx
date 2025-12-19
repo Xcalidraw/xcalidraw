@@ -1,10 +1,8 @@
 import clsx from "clsx";
-
-import "./ToolIcon.scss";
-
+import { KEYS } from "@xcalidraw/common";
+import { ToolButton } from "./ToolButton";
 import { laserPointerToolIcon } from "./icons";
-
-import type { ToolButtonSize } from "./ToolButton";
+import "./ToolIcon.scss";
 
 type LaserPointerIconProps = {
   title?: string;
@@ -14,30 +12,20 @@ type LaserPointerIconProps = {
   isMobile?: boolean;
 };
 
-const DEFAULT_SIZE: ToolButtonSize = "small";
-
 export const LaserPointerButton = (props: LaserPointerIconProps) => {
   return (
-    <label
-      className={clsx(
-        "ToolIcon ToolIcon__LaserPointer",
-        `ToolIcon_size_${DEFAULT_SIZE}`,
-        {
-          "is-mobile": props.isMobile,
-        },
-      )}
-      title={`${props.title}`}
-    >
-      <input
-        className="ToolIcon_type_checkbox"
-        type="checkbox"
-        name={props.name}
-        onChange={props.onChange}
-        checked={props.checked}
-        aria-label={props.title}
-        data-testid="toolbar-LaserPointer"
-      />
-      <div className="ToolIcon__icon">{laserPointerToolIcon}</div>
-    </label>
+    <ToolButton
+      className={clsx("Shape", { fillable: false, active: props.checked })}
+      type="radio"
+      icon={laserPointerToolIcon}
+      name="editor-current-shape"
+      checked={props.checked}
+      title={`${props.title} — ${KEYS.K.toLocaleUpperCase()}`}
+      aria-label={`${props.title} — ${KEYS.K.toLocaleUpperCase()}`}
+      keyBindingLabel={!props.isMobile ? KEYS.K.toLocaleUpperCase() : undefined}
+      aria-keyshortcuts={KEYS.K}
+      data-testid="toolbar-laser"
+      onChange={() => props.onChange?.()}
+    />
   );
 };
