@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTunnels } from "../context/tunnels";
+import { useUIAppState } from "../context/ui-appState";
 
-import { userIcon } from "./icons";
+import { usersIcon, userIcon } from "./icons";
 
 import "./RightHeaderBar.scss";
 
@@ -16,10 +17,34 @@ export const RightHeaderBar = ({
   showLibraryButton = true,
 }: RightHeaderBarProps) => {
   const { DefaultSidebarTriggerTunnel } = useTunnels();
+  const appState = useUIAppState();
+
+  const collaboratorsCount = useMemo(() => {
+    const count = appState.collaborators.size;
+
+    if (count > 99) {
+      return "99+";
+    }
+
+    return count;
+  }, [appState.collaborators]);
 
   return (
     <div className="RightHeaderBar">
-      {renderCustomContent?.()}
+      
+
+      {!!collaboratorsCount && (
+        <button
+          className="RightHeaderBar__btn RightHeaderBar__btn--users"
+          title="User"
+          type="button"
+        >
+          {usersIcon}
+          <div className="CollabButton-collaborators">
+            {collaboratorsCount}
+          </div>
+        </button>
+      )}
 
       <button
         className="RightHeaderBar__btn RightHeaderBar__btn--user"
@@ -30,6 +55,8 @@ export const RightHeaderBar = ({
       </button>
 
       {showLibraryButton && <DefaultSidebarTriggerTunnel.Out />}
+
+      {renderCustomContent?.()}
     </div>
   );
 };

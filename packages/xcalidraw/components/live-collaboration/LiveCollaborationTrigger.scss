@@ -15,6 +15,7 @@
     --button-active-bg: var(--color-primary-darker);
 
     box-shadow: 0 0 0 1px var(--color-surface-lowest);
+    border-radius: 6px;
 
     flex-shrink: 0;
 
@@ -51,16 +52,21 @@
     :root[dir="rtl"] & {
       left: -5px;
     }
-    min-width: 1em;
-    min-height: 1em;
-    line-height: 1;
     position: absolute;
-    bottom: -5px;
-    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    padding: 5px;
     border-radius: 50%;
     background-color: $oc-green-2;
-    color: $oc-green-9;
+    color: var(--icon-green-fill-color);
     font-size: 0.6rem;
     font-family: "Cascadia";
+    box-shadow: 0 0 0 1px var(--color-surface-lowest);
   }
 }
