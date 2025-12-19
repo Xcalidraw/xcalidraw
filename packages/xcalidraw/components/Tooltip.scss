@@ -23,6 +23,8 @@
   color: $oc-white;
 
   display: none;
+  width: max-content;
+  max-width: 50ch;
 
   &.xcalidraw-tooltip--visible {
     display: block;

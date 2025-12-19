@@ -137,7 +137,7 @@ export const actionChangeExportEmbedScene = register({
       onChange={(checked) => updateData(checked)}
     >
       {t("imageExportDialog.label.embedScene")}
-      <Tooltip label={t("imageExportDialog.tooltip.embedScene")} long={true}>
+      <Tooltip label={t("imageExportDialog.tooltip.embedScene")}>
         <div className="xcalidraw-tooltip-icon">{questionCircle}</div>
       </Tooltip>
     </CheckboxItem>

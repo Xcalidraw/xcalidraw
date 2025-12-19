@@ -13,7 +13,7 @@ export const EncryptedIcon = () => {
       rel="noopener"
       aria-label={t("encrypted.link")}
     >
-      <Tooltip label={t("encrypted.tooltip")} long={true}>
+      <Tooltip label={t("encrypted.tooltip")}>
         {shield}
       </Tooltip>
     </a>
