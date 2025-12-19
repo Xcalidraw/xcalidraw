@@ -110,7 +110,13 @@ export const FloatingShapeActions = ({
 
   return (
     <div
-      className={clsx("floating-shape-actions", { hidden: !isCanvasStable })}
+      className={clsx("floating-shape-actions", {
+        hidden:
+          !isCanvasStable ||
+          appState.selectedElementsAreBeingDragged ||
+          appState.isResizing ||
+          appState.isRotating,
+      })}
       style={{ left, top }}
     >
       <Section
