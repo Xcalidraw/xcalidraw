@@ -3,74 +3,50 @@
 .emoji-picker-sidebar {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface-lowest);
+  background-color: var(--popup-bg-color); // Use popup background
   
-  // Miro-like positioning: Anchored left (next to toolbar) and top (below header)
+  // Miro-like positioning: Floating panel
   position: absolute;
-  top: 60px !important; // Approx header height
-  bottom: 0 !important;
-  left: 60px !important; // Approx width of the left toolbar
-  height: auto !important; // Fill to bottom
-  width: 320px;
-  border-right: 1px solid var(--sidebar-border-color);
-  border-top: 1px solid var(--sidebar-border-color);
-  border-top-right-radius: 8px;
-  box-shadow: var(--sidebar-shadow);
-  z-index: 5;
-
-  .sidebar-header {
-     padding: 12px;
-     border-bottom: none;
+  top: 70px !important; 
+  bottom: 70px !important; 
+  left: 72px !important; 
+  height: auto !important;
+  width: 340px;
+  
+  border: 1px solid var(--sidebar-border-color); // Theme border
+  border-radius: var(--border-radius-lg) !important; // Force overrides Sidebar defaults
+  box-shadow: var(--shadow-island) !important; // Matches toolbar shadow as requested
+  z-index: 50;
+  overflow: hidden !important; // Ensure children don't bleed out border-radius
+  
+  // Override Sidebar defaults
+  &.sidebar--docked {
+    border-right: 1px solid var(--sidebar-border-color);
   }
 }
 
-.emoji-picker-header {
-    padding: 0 12px 12px 12px;
+.emoji-picker-container {
     display: flex;
-    align-items: center;
-}
-
-.emoji-picker-search-container {
-    position: relative;
-    width: 100%;
+    flex-direction: column;
+    height: 100%;
+    padding: 12px; // Reduced padding
+    box-sizing: border-box;
+    color: var(--popup-text-color);
     
-    .emoji-search-icon {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 16px;
-        height: 16px;
-        color: var(--color-text-secondary);
+    // Override TextField margin if needed
+    .ExcTextField {
+        margin-bottom: 12px;
+        flex-grow: 0;
     }
 }
 
-.emoji-picker-search {
-    width: 100%;
-    padding: 8px 12px 8px 32px;
-    border: 1px solid var(--color-primary); // Focused look from screenshot
-    border-radius: 6px;
-    font-size: 0.9rem;
-    background-color: var(--color-surface-primary);
-    color: var(--color-text-primary);
-    outline: none;
-    
-    &::placeholder {
-        color: var(--color-text-secondary);
-    }
-}
-
-.emoji-picker-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 12px 12px 12px;
-}
+// Manual search styles removed as we use TextField component now
 
 .emoji-picker-tabs {
     display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid transparent; // visual spacing
+    gap: 8px;
+    margin-bottom: 12px; // Reduced margin
+    border-bottom: none;
 }
 
 .emoji-picker-tab {
@@ -80,61 +56,107 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    border-radius: 4px;
+    color: var(--text-primary-color);
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+    opacity: 0.7;
     
     &:hover {
-        background-color: var(--color-surface-hover);
-        color: var(--color-text-primary);
+        background-color: var(--button-hover-bg);
+        opacity: 1;
     }
     
     &.active {
-        background-color: #eef2ff; // Light blue active state from design
-        color: var(--color-primary);
-        font-weight: 500;
+        background-color: var(--color-surface-primary-container);
+        color: var(--color-on-primary-container);
+        opacity: 1;
+    }
+}
+
+.emoji-categories-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.emoji-category-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+    color: var(--icon-fill-color);
+    
+    &:hover, &.active {
+        opacity: 1;
+        transform: scale(1.1);
     }
     
-    // Dark mode adjustment for active tab
-    :root[class="dark"] &.active {
-        background-color: var(--color-primary-darker);
-        color: var(--color-surface-lowest);
+    &.active {
+        color: var(--color-primary);
+    }
+}
+
+.emoji-picker-scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
+        border-radius: 3px;
     }
 }
 
 .emoji-section-title {
     font-size: 0.85rem;
-    color: var(--color-text-primary);
-    margin-bottom: 12px;
+    font-weight: 500;
+    color: var(--text-primary-color);
+    margin: 12px 0 8px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    opacity: 0.8;
+    
+    &:first-child {
+        margin-top: 0;
+    }
 }
 
 .emoji-clear-btn {
     font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    color: var(--text-primary-color);
+    opacity: 0.6;
     cursor: pointer;
     &:hover {
-        color: var(--color-primary);
+        text-decoration: underline;
+        opacity: 1;
     }
 }
 
 .emoji-grid-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 8px; // Reduced gap
+    margin-bottom: 4px;
 }
 
 .emoji-item {
     font-size: 2rem;
-    text-align: center;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1 / 1; // Square aspect ratio
+    border-radius: var(--border-radius-md); // Consistent radius
     
     &:hover {
-        background-color: var(--color-surface-hover);
+        background-color: var(--button-hover-bg);
+        // Removed scale transform
     }
 }

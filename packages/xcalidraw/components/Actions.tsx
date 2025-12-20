@@ -1243,7 +1243,8 @@ export const ShapesSwitcher = ({
               setOpenDropdown(open ? "selection" : null);
             }}
             suppressActiveState={
-              openDropdown !== null && openDropdown !== "selection"
+              (openDropdown !== null && openDropdown !== "selection") ||
+              app.state.openSidebar?.name === "emoji"
             }
             onToolChange={(type: string) => {
               if (type === "selection" || type === "lasso") {
@@ -1270,7 +1271,11 @@ export const ShapesSwitcher = ({
           key={value}
           type="radio"
           icon={icon}
-          checked={activeTool.type === value && openDropdown === null}
+          checked={
+            activeTool.type === value &&
+            openDropdown === null &&
+            app.state.openSidebar?.name !== "emoji"
+          }
           name="editor-current-shape"
           title={`${capitalizeString(label)} — ${shortcut}`}
           keyBindingLabel={numericKey || letter}
@@ -1305,29 +1310,30 @@ export const ShapesSwitcher = ({
         />,
       );
 
-      if (value === "image") {
-        result.push(
-          <ToolButton
-            className="Shape"
-            key="emoji"
-            type="radio"
-            icon={EmojiIcon}
-            checked={false}
-            name="editor-current-shape"
-            title="Stickers, Emojis & GIFs"
-            aria-label="Stickers, Emojis & GIFs"
-            data-testid="toolbar-emoji"
-            onChange={() => {
-              if (app.state.openSidebar?.name === "emoji") {
-                 setAppState({ openSidebar: null });
-              } else {
-                 setAppState({ openSidebar: { name: "emoji" } });
-              }
-            }}
-          />,
-        );
-      }
+
     });
+
+    result.push(
+      <ToolButton
+        className="Shape"
+        key="emoji"
+        type="radio"
+        icon={EmojiIcon}
+        checked={app.state.openSidebar?.name === "emoji"}
+        name="emoji-group"
+        title="Stickers, Emojis & GIFs"
+        aria-label="Stickers, Emojis & GIFs"
+        data-testid="toolbar-emoji"
+        onChange={() => {
+          if (app.state.openSidebar?.name === "emoji") {
+            setAppState({ openSidebar: null });
+          } else {
+            app.setActiveTool({ type: "selection" });
+            setAppState({ openSidebar: { name: "emoji" } });
+          }
+        }}
+      />,
+    );
 
     return result;
   };
