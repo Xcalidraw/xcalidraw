@@ -726,7 +726,6 @@ const XcalidrawWrapper = ({
         {/* Comments Layer */}
         {boardId && xcalidrawAPI && (
           <CommentsLayer
-            key={renderKey}
             boardId={boardId}
             currentUserId={currentUser?.username}
             isCommentMode={isCommentMode}
