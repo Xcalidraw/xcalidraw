@@ -89,8 +89,8 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
       ref={popoverRef}
       className={`comment-popover ${thread.root.resolved ? 'resolved' : ''}`}
       style={{
-        left: position.x + 20,
-        top: position.y - 10,
+        left: position.x + 40, // 32px bubble width + 8px gap
+        top: position.y,
       }}
     >
       {/* Header */}
