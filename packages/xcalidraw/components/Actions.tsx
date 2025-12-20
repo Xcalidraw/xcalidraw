@@ -87,6 +87,7 @@ import {
   DiamondIcon,
   EllipseIcon,
   ArrowIcon,
+  EmojiIcon,
   LineIcon,
 } from "./icons";
 
@@ -1303,6 +1304,29 @@ export const ShapesSwitcher = ({
           }}
         />,
       );
+
+      if (value === "image") {
+        result.push(
+          <ToolButton
+            className="Shape"
+            key="emoji"
+            type="radio"
+            icon={EmojiIcon}
+            checked={false}
+            name="editor-current-shape"
+            title="Stickers, Emojis & GIFs"
+            aria-label="Stickers, Emojis & GIFs"
+            data-testid="toolbar-emoji"
+            onChange={() => {
+              if (app.state.openSidebar?.name === "emoji") {
+                 setAppState({ openSidebar: null });
+              } else {
+                 setAppState({ openSidebar: { name: "emoji" } });
+              }
+            }}
+          />,
+        );
+      }
     });
 
     return result;

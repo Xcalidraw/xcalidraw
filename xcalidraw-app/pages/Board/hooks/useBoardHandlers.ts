@@ -144,6 +144,13 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
       zoomValue !== lastViewRef.current.zoom
     ) {
       lastViewRef.current = { scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: zoomValue };
+      if (boardId) {
+        try {
+            localStorage.setItem(`xcalidraw-view-${boardId}`, JSON.stringify(lastViewRef.current));
+        } catch (e) {
+            console.warn("Failed to save view state to localStorage", e);
+        }
+      }
       setRenderKey((k) => k + 1);
     }
   }, [collabAPI, xcalidrawAPI, boardId, lastSceneVersionRef, lastBoardTitleRef, lastViewRef, debugCanvasRef, saveToBackend, setRenderKey]);

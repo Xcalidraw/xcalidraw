@@ -386,25 +386,53 @@ const drawImagePlaceholder = (
   element: XcalidrawImageElement,
   context: CanvasRenderingContext2D,
 ) => {
-  context.fillStyle = "#E7E7E7";
+  context.fillStyle = "#F8F9FA"; // Sleek light grey background
   context.fillRect(0, 0, element.width, element.height);
 
   const imageMinWidthOrHeight = Math.min(element.width, element.height);
-
   const size = Math.min(
     imageMinWidthOrHeight,
     Math.min(imageMinWidthOrHeight * 0.4, 100),
   );
 
-  context.drawImage(
-    element.status === "error"
-      ? IMAGE_ERROR_PLACEHOLDER_IMG
-      : IMAGE_PLACEHOLDER_IMG,
-    element.width / 2 - size / 2,
-    element.height / 2 - size / 2,
-    size,
-    size,
-  );
+  context.save();
+  context.translate(element.width / 2, element.height / 2);
+
+  if (element.status === "error") {
+    // Elegant Error Icon (Exclamation in circle) - Neutral Grey
+    context.beginPath();
+    context.strokeStyle = "#868E96"; // Grey 6
+    context.lineWidth = 2;
+    context.arc(0, 0, size / 2, 0, Math.PI * 2);
+    context.stroke();
+
+    // Exclamation mark
+    context.fillStyle = "#868E96";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.font = `bold ${size * 0.6}px sans-serif`;
+    context.fillText("!", 0, size * 0.1); 
+  } else {
+    // Sleek Spinner
+    const time = Date.now() / 1500; // Speed
+    context.rotate(time % (Math.PI * 2));
+    
+    context.beginPath();
+    context.lineWidth = 3;
+    context.strokeStyle = "#CED4DA"; // Grey 4
+    context.arc(0, 0, size / 2, 0, Math.PI * 2);
+    context.stroke();
+
+    context.beginPath();
+    context.lineWidth = 3;
+    context.strokeStyle = "#228BE6"; // Blue 6
+    context.lineCap = "round";
+    // Arc length: 90 degrees
+    context.arc(0, 0, size / 2, -Math.PI / 4, Math.PI / 4);
+    context.stroke();
+  }
+
+  context.restore();
 };
 
 const drawElementOnCanvas = (

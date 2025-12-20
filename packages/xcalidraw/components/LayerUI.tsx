@@ -59,6 +59,7 @@ import { ImageExportDialog } from "./ImageExportDialog";
 import { Island } from "./Island";
 import { JSONExportDialog } from "./JSONExportDialog";
 import { LaserPointerButton } from "./LaserPointerButton";
+import { EmojiPicker } from "./EmojiPicker";
 
 import "./LayerUI.scss";
 import "./Toolbar.scss";
@@ -404,6 +405,11 @@ const LayerUI = ({
         }}
         tab={DEFAULT_SIDEBAR.defaultTab}
       />
+        {appState.openSidebar?.name === "default" && <DefaultSidebar />}
+
+        {appState.openSidebar?.name === "emoji" && <EmojiPicker />}
+      {/* ------------------------------------------------------------------ */}
+
       <DefaultOverwriteConfirmDialog />
       {appState.openDialog?.name === "ttd" && <TTDDialog __fallback />}
       {/* ------------------------------------------------------------------ */}
