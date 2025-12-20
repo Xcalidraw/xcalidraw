@@ -19,8 +19,6 @@ interface CommentsLayerProps {
   screenToCanvas: (x: number, y: number) => { x: number; y: number };
   onCommentModeChange?: (enabled: boolean) => void;
   theme: string;
-  /** Used to force re-renders during panning - intentionally unused */
-  _renderTrigger?: number;
 }
 
 export const CommentsLayer: React.FC<CommentsLayerProps> = ({
