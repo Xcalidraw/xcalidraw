@@ -297,6 +297,80 @@
 }
 
 /* =============================================
+   New Comment Input V2 - Miro-style Design
+   ============================================= */
+
+.new-comment-input-v2 {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.new-comment-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bubble-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-gray-40, #9ca3af);
+  flex-shrink: 0;
+}
+
+.bubble-line {
+  width: 24px;
+  height: 2px;
+  background: var(--color-gray-40, #9ca3af);
+}
+
+.new-comment-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--island-bg-color, white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  min-width: 320px;
+  border-radius: 6px;
+}
+
+.new-comment-input-container input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary-color);
+  outline: none;
+  padding-right: 60px;
+  box-sizing: border-box;
+}
+
+.new-comment-input-container input::placeholder {
+  color: var(--text-secondary-color);
+}
+
+.new-comment-input-container .emoji-btn {
+  position: absolute;
+  right: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+.new-comment-input-container .send-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* =============================================
    Comment Popover V2 - Miro-style Design
    ============================================= */
 
@@ -408,11 +482,10 @@
   transform: scale(1.1);
 }
 
-.color-dots .dot.gray { background: #9ca3af; color: #9ca3af; }
 .color-dots .dot.green { background: #22c55e; color: #22c55e; }
+.color-dots .dot.orange { background: #f97316; color: #f97316; }
 .color-dots .dot.red { background: #ef4444; color: #ef4444; }
-.color-dots .dot.blue { background: #3b82f6; color: #3b82f6; }
-.color-dots .dot.black { background: #1f2937; color: #1f2937; }
+.color-dots .dot.gray { background: #9ca3af; color: #9ca3af; }
 
 .icon-btn {
   background: none;

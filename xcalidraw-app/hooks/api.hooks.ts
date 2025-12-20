@@ -407,7 +407,7 @@ export interface Comment {
   x: number;
   y: number;
   resolved: boolean;
-  label_color?: 'gray' | 'green' | 'red' | 'blue' | 'black';
+  label_color?: 'green' | 'orange' | 'red' | 'gray';  // Color label (green is default)
   created_at: string;
   updated_at: string;
 }
@@ -645,6 +645,61 @@ export const useLabelCommentMutation = () => {
           threads: old.threads.map(thread =>
             thread.root.comment_id === variables.commentId
               ? { ...thread, root: { ...thread.root, label_color: variables.labelColor } }
+              : thread
+          ),
+        };
+      });
+      
+      return { previousData };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['comments', variables.boardId], context.previousData);
+      }
+    },
+  });
+};
+
+export const useMoveCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      commentId,
+      x,
+      y,
+    }: {
+      boardId: string;
+      commentId: string;
+      x: number;
+      y: number;
+    }) => {
+      // Use existing updateComment API
+      const response = await client.updateComment(
+        { boardId, commentId },
+        { x, y }
+      );
+      return response.data as Comment;
+    },
+    // Optimistic update
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', variables.boardId] });
+      const previousData = queryClient.getQueryData(['comments', variables.boardId]);
+      
+      queryClient.setQueryData(['comments', variables.boardId], (old: { threads: CommentThread[] } | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          threads: old.threads.map(thread =>
+            thread.root.comment_id === variables.commentId
+              ? { 
+                  ...thread, 
+                  root: { ...thread.root, x: variables.x, y: variables.y },
+                  // Also update all replies with same position
+                  replies: thread.replies.map(r => ({ ...r, x: variables.x, y: variables.y }))
+                }
               : thread
           ),
         };

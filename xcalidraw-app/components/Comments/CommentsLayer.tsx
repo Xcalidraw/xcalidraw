@@ -7,6 +7,7 @@ import {
   useDeleteCommentMutation,
   useResolveCommentMutation,
   useLabelCommentMutation,
+  useMoveCommentMutation,
 } from '../../hooks/api.hooks';
 import { FilledButton } from "@xcalidraw/xcalidraw";
 import './Comments.scss';
@@ -41,6 +42,7 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
   const deleteComment = useDeleteCommentMutation();
   const resolveComment = useResolveCommentMutation();
   const labelComment = useLabelCommentMutation();
+  const moveComment = useMoveCommentMutation();
 
   const threads = commentsData?.threads || [];
   const selectedThread = threads.find((t) => t.root.comment_id === selectedThreadId);
@@ -105,7 +107,7 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
   );
 
   const handleLabelChange = useCallback(
-    async (labelColor: 'gray' | 'green' | 'red' | 'blue' | 'black' | undefined) => {
+    async (labelColor: 'green' | 'orange' | 'red' | 'gray' | undefined) => {
       if (!selectedThread) return;
       await labelComment.mutateAsync({
         boardId,
@@ -173,6 +175,19 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
               setSelectedThreadId(thread.root.comment_id);
               setNewCommentPos(null);
             }}
+            onMove={(deltaX, deltaY) => {
+              // Convert screen delta to canvas delta
+              const currentScreen = canvasToScreen(thread.root.x, thread.root.y);
+              const newScreen = { x: currentScreen.x + deltaX, y: currentScreen.y + deltaY };
+              const newCanvas = screenToCanvas(newScreen.x, newScreen.y);
+              
+              moveComment.mutate({
+                boardId,
+                commentId: thread.root.comment_id,
+                x: newCanvas.x,
+                y: newCanvas.y,
+              });
+            }}
           />
         );
       })}
@@ -195,49 +210,56 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
       {/* New comment input */}
       {newCommentPos && (
         <div
-          className="new-comment-input"
+          className="new-comment-input-v2"
           style={{
-            left: canvasToScreen(newCommentPos.x, newCommentPos.y).x + 20,
-            top: canvasToScreen(newCommentPos.x, newCommentPos.y).y - 10,
+            left: canvasToScreen(newCommentPos.x, newCommentPos.y).x - 10, 
+            top: canvasToScreen(newCommentPos.x, newCommentPos.y).y - 30,
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <textarea
-            autoFocus
-            value={newCommentContent}
-            onChange={(e) => setNewCommentContent(e.target.value)}
-            placeholder="Add a comment..."
-            rows={3}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleCreateComment();
-              }
-              if (e.key === 'Escape') {
-                setNewCommentPos(null);
-                setNewCommentContent('');
-              }
-            }}
-          />
-          <div className="new-comment-actions">
-            <FilledButton
-              variant="outlined"
-              color="muted"
-              label="Cancel"
-              size="small"
-              onClick={() => {
-                setNewCommentPos(null);
-                setNewCommentContent('');
+          {/* Bubble with line */}
+          <div className="new-comment-bubble">
+            <div className="bubble-dot"></div>
+            <div className="bubble-line"></div>
+          </div>
+          
+          {/* Input container */}
+          <div className="new-comment-input-container">
+            <input
+              type="text"
+              autoFocus
+              value={newCommentContent}
+              onChange={(e) => setNewCommentContent(e.target.value)}
+              placeholder="Add a comment. Use @ to mention."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleCreateComment();
+                }
+                if (e.key === 'Escape') {
+                  setNewCommentPos(null);
+                  setNewCommentContent('');
+                }
               }}
             />
-            <FilledButton
-              variant="filled"
-              color="primary"
-              label={createComment.isPending ? 'Posting...' : 'Post'}
-              size="small"
+            <button className="emoji-btn" title="Add emoji">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" strokeWidth="2" strokeLinecap="round" />
+                <line x1="15" y1="9" x2="15.01" y2="9" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+            <button
+              className="send-btn"
               onClick={handleCreateComment}
               disabled={!newCommentContent.trim() || createComment.isPending}
-            />
+              title="Post comment"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
