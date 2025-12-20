@@ -51,6 +51,7 @@ import type {
   XcalidrawImperativeAPI,
   XcalidrawInitialDataState,
   UIAppState,
+  BinaryFiles,
 } from "@xcalidraw/xcalidraw/types";
 
 import CustomStats from "../../CustomStats";
@@ -345,7 +346,33 @@ const XcalidrawWrapper = ({
   });
 
   // Alias onChange and onExportToBackend for use elsewhere
-  const { onChange, onExportToBackend } = boardHandlers;
+  const { onChange: originalOnChange, onExportToBackend } = boardHandlers;
+
+  // Sync ActiveTool -> isCommentMode
+  const onChange = useCallback(
+    (
+      elements: readonly OrderedXcalidrawElement[],
+      appState: AppState,
+      files: BinaryFiles,
+    ) => {
+      // Sync active tool to comment mode
+      const isCommentTool =
+        appState.activeTool.type === "custom" &&
+        appState.activeTool.customType === "comment";
+
+      if (isCommentTool) {
+        if (!isCommentMode) {
+          setTimeout(() => setIsCommentMode(true), 0);
+        }
+      } else {
+        if (isCommentMode) {
+          setTimeout(() => setIsCommentMode(false), 0);
+        }
+      }
+      originalOnChange(elements, appState, files);
+    },
+    [originalOnChange, isCommentMode],
+  );
 
   useEffect(() => {
     if (!xcalidrawAPI || (!isCollabDisabled && !collabAPI)) {
@@ -592,7 +619,17 @@ const XcalidrawWrapper = ({
                 </svg>
               ),
               perform: () => {
-                setIsCommentMode(!isCommentMode);
+                if (isCommentMode) {
+                  xcalidrawAPI?.setActiveTool({
+                    type: "selection",
+                    customType: null,
+                  } as any);
+                } else {
+                  xcalidrawAPI?.setActiveTool({
+                    type: "custom",
+                    customType: "comment",
+                  });
+                }
               },
             },
             {
@@ -686,26 +723,29 @@ const XcalidrawWrapper = ({
             ref={debugCanvasRef}
           />
         )}
+        {/* Comments Layer */}
+        {boardId && xcalidrawAPI && (
+          <CommentsLayer
+            key={renderKey}
+            boardId={boardId}
+            currentUserId={currentUser?.username}
+            isCommentMode={isCommentMode}
+            canvasToScreen={(x: number, y: number) => {
+              const appState = xcalidrawAPI.getAppState();
+              return sceneCoordsToViewportCoords({ sceneX: x, sceneY: y }, appState);
+            }}
+            screenToCanvas={(x: number, y: number) => {
+              const appState = xcalidrawAPI.getAppState();
+              return viewportCoordsToSceneCoords({ clientX: x, clientY: y }, appState);
+            }}
+            onCommentModeChange={setIsCommentMode}
+            theme={xcalidrawAPI.getAppState().theme}
+          />
+        )}
       </Xcalidraw>
       {xcalidrawAPI && <Collab xcalidrawAPI={xcalidrawAPI} />}
       
-      {/* Comments Layer */}
-      {boardId && xcalidrawAPI && (
-        <CommentsLayer
-          boardId={boardId}
-          currentUserId={currentUser?.username}
-          isCommentMode={isCommentMode}
-          canvasToScreen={(x: number, y: number) => {
-            const appState = xcalidrawAPI.getAppState();
-            return sceneCoordsToViewportCoords({ sceneX: x, sceneY: y }, appState);
-          }}
-          screenToCanvas={(x: number, y: number) => {
-            const appState = xcalidrawAPI.getAppState();
-            return viewportCoordsToSceneCoords({ clientX: x, clientY: y }, appState);
-          }}
-          onCommentModeChange={setIsCommentMode}
-        />
-      )}
+
     </div>
   );
 };

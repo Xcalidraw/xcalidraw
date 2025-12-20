@@ -426,6 +426,8 @@ export const useCommentsQuery = (boardId?: string) => {
       return response.data as { threads: CommentThread[] };
     },
     enabled: !!client && !!boardId,
+    // Cache for 30 seconds to prevent refetch during panning (when component remounts)
+    staleTime: 30000,
   });
 };
 
