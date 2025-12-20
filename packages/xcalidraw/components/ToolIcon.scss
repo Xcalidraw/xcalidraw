@@ -31,6 +31,10 @@
     position: absolute;
     opacity: 0;
     pointer-events: none;
+
+    &:checked + .ToolIcon__icon:hover {
+      background-color: var(--color-surface-primary-container) !important;
+    }
   }
 
   .ToolIcon__icon {

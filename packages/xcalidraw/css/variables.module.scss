@@ -23,11 +23,15 @@
   .ToolIcon_type_radio,
   .ToolIcon_type_checkbox {
     &:checked + .ToolIcon__icon {
-      background: var(--color-surface-primary-container);
+      background: var(--color-surface-primary-container) !important;
       --keybinding-color: var(--color-on-primary-container);
 
       svg {
         color: var(--color-on-primary-container);
+      }
+
+      &:hover {
+        background: var(--color-surface-primary-container) !important;
       }
     }
   }
