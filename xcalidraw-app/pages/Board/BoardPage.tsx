@@ -368,6 +368,28 @@ const XcalidrawWrapper = ({
     if (!hasInitializedRef.current) {
         initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
           loadImages({ data, isInitialLoad: true, xcalidrawAPI, collabAPI, boardId });
+          
+          // Restore user's last view (zoom/scroll)
+          if (boardId) {
+            try {
+                const savedView = localStorage.getItem(`xcalidraw-view-${boardId}`);
+                if (savedView) {
+                    const { scrollX, scrollY, zoom } = JSON.parse(savedView);
+                    data.scene = data.scene || { elements: [], appState: {} };
+                    data.scene.appState = data.scene.appState || {};
+                    
+                    data.scene.appState = {
+                        ...data.scene.appState,
+                        ...(Number.isFinite(scrollX) ? { scrollX } : {}),
+                        ...(Number.isFinite(scrollY) ? { scrollY } : {}),
+                        ...(Number.isFinite(zoom) ? { zoom: { value: zoom } } : {}),
+                    };
+                }
+            } catch (e) {
+                console.warn("Failed to restore view state from localStorage", e);
+            }
+          }
+
           initialStatePromiseRef.current.promise.resolve(data.scene);
           
           if (data.scene?.elements) {

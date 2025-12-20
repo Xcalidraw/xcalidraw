@@ -308,7 +308,7 @@ export const restoreElement = (
     }
     case "image":
       return restoreElementWithProperties(element, {
-        status: element.status || "pending",
+        status: element.status === "error" ? "saved" : (element.status || "pending"),
         fileId: element.fileId,
         scale: element.scale || [1, 1],
         crop: element.crop ?? null,

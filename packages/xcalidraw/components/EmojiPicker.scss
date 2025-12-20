@@ -1,0 +1,140 @@
+@import "../css/variables.module.scss";
+
+.emoji-picker-sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-lowest);
+  
+  // Miro-like positioning: Anchored left (next to toolbar) and top (below header)
+  position: absolute;
+  top: 60px !important; // Approx header height
+  bottom: 0 !important;
+  left: 60px !important; // Approx width of the left toolbar
+  height: auto !important; // Fill to bottom
+  width: 320px;
+  border-right: 1px solid var(--sidebar-border-color);
+  border-top: 1px solid var(--sidebar-border-color);
+  border-top-right-radius: 8px;
+  box-shadow: var(--sidebar-shadow);
+  z-index: 5;
+
+  .sidebar-header {
+     padding: 12px;
+     border-bottom: none;
+  }
+}
+
+.emoji-picker-header {
+    padding: 0 12px 12px 12px;
+    display: flex;
+    align-items: center;
+}
+
+.emoji-picker-search-container {
+    position: relative;
+    width: 100%;
+    
+    .emoji-search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--color-text-secondary);
+    }
+}
+
+.emoji-picker-search {
+    width: 100%;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid var(--color-primary); // Focused look from screenshot
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    outline: none;
+    
+    &::placeholder {
+        color: var(--color-text-secondary);
+    }
+}
+
+.emoji-picker-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 12px 12px 12px;
+}
+
+.emoji-picker-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid transparent; // visual spacing
+}
+
+.emoji-picker-tab {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    border-radius: 4px;
+    
+    &:hover {
+        background-color: var(--color-surface-hover);
+        color: var(--color-text-primary);
+    }
+    
+    &.active {
+        background-color: #eef2ff; // Light blue active state from design
+        color: var(--color-primary);
+        font-weight: 500;
+    }
+    
+    // Dark mode adjustment for active tab
+    :root[class="dark"] &.active {
+        background-color: var(--color-primary-darker);
+        color: var(--color-surface-lowest);
+    }
+}
+
+.emoji-section-title {
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.emoji-clear-btn {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    &:hover {
+        color: var(--color-primary);
+    }
+}
+
+.emoji-grid-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.emoji-item {
+    font-size: 2rem;
+    text-align: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    
+    &:hover {
+        background-color: var(--color-surface-hover);
+    }
+}
