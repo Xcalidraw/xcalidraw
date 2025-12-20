@@ -407,6 +407,7 @@ export interface Comment {
   x: number;
   y: number;
   resolved: boolean;
+  label_color?: 'gray' | 'green' | 'red' | 'blue' | 'black';
   created_at: string;
   updated_at: string;
 }
@@ -460,7 +461,51 @@ export const useCreateCommentMutation = () => {
       );
       return response.data as Comment;
     },
-    onSuccess: (_, variables) => {
+    // Optimistic update for replies
+    onMutate: async (variables) => {
+      // Only optimistically update for replies (when parentId exists)
+      if (!variables.parentId) return;
+      
+      await queryClient.cancelQueries({ queryKey: ['comments', variables.boardId] });
+      const previousData = queryClient.getQueryData(['comments', variables.boardId]);
+      
+      // Create optimistic comment
+      const optimisticReply: Comment = {
+        comment_id: `temp-${Date.now()}`,
+        board_id: variables.boardId,
+        thread_id: variables.parentId,
+        content: variables.content,
+        parent_id: variables.parentId,
+        author_id: 'current-user',
+        author_name: 'You',
+        author_avatar: '',
+        x: 0,
+        y: 0,
+        resolved: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      
+      queryClient.setQueryData(['comments', variables.boardId], (old: { threads: CommentThread[] } | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          threads: old.threads.map(thread =>
+            thread.root.comment_id === variables.parentId
+              ? { ...thread, replies: [...thread.replies, optimisticReply] }
+              : thread
+          ),
+        };
+      });
+      
+      return { previousData };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['comments', variables.boardId], context.previousData);
+      }
+    },
+    onSettled: (_, __, variables) => {
       queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
     },
   });
@@ -532,8 +577,85 @@ export const useResolveCommentMutation = () => {
       );
       return response.data as Comment;
     },
-    onSuccess: (_, variables) => {
+    // Optimistic update - update UI immediately
+    onMutate: async (variables) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['comments', variables.boardId] });
+      
+      // Snapshot previous value
+      const previousData = queryClient.getQueryData(['comments', variables.boardId]);
+      
+      // Optimistically update the cache
+      queryClient.setQueryData(['comments', variables.boardId], (old: { threads: CommentThread[] } | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          threads: old.threads.map(thread =>
+            thread.root.comment_id === variables.commentId
+              ? { ...thread, root: { ...thread.root, resolved: variables.resolved } }
+              : thread
+          ),
+        };
+      });
+      
+      return { previousData };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        queryClient.setQueryData(['comments', variables.boardId], context.previousData);
+      }
+    },
+    onSettled: (_, __, variables) => {
+      // Always refetch after error or success to ensure sync
       queryClient.invalidateQueries({ queryKey: ['comments', variables.boardId] });
+    },
+  });
+};
+
+export const useLabelCommentMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      commentId,
+      labelColor,
+    }: {
+      boardId: string;
+      commentId: string;
+      labelColor: Comment['label_color'];
+    }) => {
+      const response = await client.labelComment(
+        { boardId, commentId },
+        { label_color: labelColor }
+      );
+      return response.data as Comment;
+    },
+    // Optimistic update
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: ['comments', variables.boardId] });
+      const previousData = queryClient.getQueryData(['comments', variables.boardId]);
+      
+      queryClient.setQueryData(['comments', variables.boardId], (old: { threads: CommentThread[] } | undefined) => {
+        if (!old) return old;
+        return {
+          ...old,
+          threads: old.threads.map(thread =>
+            thread.root.comment_id === variables.commentId
+              ? { ...thread, root: { ...thread.root, label_color: variables.labelColor } }
+              : thread
+          ),
+        };
+      });
+      
+      return { previousData };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['comments', variables.boardId], context.previousData);
+      }
     },
   });
 };

@@ -6,6 +6,7 @@ import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useResolveCommentMutation,
+  useLabelCommentMutation,
 } from '../../hooks/api.hooks';
 import { FilledButton } from "@xcalidraw/xcalidraw";
 import './Comments.scss';
@@ -39,6 +40,7 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
   const createComment = useCreateCommentMutation();
   const deleteComment = useDeleteCommentMutation();
   const resolveComment = useResolveCommentMutation();
+  const labelComment = useLabelCommentMutation();
 
   const threads = commentsData?.threads || [];
   const selectedThread = threads.find((t) => t.root.comment_id === selectedThreadId);
@@ -100,6 +102,18 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
       }
     },
     [boardId, selectedThread, deleteComment]
+  );
+
+  const handleLabelChange = useCallback(
+    async (labelColor: 'gray' | 'green' | 'red' | 'blue' | 'black' | undefined) => {
+      if (!selectedThread) return;
+      await labelComment.mutateAsync({
+        boardId,
+        commentId: selectedThread.root.comment_id,
+        labelColor,
+      });
+    },
+    [boardId, selectedThread, labelComment]
   );
 
   const layerRef = React.useRef<HTMLDivElement>(null);
@@ -172,6 +186,7 @@ export const CommentsLayer: React.FC<CommentsLayerProps> = ({
           onReply={handleReply}
           onResolve={handleResolve}
           onDelete={handleDelete}
+          onLabelChange={handleLabelChange}
           currentUserId={currentUserId}
           theme={theme}
         />
