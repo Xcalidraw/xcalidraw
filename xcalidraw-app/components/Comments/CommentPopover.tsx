@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom';
 import type { CommentThread, Comment } from '../../hooks/api.hooks';
 import './Comments.scss';
 
-// Color labels available
-const LABEL_COLORS = ['gray', 'green', 'red', 'blue', 'black'] as const;
+// Color labels available - green (theme primary) is default
+const LABEL_COLORS = ['green', 'orange', 'red', 'gray'] as const;
 type LabelColor = typeof LABEL_COLORS[number];
 
 interface CommentPopoverProps {
@@ -116,11 +116,10 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
 
   // Get accent color for left border
   const accentColor = currentColor ? {
-    gray: '#9ca3af',
     green: '#22c55e',
+    orange: '#f97316',
     red: '#ef4444',
-    blue: '#3b82f6',
-    black: '#1f2937',
+    gray: '#9ca3af',
   }[currentColor] : undefined;
 
   return createPortal(
