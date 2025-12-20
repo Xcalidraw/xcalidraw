@@ -1,6 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import type { CommentThread } from '../../hooks/api.hooks';
 import './Comments.scss';
+
+// Color map for label colors
+const LABEL_COLORS: Record<string, string> = {
+  gray: '#9ca3af',
+  green: '#22c55e',
+  red: '#ef4444',
+  blue: '#3b82f6',
+  black: '#1f2937',
+};
 
 interface CommentBubbleProps {
   thread: CommentThread;
@@ -17,12 +26,22 @@ export const CommentBubble: React.FC<CommentBubbleProps> = ({
 }) => {
   const replyCount = thread.replies.length;
   const isResolved = thread.root.resolved;
+  const labelColor = thread.root.label_color;
+  
+  // Get the bubble background color
+  const bubbleColor = isResolved 
+    ? '#9ca3af' // Gray for resolved
+    : labelColor 
+      ? LABEL_COLORS[labelColor] 
+      : undefined; // Default (uses CSS var)
 
   return (
     <div
       className={`comment-bubble ${isSelected ? 'selected' : ''} ${isResolved ? 'resolved' : ''}`}
       style={{
         transform: `translate(${screenPosition.x}px, ${screenPosition.y}px)`,
+        ...(bubbleColor && !isResolved ? { backgroundColor: bubbleColor } : {}),
+        ...(isSelected && bubbleColor ? { boxShadow: `0 0 0 3px ${bubbleColor}, 0 4px 12px rgba(0, 0, 0, 0.3)` } : {}),
       }}
       onClick={(e) => {
         e.stopPropagation();

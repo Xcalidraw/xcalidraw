@@ -4569,10 +4569,9 @@
     "@webassemblyjs/ast" "1.14.1"
     "@xtuc/long" "4.2.2"
 
-"@xcalidraw/client@./xcalidraw-client-1.0.13.tgz":
-  version "1.0.13"
-  resolved "file:xcalidraw-app/xcalidraw-client-1.0.13.tgz"
-  integrity sha512-MAjISI4BiaKdyEjZC+ihr36TkmbHpBB1pTZp78J5Tmtp6d0XfzSi31JAQtead1Pm+ObvFENhr0fqA7gP6flyMQ==
+"@xcalidraw/client@./xcalidraw-client-1.0.14.tgz":
+  version "1.0.14"
+  resolved "./xcalidraw-client-1.0.14.tgz#edadc8fb70e41a85db10cae1ba6bc79992754858"
   dependencies:
     axios "^1.6.2"
     openapi-client-axios "^7.5.1"
