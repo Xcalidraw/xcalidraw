@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { Comment, CommentThread } from '../../hooks/api.hooks';
 import './Comments.scss';
+import { FilledButton } from "@xcalidraw/xcalidraw";
 
 interface CommentPopoverProps {
   thread: CommentThread;
@@ -11,6 +12,7 @@ interface CommentPopoverProps {
   onResolve: (resolved: boolean) => void;
   onDelete: (commentId: string) => void;
   currentUserId?: string;
+  theme: string;
 }
 
 export const CommentPopover: React.FC<CommentPopoverProps> = ({
@@ -21,6 +23,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
   onResolve,
   onDelete,
   currentUserId,
+  theme,
 }) => {
   const [replyContent, setReplyContent] = useState('');
   const [isReplying, setIsReplying] = useState(false);
@@ -81,6 +84,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
   };
 
   return createPortal(
+    <div className={`xcalidraw theme--${theme}`} style={{ position: 'absolute', top: 0, left: 0, transition: 'none' }}>
     <div
       ref={popoverRef}
       className={`comment-popover ${thread.root.resolved ? 'resolved' : ''}`}
@@ -159,6 +163,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
       </div>
 
       {/* Reply input */}
+      {/* Reply input */}
       <div className="comment-popover-footer">
         {isReplying ? (
           <div className="comment-reply-input">
@@ -171,38 +176,47 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               rows={2}
             />
             <div className="comment-reply-actions">
-              <button
-                className="comment-reply-cancel"
+              <FilledButton
+                variant="outlined"
+                color="muted"
+                label="Cancel"
+                size="small"
                 onClick={() => {
                   setIsReplying(false);
                   setReplyContent('');
                 }}
-              >
-                Cancel
-              </button>
-              <button
-                className="comment-reply-submit"
+              />
+              <FilledButton
+                variant="filled"
+                color="primary"
+                label="Reply"
+                size="small"
                 onClick={handleSubmitReply}
                 disabled={!replyContent.trim()}
-              >
-                Reply
-              </button>
+              />
             </div>
           </div>
         ) : (
           <div className="comment-footer-actions">
-            <button className="comment-action-btn" onClick={() => setIsReplying(true)}>
-              Reply
-            </button>
-            <button
-              className="comment-action-btn resolve"
+            <FilledButton
+              variant="outlined"
+              color="muted"
+              label="Reply"
+              size="small"
+              onClick={() => setIsReplying(true)}
+            />
+            <FilledButton
+              variant="outlined"
+              color={thread.root.resolved ? "warning" : "success"}
+              label={thread.root.resolved ? 'Reopen' : 'Resolve'}
+              size="small"
+              className="resolve"
               onClick={() => onResolve(!thread.root.resolved)}
-            >
-              {thread.root.resolved ? 'Reopen' : 'Resolve'}
-            </button>
+            />
           </div>
         )}
       </div>
+    </div>
     </div>,
     document.body
   );

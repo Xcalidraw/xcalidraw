@@ -17,7 +17,7 @@ export type ButtonColor =
   | "warning"
   | "muted"
   | "success";
-export type ButtonSize = "medium" | "large";
+export type ButtonSize = "medium" | "large" | "small";
 
 export type FilledButtonProps = {
   label?: string;
@@ -33,6 +33,8 @@ export type FilledButtonProps = {
   fullWidth?: boolean;
 
   icon?: React.ReactNode;
+  disabled?: boolean;
+  style?: React.CSSProperties;
 };
 
 export const FilledButton = forwardRef<HTMLButtonElement, FilledButtonProps>(
@@ -48,12 +50,16 @@ export const FilledButton = forwardRef<HTMLButtonElement, FilledButtonProps>(
       fullWidth,
       className,
       status,
+      disabled,
+      style,
     },
     ref,
   ) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const _onClick = async (event: React.MouseEvent) => {
+      if (disabled) return;
+      
       const ret = onClick?.(event);
 
       if (isPromiseLike(ret)) {
@@ -94,7 +100,8 @@ export const FilledButton = forwardRef<HTMLButtonElement, FilledButtonProps>(
         type="button"
         aria-label={label}
         ref={ref}
-        disabled={_status === "loading" || _status === "success"}
+        disabled={disabled || _status === "loading" || _status === "success"}
+        style={style}
       >
         <div className="ExcButton__contents">
           {_status === "loading" ? (

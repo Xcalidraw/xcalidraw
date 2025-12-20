@@ -89,6 +89,7 @@ import {
   ArrowIcon,
   EmojiIcon,
   LineIcon,
+  CommentIcon,
 } from "./icons";
 
 import { Island } from "./Island";
@@ -1331,6 +1332,27 @@ export const ShapesSwitcher = ({
             app.setActiveTool({ type: "selection" });
             setAppState({ openSidebar: { name: "emoji" } });
           }
+        }}
+      />,
+    );
+
+    result.push(
+      <ToolButton
+        className="Shape"
+        key="comment"
+        type="radio"
+        icon={CommentIcon}
+        checked={
+          activeTool.type === "custom" && activeTool.customType === "comment" &&
+          app.state.openSidebar?.name !== "emoji"
+        }
+        name="comment-group"
+        title="Comment"
+        aria-label="Comment"
+        data-testid="toolbar-comment"
+        onChange={() => {
+          app.setActiveTool({ type: "custom", customType: "comment" });
+          setAppState({ openSidebar: null });
         }}
       />,
     );
