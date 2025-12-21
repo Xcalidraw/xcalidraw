@@ -5,9 +5,6 @@ import { FilledButton } from "@xcalidraw/xcalidraw/components/FilledButton";
 import { TextField } from "@xcalidraw/xcalidraw/components/TextField";
 import {
   copyIcon,
-  LinkIcon,
-  playerPlayIcon,
-  playerStopFilledIcon,
   share,
   shareIOS,
   shareWindows,
@@ -15,11 +12,10 @@ import {
 import { useUIAppState } from "@xcalidraw/xcalidraw/context/ui-appState";
 import { useCopyStatus } from "@xcalidraw/xcalidraw/hooks/useCopiedIndicator";
 import { useI18n } from "@xcalidraw/xcalidraw/i18n";
-import { KEYS, getFrame } from "@xcalidraw/common";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { atom, useAtom, useAtomValue } from "../app-jotai";
-import { activeRoomLinkAtom } from "../collab/Collab";
+import { atom, useAtom } from "../app-jotai";
+import { useShareBoardMutation, useBoardMembersQuery } from "../hooks/api.hooks";
 
 import "./ShareDialog.scss";
 
@@ -32,231 +28,153 @@ export const shareDialogStateAtom = atom<
   { isOpen: false } | { isOpen: true; type: ShareDialogType }
 >({ isOpen: false });
 
-const getShareIcon = () => {
-  const navigator = window.navigator as any;
-  const isAppleBrowser = /Apple/.test(navigator.vendor);
-  const isWindowsBrowser = navigator.appVersion.indexOf("Win") !== -1;
-
-  if (isAppleBrowser) {
-    return shareIOS;
-  } else if (isWindowsBrowser) {
-    return shareWindows;
-  }
-
-  return share;
-};
-
 export type ShareDialogProps = {
   collabAPI: CollabAPI | null;
   handleClose: () => void;
   onExportToBackend: OnExportToBackend;
   type: ShareDialogType;
+  boardId?: string;
 };
 
-const ActiveRoomDialog = ({
-  collabAPI,
-  activeRoomLink,
-  handleClose,
-}: {
-  collabAPI: CollabAPI;
-  activeRoomLink: string;
-  handleClose: () => void;
-}) => {
-  const { t } = useI18n();
-  const [, setJustCopied] = useState(false);
-  const timerRef = useRef<number>(0);
-  const ref = useRef<HTMLInputElement>(null);
-  const isShareSupported = "share" in navigator;
-  const { onCopy, copyStatus } = useCopyStatus();
+const MemberList = ({ boardId }: { boardId: string }) => {
+    const { data: members, isLoading } = useBoardMembersQuery(boardId);
 
-  const copyRoomLink = async () => {
-    try {
-      await copyTextToSystemClipboard(activeRoomLink);
-    } catch (e) {
-      collabAPI.setCollabError(t("errors.copyToSystemClipboardFailed"));
-    }
+    if (isLoading) return <div>Loading members...</div>;
 
-    setJustCopied(true);
-
-    if (timerRef.current) {
-      window.clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = window.setTimeout(() => {
-      setJustCopied(false);
-    }, 3000);
-
-    ref.current?.select();
-  };
-
-  const shareRoomLink = async () => {
-    try {
-      await navigator.share({
-        title: t("roomDialog.shareTitle"),
-        text: t("roomDialog.shareTitle"),
-        url: activeRoomLink,
-      });
-    } catch (error: any) {
-      // Just ignore.
-    }
-  };
-
-  return (
-    <>
-      <h3 className="ShareDialog__active__header">
-        {t("labels.liveCollaboration").replace(/\./g, "")}
-      </h3>
-      <TextField
-        defaultValue={collabAPI.getUsername()}
-        placeholder="Your name"
-        label="Your name"
-        onChange={collabAPI.setUsername}
-        onKeyDown={(event) => event.key === KEYS.ENTER && handleClose()}
-      />
-      <div className="ShareDialog__active__linkRow">
-        <TextField
-          ref={ref}
-          label="Link"
-          readonly
-          fullWidth
-          value={activeRoomLink}
-        />
-        {isShareSupported && (
-          <FilledButton
-            size="large"
-            variant="icon"
-            label="Share"
-            icon={getShareIcon()}
-            className="ShareDialog__active__share"
-            onClick={shareRoomLink}
-          />
-        )}
-        <FilledButton
-          size="large"
-          label={t("buttons.copyLink")}
-          icon={copyIcon}
-          status={copyStatus}
-          onClick={() => {
-            copyRoomLink();
-            onCopy();
-          }}
-        />
-      </div>
-      <div className="ShareDialog__active__description">
-        <p>
-          <span
-            role="img"
-            aria-hidden="true"
-            className="ShareDialog__active__description__emoji"
-          >
-            🔒{" "}
-          </span>
-          {t("roomDialog.desc_privacy")}
-        </p>
-        <p>{t("roomDialog.desc_exitSession")}</p>
-      </div>
-
-      <div className="ShareDialog__active__actions">
-        <FilledButton
-          size="large"
-          variant="outlined"
-          color="danger"
-          label={t("roomDialog.button_stopSession")}
-          icon={playerStopFilledIcon}
-          onClick={() => {
-            trackEvent("share", "room closed");
-            collabAPI.stopCollaboration();
-            if (!collabAPI.isCollaborating()) {
-              handleClose();
-            }
-          }}
-        />
-      </div>
-    </>
-  );
-};
-
-const ShareDialogPicker = (props: ShareDialogProps) => {
-  const { t } = useI18n();
-
-  const { collabAPI } = props;
-
-  const startCollabJSX = collabAPI ? (
-    <>
-      <div className="ShareDialog__picker__header">
-        {t("labels.liveCollaboration").replace(/\./g, "")}
-      </div>
-
-      <div className="ShareDialog__picker__description">
-        <div style={{ marginBottom: "1em" }}>{t("roomDialog.desc_intro")}</div>
-        {t("roomDialog.desc_privacy")}
-      </div>
-
-      <div className="ShareDialog__picker__button">
-        <FilledButton
-          size="large"
-          label={t("roomDialog.button_startSession")}
-          icon={playerPlayIcon}
-          onClick={() => {
-            trackEvent("share", "room creation", `ui (${getFrame()})`);
-            collabAPI.startCollaboration(null);
-          }}
-        />
-      </div>
-
-      {props.type === "share" && (
-        <div className="ShareDialog__separator">
-          <span>{t("shareDialog.or")}</span>
+    return (
+        <div className="ShareDialog__members">
+            <h3>Board Access</h3>
+            <div className="ShareDialog__members__list">
+                {members?.map((m: any) => (
+                    <div key={m.user_id} className="ShareDialog__memberItem">
+                        <div className="ShareDialog__memberItem__avatar">
+                            {/* Avatar placeholder or image */}
+                            {m.user?.displayName?.[0] || "?"}
+                        </div>
+                        <div className="ShareDialog__memberItem__info">
+                            <span className="name">{m.user?.displayName || "Unknown"}</span>
+                            <span className="email">{m.user?.email}</span>
+                        </div>
+                        <div className="ShareDialog__memberItem__role">
+                            {m.role}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <style>{`
+                .ShareDialog__members { margin-top: 1.5rem; }
+                .ShareDialog__members h3 { font-size: 0.9rem; font-weight: bold; margin-bottom: 0.5rem; }
+                .ShareDialog__members__list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
+                .ShareDialog__memberItem { display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem; border-radius: 6px; background: var(--color-gray-10); }
+                .ShareDialog__memberItem__avatar { width: 32px; height: 32px; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; }
+                .ShareDialog__memberItem__info { flex: 1; display: flex; flex-direction: column; }
+                .ShareDialog__memberItem__info .name { font-weight: 500; font-size: 0.9rem; }
+                .ShareDialog__memberItem__info .email { font-size: 0.75rem; color: var(--text-color-secondary); }
+                .ShareDialog__memberItem__role { font-size: 0.8rem; color: var(--text-color-secondary); text-transform: capitalize; }
+            `}</style>
         </div>
-      )}
-    </>
-  ) : null;
+    );
+}
 
-  return (
-    <>
-      {startCollabJSX}
+const InviteTab = ({ boardId }: { boardId: string }) => {
+    const [email, setEmail] = useState("");
+    const shareMutation = useShareBoardMutation();
+    const { t } = useI18n(); // Assuming t is available or we use strings
 
-      {props.type === "share" && (
-        <>
-          <div className="ShareDialog__picker__header">
-            {t("exportDialog.link_title")}
-          </div>
-          <div className="ShareDialog__picker__description">
-            {t("exportDialog.link_details")}
-          </div>
+    const handleInvite = async () => {
+        if (!email) return;
+        try {
+            await shareMutation.mutateAsync({ boardId, email });
+            setEmail("");
+            // Optional: Success toast
+        } catch (e) {
+            console.error(e);
+            // Optional: Error handling
+        }
+    };
 
-          <div className="ShareDialog__picker__button">
-            <FilledButton
-              size="large"
-              label={t("exportDialog.link_button")}
-              icon={LinkIcon}
-              onClick={async () => {
-                await props.onExportToBackend();
-                props.handleClose();
-              }}
-            />
-          </div>
-        </>
-      )}
-    </>
-  );
+    return (
+        <div className="ShareDialog__invite">
+            <div className="ShareDialog__invite__inputRow">
+                <TextField
+                    value={email}
+                    onChange={(val) => setEmail(val)}
+                    placeholder="Enter email to invite"
+                    label="Email"
+                    fullWidth
+                    onKeyDown={(e) => e.key === 'Enter' && handleInvite()}
+                />
+                <FilledButton
+                    label="Invite"
+                    onClick={handleInvite}
+                    disabled={shareMutation.isPending || !email}
+                    className="ShareDialog__inviteButton"
+                />
+            </div>
+            {shareMutation.error && (
+                <div style={{ color: "red", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+                    {(shareMutation.error as any).message || "Failed to invite"}
+                </div>
+            )}
+            
+            <MemberList boardId={boardId} />
+            
+            <style>{`
+                .ShareDialog__invite__inputRow { display: flex; gap: 0.5rem; align-items: flex-end; }
+                .ShareDialog__inviteButton { height: 40px; margin-bottom: 2px; }
+            `}</style>
+        </div>
+    );
 };
 
 const ShareDialogInner = (props: ShareDialogProps) => {
-  const activeRoomLink = useAtomValue(activeRoomLinkAtom);
+  const { t } = useI18n();
+  const [activeTab, setActiveTab] = useState<'invite' | 'embed' | 'publish'>('invite');
+
+  // If we don't have a boardId, we can't share specifically.
+  // Fallback to old UI logic or show error? 
+  // For now, if boardId is missing, maybe just show "Save to backend" option?
+  // But props.boardId is passed now.
 
   return (
-    <Dialog size="small" onCloseRequest={props.handleClose} title={false}>
+    <Dialog size="small" onCloseRequest={props.handleClose} title="Share Board">
       <div className="ShareDialog">
-        {props.collabAPI && activeRoomLink ? (
-          <ActiveRoomDialog
-            collabAPI={props.collabAPI}
-            activeRoomLink={activeRoomLink}
-            handleClose={props.handleClose}
-          />
-        ) : (
-          <ShareDialogPicker {...props} />
-        )}
+          {props.boardId ? (
+             <>
+                {/* Simple Tab Bar */}
+                <div className="ShareDialog__tabs">
+                    <button 
+                        className={activeTab === 'invite' ? 'active' : ''} 
+                        onClick={() => setActiveTab('invite')}
+                    >
+                        Invite
+                    </button>
+                    <button className="disabled" disabled title="Coming soon">Embed</button>
+                    <button className="disabled" disabled title="Coming soon">Publish</button>
+                </div>
+                
+                <div className="ShareDialog__content">
+                    {activeTab === 'invite' && <InviteTab boardId={props.boardId} />}
+                </div>
+
+                <style>{`
+                    .ShareDialog__tabs { display: flex; border-bottom: 1px solid var(--color-gray-20); margin-bottom: 1rem; }
+                    .ShareDialog__tabs button { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; color: var(--text-color-primary); }
+                    .ShareDialog__tabs button.active { border-bottom-color: var(--color-primary); color: var(--color-primary); }
+                    .ShareDialog__tabs button.disabled { opacity: 0.5; cursor: not-allowed; }
+                `}</style>
+             </>
+          ) : (
+             <div style={{ padding: '1rem' }}>
+                 Please save the board to a workspace to share it.
+                 <br />
+                 <FilledButton 
+                    label="Save to Backend" 
+                    onClick={props.onExportToBackend}
+                    style={{ marginTop: '1rem' }} 
+                 />
+             </div>
+          )}
       </div>
     </Dialog>
   );
@@ -265,9 +183,9 @@ const ShareDialogInner = (props: ShareDialogProps) => {
 export const ShareDialog = (props: {
   collabAPI: CollabAPI | null;
   onExportToBackend: OnExportToBackend;
+  boardId?: string;
 }) => {
   const [shareDialogState, setShareDialogState] = useAtom(shareDialogStateAtom);
-
   const { openDialog } = useUIAppState();
 
   useEffect(() => {
@@ -286,6 +204,7 @@ export const ShareDialog = (props: {
       collabAPI={props.collabAPI}
       onExportToBackend={props.onExportToBackend}
       type={shareDialogState.type}
+      boardId={props.boardId}
     />
   );
 };

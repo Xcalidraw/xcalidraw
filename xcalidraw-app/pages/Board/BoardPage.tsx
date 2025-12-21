@@ -578,6 +578,7 @@ const XcalidrawWrapper = ({
 
         <ShareDialog
           collabAPI={collabAPI}
+          boardId={boardId}
           onExportToBackend={async () => {
             if (xcalidrawAPI) {
               try {
