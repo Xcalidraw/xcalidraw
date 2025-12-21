@@ -27,7 +27,7 @@ import {
 } from "@xcalidraw/common";
 import polyfill from "@xcalidraw/xcalidraw/polyfill";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useCallbackRefState } from "@xcalidraw/xcalidraw/hooks/useCallbackRefState";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 
@@ -37,7 +37,7 @@ import clsx from "clsx";
 import {
   useHandleLibrary,
 } from "@xcalidraw/xcalidraw/data/library";
-import { useUpdateBoardMutation, useBoardQuery } from "../../hooks/api.hooks";
+import { useUpdateBoardMutation, useBoardQuery, useBoardPublicQuery } from "../../hooks/api.hooks";
 import { CommentsLayer } from "../../components/Comments";
 import { useGetUser } from "../../hooks/auth.hooks";
 
@@ -51,6 +51,7 @@ import type {
   XcalidrawImperativeAPI,
   XcalidrawInitialDataState,
   UIAppState,
+  UIOptions,
   BinaryFiles,
 } from "@xcalidraw/xcalidraw/types";
 
@@ -151,12 +152,19 @@ import { loadImages } from "./helpers";
 
 const XcalidrawWrapper = ({
   boardId,
+  token,
   onHomeClick,
 }: {
   boardId?: string;
+  token?: string | null;
   onHomeClick?: () => void;
 }) => {
-  const { data: boardData, isLoading: isBoardLoading } = useBoardQuery(boardId);
+  // Conditional Query Logic
+  const privateBoardQuery = useBoardQuery(token ? undefined : boardId);
+  const publicBoardQuery = useBoardPublicQuery(boardId, token);
+
+  const boardData = token ? publicBoardQuery.data : privateBoardQuery.data;
+  const isBoardLoading = token ? publicBoardQuery.isLoading : privateBoardQuery.isLoading;
 
   const updateBoardMutation = useUpdateBoardMutation();
   const updateBoardMutationRef = useRef(updateBoardMutation);
@@ -172,6 +180,10 @@ const XcalidrawWrapper = ({
     () =>
       debounce(async (elements: readonly OrderedXcalidrawElement[], appState: AppState, boardId: string) => {
         if (!boardId) return;
+        // If we have a token, we might not be able to save unless we are also logged in or backend supports it.
+        // For now, if we are in "public view mode" (token present), we skip auto-save or warn?
+        // But the user might be logged in AND viewing via link.
+        // Let's attempt save. If it fails (401/403), we catch it.
         try {
             await updateBoardMutationRef.current.mutateAsync({
                 boardId,
@@ -392,7 +404,11 @@ const XcalidrawWrapper = ({
     }
 
     // Initialize scene
-    if (!hasInitializedRef.current) {
+    if (!hasInitializedRef.current && (boardData || !boardId)) {
+        // Only initialize if we have data OR if there is no boardId (empty board)
+        // If boardId exists but no data yet, wait for isLoading to finish or data to arrive
+        if (boardId && !boardData) return;
+
         initializeScene({ collabAPI, xcalidrawAPI, boardId, boardData }).then(async (data) => {
           loadImages({ data, isInitialLoad: true, xcalidrawAPI, collabAPI, boardId });
           
@@ -457,12 +473,26 @@ const XcalidrawWrapper = ({
     [setShareDialogState],
   );
 
+  // If token is present, we allow viewing even if auth fails (handled by Public Query)
+  // If loading...
   if (boardId && isBoardLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-full bg-muted">
         <div className="text-muted-foreground animate-pulse">Loading board...</div>
       </div>
     );
+  }
+
+  // Error handling state if public query fails? (403/404)
+  // useBoardPublicQuery will have `error`.
+  if (token && publicBoardQuery.isError) {
+      return (
+        <div className="flex items-center justify-center h-screen w-full bg-muted flex-col gap-4">
+             <div className="text-red-500 font-bold">Unable to load shared board</div>
+             <div>{(publicBoardQuery.error as any).message || "Invalid or expired link"}</div>
+             <button onClick={onHomeClick} className="underline">Go Home</button>
+        </div>
+      );
   }
 
   if (isSelfEmbedding) {
@@ -480,6 +510,20 @@ const XcalidrawWrapper = ({
       </div>
     );
   }
+  
+  // Conditionally disable things for Viewer View?
+  const isReadOnly = token && true; // Assume read only for link view for now
+  // We can pass `viewModeEnabled: isReadOnly` to Xcalidraw if we want.
+
+  const uiOptions: UIOptions = {
+      canvasActions: {
+        toggleTheme: true,
+        export: {
+          onExportToBackend,
+          renderCustomUI: undefined,
+        },
+      },
+  };
 
   return (
     <div
@@ -494,15 +538,12 @@ const XcalidrawWrapper = ({
         initialData={initialStatePromiseRef.current.promise}
         isCollaborating={isCollaborating}
         onPointerUpdate={collabAPI?.onPointerUpdate}
-        UIOptions={{
-          canvasActions: {
-            toggleTheme: true,
-            export: {
-              onExportToBackend,
-              renderCustomUI: undefined,
-            },
-          },
-        }}
+        UIOptions={uiOptions}
+        viewModeEnabled={!!isReadOnly && false} // Disable force view mode for now to check behavior, or enable it.
+        // If we want them to interact but not save:
+        // viewModeEnabled=true hides tools.
+        // Maybe we just let them edit but save fails.
+        // Let's set autoFocus
         langCode={langCode}
         renderCustomStats={renderCustomStats}
         detectScroll={false}
@@ -752,6 +793,10 @@ const XcalidrawWrapper = ({
 
 const BoardPage = () => {
   const { boardId } = useParams<{ boardId?: string }>();
+  // Handle Magic Link Token
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+
   const navigate = useNavigate();
 
   const handleHomeClick = useCallback(() => {
@@ -764,6 +809,7 @@ const BoardPage = () => {
         <XcalidrawWrapper
           key={boardId}
           boardId={boardId}
+          token={token} // Pass token
           onHomeClick={handleHomeClick}
         />
       </Provider>

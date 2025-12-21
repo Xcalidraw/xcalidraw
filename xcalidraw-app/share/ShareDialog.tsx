@@ -15,11 +15,18 @@ import { useI18n } from "@xcalidraw/xcalidraw/i18n";
 import { useEffect, useState } from "react";
 
 import { atom, useAtom } from "../app-jotai";
-import { useShareBoardMutation, useBoardMembersQuery } from "../hooks/api.hooks";
+import { 
+    useShareBoardMutation, 
+    useBoardMembersQuery,
+    useCreateMagicLinkMutation,
+    useMagicLinksQuery,
+    useRevokeMagicLinkMutation
+} from "../hooks/api.hooks";
 
 import "./ShareDialog.scss";
 
 import type { CollabAPI } from "../collab/Collab";
+import { Trash2, Copy } from "lucide-react";
 
 type OnExportToBackend = () => void;
 type ShareDialogType = "share" | "collaborationOnly";
@@ -76,6 +83,113 @@ const MemberList = ({ boardId }: { boardId: string }) => {
     );
 }
 
+const LinksTab = ({ boardId }: { boardId: string }) => {
+    const { data: links, isLoading, error: linksError } = useMagicLinksQuery(boardId);
+    const createMutation = useCreateMagicLinkMutation();
+    const revokeMutation = useRevokeMagicLinkMutation();
+    const [accessLevel, setAccessLevel] = useState<'viewer' | 'editor'>('viewer');
+
+    const handleCreate = () => {
+        createMutation.mutate({ boardId, accessLevel });
+    };
+
+    const handleRevoke = (token: string) => {
+        revokeMutation.mutate({ boardId, token });
+    };
+
+    const copyLink = (token: string) => {
+        const url = `${window.location.origin}/board/${boardId}?token=${token}`;
+        copyTextToSystemClipboard(url);
+        // Toast?
+    };
+
+    return (
+        <div className="ShareDialog__links">
+            <div className="ShareDialog__links__create">
+                <select 
+                    value={accessLevel} 
+                    onChange={e => setAccessLevel(e.target.value as any)}
+                    className="ShareDialog__select"
+                >
+                    <option value="viewer">Can View</option>
+                    <option value="editor">Can Edit</option>
+                </select>
+                <FilledButton 
+                    label={createMutation.isPending ? "Generating..." : "Generate Link"} 
+                    onClick={handleCreate}
+                    disabled={createMutation.isPending}
+                />
+            </div>
+            {createMutation.error && (
+                <div style={{ color: "var(--color-danger)", fontSize: "0.8rem", marginBottom: "1rem" }}>
+                    Failed to create link: {(createMutation.error as any).message}
+                </div>
+            )}
+
+            <div className="ShareDialog__links__list">
+                {isLoading && <div>Loading links...</div>}
+                
+                {linksError && (
+                     <div style={{ color: "var(--color-danger)", fontSize: "0.8rem" }}>
+                         Failed to load links: {(linksError as any).message}
+                     </div>
+                )}
+
+                {links?.map((link: any) => {
+                    const fullUrl = `${window.location.origin}/board/${boardId}?token=${link.token}`;
+                    return (
+                        <div key={link.token} className="ShareDialog__linkItem">
+                             <div className="ShareDialog__linkItem__info" style={{ width: '100%' }}>
+                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                     <span className="role" style={{ fontWeight: 'bold' }}>{link.access_level === 'editor' ? 'Editor' : 'Viewer'} Access</span>
+                                     <span className="date" style={{ fontSize: '0.7rem', color: 'gray' }}>{new Date(link.created_at).toLocaleDateString()}</span>
+                                 </div>
+                                 <div style={{ display: 'flex', gap: '8px' }}>
+                                     <input 
+                                         type="text" 
+                                         readOnly 
+                                         value={fullUrl} 
+                                         style={{ 
+                                             flex: 1, 
+                                             background: 'var(--color-gray-20)', 
+                                             border: '1px solid var(--color-gray-30)', 
+                                             borderRadius: '4px',
+                                             padding: '4px 8px',
+                                             fontSize: '0.8rem',
+                                             color: 'var(--text-color-primary)'
+                                         }}
+                                         onClick={(e) => e.currentTarget.select()}
+                                     />
+                                     <button onClick={() => copyLink(link.token)} title="Copy" style={{ padding: '6px', background: 'var(--color-gray-20)', borderRadius: '4px', border: '1px solid var(--color-gray-30)', cursor: 'pointer' }}>
+                                         <Copy size={16} />
+                                     </button>
+                                     <button onClick={() => handleRevoke(link.token)} title="Revoke" style={{ padding: '6px', background: 'var(--color-danger-10)', color: 'var(--color-danger)', borderRadius: '4px', border: '1px solid var(--color-danger)', cursor: 'pointer' }}>
+                                         <Trash2 size={16} />
+                                     </button>
+                                 </div>
+                             </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <style>{`
+                .ShareDialog__links__create { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+                .ShareDialog__select { padding: 0.5rem; border-radius: 4px; border: 1px solid var(--color-gray-30); background: var(--color-gray-10); color: var(--text-color-primary); }
+                .ShareDialog__links__list { display: flex; flex-direction: column; gap: 0.5rem; }
+                .ShareDialog__linkItem { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: var(--color-gray-10); border-radius: 6px; }
+                .ShareDialog__linkItem__info { display: flex; flex-direction: column; }
+                .ShareDialog__linkItem__info .role { font-weight: 500; font-size: 0.9rem; text-transform: capitalize; }
+                .ShareDialog__linkItem__info .date { font-size: 0.75rem; color: var(--text-color-secondary); }
+                .ShareDialog__linkItem__actions { display: flex; gap: 0.5rem; }
+                .ShareDialog__linkItem__actions button { background: none; border: none; cursor: pointer; color: var(--icon-fill-color); padding: 4px; border-radius: 4px; }
+                .ShareDialog__linkItem__actions button:hover { background: var(--button-hover-bg); }
+                .ShareDialog__linkItem__actions button.danger:hover { color: var(--color-danger); background: var(--color-danger-10); }
+            `}</style>
+        </div>
+    );
+};
+
 const InviteTab = ({ boardId }: { boardId: string }) => {
     const [email, setEmail] = useState("");
     const shareMutation = useShareBoardMutation();
@@ -129,7 +243,7 @@ const InviteTab = ({ boardId }: { boardId: string }) => {
 
 const ShareDialogInner = (props: ShareDialogProps) => {
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = useState<'invite' | 'embed' | 'publish'>('invite');
+  const [activeTab, setActiveTab] = useState<'invite' | 'link' | 'publish'>('invite');
 
   // If we don't have a boardId, we can't share specifically.
   // Fallback to old UI logic or show error? 
@@ -149,12 +263,18 @@ const ShareDialogInner = (props: ShareDialogProps) => {
                     >
                         Invite
                     </button>
-                    <button className="disabled" disabled title="Coming soon">Embed</button>
+                    <button 
+                        className={activeTab === 'link' ? 'active' : ''} 
+                        onClick={() => setActiveTab('link')}
+                    >
+                        Magic Link
+                    </button>
                     <button className="disabled" disabled title="Coming soon">Publish</button>
                 </div>
                 
                 <div className="ShareDialog__content">
                     {activeTab === 'invite' && <InviteTab boardId={props.boardId} />}
+                    {activeTab === 'link' && <LinksTab boardId={props.boardId} />}
                 </div>
 
                 <style>{`

@@ -23,6 +23,7 @@ import { deriveKeyFromBoardId } from "../utils/deriveKey";
 import type { InitializeSceneOpts, InitializeSceneResult } from "../types";
 import type { RestoredDataState } from "@xcalidraw/xcalidraw/data/restore";
 import type { RemoteXcalidrawElement } from "@xcalidraw/xcalidraw/data/reconcile";
+import type { OrderedXcalidrawElement } from "@xcalidraw/element/types";
 
 /**
  * Dialog config for confirming overwrite with shareable link data.
@@ -158,29 +159,46 @@ export const initializeScene = async (
 
     const collabScene = await opts.collabAPI.startCollaboration(roomLinkData);
 
-    return {
-      scene: {
-        ...collabScene,
-        appState: {
-          ...restoreAppState(
-            {
-              ...collabScene?.appState,
-              theme: localDataState?.appState?.theme || collabScene?.appState?.theme,
+    if (collabScene) {
+        return {
+        scene: {
+            ...collabScene,
+            appState: {
+            ...restoreAppState(
+                {
+                ...collabScene?.appState,
+                theme: localDataState?.appState?.theme || collabScene?.appState?.theme,
+                },
+                xcalidrawAPI.getAppState(),
+            ),
+            isLoading: false,
             },
+            elements: reconcileElements(
+            (collabScene?.elements || []) as unknown as OrderedXcalidrawElement[],
+            xcalidrawAPI.getSceneElementsIncludingDeleted() as any as RemoteXcalidrawElement[],
             xcalidrawAPI.getAppState(),
-          ),
-          isLoading: false,
+            ),
         },
-        elements: reconcileElements(
-          collabScene?.elements || [],
-          xcalidrawAPI.getSceneElementsIncludingDeleted() as RemoteXcalidrawElement[],
-          xcalidrawAPI.getAppState(),
-        ),
-      },
-      isExternalScene: true,
-      id: roomLinkData.roomId,
-      key: roomLinkData.roomKey,
-    };
+        isExternalScene: true,
+        id: roomLinkData.roomId,
+        key: roomLinkData.roomKey,
+        };
+    } else {
+        // Yjs Path: Collaboration started, but data sync is async.
+        // We rely on the initial data loaded from `opts.boardData` (stored in `scene`).
+        return {
+            scene: {
+                ...scene,
+                appState: {
+                    ...scene.appState,
+                    isLoading: false,
+                }
+            },
+            isExternalScene: true,
+            id: roomLinkData.roomId,
+            key: roomLinkData.roomKey,
+        };
+    }
   } else if (scene) {
     let key: string | null = null;
     if (opts.boardId) {
