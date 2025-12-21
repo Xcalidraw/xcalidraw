@@ -536,10 +536,20 @@ class Collab extends PureComponent<CollabProps, CollabState> {
         this.yElementsMap.observe((e, transaction) => {
              if (transaction.origin === 'local') return;
 
-             const elements = Array.from(this.yElementsMap!.values());
+             const remoteElements = Array.from(this.yElementsMap!.values()) as RemoteXcalidrawElement[];
+             const localElements = this.xcalidrawAPI.getSceneElementsIncludingDeleted();
+             const appState = this.xcalidrawAPI.getAppState();
+             
+             // Reconcile remote changes with local state to prevent conflicts
+             const reconciledElements = reconcileElements(
+                 localElements,
+                 remoteElements,
+                 appState
+             );
+             
              this.xcalidrawAPI.updateScene({ 
-                 elements: elements as any,
-                 captureUpdate: CaptureUpdateAction.NEVER // Prevent triggering onChange
+                 elements: reconciledElements,
+                 captureUpdate: CaptureUpdateAction.NEVER
              });
         });
         
@@ -790,25 +800,31 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     // Legacy broadcast - removed
   };
 
-  private lastSyncedSceneVersion = -1;
+  // Track per-element versions to only sync changed elements (like original Excalidraw)
+  private syncedElementVersions: Map<string, number> = new Map();
 
   syncElements = (elements: readonly OrderedXcalidrawElement[]) => {
-    if (this.doc && this.yElementsMap && this.provider) {
-        const currentVersion = getSceneVersion(elements);
-        
-        // Only sync if scene version is newer (prevents infinite loop)
-        if (currentVersion > this.lastSyncedSceneVersion) {
-            this.lastSyncedSceneVersion = currentVersion;
-            
-            this.doc.transact(() => {
-                if (this.yElementsMap) {
-                   elements.forEach(element => {
-                       this.yElementsMap!.set(element.id, element);
-                   });
-                }
-            }, 'local');
+    if (!this.doc || !this.yElementsMap || !this.provider) return;
+    
+    // Filter to only elements that have changed since last sync
+    const changedElements = elements.filter(element => {
+        const lastSyncedVersion = this.syncedElementVersions.get(element.id);
+        return !lastSyncedVersion || element.version > lastSyncedVersion;
+    });
+    
+    // Skip if nothing changed
+    if (changedElements.length === 0) return;
+    
+    console.log(`[COLLAB] Syncing ${changedElements.length} changed elements (of ${elements.length} total)`);
+    
+    this.doc.transact(() => {
+        if (this.yElementsMap) {
+            changedElements.forEach(element => {
+                this.yElementsMap!.set(element.id, element);
+                this.syncedElementVersions.set(element.id, element.version);
+            });
         }
-    }
+    }, 'local');
   };
 
   queueSaveToBackend = throttle(
