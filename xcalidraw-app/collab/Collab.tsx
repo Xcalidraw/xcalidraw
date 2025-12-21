@@ -534,23 +534,29 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
         // Observation: Update Scene when Yjs changes
         this.yElementsMap.observe((e, transaction) => {
-             if (transaction.origin === 'local') return;
+            if (transaction.origin === 'local') return;
 
-             const remoteElements = Array.from(this.yElementsMap!.values()) as RemoteXcalidrawElement[];
-             const localElements = this.xcalidrawAPI.getSceneElementsIncludingDeleted();
-             const appState = this.xcalidrawAPI.getAppState();
-             
-             // Reconcile remote changes with local state to prevent conflicts
-             const reconciledElements = reconcileElements(
-                 localElements,
-                 remoteElements,
-                 appState
-             );
-             
-             this.xcalidrawAPI.updateScene({ 
-                 elements: reconciledElements,
-                 captureUpdate: CaptureUpdateAction.NEVER
-             });
+            const remoteElements = Array.from(this.yElementsMap!.values()) as RemoteXcalidrawElement[];
+            const localElements = this.xcalidrawAPI.getSceneElementsIncludingDeleted();
+            const appState = this.xcalidrawAPI.getAppState();
+            
+            // Reconcile remote changes with local state to prevent conflicts
+            const reconciledElements = reconcileElements(
+                localElements,
+                remoteElements,
+                appState
+            );
+            
+            // Update syncedElementVersions with received remote element versions
+            // This ensures we don't re-sync elements we just received
+            remoteElements.forEach(el => {
+                this.syncedElementVersions.set(el.id, el.version);
+            });
+            
+            this.xcalidrawAPI.updateScene({ 
+                elements: reconciledElements,
+                captureUpdate: CaptureUpdateAction.NEVER
+            });
         });
         
         // Awareness (Cursors)
