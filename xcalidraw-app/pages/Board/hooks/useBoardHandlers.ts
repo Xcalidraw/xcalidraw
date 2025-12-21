@@ -16,7 +16,7 @@ import { parseLibraryTokensFromUrl } from "@xcalidraw/xcalidraw/data/library";
 import { getDefaultAppState } from "@xcalidraw/xcalidraw/appState";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 import type { FileId, OrderedXcalidrawElement, NonDeletedXcalidrawElement } from "@xcalidraw/element/types";
-import type { AppState, XcalidrawImperativeAPI, BinaryFiles, UIAppState } from "@xcalidraw/xcalidraw/types";
+import type { AppState, XcalidrawImperativeAPI, BinaryFiles, UIAppState, Gesture } from "@xcalidraw/xcalidraw/types";
 
 import { LocalData, LibraryIndexedDBAdapter } from "../../../data/LocalData";
 import { exportToBackend, isCollaborationLink } from "../../../data";
@@ -63,6 +63,7 @@ export interface BoardHandlers {
   syncData: ReturnType<typeof debounce>;
   visibilityChange: (event: FocusEvent | Event) => void;
   setupEventListeners: () => () => void;
+  onPointerUpdate: (payload: { pointer: { x: number; y: number; tool: "pointer" | "laser" }; button: "down" | "up"; pointersMap: Gesture["pointers"] }) => void;
 }
 
 /**
@@ -104,7 +105,12 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
         ) {
           lastSceneVersionRef.current = currentVersion;
           lastBoardTitleRef.current = currentTitle;
-          saveToBackend(elements, appState, boardId);
+          
+          // Only save to backend via REST if NOT collaborating.
+          // IF collaborating, the Fargate server handles persistence to S3 directly.
+          if (!collabAPI?.isCollaborating()) {
+               saveToBackend(elements, appState, boardId);
+          }
         }
       }
       LocalData.save(elements, appState, files, () => {
@@ -305,6 +311,12 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
     };
   }, [onHashChange, onUnload, visibilityChange, onBeforeUnload]);
 
+  const onPointerUpdate = useCallback((payload: { pointer: { x: number; y: number; tool: "pointer" | "laser" }; button: "down" | "up"; pointersMap: Gesture["pointers"] }) => {
+    if (collabAPI?.isCollaborating()) {
+      collabAPI.onPointerUpdate(payload);
+    }
+  }, [collabAPI]);
+
   return useMemo(() => ({
     onChange,
     onExportToBackend,
@@ -314,6 +326,7 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
     syncData,
     visibilityChange,
     setupEventListeners,
+    onPointerUpdate,
   }), [
     onChange,
     onExportToBackend,
@@ -323,5 +336,6 @@ export const useBoardHandlers = (deps: UseBoardHandlersDeps): BoardHandlers => {
     syncData,
     visibilityChange,
     setupEventListeners,
+    onPointerUpdate,
   ]);
 };

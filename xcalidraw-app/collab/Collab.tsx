@@ -25,7 +25,10 @@ import { isImageElement, isInitializedImageElement } from "@xcalidraw/element";
 import { AbortError } from "@xcalidraw/xcalidraw/errors";
 import { t } from "@xcalidraw/xcalidraw/i18n";
 import { withBatchedUpdates } from "@xcalidraw/xcalidraw/reactUtils";
+import * as Y from "yjs";
+import { WebsocketProvider } from "y-websocket";
 
+import { toast } from "sonner";
 import throttle from "lodash.throttle";
 import { PureComponent } from "react";
 
@@ -52,12 +55,10 @@ import type {
 import { appJotaiStore, atom } from "../app-jotai";
 
 import {
-  CURSOR_SYNC_TIMEOUT,
-  FILE_UPLOAD_MAX_BYTES,
-
   INITIAL_SCENE_UPDATE_TIMEOUT,
   LOAD_IMAGES_TIMEOUT,
-  WS_SUBTYPES,
+  CURSOR_SYNC_TIMEOUT,
+  FILE_UPLOAD_MAX_BYTES,
   SYNC_FULL_SCENE_INTERVAL_MS,
   WS_EVENTS,
 } from "../app_constants";
@@ -132,6 +133,11 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   private socketInitializationTimer?: number;
   private lastBroadcastedOrReceivedSceneVersion: number = -1;
   private collaborators = new Map<SocketId, Collaborator>();
+
+  // Yjs State
+  private doc: Y.Doc | null = null;
+  private provider: WebsocketProvider | null = null;
+  private yElementsMap: Y.Map<any> | null = null;
 
   constructor(props: CollabProps) {
     super(props);
@@ -318,6 +324,12 @@ class Collab extends PureComponent<CollabProps, CollabState> {
         return;
       }
 
+      // If Yjs is active, Fargate handles persistence. Do NOT save from client to avoid overwrite.
+      if (this.provider) {
+          // console.log("Yjs active - skipping REST API save");
+          return;
+      }
+
       const client = getClient();
       const appState = this.xcalidrawAPI.getAppState();
       const payload: any = {
@@ -327,10 +339,26 @@ class Collab extends PureComponent<CollabProps, CollabState> {
           payload.title = appState.name;
       }
       
-      await client.updateBoard(roomId, payload);
+      
+      // Check for magic link token
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      if (token) {
+          // Use public update endpoint with token
+          await (client as any).updateBoardPublic({ boardId: roomId, token }, payload);
+      } else {
+          await client.updateBoard(roomId, payload);
+      }
 
       this.resetErrorIndicator();
     } catch (error: any) {
+      // Handle 403 Forbidden (View-only user trying to save)
+      if (error.response?.status === 403 || error.message?.includes('403')) {
+          toast.error("You don't have permission to edit this board (View Only)");
+          return;
+      }
+
       const errorMessage = t("errors.collabSaveFailed");
 
       if (
@@ -355,7 +383,6 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   };
 
   stopCollaboration = (keepRemoteState = true) => {
-    this.queueBroadcastAllElements.cancel();
     this.queueSaveToBackend.cancel();
     this.loadImageFiles.cancel();
     this.resetErrorIndicator(true);
@@ -402,7 +429,19 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
   private destroySocketClient = (opts?: { isUnload: boolean }) => {
     this.lastBroadcastedOrReceivedSceneVersion = -1;
-    this.portal.close();
+    
+    // Yjs Cleanup
+    if (this.provider) {
+        this.provider.destroy();
+        this.provider = null;
+    }
+    if (this.doc) {
+        this.doc.destroy();
+        this.doc = null;
+        this.yElementsMap = null;
+    }
+
+    this.portal.close(); // Keep for legacy cleanup/reset
     this.fileManager.reset();
     if (!opts?.isUnload) {
       this.setIsCollaborating(false);
@@ -442,47 +481,30 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
     return await this.fileManager.getFiles(unfetchedImages);
   };
-
-  private decryptPayload = async (
-    iv: Uint8Array,
-    encryptedData: ArrayBuffer,
-    decryptionKey: string,
-  ): Promise<ValueOf<SocketUpdateDataSource>> => {
-    try {
-      const decrypted = await decryptData(iv, encryptedData, decryptionKey);
-
-      const decodedData = new TextDecoder("utf-8").decode(
-        new Uint8Array(decrypted),
-      );
-      return JSON.parse(decodedData);
-    } catch (error) {
-      window.alert(t("alerts.decryptFailed"));
-      console.error(error);
-      return {
-        type: WS_SUBTYPES.INVALID_RESPONSE,
-      };
-    }
-  };
-
+  
   private fallbackInitializationHandler: null | (() => any) = null;
+
+  private isReceivingRemoteUpdate = false;
 
   startCollaboration = async (
     existingRoomLinkData: null | { roomId: string; roomKey: string },
     options?: { skipSceneReset?: boolean },
-  ) => {
+  ): Promise<ImportedDataState | null> => {
     if (!this.state.username) {
       import("@excalidraw/random-username").then(({ getRandomUsername }) => {
         const username = getRandomUsername();
         this.setUsername(username);
+        saveUsernameToLocalStorage(username);
       });
     }
 
-    if (this.portal.socket) {
+    // If already connected, do nothing
+    if (this.provider) {
       return null;
     }
 
     let roomId;
-    let roomKey;
+    let roomKey; // Kept for URL compatibility
 
     if (existingRoomLinkData) {
       ({ roomId, roomKey } = existingRoomLinkData);
@@ -495,285 +517,95 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       );
     }
 
-    // TODO: `ImportedDataState` type here seems abused
-    const scenePromise = resolvablePromise<
-      | (ImportedDataState & { elements: readonly OrderedXcalidrawElement[] })
-      | null
-    >();
-
     this.setIsCollaborating(true);
     LocalData.pauseSave("collaboration");
 
-    // Import WebSocketClient instead of Socket.IO
-    const { default: WebSocketClient } = await import("./WebSocketClient");
-
-    const fallbackInitializationHandler = () => {
-      this.initializeRoom({
-        roomLinkData: existingRoomLinkData,
-        fetchScene: true,
-      }).then((scene) => {
-        scenePromise.resolve(scene);
-      });
-    };
-    this.fallbackInitializationHandler = fallbackInitializationHandler;
-
     try {
-      // Create WebSocket client and connect
-      const wsClient = new WebSocketClient();
-      wsClient.connect(import.meta.env.VITE_APP_WS_SERVER_URL, roomId);
-      
-      this.portal.socket = this.portal.open(
-        wsClient,
-        roomId,
-        roomKey,
-      );
+        // Initialize Yjs
+        this.doc = new Y.Doc();
+        this.provider = new WebsocketProvider(
+            import.meta.env.VITE_APP_WS_SERVER_URL as string,
+            roomId,
+            this.doc,
+            { params: { boardId: roomId } }
+        );
 
-      this.portal.socket.on("connect_error", fallbackInitializationHandler);
+        this.yElementsMap = this.doc.getMap('elements');
+
+        // Observation: Update Scene when Yjs changes
+        this.yElementsMap.observe((e, transaction) => {
+             if (transaction.origin === 'local') return;
+
+             const elements = Array.from(this.yElementsMap!.values());
+             this.xcalidrawAPI.updateScene({ 
+                 elements: elements as any,
+                 captureUpdate: CaptureUpdateAction.NEVER // Prevent triggering onChange
+             });
+        });
+        
+        // Awareness (Cursors)
+        this.provider.awareness.setLocalStateField('user', {
+            name: this.state.username,
+            color: '#ffa500' // Assign specific colors in future
+        });
+
+        this.provider.awareness.on('change', () => {
+             const states = this.provider!.awareness.getStates();
+             const collaborators = new Map<SocketId, Collaborator>();
+             
+             states.forEach((state: any, clientId: number) => {
+                 if (clientId === this.provider!.awareness.clientID) return;
+                 if (!state.user) return;
+                 
+                 collaborators.set(clientId.toString() as SocketId, {
+                     pointer: state.pointer,
+                     button: state.button || 'up',
+                     selectedElementIds: {},
+                     username: state.user.name,
+                     avatarUrl: undefined, 
+                     id: clientId.toString() as SocketId,
+                     color: { background: state.user.color, stroke: state.user.color },
+                 });
+             });
+             
+             this.collaborators = collaborators;
+             this.xcalidrawAPI.updateScene({ collaborators });
+        });
+
+        this.provider.on('status', (event: any) => {
+            console.log('Yjs WebSocket status:', event?.status); 
+            if (event?.status === 'connected') {
+                this.resetErrorIndicator();
+            } else {
+                this.setErrorIndicator("Offline");
+            }
+        });
+
+        this.provider.on('sync', (isSynced: boolean) => {
+            console.log("Yjs WebSocket synced:", isSynced);
+        });
+        
+        this.provider.on('connection-close', (event: any) => {
+            console.log("Yjs WebSocket closed. Code:", event?.code, "Reason:", event?.reason);
+        });
+        
+        this.provider.on('connection-error', (event: any) => {
+            console.error("Yjs WebSocket error:", event);
+        });
+
     } catch (error: any) {
       console.error(error);
       this.setErrorDialog(error.message);
       return null;
     }
-
-    // Only save to backend when CREATING a new room (not joining existing)
-    // For existing rooms: data is already loaded from backend API, no need to save or reset
-    if (!existingRoomLinkData) {
-      const elements = this.xcalidrawAPI.getSceneElements().map((element) => {
-        if (isImageElement(element) && element.status === "saved") {
-          return newElementWith(element, { status: "pending" });
-        }
-        return element;
-      });
-      // remove deleted elements from elements array to ensure we don't
-      // expose potentially sensitive user data in case user manually deletes
-      // existing elements (or clears scene), which would otherwise be persisted
-      // to database even if deleted before creating the room.
-      this.xcalidrawAPI.updateScene({
-        elements,
-        captureUpdate: CaptureUpdateAction.NEVER,
-      });
-
-      this.saveCollabRoomToBackend(getSyncableElements(elements));
-    }
-    // For existing rooms - do nothing here. Data already loaded from backend.
-
-    // fallback in case you're not alone in the room but still don't receive
-    // initial SCENE_INIT message
-    this.socketInitializationTimer = window.setTimeout(
-      fallbackInitializationHandler,
-      INITIAL_SCENE_UPDATE_TIMEOUT,
-    );
-
-    // All socket listeners are moving to Portal
-    this.portal.socket.on(
-      "first-in-room",
-      async () => {
-        if (!this.portal.socketInitialized) {
-          // If we are the first in the room, the Fargate server has no memory of the board.
-          // We must trust our local data (if loaded from backend) or fetch it content again.
-          // Since we use 'always-on' collab, we likely already loaded from the backend.
-          // Triggering initializeRoom ensures we are synced with DynamoDB.
-          this.initializeRoom({ fetchScene: true, roomLinkData: existingRoomLinkData });
-        }
-      }
-    );
-
-    this.portal.socket.on(
-      "client-broadcast",
-      async (encryptedData: ArrayBuffer, iv: Uint8Array) => {
-        if (!this.portal.roomKey) {
-          return;
-        }
-
-        const decryptedData = await this.decryptPayload(
-          iv,
-          encryptedData,
-          this.portal.roomKey,
-        );
-
-
-
-        switch (decryptedData.type) {
-          case WS_SUBTYPES.INVALID_RESPONSE:
-            return;
-          case WS_SUBTYPES.INIT: {
-            if (!this.portal.socketInitialized) {
-              this.initializeRoom({ fetchScene: false });
-              const remoteElements = decryptedData.payload.elements;
-              const reconciledElements =
-                this._reconcileElements(remoteElements);
-              this.handleRemoteSceneUpdate(reconciledElements);
-              // noop if already resolved via init from backend
-              scenePromise.resolve({
-                elements: reconciledElements,
-                scrollToContent: true,
-              });
-            }
-            break;
-          }
-          case WS_SUBTYPES.UPDATE:
-            this.handleRemoteSceneUpdate(
-              this._reconcileElements(decryptedData.payload.elements),
-            );
-            break;
-          case WS_SUBTYPES.MOUSE_LOCATION: {
-            const { pointer, button, username, selectedElementIds } =
-              decryptedData.payload;
-
-            const socketId: SocketUpdateDataSource["MOUSE_LOCATION"]["payload"]["socketId"] =
-              decryptedData.payload.socketId ||
-              // @ts-ignore legacy, see #2094 (#2097)
-              decryptedData.payload.socketID;
-
-
-
-            this.updateCollaborator(socketId, {
-              pointer,
-              button,
-              selectedElementIds,
-              username,
-            });
-
-            break;
-          }
-
-          case WS_SUBTYPES.USER_VISIBLE_SCENE_BOUNDS: {
-            const { sceneBounds, socketId } = decryptedData.payload;
-
-            const appState = this.xcalidrawAPI.getAppState();
-
-            // we're not following the user
-            // (shouldn't happen, but could be late message or bug upstream)
-            if (appState.userToFollow?.socketId !== socketId) {
-              console.warn(
-                `receiving remote client's (from ${socketId}) viewport bounds even though we're not subscribed to it!`,
-              );
-              return;
-            }
-
-            // cross-follow case, ignore updates in this case
-            if (
-              appState.userToFollow &&
-              appState.followedBy.has(appState.userToFollow.socketId)
-            ) {
-              return;
-            }
-
-            this.xcalidrawAPI.updateScene({
-              appState: zoomToFitBounds({
-                appState,
-                bounds: sceneBounds,
-                fitToViewport: true,
-                viewportZoomFactor: 1,
-              }).appState,
-            });
-
-            break;
-          }
-
-          case WS_SUBTYPES.IDLE_STATUS: {
-            const { userState, socketId, username } = decryptedData.payload;
-            this.updateCollaborator(socketId, {
-              userState,
-              username,
-            });
-            break;
-          }
-
-          default: {
-            assertNever(decryptedData, null);
-          }
-        }
-      },
-    );
-
-    this.portal.socket.on("first-in-room", async () => {
-      if (this.portal.socket) {
-        this.portal.socket.off("first-in-room");
-      }
-      const sceneData = await this.initializeRoom({
-        fetchScene: true,
-        roomLinkData: existingRoomLinkData,
-      });
-      scenePromise.resolve(sceneData);
-    });
-
-    this.portal.socket.on(
-      WS_EVENTS.USER_FOLLOW_ROOM_CHANGE,
-      (followedBy: SocketId[]) => {
-        this.xcalidrawAPI.updateScene({
-          appState: { followedBy: new Set(followedBy) },
-        });
-
-        this.relayVisibleSceneBounds({ force: true });
-      },
-    );
-
-    this.initializeIdleDetector();
+    
+    // Init awareness (cursors) could go here
 
     this.setActiveRoomLink(window.location.href);
 
-    return scenePromise;
+    return null; // scenePromise logic removed as Yjs handles sync implicitly
   };
 
-  private initializeRoom = async ({
-    fetchScene,
-    roomLinkData,
-  }:
-    | {
-        fetchScene: true;
-        roomLinkData: { roomId: string; roomKey: string } | null;
-      }
-    | { fetchScene: false; roomLinkData?: null }) => {
-    clearTimeout(this.socketInitializationTimer!);
-    if (this.portal.socket && this.fallbackInitializationHandler) {
-      this.portal.socket.off(
-        "connect_error",
-        this.fallbackInitializationHandler,
-      );
-    }
-
-    // Mark as initialized - scene data comes from BoardPage via backend API
-    // We never reset here because BoardPage already loaded the data
-    this.portal.socketInitialized = true;
-    
-    // Just return current scene elements if any
-    const existingElements = this.xcalidrawAPI.getSceneElements();
-    if (existingElements.length > 0) {
-      this.setLastBroadcastedOrReceivedSceneVersion(
-        getSceneVersion(existingElements as readonly OrderedXcalidrawElement[]),
-      );
-      return {
-        elements: existingElements as readonly OrderedXcalidrawElement[],
-        scrollToContent: false,
-      };
-    }
-
-    return null;
-  };
-
-  private _reconcileElements = (
-    remoteElements: readonly XcalidrawElement[],
-  ): ReconciledXcalidrawElement[] => {
-    const localElements = this.getSceneElementsIncludingDeleted();
-    const appState = this.xcalidrawAPI.getAppState();
-    const restoredRemoteElements = restoreElements(remoteElements, null);
-    const reconciledElements = reconcileElements(
-      localElements,
-      restoredRemoteElements as RemoteXcalidrawElement[],
-      appState,
-    );
-
-    // Avoid broadcasting to the rest of the collaborators the scene
-    // we just received!
-    // Note: this needs to be set before updating the scene as it
-    // synchronously calls render.
-    this.setLastBroadcastedOrReceivedSceneVersion(
-      getSceneVersion(reconciledElements),
-    );
-
-    return reconciledElements;
-  };
 
   private loadImageFiles = throttle(async () => {
     const { loadedFiles, erroredFiles } =
@@ -933,9 +765,10 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       button: SocketUpdateDataSource["MOUSE_LOCATION"]["payload"]["button"];
       pointersMap: Gesture["pointers"];
     }) => {
-      payload.pointersMap.size < 2 &&
-        this.portal.socket &&
-        this.portal.broadcastMouseLocation(payload);
+      if (this.provider && payload.pointersMap.size < 2) {
+        this.provider.awareness.setLocalStateField('pointer', payload.pointer);
+        this.provider.awareness.setLocalStateField('button', payload.button);
+      }
     },
     CURSOR_SYNC_TIMEOUT,
   );
@@ -954,38 +787,29 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   };
 
   onIdleStateChange = (userState: UserIdleState) => {
-    this.portal.broadcastIdleChange(userState);
+    // Legacy broadcast - removed
   };
 
-  broadcastElements = (elements: readonly OrderedXcalidrawElement[]) => {
-    if (
-      getSceneVersion(elements) >
-      this.getLastBroadcastedOrReceivedSceneVersion()
-    ) {
-      this.portal.broadcastScene(WS_SUBTYPES.UPDATE, elements, false);
-      this.lastBroadcastedOrReceivedSceneVersion = getSceneVersion(elements);
-      this.queueBroadcastAllElements();
-    }
-  };
+  private lastSyncedSceneVersion = -1;
 
   syncElements = (elements: readonly OrderedXcalidrawElement[]) => {
-    this.broadcastElements(elements);
-    this.queueSaveToBackend();
+    if (this.doc && this.yElementsMap && this.provider) {
+        const currentVersion = getSceneVersion(elements);
+        
+        // Only sync if scene version is newer (prevents infinite loop)
+        if (currentVersion > this.lastSyncedSceneVersion) {
+            this.lastSyncedSceneVersion = currentVersion;
+            
+            this.doc.transact(() => {
+                if (this.yElementsMap) {
+                   elements.forEach(element => {
+                       this.yElementsMap!.set(element.id, element);
+                   });
+                }
+            }, 'local');
+        }
+    }
   };
-
-  queueBroadcastAllElements = throttle(() => {
-    this.portal.broadcastScene(
-      WS_SUBTYPES.UPDATE,
-      this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
-      true,
-    );
-    const currentVersion = this.getLastBroadcastedOrReceivedSceneVersion();
-    const newVersion = Math.max(
-      currentVersion,
-      getSceneVersion(this.getSceneElementsIncludingDeleted()),
-    );
-    this.setLastBroadcastedOrReceivedSceneVersion(newVersion);
-  }, SYNC_FULL_SCENE_INTERVAL_MS);
 
   queueSaveToBackend = throttle(
     () => {

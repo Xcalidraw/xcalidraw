@@ -815,3 +815,92 @@ export const useBoardMembersQuery = (boardId?: string) => {
     enabled: !!client && !!boardId,
   });
 };
+
+// ============================================================================
+// MAGIC LINK HOOKS
+// ============================================================================
+
+export const useCreateMagicLinkMutation = () => {
+    const client = useClient();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({
+            boardId,
+            accessLevel,
+            expiresAt,
+            password
+        }: {
+            boardId: string;
+            accessLevel: 'viewer' | 'editor';
+            expiresAt?: string;
+            password?: string;
+        }) => {
+            // Using as any because client type isn't updated yet
+            const response = await client.createMagicLink(
+                { boardId },
+                { accessLevel, expiresAt, password }
+            );
+            return response.data;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['magic-links', variables.boardId] });
+        }
+    });
+};
+
+export const useMagicLinksQuery = (boardId: string) => {
+    const client = useClient();
+    return useQuery({
+        queryKey: ['magic-links', boardId],
+        queryFn: async () => {
+            if (!boardId) return [];
+            const response = await client.listMagicLinks({ boardId });
+            return response.data.items || [];
+        },
+        enabled: !!client && !!boardId
+    });
+};
+
+export const useRevokeMagicLinkMutation = () => {
+    const client = useClient();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ boardId, token }: { boardId: string; token: string }) => {
+            const response = await client.revokeMagicLink({ boardId, token });
+            return response.data;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['magic-links', variables.boardId] });
+        }
+    });
+};
+
+export const useValidateMagicLinkMutation = () => {
+    const client = useClient(); 
+
+    return useMutation({
+        mutationFn: async ({ boardId, token, password }: { boardId: string; token: string; password?: string }) => {
+             const response = await client.validateMagicLink(
+                 { boardId, token }, 
+                 { password }
+             );
+             return response.data;
+        }
+    });
+};
+
+export const useBoardPublicQuery = (boardId?: string, token?: string | null) => {
+    const client = useClient(); 
+
+    return useQuery({
+        queryKey: ['board-public', boardId, token],
+        queryFn: async () => {
+            if (!boardId || !token) return null;
+            const response = await client.getBoardPublic({ boardId, token });
+            return response.data;
+        },
+        enabled: !!client && !!boardId && !!token
+    });
+};
