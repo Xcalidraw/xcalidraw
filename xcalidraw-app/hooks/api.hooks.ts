@@ -773,3 +773,45 @@ export const useBatchGetFileUrlsMutation = () => {
     },
   });
 };
+
+// ============================================================================
+// BOARD SHARE HOOKS
+// ============================================================================
+
+export const useShareBoardMutation = () => {
+  const client = useClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      boardId,
+      email,
+    }: {
+      boardId: string;
+      email: string;
+    }) => {
+      // client.shareBoard will be available after regeneration
+      const response = await client.shareBoard(
+        { boardId },
+        { email }
+      );
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['board-members', variables.boardId] });
+    },
+  });
+};
+
+export const useBoardMembersQuery = (boardId?: string) => {
+  const client = useClient();
+  return useQuery({
+    queryKey: ['board-members', boardId],
+    queryFn: async () => {
+        if (!boardId) return [];
+      const response = await client.listBoardMembers({ boardId });
+      return response.data.items;
+    },
+    enabled: !!client && !!boardId,
+  });
+};
