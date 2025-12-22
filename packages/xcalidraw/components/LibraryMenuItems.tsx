@@ -347,6 +347,7 @@ export default function LibraryMenuItems({
       {filteredItems.length > 0 ? (
         <LibraryMenuSectionGrid>
           <LibraryMenuSection
+            key={searchInputValue}
             itemsRenderedPerBatch={itemsRenderedPerBatch}
             items={filteredItems}
             onItemSelectToggle={onItemSelectToggle}

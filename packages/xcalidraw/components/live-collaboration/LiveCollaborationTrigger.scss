@@ -14,8 +14,11 @@
 
     --button-active-bg: var(--color-primary-darker);
 
-    box-shadow: 0 0 0 1px var(--color-surface-lowest);
-    border-radius: 6px;
+
+    // Match PresentationTrigger styles
+    box-shadow: none;
+    border: none;
+    border-radius: 8px;
 
     flex-shrink: 0;
 
