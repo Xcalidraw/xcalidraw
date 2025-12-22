@@ -821,8 +821,6 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     // Skip if nothing changed
     if (changedElements.length === 0) return;
     
-    console.log(`[COLLAB] Syncing ${changedElements.length} changed elements (of ${elements.length} total)`);
-    
     this.doc.transact(() => {
         if (this.yElementsMap) {
             changedElements.forEach(element => {
