@@ -139,6 +139,13 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   private provider: WebsocketProvider | null = null;
   private yElementsMap: Y.Map<any> | null = null;
 
+  // Connection status toast management
+  private connectionToastId = 'connection-status';
+  private reconnectToastTimeoutId: number | null = null;
+  private lastConnectionStatus: string | null = null;
+  private hasBeenConnected = false; // Track if we've ever successfully connected
+  private hasHadDisconnection = false; // Only show "Connected" toast after a disconnection
+
   constructor(props: CollabProps) {
     super(props);
     this.state = {
@@ -430,6 +437,16 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   private destroySocketClient = (opts?: { isUnload: boolean }) => {
     this.lastBroadcastedOrReceivedSceneVersion = -1;
     
+    // Clean up reconnection toast timeout
+    if (this.reconnectToastTimeoutId) {
+        window.clearTimeout(this.reconnectToastTimeoutId);
+        this.reconnectToastTimeoutId = null;
+    }
+    // Reset connection status so next connection cycle starts fresh
+    this.lastConnectionStatus = null;
+    this.hasHadDisconnection = false;
+    this.hasBeenConnected = false;
+    
     // Yjs Cleanup
     if (this.provider) {
         this.provider.destroy();
@@ -566,11 +583,15 @@ class Collab extends PureComponent<CollabProps, CollabState> {
         });
 
         this.provider.awareness.on('change', () => {
-             const states = this.provider!.awareness.getStates();
+             // Guard against provider being destroyed during cleanup (e.g., sleep/wake)
+             if (!this.provider?.awareness) return;
+             
+             const states = this.provider.awareness.getStates();
              const collaborators = new Map<SocketId, Collaborator>();
+             const clientID = this.provider.awareness.clientID;
              
              states.forEach((state: any, clientId: number) => {
-                 if (clientId === this.provider!.awareness.clientID) return;
+                 if (clientId === clientID) return;
                  if (!state.user) return;
                  
                  collaborators.set(clientId.toString() as SocketId, {
@@ -589,16 +610,78 @@ class Collab extends PureComponent<CollabProps, CollabState> {
         });
 
         this.provider.on('status', (event: any) => {
-            console.log('Yjs WebSocket status:', event?.status); 
-            if (event?.status === 'connected') {
+            const status = event?.status;
+            
+            // Avoid duplicate handling for same status
+            if (status === this.lastConnectionStatus) return;
+            this.lastConnectionStatus = status;
+            
+            if (status === 'connected') {
+                // Clear any pending reconnect toast timeout
+                if (this.reconnectToastTimeoutId) {
+                    window.clearTimeout(this.reconnectToastTimeoutId);
+                    this.reconnectToastTimeoutId = null;
+                }
+                
                 this.resetErrorIndicator();
-            } else {
-                this.setErrorIndicator("Offline");
+                
+                // Only show success toast if this is a reconnection (lost connection after being connected)
+                if (this.hasHadDisconnection) {
+                    toast.success('Connected', {
+                        id: this.connectionToastId,
+                        duration: 2000,
+                    });
+                }
+                
+                // Mark that we've been connected (for future disconnection detection)
+                this.hasBeenConnected = true;
+            } else if (status === 'disconnected' || status === 'connecting') {
+                // Check if we were previously connected (this is a reconnection)
+                if (this.hasBeenConnected) {
+                    this.hasHadDisconnection = true;
+                
+                    // Debounce: only show toast after 2 seconds of disconnection
+                    // This prevents toast spam for brief network blips
+                    if (!this.reconnectToastTimeoutId) {
+                        this.reconnectToastTimeoutId = window.setTimeout(() => {
+                            this.reconnectToastTimeoutId = null;
+                            // Check if still disconnected before showing toast
+                            if (this.lastConnectionStatus !== 'connected') {
+                                toast.loading('Reconnecting...', {
+                                    id: this.connectionToastId,
+                                    duration: Infinity,
+                                });
+                                this.setErrorIndicator("Reconnecting");
+                            }
+                        }, 2000);
+                    }
+                } else if (status === 'connecting') {
+                    // Initial connection - show "Connecting..." immediately
+                    toast.loading('Connecting...', {
+                        id: this.connectionToastId,
+                        duration: Infinity,
+                    });
+                }
             }
         });
 
         this.provider.on('sync', (isSynced: boolean) => {
-            console.log("Yjs WebSocket synced:", isSynced);
+            // Use sync event as a reliable indicator of successful connection
+            if (isSynced) {
+                // Clear any pending reconnect toast timeout
+                if (this.reconnectToastTimeoutId) {
+                    window.clearTimeout(this.reconnectToastTimeoutId);
+                    this.reconnectToastTimeoutId = null;
+                }
+                
+                this.resetErrorIndicator();
+                
+                // Show "Connected" toast (replaces Connecting.../Reconnecting...)
+                toast.success('Connected', {
+                    id: this.connectionToastId,
+                    duration: 2000,
+                });
+            }
         });
         
         this.provider.on('connection-close', (event: any) => {
@@ -781,7 +864,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       button: SocketUpdateDataSource["MOUSE_LOCATION"]["payload"]["button"];
       pointersMap: Gesture["pointers"];
     }) => {
-      if (this.provider && payload.pointersMap.size < 2) {
+      // Guard against provider being destroyed during cleanup
+      if (this.provider?.awareness && payload.pointersMap.size < 2) {
         this.provider.awareness.setLocalStateField('pointer', payload.pointer);
         this.provider.awareness.setLocalStateField('button', payload.button);
       }
@@ -810,7 +894,8 @@ class Collab extends PureComponent<CollabProps, CollabState> {
   private syncedElementVersions: Map<string, number> = new Map();
 
   syncElements = (elements: readonly OrderedXcalidrawElement[]) => {
-    if (!this.doc || !this.yElementsMap || !this.provider) return;
+    // Guard against provider/doc being destroyed during cleanup
+    if (!this.doc || !this.yElementsMap || !this.provider?.awareness) return;
     
     // Filter to only elements that have changed since last sync
     const changedElements = elements.filter(element => {
