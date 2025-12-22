@@ -771,6 +771,34 @@ class Collab extends PureComponent<CollabProps, CollabState> {
     }
   }, LOAD_IMAGES_TIMEOUT);
 
+  /**
+   * Force reload all images regardless of their status.
+   * Used after sleep/wake to recover images that got stuck.
+   */
+  private forceReloadImages = async () => {
+    try {
+      const { loadedFiles, erroredFiles } =
+        await this.fetchImageFilesFromBackend({
+          elements: this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
+          forceFetchFiles: true, // This bypasses the status === "saved" filter
+        });
+
+      if (loadedFiles.length > 0) {
+        this.xcalidrawAPI.addFiles(loadedFiles);
+      }
+
+      updateStaleImageStatuses({
+        xcalidrawAPI: this.xcalidrawAPI,
+        erroredFiles,
+        elements: this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
+      });
+    } catch (error: any) {
+      if (error?.name !== 'AbortError') {
+        console.error('[Collab] Failed to force reload images:', error);
+      }
+    }
+  };
+
   private handleRemoteSceneUpdate = (
     elements: ReconciledXcalidrawElement[],
   ) => {
@@ -817,14 +845,40 @@ class Collab extends PureComponent<CollabProps, CollabState> {
       );
       this.onIdleStateChange(UserIdleState.ACTIVE);
 
-      // Wake up connection logic
+      // Wake up connection logic - check if WebSocket is actually alive
       if (this.isCollaborating() && this.portal.roomId) {
+        // Check if provider exists and is actually connected
+        const isConnected = this.provider?.wsconnected;
+        
+        if (!isConnected) {
+          // Provider exists but WebSocket is dead - force reconnection
+          if (this.provider) {
+            // y-websocket should auto-reconnect, but let's force it
+            this.provider.connect();
+          }
+        }
+        
+        // Trigger delayed connection health check
         setTimeout(() => {
-             // If completely disconnected, the WebSocketClient should handle it via retry,
-             // but sending an update forces a check.
-             // If we are technically "connected" but the link is dead, this might throw or fail silently,
-             // but usually attempting to write will reveal the broken pipe.
-             this.portal.broadcastIdleChange(UserIdleState.ACTIVE);
+          // If still not connected after 2 seconds, show reconnecting toast
+          if (this.provider && !this.provider.wsconnected) {
+            toast.loading('Reconnecting...', {
+              id: this.connectionToastId,
+              duration: Infinity,
+            });
+            this.setErrorIndicator("Reconnecting");
+          }
+          
+          // Always try to force reload images after visibility change
+          // This handles the case where images were mid-load when sleep happened
+          if (this.isCollaborating()) {
+            this.forceReloadImages();
+          }
+        }, 2000);
+        
+        // Try to broadcast to check connection
+        setTimeout(() => {
+          this.portal.broadcastIdleChange(UserIdleState.ACTIVE);
         }, 1000);
       }
       this.onIdleStateChange(UserIdleState.ACTIVE);
