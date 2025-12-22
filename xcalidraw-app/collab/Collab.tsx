@@ -1,8 +1,5 @@
 import {
   CaptureUpdateAction,
-  getSceneVersion,
-  restoreElements,
-  zoomToFitBounds,
   reconcileElements,
 } from "@xcalidraw/xcalidraw";
 import { ErrorDialog } from "@xcalidraw/xcalidraw/components/ErrorDialog";
@@ -11,14 +8,11 @@ import {
   IDLE_THRESHOLD,
   ACTIVE_THRESHOLD,
   UserIdleState,
-  assertNever,
   isDevEnv,
   isTestEnv,
   preventUnload,
-  resolvablePromise,
   throttleRAF,
 } from "@xcalidraw/common";
-import { decryptData } from "@xcalidraw/xcalidraw/data/encryption";
 import { getVisibleSceneBounds } from "@xcalidraw/element";
 import { newElementWith } from "@xcalidraw/element";
 import { isImageElement, isInitializedImageElement } from "@xcalidraw/element";
@@ -31,6 +25,7 @@ import { WebsocketProvider } from "y-websocket";
 import { toast } from "sonner";
 import throttle from "lodash.throttle";
 import { PureComponent } from "react";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 import type { Mutable, ValueOf } from "@xcalidraw/common/utility-types";
 import type { ImportedDataState } from "@xcalidraw/xcalidraw/data/types";
@@ -55,7 +50,6 @@ import type {
 import { appJotaiStore, atom } from "../app-jotai";
 
 import {
-  INITIAL_SCENE_UPDATE_TIMEOUT,
   LOAD_IMAGES_TIMEOUT,
   CURSOR_SYNC_TIMEOUT,
   FILE_UPLOAD_MAX_BYTES,
@@ -503,16 +497,62 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
   private isReceivingRemoteUpdate = false;
 
+  /**
+   * Get the authenticated user's real name from the ID token.
+   * Returns null if user is not authenticated or name is not available.
+   */
+  private getAuthenticatedUserName = async (): Promise<string | null> => {
+    try {
+      const session = await fetchAuthSession();
+      const idToken = session.tokens?.idToken?.toString();
+
+      if (idToken) {
+        // Decode JWT payload (base64)
+        const payload = JSON.parse(atob(idToken.split('.')[1])) as {
+          name?: string;
+          given_name?: string;
+          email?: string;
+        };
+
+        // Prefer full name, then given name, then email prefix
+        if (payload.name) {
+          return payload.name;
+        }
+        if (payload.given_name) {
+          return payload.given_name;
+        }
+        if (payload.email) {
+          return payload.email.split('@')[0];
+        }
+      }
+    } catch (error) {
+      // User not authenticated or session error - this is expected for anonymous users
+      console.debug('[Collab] No authenticated session for username');
+    }
+    return null;
+  };
+
   startCollaboration = async (
     existingRoomLinkData: null | { roomId: string; roomKey: string },
     options?: { skipSceneReset?: boolean },
   ): Promise<ImportedDataState | null> => {
-    if (!this.state.username) {
-      import("@excalidraw/random-username").then(({ getRandomUsername }) => {
-        const username = getRandomUsername();
-        this.setUsername(username);
-        saveUsernameToLocalStorage(username);
-      });
+    // Ensure username is resolved before proceeding
+    // Priority: 1. Authenticated user's real name (always checked), 2. Stored username, 3. Random username
+    
+    // Always try authenticated name first - it takes precedence over stored random names
+    const authenticatedName = await this.getAuthenticatedUserName();
+    let usernameToUse = authenticatedName || this.state.username;
+    
+    if (!usernameToUse) {
+      // Fall back to random username for anonymous users with no stored name
+      const { getRandomUsername } = await import("@excalidraw/random-username");
+      usernameToUse = getRandomUsername();
+    }
+    
+    // Update stored username if it changed
+    if (usernameToUse !== this.state.username) {
+      this.setUsername(usernameToUse);
+      saveUsernameToLocalStorage(usernameToUse);
     }
 
     // If already connected, do nothing
