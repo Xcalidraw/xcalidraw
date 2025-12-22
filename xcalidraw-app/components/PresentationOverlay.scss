@@ -1,0 +1,8 @@
+.presentation-overlay {
+  &__mask {
+    position: fixed;
+    background-color: #000;
+    z-index: 1; /* Above canvas, below controls */
+    pointer-events: auto; /* Block interactions */
+  }
+}

@@ -1,0 +1,40 @@
+.presentation-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-right: 8px;
+
+  &:hover {
+    background: var(--color-primary-darker, #5b5bf8);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.presentation-black-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 1; // Behind the canvas, but above page background
+  pointer-events: none;
+}

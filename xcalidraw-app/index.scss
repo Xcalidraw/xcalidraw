@@ -88,6 +88,69 @@
   }
 }
 
+// Presentation mode - hide all UI elements except canvas and presentation controls
+.xcalidraw-app.is-presentation-mode {
+  // Hide top left menu
+  .App-menu_top__left {
+    display: none !important;
+  }
+  
+  // Hide top right UI (share button etc)
+  .layer-ui__wrapper__top-right {
+    display: none !important;
+  }
+  
+  // Hide main toolbar
+  .App-toolbar-container,
+  .App-toolbar {
+    display: none !important;
+  }
+  
+  // Hide sidebar
+  .sidebar,
+  .layer-ui__sidebar {
+    display: none !important;
+  }
+  
+  // Hide footer
+  .layer-ui__wrapper__footer {
+    display: none !important;
+  }
+  
+  // Hide mobile menu
+  .App-bottom-bar,
+  .mobile-menu {
+    display: none !important;
+  }
+  
+  // Hide welcome screen
+  .welcome-screen-center,
+  .welcome-screen-menu-hints {
+    display: none !important;
+  }
+  
+  // Hide zoom controls
+  .zoom-actions {
+    display: none !important;
+  }
+  
+  // Hide frame render - the frame name/border
+  .excalidraw__canvas .frame-name,
+  .frame-label {
+    display: none !important;
+  }
+  
+  // KEEP presentation controls visible (they are fixed position, outside layer-ui)
+  .presentation-controls {
+    display: flex !important;
+  }
+  
+  // KEEP black background overlay visible
+  .presentation-black-bg {
+    display: block !important;
+  }
+}
+
 .plus-banner {
   display: flex;
   justify-content: center;

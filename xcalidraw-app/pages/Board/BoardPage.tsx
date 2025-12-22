@@ -56,7 +56,7 @@ import type {
 } from "@xcalidraw/xcalidraw/types";
 
 import CustomStats from "../../CustomStats";
-import { appJotaiStore, Provider, useAtom, useAtomValue, useAtomWithInitialValue } from "../../app-jotai";
+import { appJotaiStore, Provider, useAtom, useAtomValue, useAtomWithInitialValue, presentationModeAtom } from "../../app-jotai";
 
 import Collab, {
   collabAPIAtom,
@@ -67,6 +67,8 @@ import { AppFooter } from "../../components/AppFooter";
 import { AppMainMenu } from "../../components/AppMainMenu";
 import { AppWelcomeScreen } from "../../components/AppWelcomeScreen";
 import { TopErrorBoundary } from "../../components/TopErrorBoundary";
+import { PresentationTrigger } from "../../components/PresentationTrigger";
+import { PresentationOverlay } from "../../components/PresentationOverlay";
 
 import {
   isCollaborationLink,
@@ -249,6 +251,10 @@ const XcalidrawWrapper = ({
     return isCollaborationLink(window.location.href);
   });
   const collabError = useAtomValue(collabErrorIndicatorAtom);
+  
+  // Presentation mode state - must be before any conditional returns
+  const presentationMode = useAtomValue(presentationModeAtom);
+  const isPresentationMode = presentationMode.isActive;
 
   useHandleLibrary({
     xcalidrawAPI,
@@ -517,8 +523,8 @@ const XcalidrawWrapper = ({
 
   const uiOptions: UIOptions = {
       canvasActions: {
-        toggleTheme: true,
-        export: {
+        toggleTheme: !isPresentationMode,
+        export: isPresentationMode ? false : {
           onExportToBackend,
           renderCustomUI: undefined,
         },
@@ -530,6 +536,7 @@ const XcalidrawWrapper = ({
       style={{ height: "100%" }}
       className={clsx("xcalidraw-app", {
         "is-collaborating": isCollaborating,
+        "is-presentation-mode": isPresentationMode,
       })}
     >
       <Xcalidraw
@@ -558,6 +565,7 @@ const XcalidrawWrapper = ({
           return (
             <>
               {collabError.message && <CollabError collabError={collabError} />}
+              <PresentationTrigger xcalidrawAPI={xcalidrawAPI} />
               <LiveCollaborationTrigger
                 isCollaborating={isCollaborating}
                 onSelect={() =>
@@ -786,6 +794,8 @@ const XcalidrawWrapper = ({
       </Xcalidraw>
       {xcalidrawAPI && <Collab xcalidrawAPI={xcalidrawAPI} />}
       
+      {/* Presentation overlay - rendered outside Xcalidraw to stay visible */}
+      <PresentationOverlay />
 
     </div>
   );
