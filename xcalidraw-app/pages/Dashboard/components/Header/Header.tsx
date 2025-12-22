@@ -2,7 +2,7 @@ import React from "react";
 import { Bell, Search, User, Menu } from "lucide-react";
 import { useAtom } from "jotai";
 
-import { Button } from "../../../../components/ui/button";
+import { Button } from "@shadcn/components/ui/button";
 import { sidebarOpenAtom } from "../../store";
 
 import { UserDropdown } from "./UserDropdown";
@@ -28,18 +28,18 @@ export const Header = () => {
 
         {/* Right Side Actions */}
         <div className="header-right">
-          <Button variant="outline" size="default">
+          <Button variant='secondary' size="default">
             <User size={16} />
             <span>Invite members</span>
           </Button>
 
-          <button className="header-icon-btn">
+          <Button variant="ghost" size="icon">
             <Search size={20} />
-          </button>
+          </Button>
 
-          <button className="header-icon-btn">
+          <Button variant="ghost" size="icon">
             <Bell size={20} />
-          </button>
+          </Button>
 
           <div className="h-6 w-px bg-border mx-2" /> {/* Divider */}
           

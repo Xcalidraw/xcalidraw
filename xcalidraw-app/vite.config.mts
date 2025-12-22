@@ -25,6 +25,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: [
         {
+          find: /^@shadcn\/(.*?)/,
+          replacement: path.resolve(__dirname, "./shadcn/$1"),
+        },
+        {
           find: /^@xcalidraw\/common$/,
           replacement: path.resolve(
             __dirname,
