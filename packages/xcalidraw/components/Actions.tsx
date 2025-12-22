@@ -86,6 +86,7 @@ import {
   RectangleIcon,
   DiamondIcon,
   EllipseIcon,
+  TriangleIcon,
   ArrowIcon,
   EmojiIcon,
   LineIcon,
@@ -1117,6 +1118,12 @@ export const ShapesSwitcher = ({
       icon: EllipseIcon,
       title: t("toolBar.ellipse"),
       key: "O",
+    },
+    {
+      type: "triangle",
+      icon: TriangleIcon,
+      title: "Triangle",
+      key: "T",
     },
   ];
 

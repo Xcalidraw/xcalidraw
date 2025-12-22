@@ -97,6 +97,10 @@ export type XcalidrawEllipseElement = _XcalidrawElementBase & {
   type: "ellipse";
 };
 
+export type XcalidrawTriangleElement = _XcalidrawElementBase & {
+  type: "triangle";
+};
+
 export type XcalidrawEmbeddableElement = _XcalidrawElementBase &
   Readonly<{
     type: "embeddable";
@@ -181,12 +185,14 @@ export type XcalidrawGenericElement =
   | XcalidrawSelectionElement
   | XcalidrawRectangleElement
   | XcalidrawDiamondElement
-  | XcalidrawEllipseElement;
+  | XcalidrawEllipseElement
+  | XcalidrawTriangleElement;
 
 export type XcalidrawFlowchartNodeElement =
   | XcalidrawRectangleElement
   | XcalidrawDiamondElement
-  | XcalidrawEllipseElement;
+  | XcalidrawEllipseElement
+  | XcalidrawTriangleElement;
 
 export type XcalidrawRectanguloidElement =
   | XcalidrawRectangleElement
@@ -260,6 +266,7 @@ export type XcalidrawBindableElement =
   | XcalidrawRectangleElement
   | XcalidrawDiamondElement
   | XcalidrawEllipseElement
+  | XcalidrawTriangleElement
   | XcalidrawTextElement
   | XcalidrawImageElement
   | XcalidrawIframeElement
@@ -271,6 +278,7 @@ export type XcalidrawTextContainer =
   | XcalidrawRectangleElement
   | XcalidrawDiamondElement
   | XcalidrawEllipseElement
+  | XcalidrawTriangleElement
   | XcalidrawArrowElement;
 
 export type XcalidrawTextElementWithContainer = {

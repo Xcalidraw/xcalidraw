@@ -213,7 +213,8 @@ export const generateRoughOptions = (
     case "iframe":
     case "embeddable":
     case "diamond":
-    case "ellipse": {
+    case "ellipse":
+    case "triangle": {
       options.fillStyle = element.fillStyle;
       options.fill = isTransparent(element.backgroundColor)
         ? undefined
@@ -716,6 +717,25 @@ const generateElementShape = (
       );
       return shape;
     }
+    case "triangle": {
+      // Triangle points: top-center, bottom-right, bottom-left
+      const topX = element.width / 2;
+      const topY = 0;
+      const bottomLeftX = 0;
+      const bottomLeftY = element.height;
+      const bottomRightX = element.width;
+      const bottomRightY = element.height;
+
+      const shape = generator.polygon(
+        [
+          [topX, topY],
+          [bottomRightX, bottomRightY],
+          [bottomLeftX, bottomLeftY],
+        ],
+        generateRoughOptions(element),
+      );
+      return shape;
+    }
     case "line":
     case "arrow": {
       let shape: ElementShapes[typeof element.type];
@@ -914,6 +934,7 @@ export const getElementShape = <Point extends GlobalPoint | LocalPoint>(
   switch (element.type) {
     case "rectangle":
     case "diamond":
+    case "triangle":
     case "frame":
     case "magicframe":
     case "embeddable":

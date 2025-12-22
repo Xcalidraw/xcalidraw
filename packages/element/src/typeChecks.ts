@@ -187,6 +187,7 @@ export const isBindableElement = (
     (element.type === "rectangle" ||
       element.type === "diamond" ||
       element.type === "ellipse" ||
+      element.type === "triangle" ||
       element.type === "image" ||
       element.type === "iframe" ||
       element.type === "embeddable" ||
@@ -240,6 +241,7 @@ export const isTextBindableContainer = (
     (element.type === "rectangle" ||
       element.type === "diamond" ||
       element.type === "ellipse" ||
+      element.type === "triangle" ||
       isArrowElement(element))
   );
 };
@@ -258,6 +260,7 @@ export const isXcalidrawElement = (
     case "iframe":
     case "embeddable":
     case "ellipse":
+    case "triangle":
     case "arrow":
     case "freedraw":
     case "line":
@@ -280,7 +283,8 @@ export const isFlowchartNodeElement = (
   return (
     element.type === "rectangle" ||
     element.type === "ellipse" ||
-    element.type === "diamond"
+    element.type === "diamond" ||
+    element.type === "triangle"
   );
 };
 
@@ -315,7 +319,7 @@ export const isUsingAdaptiveRadius = (type: string) =>
   type === "image";
 
 export const isUsingProportionalRadius = (type: string) =>
-  type === "line" || type === "arrow" || type === "diamond";
+  type === "line" || type === "arrow" || type === "diamond" || type === "triangle";
 
 export const canApplyRoundnessTypeToElement = (
   roundnessType: RoundnessType,

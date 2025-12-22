@@ -45,6 +45,9 @@ export const distanceToElement = (
       return distanceToDiamondElement(element, elementsMap, p);
     case "ellipse":
       return distanceToEllipseElement(element, elementsMap, p);
+    case "triangle":
+      // Triangle uses same distance calculation as diamond (polygon-based)
+      return distanceToDiamondElement(element as any, elementsMap, p);
     case "line":
     case "arrow":
     case "freedraw":
