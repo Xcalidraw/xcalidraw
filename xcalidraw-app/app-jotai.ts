@@ -12,6 +12,33 @@ import { useLayoutEffect } from "react";
 
 export const appJotaiStore = createStore();
 
+// Presentation mode state
+export interface PresentationModeState {
+  isActive: boolean;
+  showBlackBackground: boolean;
+  currentSlideIndex: number;
+  totalSlides: number;
+  // Navigation callbacks set by PresentationTrigger
+  onNextSlide: (() => void) | null;
+  onPrevSlide: (() => void) | null;
+  onExit: (() => void) | null;
+  onToggleBlackBackground: (() => void) | null;
+  // Slide bounds in viewport coordinates (for masking)
+  slideViewportBounds: { x: number; y: number; width: number; height: number } | null;
+}
+
+export const presentationModeAtom = atom<PresentationModeState>({
+  isActive: false,
+  showBlackBackground: false,
+  currentSlideIndex: 0,
+  totalSlides: 0,
+  onNextSlide: null,
+  onPrevSlide: null,
+  onExit: null,
+  onToggleBlackBackground: null,
+  slideViewportBounds: null,
+});
+
 export { atom, Provider, useAtom, useAtomValue, useSetAtom };
 
 export const useAtomWithInitialValue = <
