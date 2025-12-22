@@ -51,6 +51,7 @@ import type {
   XcalidrawRectangleElement,
   XcalidrawSelectionElement,
   XcalidrawTextElement,
+  XcalidrawTriangleElement,
 } from "@xcalidraw/element/types";
 import type { Curve, LineSegment, Polygon, Radians } from "@xcalidraw/math";
 
@@ -105,6 +106,7 @@ export type GeometricShape<Point extends GlobalPoint | LocalPoint> =
 type RectangularElement =
   | XcalidrawRectangleElement
   | XcalidrawDiamondElement
+  | XcalidrawTriangleElement
   | XcalidrawFrameLikeElement
   | XcalidrawEmbeddableElement
   | XcalidrawImageElement
@@ -131,6 +133,13 @@ export const getPolygonShape = <Point extends GlobalPoint | LocalPoint>(
       pointRotateRads(pointFrom(x + width, cy), center, angle),
       pointRotateRads(pointFrom(cx, y + height), center, angle),
       pointRotateRads(pointFrom(x, cy), center, angle),
+    );
+  } else if (element.type === "triangle") {
+    // Triangle: top center, bottom right, bottom left
+    data = polygon(
+      pointRotateRads(pointFrom(cx, y), center, angle),
+      pointRotateRads(pointFrom(x + width, y + height), center, angle),
+      pointRotateRads(pointFrom(x, y + height), center, angle),
     );
   } else {
     data = polygon(

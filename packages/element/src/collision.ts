@@ -249,6 +249,15 @@ export const intersectElementWithLineSegment = (
         line,
         offset,
       );
+    case "triangle":
+      // Triangle is treated like diamond - both are polygons
+      return intersectDiamondWithLineSegment(
+        element as any,
+        elementsMap,
+        line,
+        offset,
+        onlyFirst,
+      );
     case "line":
     case "freedraw":
     case "arrow":
