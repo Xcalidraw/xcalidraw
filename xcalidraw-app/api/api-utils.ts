@@ -18,14 +18,19 @@ export const configureClient = <ClientType extends AxiosInstance>(
 
   // add authorization header and org header
   client.interceptors.request.use(async (request) => {
-    const token =
-      opts.token ||
-      (await fetchAuthSession().then((session) =>
-        session.tokens?.idToken?.toString()
-      ));
+    try {
+      const token =
+        opts.token ||
+        (await fetchAuthSession({ forceRefresh: false }).then((session) =>
+          session.tokens?.idToken?.toString()
+        ));
 
-    if (token) {
-      request.headers.authorization = `Bearer ${token}`;
+      if (token) {
+        request.headers.authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error('[API] Failed to get auth token:', error);
+      // Continue without token - request will likely fail with 401
     }
 
     // Add X-Organization-Id header (required for multi-org support)

@@ -114,8 +114,8 @@ export const loadFilesFromBackend = async (
              }
         })
     );
-  } catch (error) {
-    console.error("Failed to get batch file URLs:", error);
+  } catch (error: any) {
+    console.error("Failed to get batch file URLs:", error?.response?.status || error?.message || error);
     // Mark all as errored if batch request fails
     filesIds.forEach(id => erroredFiles.set(id, true));
   }
