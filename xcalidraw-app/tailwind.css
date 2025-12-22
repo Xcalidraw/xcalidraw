@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+/*
+ * Tailwind CSS v4 + shadcn/ui integration
+ * Uses CSS variables from theme.scss for consistency
+ */
+
+@theme inline {
+  /* Map shadcn color utilities to theme.scss variables */
+  --color-background: var(--island-bg-color, #ffffff);
+  --color-foreground: var(--color-on-surface, #1b1b1f);
+  --color-card: var(--island-bg-color, #ffffff);
+  --color-card-foreground: var(--color-on-surface, #1b1b1f);
+  --color-popover: var(--popup-bg-color, #ffffff);
+  --color-popover-foreground: var(--popup-text-color, #000000);
+  
+  /* Primary uses the xcalidraw teal */
+  --color-primary: var(--color-primary, #087f5b);
+  --color-primary-foreground: #ffffff;
+  
+  /* Secondary uses surface colors */
+  --color-secondary: var(--color-surface-high, #f1f3f5);
+  --color-secondary-foreground: var(--color-on-surface, #1b1b1f);
+  
+  /* Muted uses gray scale */
+  --color-muted: var(--color-gray-20, #ebebeb);
+  --color-muted-foreground: var(--color-gray-60, #7a7a7a);
+  
+  /* Accent uses primary light */
+  --color-accent: var(--color-primary-light, #e6fcf5);
+  --color-accent-foreground: var(--color-on-primary-container, #044532);
+  
+  /* Destructive uses danger colors */
+  --color-destructive: var(--color-danger, #db6965);
+  --color-destructive-foreground: #ffffff;
+  
+  /* Border and input */
+  --color-border: var(--color-border-outline-variant, #c5c5d0);
+  --color-input: var(--color-border-outline-variant, #c5c5d0);
+  --color-ring: var(--color-primary, #087f5b);
+  
+  /* Radius */
+  --radius-sm: var(--border-radius-sm, 0.25rem);
+  --radius-md: var(--border-radius-md, 0.375rem);
+  --radius-lg: var(--border-radius-lg, 0.5rem);
+  --radius-xl: calc(var(--border-radius-lg, 0.5rem) + 0.25rem);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+/* Ensure shadcn button text colors override inherited styles */
+[data-slot="button"].text-white,
+[data-slot="button"][data-variant="destructive"] {
+  color: white !important;
+}
+
+[data-slot="button"][data-variant="default"] {
+  color: var(--primary-foreground) !important;
+}
+

@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
+      "@shadcn/*": ["./xcalidraw-app/shadcn/*"],
       "@xcalidraw/common": ["./packages/common/src/index.ts"],
       "@xcalidraw/common/*": ["./packages/common/src/*"],
       "@xcalidraw/xcalidraw": ["./packages/xcalidraw/index.tsx"],
