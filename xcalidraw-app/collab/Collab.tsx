@@ -614,6 +614,9 @@ class Collab extends PureComponent<CollabProps, CollabState> {
                 elements: reconciledElements,
                 captureUpdate: CaptureUpdateAction.NEVER
             });
+            
+            // Load any images that need fetching (important after reconnection)
+            this.loadImageFiles();
         });
         
         // Awareness (Cursors)
@@ -747,18 +750,25 @@ class Collab extends PureComponent<CollabProps, CollabState> {
 
 
   private loadImageFiles = throttle(async () => {
-    const { loadedFiles, erroredFiles } =
-      await this.fetchImageFilesFromBackend({
+    try {
+      const { loadedFiles, erroredFiles } =
+        await this.fetchImageFilesFromBackend({
+          elements: this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
+        });
+
+      this.xcalidrawAPI.addFiles(loadedFiles);
+
+      updateStaleImageStatuses({
+        xcalidrawAPI: this.xcalidrawAPI,
+        erroredFiles,
         elements: this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
       });
-
-    this.xcalidrawAPI.addFiles(loadedFiles);
-
-    updateStaleImageStatuses({
-      xcalidrawAPI: this.xcalidrawAPI,
-      erroredFiles,
-      elements: this.xcalidrawAPI.getSceneElementsIncludingDeleted(),
-    });
+    } catch (error: any) {
+      // AbortError is expected when requests are canceled during cleanup
+      if (error?.name !== 'AbortError') {
+        console.error('[Collab] Failed to load image files:', error);
+      }
+    }
   }, LOAD_IMAGES_TIMEOUT);
 
   private handleRemoteSceneUpdate = (
