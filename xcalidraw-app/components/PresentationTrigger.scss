@@ -11,15 +11,9 @@
   color: white;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
-  margin-right: 8px;
 
   &:hover {
     background: var(--color-primary-darker, #5b5bf8);
-    transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.98);
   }
 
   svg {

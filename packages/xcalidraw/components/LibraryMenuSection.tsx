@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 
-import { useTransition } from "../hooks/useTransition";
+
 
 import { EmptyLibraryUnit, LibraryUnit } from "./LibraryUnit";
 
@@ -46,16 +46,13 @@ export const LibraryMenuSection = memo(
     svgCache,
     itemsRenderedPerBatch,
   }: Props) => {
-    const [, startTransition] = useTransition();
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(itemsRenderedPerBatch);
 
     useEffect(() => {
       if (index < items.length) {
-        startTransition(() => {
-          setIndex(index + itemsRenderedPerBatch);
-        });
+        setIndex(index + itemsRenderedPerBatch);
       }
-    }, [index, items.length, startTransition, itemsRenderedPerBatch]);
+    }, [index, items.length, itemsRenderedPerBatch]);
 
     return (
       <>

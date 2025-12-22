@@ -149,6 +149,9 @@ export const SidebarInner = forwardRef(
           className,
         )}
         ref={islandRef}
+        onPointerDown={(event) => {
+          event.stopPropagation();
+        }}
       >
         <SidebarPropsContext.Provider value={headerPropsRef.current}>
           {children}
