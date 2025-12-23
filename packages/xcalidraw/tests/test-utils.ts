@@ -13,7 +13,7 @@ import { ORIG_ID, arrayToMap } from "@xcalidraw/common";
 
 import { getSelectedElements } from "@xcalidraw/element";
 
-import { STORAGE_KEYS } from "../../../xcalidraw-app/app_constants";
+import { STORAGE_KEYS } from "../../../apps/xcalidraw-app/app_constants";
 
 import { Pointer, UI } from "./helpers/ui";
 import * as toolQueries from "./queries/toolQueries";

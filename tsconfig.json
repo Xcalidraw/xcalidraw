@@ -19,7 +19,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@shadcn/*": ["./xcalidraw-app/shadcn/*"],
+      "@shadcn/*": ["apps/xcalidraw-app/shadcn/*"],
       "@xcalidraw/common": ["./packages/common/src/index.ts"],
       "@xcalidraw/common/*": ["./packages/common/src/*"],
       "@xcalidraw/xcalidraw": ["./packages/xcalidraw/index.tsx"],
@@ -30,10 +30,10 @@
       "@xcalidraw/math/*": ["./packages/math/src/*"],
       "@xcalidraw/utils": ["./packages/utils/src/index.ts"],
       "@xcalidraw/utils/*": ["./packages/utils/src/*"],
-      "xcalidraw-app/*": ["./xcalidraw-app/*"],
+      "xcalidraw-app/*": ["apps/xcalidraw-app/*"],
       "@tailwindcss/vite": ["./node_modules/@tailwindcss/vite/dist/index.d.mts"]
     }
   },
-  "include": ["packages", "xcalidraw-app"],
+  "include": ["packages", "apps/xcalidraw-app"],
   "exclude": ["examples", "dist", "types"]
 }
