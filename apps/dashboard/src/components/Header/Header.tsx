@@ -8,7 +8,7 @@ import { NotificationsDropdown } from "./NotificationsDropdown";
 
 export const Header = () => {
   return (
-    <div className="h-16 px-8 flex items-center justify-center bg-white border-b border-border md:px-4 md:h-14">
+    <div className="h-16 px-4 flex items-center justify-center bg-white border-b border-border">
       <div className="w-full flex justify-between items-center">
         {/* Left Side */}
         <div className="flex items-center gap-3">
@@ -19,7 +19,7 @@ export const Header = () => {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
-          <Button variant='secondary' size="default" className="hover:bg-gray-100 shadow-none cursor-pointer">
+          <Button variant='ghost' size="default" className="bg-gray-50 hover:bg-gray-100 shadow-none cursor-pointer ">
             <User size={16} />
             <span>Invite members</span>
           </Button>
