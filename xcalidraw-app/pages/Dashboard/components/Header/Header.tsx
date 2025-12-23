@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, Search, User, Menu } from "lucide-react";
+import { Bell, Search, User } from "lucide-react";
 import { useAtom } from "jotai";
 
 import { Button } from "@shadcn/components/ui/button";
@@ -7,28 +7,23 @@ import { sidebarOpenAtom } from "../../store";
 
 import { UserDropdown } from "./UserDropdown";
 import { OrgSwitcher } from "./OrgSwitcher";
-import "./Header.scss";
 
 export const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
 
   return (
-    <div className="dashboard-header">
-      <div className="header-content">
-        <div className="header-left">
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle sidebar"
-          >
-            <Menu size={20} />
-          </button>
-          <span className="xcalidraw-logo">Xcalidraw</span>
+    <div className="h-16 px-8 flex items-center justify-center bg-white border-b border-border md:px-4 md:h-14">
+      <div className="w-full flex justify-between items-center">
+        {/* Left Side */}
+        <div className="flex items-center gap-3">
+          <span className="font-excalifont text-[26px] font-semibold text-primary select-none whitespace-nowrap tracking-tight md:text-[22px]">
+            Xcalidraw
+          </span>
         </div>
 
         {/* Right Side Actions */}
-        <div className="header-right">
-          <Button variant='secondary' size="default">
+        <div className="flex items-center gap-2">
+          <Button variant='secondary' size="default" className="max-[480px]:w-7 max-[480px]:h-7 max-[480px]:p-0 max-[480px]:rounded-full max-[480px]:[&>span]:hidden">
             <User size={16} />
             <span>Invite members</span>
           </Button>
