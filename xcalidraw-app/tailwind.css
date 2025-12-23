@@ -1,29 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Ensure Tailwind scans all source files */
-@source "./pages/**/*.{tsx,ts}";
-@source "./shadcn/**/*.{tsx,ts}";
-
-/* Excalifont for logo */
-@font-face {
-  font-family: "Excalifont";
-  src: url("../packages/xcalidraw/fonts/Excalifont/Excalifont-Regular-a88b72a24fb54c9f94e3b5fdaa7481c9.woff2")
-    format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-/*
- ---break---
- */
-@custom-variant dark (&:is(.dark *));
-@custom-variant data-open (&[data-state="open"]);
-
-/*
- * Tailwind CSS v4 + shadcn/ui integration
- * Uses CSS variables from theme.scss for consistency
- */
+/* Explicitly scan all source directories */
+@source "./pages/**/*.{ts,tsx}";
+@source "./shadcn/**/*.{ts,tsx}";
+@source "./components/**/*.{ts,tsx}";
+@source "./index.tsx";
 
 @theme inline {
   /* Custom fonts */
@@ -62,29 +44,17 @@
   --color-input: var(--color-border-outline-variant, #c5c5d0);
   --color-ring: var(--color-primary, #087f5b);
 
-  /* Radius - calculated from base --radius in :root */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* Radius - Mapping to theme.scss variables */
+  --radius-sm: var(--border-radius-sm, 0.25rem);
+  --radius-md: var(--border-radius-md, 0.375rem);
+  --radius-lg: var(--border-radius-lg, 0.5rem);
+  --radius-xl: calc(var(--border-radius-lg, 0.5rem) + 0.25rem);
+  --radius-2xl: calc(var(--border-radius-lg, 0.5rem) + 0.5rem);
 
-  /* Animations for shadcn components */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
+  /* Custom Z-index */
+  --z-9999: 9999;
 
+  /* Keyframes */
   @keyframes accordion-down {
     from { height: 0; }
     to { height: var(--radix-accordion-content-height); }
@@ -93,187 +63,11 @@
     from { height: var(--radix-accordion-content-height); }
     to { height: 0; }
   }
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px)
 }
 
-/* shadcn enter/exit animations */
-@keyframes enter {
-  from {
-    opacity: var(--tw-enter-opacity, 1);
-    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
-  }
-}
-
-@keyframes exit {
-  to {
-    opacity: var(--tw-exit-opacity, 1);
-    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
-  }
-}
-
-/* Animation utilities */
-.animate-in,
-[data-state="open"].animate-in,
-[data-state="open"] .animate-in {
-  animation-name: enter;
-  animation-duration: 150ms;
-  animation-fill-mode: forwards;
-  --tw-enter-opacity: initial;
-  --tw-enter-scale: initial;
-  --tw-enter-rotate: initial;
-  --tw-enter-translate-x: initial;
-  --tw-enter-translate-y: initial;
-}
-
-.animate-out,
-[data-state="closed"].animate-out,
-[data-state="closed"] .animate-out {
-  animation-name: exit;
-  animation-duration: 150ms;
-  animation-fill-mode: forwards;
-  --tw-exit-opacity: initial;
-  --tw-exit-scale: initial;
-  --tw-exit-rotate: initial;
-  --tw-exit-translate-x: initial;
-  --tw-exit-translate-y: initial;
-}
-
-/* Fade animations */
-.fade-in-0 { --tw-enter-opacity: 0; }
-.fade-out-0 { --tw-exit-opacity: 0; }
-
-/* Zoom animations */
-.zoom-in-95 { --tw-enter-scale: .95; }
-.zoom-out-95 { --tw-exit-scale: .95; }
-
-/* Slide in animations */
-.slide-in-from-top-2, [data-side="bottom"] { --tw-enter-translate-y: -0.5rem; }
-.slide-in-from-bottom-2, [data-side="top"] { --tw-enter-translate-y: 0.5rem; }
-.slide-in-from-left-2, [data-side="right"] { --tw-enter-translate-x: -0.5rem; }
-.slide-in-from-right-2, [data-side="left"] { --tw-enter-translate-x: 0.5rem; }
-
-/* Apply animations to dropdown content based on Radix state */
-[data-slot="dropdown-menu-content"][data-state="open"] {
-  animation: enter 150ms ease-out forwards;
-  --tw-enter-opacity: 0;
-  --tw-enter-scale: 0.95;
-}
-
-[data-slot="dropdown-menu-content"][data-state="closed"] {
-  animation: exit 150ms ease-in forwards;
-  --tw-exit-opacity: 0;
-  --tw-exit-scale: 0.95;
-}
-
+/* Base specificity overrides if needed */
 @layer base {
   * {
     @apply border-border;
-  }
-}
-
-/* Ensure shadcn button text colors override inherited styles */
-[data-slot="button"].text-white,
-[data-slot="button"][data-variant="destructive"] {
-  color: white !important;
-}
-
-[data-slot="button"][data-variant="default"] {
-  color: var(--primary-foreground) !important;
-}
-
-/* Ensure dropdown z-index and reset inherited text color */
-[data-slot="dropdown-menu-content"] {
-  z-index: 9999 !important;
-  color: inherit;
-}
-
-/* Allow Tailwind text color to override on any element with text-* class */
-[data-slot="dropdown-menu-content"] [class*="text-"] {
-  color: revert-layer;
-}
-/*
- ---break---
- */
-:root {
-  --radius: 0.75rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.96 0.02 270);
-  --accent-foreground: oklch(0.3 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-/*
- ---break---
- */
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-/*
- ---break---
- */
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
