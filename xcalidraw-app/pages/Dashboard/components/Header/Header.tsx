@@ -1,16 +1,10 @@
-import React from "react";
 import { Bell, Search, User } from "lucide-react";
-import { useAtom } from "jotai";
-
 import { Button } from "@shadcn/components/ui/button";
-import { sidebarOpenAtom } from "../../store";
 
 import { UserDropdown } from "./UserDropdown";
 import { OrgSwitcher } from "./OrgSwitcher";
 
 export const Header = () => {
-  const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
-
   return (
     <div className="h-16 px-8 flex items-center justify-center bg-white border-b border-border md:px-4 md:h-14">
       <div className="w-full flex justify-between items-center">

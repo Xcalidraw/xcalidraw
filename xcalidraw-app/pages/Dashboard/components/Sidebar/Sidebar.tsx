@@ -8,12 +8,9 @@ import {
   Search,
   Plus,
   ChevronRight,
-  ChevronDown,
   Command,
   Hash,
   Loader2,
-  Check,
-  Users,
   Pin,
   MoreVertical,
   Link2,
@@ -32,7 +29,6 @@ import {
   yourSpacesExpandedAtom,
   spacesExpandedAtom,
   sidebarOpenAtom,
-  teamsAtom,
   teamsQueryAtom,
   workspacesQueryAtom,
   deleteSpaceMutationAtom,
@@ -59,24 +55,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
+} from "@shadcn/components/ui/dropdown-menu";
 
 import "./Sidebar.scss";
 import "./TeamSearchDialog.scss";
 import "./SpaceActions.scss";
 import { SidebarSpacesSkeleton } from "./SidebarSpacesSkeleton";
 import { SidebarTeamTriggerSkeleton } from "./SidebarTeamTriggerSkeleton";
-
-// Dummy searchable teams (teams user can join)
-const SEARCHABLE_TEAMS = [
-  { id: '4', name: 'Engineering Team', initials: 'ET', colorClass: 'color-teal', members: 12 },
-  { id: '5', name: 'Product Design', initials: 'PD', colorClass: 'color-purple', members: 8 },
-  { id: '6', name: 'Sales & Marketing', initials: 'SM', colorClass: 'color-orange', members: 15 },
-  { id: '7', name: 'Customer Success', initials: 'CS', colorClass: 'color-teal', members: 6 },
-];
+import { TeamSelectorDropdown } from "./TeamSelectorDropdown";
 
 export const Sidebar = () => {
-  const [currentTeam, setCurrentTeam] = useAtom(currentTeamAtom);
+  const [currentTeam] = useAtom(currentTeamAtom);
   const [yourSpaces] = useAtom(yourSpacesAtom);
   const [spaces] = useAtom(spacesAtom);
   const [yourSpacesExpanded, setYourSpacesExpanded] = useAtom(
@@ -84,18 +73,13 @@ export const Sidebar = () => {
   );
   const [spacesExpanded, setSpacesExpanded] = useAtom(spacesExpandedAtom);
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
-  const [teams] = useAtom(teamsAtom);
   const [searchValue, setSearchValue] = useState("");
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState("");
   const [createSpaceError, setCreateSpaceError] = useState("");
-  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
-  const [isTeamSearchOpen, setIsTeamSearchOpen] = useState(false);
-  const [teamSearchQuery, setTeamSearchQuery] = useState("");
   const [activeNavItem, setActiveNavItem] = useState<'home' | 'recent' | 'starred'>('home');
   const [activeSpaceId, setActiveSpaceId] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const teamSearchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -125,23 +109,6 @@ export const Sidebar = () => {
         }
     }
   }, [location.pathname]);
-
-  // Set default team if not set
-  useEffect(() => {
-    if (teams.length > 0 && !currentTeam.id) {
-      setCurrentTeam(teams[0]);
-    }
-  }, [teams, currentTeam.id, setCurrentTeam]);
-
-  // Focus team search input when dialog opens
-  useEffect(() => {
-    if (isTeamSearchOpen && teamSearchInputRef.current) {
-      // Small delay to ensure dialog is fully rendered
-      setTimeout(() => {
-        teamSearchInputRef.current?.focus();
-      }, 100);
-    }
-  }, [isTeamSearchOpen]);
 
   const handleCreateSpace = async () => {
     if (!newSpaceName.trim()) {
@@ -242,117 +209,9 @@ export const Sidebar = () => {
         {isTeamsLoading ? (
             <SidebarTeamTriggerSkeleton />
         ) : (
-        <DropdownMenu open={isTeamDropdownOpen} onOpenChange={setIsTeamDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <button className={clsx("workspace-btn", { active: isTeamDropdownOpen || isTeamSearchOpen })}>
-              <span className={clsx("workspace-avatar", currentTeam.colorClass)}>
-                {currentTeam.initials}
-              </span>
-              <div className="workspace-details">
-                <span className="name">{currentTeam.name}</span>
-              </div>
-              <ChevronDown size={16} className="workspace-chevron" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="dropdown-menu-width">
-            {/* Search Input */}
-            <div className="dropdown-search-wrapper">
-              <button
-                className="dropdown-search-input"
-                onClick={() => {
-                  setIsTeamDropdownOpen(false);
-                  setIsTeamSearchOpen(true);
-                }}
-              >
-                <Search size={14} className="search-icon" />
-                <span className="search-placeholder">Search teams...</span>
-              </button>
-            </div>
-            
-            <div className="dropdown-menu-header">
-              Your Teams
-            </div>
-            {teams.map((team: any) => (
-              <DropdownMenuItem
-                key={team.id}
-                onClick={() => {
-                  setCurrentTeam(team);
-                }}
-                className={clsx({ selected: currentTeam.id === team.id })}
-              >
-                <span className={clsx("workspace-avatar-small", team.colorClass)}>
-                  {team.initials}
-                </span>
-                <span className="team-name">{team.name}</span>
-                {currentTeam.id === team.id && (
-                  <Check size={16} className="team-check" />
-                )}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="create-team-item">
-              <Plus size={16} />
-              <span>Create Team</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <TeamSelectorDropdown />
         )}
       </header>
-
-      {/* Team Search Dialog */}
-      <Dialog open={isTeamSearchOpen} onOpenChange={setIsTeamSearchOpen}>
-        <DialogContent className="team-search-dialog">
-          <DialogHeader>
-            <DialogTitle>Search Teams</DialogTitle>
-          </DialogHeader>
-          
-          <div className="team-search-input-wrapper">
-            <Search size={20} className="search-icon" />
-            <Input
-              ref={teamSearchInputRef}
-              placeholder="Search teams"
-              value={teamSearchQuery}
-              onChange={(e) => setTeamSearchQuery(e.target.value)}
-              className="team-search-input"
-            />
-          </div>
-
-          <div className="team-search-results">
-            {SEARCHABLE_TEAMS
-              .filter(team => 
-                team.name.toLowerCase().includes(teamSearchQuery.toLowerCase())
-              )
-              .map((team) => (
-                <div key={team.id} className="team-search-item">
-                  <span className={clsx("workspace-avatar-small", team.colorClass)}>
-                    {team.initials}
-                  </span>
-                  <div className="team-info">
-                    <span className="team-name">{team.name}</span>
-                    <span className="team-members">{team.members} members</span>
-                  </div>
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      toast.success(`Joined ${team.name}`);
-                      setIsTeamSearchOpen(false);
-                    }}
-                  >
-                    Join
-                  </Button>
-                </div>
-              ))}
-            {teamSearchQuery && SEARCHABLE_TEAMS.filter(team => 
-              team.name.toLowerCase().includes(teamSearchQuery.toLowerCase())
-            ).length === 0 && (
-              <div className="no-results">
-                <Users size={32} className="no-results-icon" />
-                <p>No teams found</p>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* 2. Search Input */}
       <div className="sidebar-search-container">
