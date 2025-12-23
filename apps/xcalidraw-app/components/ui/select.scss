@@ -1,0 +1,111 @@
+@import "@packages/xcalidraw/css/variables.module.scss";
+
+.xcalidraw {
+  .select-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 3px 12px;
+    font-size: 13px;
+    line-height: 1;
+    height: 32px;
+    background-color: var(--color-surface-high);
+    color: var(--color-on-surface);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: var(--color-gray-20);
+      border-color: var(--color-gray-30);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px var(--color-brand-hover);
+      border-color: var(--color-primary);
+    }
+
+    &[data-disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &[data-placeholder] {
+      color: var(--color-gray-50);
+    }
+  }
+
+  .select-icon {
+    color: var(--color-gray-60);
+    transition: transform 0.2s;
+
+    [data-state="open"] & {
+      transform: rotate(180deg);
+    }
+  }
+
+  .select-content {
+    overflow: hidden;
+    background-color: var(--island-bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-dropdown);
+    border: 1px solid var(--color-border-outline-variant);
+    z-index: 3000;
+  }
+
+  .select-viewport {
+    padding: 4px;
+  }
+
+  .select-item {
+    all: unset;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--color-on-surface);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    position: relative;
+    user-select: none;
+    cursor: pointer;
+
+    &[data-disabled] {
+      color: var(--color-gray-40);
+      pointer-events: none;
+    }
+
+    &[data-highlighted] {
+      outline: none;
+      background-color: var(--color-surface-high);
+    }
+
+    &[data-state="checked"] {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+  }
+
+  .select-item-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+  }
+
+  .select-scroll-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    background-color: var(--island-bg-color);
+    color: var(--color-gray-60);
+    cursor: default;
+  }
+}
