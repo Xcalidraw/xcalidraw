@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
+} from "@shadcn/components/ui/dropdown-menu";
 
 export const UserDropdown = () => {
   const navigate = useNavigate();
@@ -30,33 +30,33 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="user-avatar" style={{ cursor: "pointer", width: "32px", height: "32px", borderRadius: "50%", overflow: "hidden" }}>
+        <div className="cursor-pointer w-8 h-8 rounded-full overflow-hidden ring-offset-2 data-open:ring-2 data-open:ring-primary">
           <img
             src={avatarUrl}
             alt="User"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            className="w-full h-full object-cover"
           />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="user-dropdown-content">
-        <DropdownMenuLabel className="dropdown-header" style={{ display: "flex", flexDirection: "column", gap: "2px", padding: "8px 12px" }}>
-          <span style={{ fontWeight: 500, fontSize: "14px", color: "var(--color-on-surface)" }}>{displayName}</span>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel className="flex flex-col gap-0.5 px-3 py-2">
+          <span className="text-base font-semibold text-gray-900">{displayName}</span>
           {displayName !== displayEmail && (
-            <span style={{ fontSize: "12px", color: "var(--color-muted-darker)", fontWeight: 400 }}>{displayEmail}</span>
+            <span className="text-xs font-normal text-muted-foreground">{displayEmail}</span>
           )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")}>
-          <User size={16} />
+        <DropdownMenuItem onClick={() => navigate("/profile")} className="px-3 py-2 gap-3">
+          <User size={18} />
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/settings")}>
-          <Settings size={16} />
+        <DropdownMenuItem onClick={() => navigate("/settings")} className="px-3 py-2 gap-3">
+          <Settings size={18} />
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red" onClick={handleLogout} style={{ color: "#ef4444" }}>
-          <LogOut size={16} />
+        <DropdownMenuItem className="px-3 py-2.5 gap-3" onClick={handleLogout} variant='destructive'>
+          <LogOut size={18} />
           <span>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
