@@ -17,7 +17,7 @@ const DashboardLayoutContent = () => {
           aria-hidden="true"
         />
       )}
-      <div className="xcalidraw dashboard-layout">
+      <div id="dashboard-root" className="xcalidraw dashboard-layout">
         <Sidebar />
         <div className="dashboard-main">
           <Header />

@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
+      "@/*": ["apps/dashboard/src/*"],
       "@shadcn/*": ["apps/xcalidraw-app/shadcn/*"],
       "@xcalidraw/common": ["./packages/common/src/index.ts"],
       "@xcalidraw/common/*": ["./packages/common/src/*"],
@@ -34,6 +35,6 @@
       "@tailwindcss/vite": ["./node_modules/@tailwindcss/vite/dist/index.d.mts"]
     }
   },
-  "include": ["packages", "apps/xcalidraw-app"],
+  "include": ["packages", "apps/xcalidraw-app", "apps/dashboard"],
   "exclude": ["examples", "dist", "types"]
 }

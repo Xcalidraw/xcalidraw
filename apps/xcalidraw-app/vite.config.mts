@@ -8,6 +8,7 @@ import checker from "vite-plugin-checker";
 import { createHtmlPlugin } from "vite-plugin-html";
 import Sitemap from "vite-plugin-sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { federation } from "@module-federation/vite";
 import { woff2BrowserPlugin } from "../../scripts/woff2/woff2-vite-plugins";
 export default defineConfig(({ mode }) => {
   // To load .env variables
@@ -15,6 +16,7 @@ export default defineConfig(({ mode }) => {
   // https://vitejs.dev/config/
   return {
     server: {
+      host: "localhost",
       port: Number(envVars.VITE_APP_PORT || 3000),
       // open the browser
       open: true,
@@ -127,6 +129,20 @@ export default defineConfig(({ mode }) => {
       assetsInlineLimit: 0,
     },
     plugins: [
+      federation({
+        name: "host",
+        remotes: {
+          dashboard: {
+            type: "module",
+            name: "dashboard",
+            entry: "http://localhost:3001/mf-manifest.json",
+          },
+        },
+        shared: {
+          react: { singleton: true },
+          "react-dom": { singleton: true },
+        },
+      }),
       tailwindcss(),
       Sitemap({
         hostname: "https://xcalidraw.com",

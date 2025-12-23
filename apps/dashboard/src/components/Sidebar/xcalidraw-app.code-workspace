@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "xcalidraw-app",
+			"path": "../../../../.."
+		},
+		{
+			"name": "xcalidraw-backend",
+			"path": "../../../../../../xcalidraw-backend"
+		}
+	],
+	"settings": {}
+}
