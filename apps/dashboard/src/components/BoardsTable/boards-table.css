@@ -1,0 +1,26 @@
+/* BoardsTable Custom Styles - Icon gradients that are too complex for inline Tailwind */
+/* These use CSS custom properties for theming */
+
+/* Board Icon Colors - List View */
+.board-icon.icon-orange { background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%); color: #d46b08; }
+.board-icon.icon-blue { background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%); color: #0050b3; }
+.board-icon.icon-pink { background: linear-gradient(135deg, #fff0f6 0%, #ffd6e7 100%); color: #c41d7f; }
+.board-icon.icon-purple { background: linear-gradient(135deg, #f9f0ff 0%, #efdbff 100%); color: #531dab; }
+.board-icon.icon-green { background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%); color: #389e0d; }
+.board-icon.icon-red { background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%); color: #cf1322; }
+.board-icon.icon-cyan { background: linear-gradient(135deg, #e6fffa 0%, #b5f5ec 100%); color: #08979c; }
+.board-icon.icon-yellow { background: linear-gradient(135deg, #fffbe6 0%, #fff1b8 100%); color: #d48806; }
+.board-icon.icon-indigo { background: linear-gradient(135deg, #eef2ff 0%, #d6e4ff 100%); color: #2f54eb; }
+.board-icon.icon-teal { background: linear-gradient(135deg, #f0fdfa 0%, #b5f5ec 100%); color: #13c2c2; }
+
+/* Preview Placeholder Colors - Grid View */
+.preview-placeholder.bg-orange { background: linear-gradient(135deg, #ffd591 0%, #ffa940 100%); color: #873800; }
+.preview-placeholder.bg-blue { background: linear-gradient(135deg, #91caff 0%, #40a9ff 100%); color: #003a8c; }
+.preview-placeholder.bg-pink { background: linear-gradient(135deg, #ffadd2 0%, #ff85c0 100%); color: #780650; }
+.preview-placeholder.bg-purple { background: linear-gradient(135deg, #d3adf7 0%, #b37feb 100%); color: #391085; }
+.preview-placeholder.bg-green { background: linear-gradient(135deg, #b7eb8f 0%, #73d13d 100%); color: #135200; }
+.preview-placeholder.bg-red { background: linear-gradient(135deg, #ffccc7 0%, #ff7875 100%); color: #a8071a; }
+.preview-placeholder.bg-cyan { background: linear-gradient(135deg, #b5f5ec 0%, #36cfc9 100%); color: #006d75; }
+.preview-placeholder.bg-yellow { background: linear-gradient(135deg, #fffb8f 0%, #ffec3d 100%); color: #ad8b00; }
+.preview-placeholder.bg-indigo { background: linear-gradient(135deg, #d3adf7 0%, #85a5ff 100%); color: #10239e; }
+.preview-placeholder.bg-teal { background: linear-gradient(135deg, #87e8de 0%, #5cdbd3 100%); color: #006d75; }

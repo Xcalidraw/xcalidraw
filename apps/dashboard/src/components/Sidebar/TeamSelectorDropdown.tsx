@@ -7,7 +7,7 @@ import { currentTeamAtom, teamsAtom } from "../../store";
 import {
   Dialog,
   DialogContent,
-} from "../../../../components/ui/dialog";
+} from "../ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuGroup,
-} from "@shadcn/components/ui/dropdown-menu";
-import { cn } from "@shadcn/lib/utils";
+} from "../ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 // Dummy searchable teams
 const SEARCHABLE_TEAMS = [
