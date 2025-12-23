@@ -2,7 +2,6 @@ import React from "react";
 import { Check, ChevronDown, Building2, Plus } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
-import clsx from "clsx";
 
 import {
   DropdownMenu,
@@ -11,8 +10,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
-import { Button } from "../../../../components/ui/button";
+} from "@shadcn/components/ui/dropdown-menu";
+import { Button } from "@shadcn/components/ui/button";
 import { useListUserOrgsQuery } from "../../../../hooks/api.hooks";
 import { currentTeamAtom } from "../../store";
 
@@ -70,9 +69,9 @@ export const OrgSwitcher = () => {
           <DropdownMenuItem
             key={org.org_id}
             onClick={() => handleSwitchOrg(org.org_id)}
-            className="flex items-center cursor-pointer"
+            className="flex items-center cursor-pointer px-3 py-2 gap-3"
           >
-            <div className="w-4 mr-2 flex items-center justify-center">
+            <div className="flex items-center justify-center">
               {currentOrg.org_id === org.org_id && (
                 <Check size={14} className="text-primary" />
               )}
@@ -81,8 +80,8 @@ export const OrgSwitcher = () => {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
-          <Plus size={14} className="mr-2" />
+        <DropdownMenuItem className="cursor-pointer whitespace-nowrap px-3 py-2 gap-3">
+          <Plus size={14} />
           Add another account
         </DropdownMenuItem>
       </DropdownMenuContent>
