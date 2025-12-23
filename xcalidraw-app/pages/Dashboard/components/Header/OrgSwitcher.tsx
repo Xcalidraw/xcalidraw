@@ -50,7 +50,7 @@ export const OrgSwitcher = () => {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="org-switcher-trigger gap-2 px-2 font-normal hover:bg-[var(--color-surface-high)] hover:text-[var(--color-on-surface)]"
+          className="gap-2 px-2 font-normal hover:bg-(--color-surface-high) hover:text-(--color-on-surface) data-[state=open]:bg-(--color-surface-high) data-[state=open]:text-(--color-on-surface)"
         >
           <div className="flex items-center justify-center w-5 h-5 rounded bg-primary/10 text-primary">
             <Building2 size={12} />

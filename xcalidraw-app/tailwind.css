@@ -1,5 +1,19 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+/* Ensure Tailwind scans all source files */
+@source "./pages/**/*.{tsx,ts}";
+@source "./shadcn/**/*.{tsx,ts}";
+
+/* Excalifont for logo */
+@font-face {
+  font-family: "Excalifont";
+  src: url("../packages/xcalidraw/fonts/Excalifont/Excalifont-Regular-a88b72a24fb54c9f94e3b5fdaa7481c9.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 /*
  ---break---
  */
@@ -12,6 +26,9 @@
  */
 
 @theme inline {
+  /* Custom fonts */
+  --font-excalifont: "Excalifont", "Xiaolai", sans-serif;
+
   /* Map shadcn color utilities to theme.scss variables */
   --color-background: var(--island-bg-color, #ffffff);
   --color-foreground: var(--color-on-surface, #1b1b1f);
