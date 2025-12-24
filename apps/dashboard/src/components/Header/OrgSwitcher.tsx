@@ -62,7 +62,7 @@ export const OrgSwitcher = () => {
           <IconSelector size={16} className="text-gray-400" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[240px] p-2 rounded-2xl shadow-xl border-gray-300">
+      <DropdownMenuContent align="end" className="w-[240px]">
         <DropdownMenuLabel className="text-xs font-normal text-muted-foreground py-2 uppercase tracking-wider">
           Organizations
         </DropdownMenuLabel>
@@ -72,7 +72,7 @@ export const OrgSwitcher = () => {
             <DropdownMenuItem
               key={org.org_id}
               onClick={() => handleSwitchOrg(org.org_id)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden"
+              className="group"
             >
               <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors shrink-0">
                  <IconBuildingCommunity className="!w-6 !h-6" />
@@ -90,9 +90,9 @@ export const OrgSwitcher = () => {
           ))}
         </div>
 
-        <DropdownMenuSeparator className="my-2 bg-gray-200" />
+        <DropdownMenuSeparator className="my-2" />
         
-        <DropdownMenuItem className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group text-muted-foreground hover:text-foreground">
+        <DropdownMenuItem className="group text-muted-foreground hover:text-foreground">
           <div className="flex items-center justify-center w-8 h-8 rounded-md border border-dashed border-gray-300 group-hover:border-gray-400 transition-colors shrink-0">
             <IconPlus size={16} />
           </div>

@@ -108,7 +108,7 @@ export const NotificationsDropdown = () => {
           <span className="absolute top-1 right-1 w-2 h-2 bg-green-700 rounded-full ring-2 ring-white" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[380px] p-0 rounded-2xl shadow-xl border-gray-300 overflow-hidden font-sans">
+      <DropdownMenuContent align="end" className="w-[380px] p-0 overflow-hidden font-sans">
         <Tabs defaultValue="All" className="w-full">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white">
