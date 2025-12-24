@@ -112,6 +112,7 @@ import {
   DialogDescription,
 } from "../../../../components/ui/dialog";
 import { toast } from "sonner";
+import { IconPlus } from "@tabler/icons-react";
 
 interface BoardsTableProps {
   title?: string;
@@ -221,8 +222,9 @@ export const BoardsTable = ({
               Explore templates
             </Button>
           )}
-          <Button variant="outline" size="default" onClick={() => setIsCreateModalOpen(true)}>
-            + Create new
+          <Button variant='default' size="default" onClick={() => setIsCreateModalOpen(true)}>
+            <IconPlus size={16} />
+            <span>Create new</span>
           </Button>
         </div>
       </div>
