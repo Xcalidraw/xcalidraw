@@ -51,7 +51,7 @@ export const OrgSwitcher = () => {
         <Button 
           variant="ghost" 
           size='default' 
-          className="bg-gray-50 hover:bg-gray-100 gap-2 px-1 font-normal transition-colors shadow-none cursor-pointer"
+          className="bg-gray-50 hover:bg-gray-100 gap-2 !px-2 font-normal transition-colors shadow-none cursor-pointer"
         >
           <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 text-primary">
             <IconBuildingCommunity size={16} />
