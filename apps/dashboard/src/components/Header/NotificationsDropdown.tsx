@@ -186,10 +186,10 @@ const NotificationList = ({ items }: { items: typeof notifications }) => {
             {/* Buttons for Invite */}
             {item.type === "invite" && (
               <div className="flex gap-2 mt-2">
-                <Button variant="outline" size="sm" className="h-7 px-3 bg-white hover:bg-gray-50 border-gray-200 text-gray-700 font-medium rounded-md shadow-sm text-xs">
+                <Button variant="outline" size="sm" className="cursor-pointer">
                   Decline
                 </Button>
-                <Button size="sm" className="h-7 px-3 bg-black hover:bg-black/90 text-white font-medium rounded-md shadow-sm text-xs">
+                <Button size="sm" className="cursor-pointer">
                   Accept
                 </Button>
               </div>
