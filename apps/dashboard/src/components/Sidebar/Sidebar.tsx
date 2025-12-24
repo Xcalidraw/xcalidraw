@@ -25,8 +25,6 @@ import {
   currentTeamAtom,
   yourSpacesAtom,
   spacesAtom,
-  yourSpacesExpandedAtom,
-  spacesExpandedAtom,
   sidebarOpenAtom,
   teamsQueryAtom,
   workspacesQueryAtom,
@@ -59,13 +57,18 @@ import {
 import { SidebarSpacesSkeleton } from "./SidebarSpacesSkeleton";
 import { SidebarTeamTriggerSkeleton } from "./SidebarTeamTriggerSkeleton";
 import { TeamSelectorDropdown } from "./TeamSelectorDropdown";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { Field, FieldLabel, FieldError } from "../ui/field";
 
 export const Sidebar = () => {
   const [currentTeam] = useAtom(currentTeamAtom);
   const [yourSpaces] = useAtom(yourSpacesAtom);
   const [spaces] = useAtom(spacesAtom);
-  const [yourSpacesExpanded, setYourSpacesExpanded] = useAtom(yourSpacesExpandedAtom);
-  const [spacesExpanded, setSpacesExpanded] = useAtom(spacesExpandedAtom);
   const [sidebarOpen, setSidebarOpen] = useAtom(sidebarOpenAtom);
   const [searchValue, setSearchValue] = useState("");
   const [isCreateSpaceDialogOpen, setIsCreateSpaceDialogOpen] = useState(false);
@@ -135,96 +138,117 @@ export const Sidebar = () => {
   }) => (
     <button 
       type="button" 
-      className={`relative flex items-center justify-between w-full px-3 py-2 rounded-md text-sm font-medium transition-colors
+      className={`relative flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors
         ${active 
-          ? 'bg-primary/10 text-primary before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[3px] before:h-5 before:bg-primary before:rounded-r' 
+          ? 'bg-primary/10 text-primary font-medium' 
           : 'text-muted-foreground hover:bg-muted hover:text-foreground'
         }`}
       onClick={onClick}
     >
       <div className="flex items-center gap-2.5">
-        <Icon className={`${active ? 'text-primary' : 'text-muted-foreground'}`} size={18} strokeWidth={1.5} />
+        <Icon className={active ? 'text-primary' : 'text-muted-foreground'} size={18} strokeWidth={active ? 2 : 1.5} />
         <span>{label}</span>
       </div>
-      {badge && <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${active ? 'bg-white/60 text-primary' : 'bg-muted text-muted-foreground'}`}>{badge}</span>}
+      {badge && (
+        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full min-w-[18px] text-center
+          ${active ? 'bg-primary text-white' : 'bg-muted-foreground/10 text-muted-foreground'}`}>
+          {badge}
+        </span>
+      )}
     </button>
   );
 
-  const SpaceGroup = ({ title, expanded, onToggle, children, onAdd }: {
-    title: string; expanded: boolean; onToggle: () => void; children: React.ReactNode; onAdd?: () => void;
-  }) => (
-    <div>
-      <div className="flex items-center justify-between pb-5 group">
-        <button className="flex items-center gap-1.5 text-[11px] font-semibold uppercase text-muted-foreground tracking-wide hover:text-foreground" onClick={onToggle}>
-          <ChevronRight size={12} strokeWidth={3} className={`transition-transform ${expanded ? 'rotate-90' : ''}`} />
-          <span>{title}</span>
-        </button>
-        {onAdd && (
-          <button className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary" onClick={onAdd}>
-            <Plus size={14} strokeWidth={2} />
-          </button>
-        )}
-      </div>
-      {expanded && <div className="flex flex-col gap-1">{children}</div>}
-    </div>
-  );
 
-  const SpaceItem = ({ space, isActive }: { space: { id: string; name: string }; isActive: boolean }) => (
-    <div 
-      className="relative cursor-pointer group"
-      onClick={() => {
-        setActiveSpaceId(space.id);
-        setActiveNavItem(null as any);
-        navigate(`/dashboard/space/${space.id}`);
-      }}
-    >
-      <div className={`flex items-center gap-2 w-full px-3 py-2 h-10 rounded-md text-sm transition-colors
-        ${isActive 
-          ? 'bg-primary/10 text-primary before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[3px] before:h-5 before:bg-primary before:rounded-r' 
-          : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-        }`}
+
+  const SpaceItem = ({ space, isActive }: { space: { id: string; name: string }; isActive: boolean }) => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    
+    return (
+      <div 
+        className="relative cursor-pointer group"
+        onClick={() => {
+          setActiveSpaceId(space.id);
+          setActiveNavItem(null as any);
+          navigate(`/dashboard/space/${space.id}`);
+        }}
       >
-        <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-muted-foreground/40 group-hover:bg-muted-foreground/60'}`} />
-        <span className="flex-1 min-w-0 truncate">{space.name}</span>
-        <div className="flex items-center gap-0 w-0 opacity-0 overflow-hidden group-hover:w-auto group-hover:opacity-100 transition-all h-[30px] -mr-2">
-          <button 
-            className="flex items-center justify-center h-full aspect-square rounded-md text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-            onClick={(e) => { e.stopPropagation(); toast.success('Pinned'); }}
+        <div className={`flex items-center gap-2.5 w-full px-3 pr-2 py-2 rounded-lg text-sm transition-colors
+          ${isActive 
+            ? 'bg-primary/10 text-primary font-medium' 
+            : dropdownOpen 
+              ? 'bg-muted text-foreground'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+          }`}
+        >
+          <Hash size={16} strokeWidth={isActive ? 2 : 1.5} className={`shrink-0 ${isActive ? 'text-primary' : dropdownOpen ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`} />
+          <span className="flex-1 min-w-0 truncate">{space.name}</span>
+          <div 
+            className={`flex items-center gap-0.5 shrink-0 overflow-hidden transition-all duration-150 ${dropdownOpen ? 'w-auto opacity-100' : 'w-0 opacity-0 group-hover:w-auto group-hover:opacity-100'}`}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
-            <Pin size={14} />
-          </button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button 
-                className="flex items-center justify-center h-full aspect-square rounded-md text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-                onClick={(e) => e.stopPropagation()}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost"
+                  size="icon-sm"
+                  className="h-7 w-7 text-muted-foreground hover:!text-primary hover:!bg-primary/10 cursor-pointer"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    e.preventDefault();
+                    toast.success('Pinned'); 
+                  }}
+                >
+                  <Pin size={14} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Pin to top</TooltipContent>
+            </Tooltip>
+            <DropdownMenu modal={false} open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost"
+                      size="icon-sm"
+                      className={`h-7 w-7 cursor-pointer ${dropdownOpen ? 'bg-primary/10 text-primary hover:!bg-primary/20' : 'text-muted-foreground hover:!text-primary hover:!bg-primary/10'}`}
+                      onPointerDown={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical size={14} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="top">More options</TooltipContent>
+              </Tooltip>
+              <DropdownMenuContent 
+                side="right" 
+                align="start"
+                className="w-[180px] p-1.5 rounded-xl shadow-lg border-gray-300"
               >
-                <MoreVertical size={14} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="right" align="start" className="min-w-[180px]">
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast.success('Link copied'); }}>
-                <Link2 size={14} /><span>Copy link</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast.success('Share dialog'); }}>
-                <Share2 size={14} /><span>Share</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast.success('Rename dialog'); }}>
-                <Edit2 size={14} /><span>Rename</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={(e) => { e.stopPropagation(); setSpaceToDelete({ id: space.id, name: space.name }); }}>
-                <Trash2 size={14} /><span>Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer" onClick={(e) => { e.stopPropagation(); toast.success('Link copied'); }}>
+                  <Link2 size={15} className="text-muted-foreground" /><span className="text-sm">Copy link</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer" onClick={(e) => { e.stopPropagation(); toast.success('Share dialog'); }}>
+                  <Share2 size={15} className="text-muted-foreground" /><span className="text-sm">Share</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer" onClick={(e) => { e.stopPropagation(); toast.success('Rename dialog'); }}>
+                  <Edit2 size={15} className="text-muted-foreground" /><span className="text-sm">Rename</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="my-1" />
+                <DropdownMenuItem variant="destructive" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer" onClick={(e) => { e.stopPropagation(); setSpaceToDelete({ id: space.id, name: space.name }); }}>
+                  <Trash2 size={15} /><span className="text-sm">Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <aside className={`w-64 h-dvh flex flex-col flex-shrink-0 bg-card border-r border-border text-foreground font-sans select-none p-2.5 pt-2.5 pb-0 gap-3
+    <aside className={`w-68 h-dvh flex flex-col flex-shrink-0 bg-card border-r border-border text-foreground font-sans select-none p-2.5 pt-2.5 pb-0 gap-3
       max-md:fixed max-md:left-0 max-md:top-0 max-md:z-[1000] max-md:-translate-x-full max-md:transition-transform max-md:duration-300 max-md:shadow-lg
       ${sidebarOpen ? 'max-md:translate-x-0' : ''}`}
     >
@@ -243,7 +267,7 @@ export const Sidebar = () => {
             placeholder="Search..."
             value={searchValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
-            className="pl-9 pr-14 h-[38px] text-sm w-full bg-muted"
+            className="pl-9 pr-14 h-[38px] text-sm w-full bg-muted !border-transparent"
           />
           <div className="absolute right-2 flex items-center gap-0.5 text-[10px] px-1 py-0.5 bg-card rounded text-muted-foreground shadow-sm pointer-events-none z-10">
             <Command size={10} />K
@@ -259,53 +283,90 @@ export const Sidebar = () => {
           <NavItem icon={Star} label="Starred" badge="3" active={activeNavItem === 'starred'} onClick={() => { setActiveNavItem('starred'); setActiveSpaceId(null); }} />
         </nav>
 
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-1" />
+        <div className="w-full h-px bg-border/50 my-3" />
 
         {/* 4. Spaces */}
         <div className="flex-1 flex flex-col relative min-h-0">
-          <div className="flex items-center justify-between pb-5 flex-shrink-0">
-            <span className="text-xs font-bold uppercase text-foreground tracking-wider">Spaces</span>
+          <div className="flex items-center justify-between pb-3 shrink-0">
+            <span className="text-xs font-semibold uppercase text-foreground tracking-wide">Spaces</span>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="text-muted-foreground p-1.5 rounded-md border border-transparent hover:text-primary hover:bg-primary/10 hover:border-primary w-7 h-7 flex items-center justify-center" onClick={() => setIsCreateSpaceDialogOpen(true)}>
-                  <Plus size={18} strokeWidth={2} />
-                </button>
+                <Button 
+                  variant="secondary" 
+                  size="icon" 
+                  className="h-7 w-7 shadow-none cursor-pointer"
+                  onClick={() => setIsCreateSpaceDialogOpen(true)}
+                >
+                  <Plus size={16} strokeWidth={2} />
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="right"><p>Create Space</p></TooltipContent>
+              <TooltipContent side="right">Create a Space</TooltipContent>
             </Tooltip>
           </div>
           
-          <div className="flex-1 overflow-y-auto min-h-0 flex flex-col gap-5 -mr-2.5 pr-2.5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/30">
-            <SpaceGroup title="Your Spaces" expanded={yourSpacesExpanded} onToggle={() => setYourSpacesExpanded(!yourSpacesExpanded)}>
-              {isLoading ? <SidebarSpacesSkeleton /> : yourSpaces.map((space) => <SpaceItem key={space.id} space={space} isActive={activeSpaceId === space.id} />)}
-              <div className="h-2.5" />
-            </SpaceGroup>
+          <div className="flex-1 overflow-y-auto min-h-0 -mr-2.5 pr-2.5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/30">
+            <Accordion type="multiple" defaultValue={["your-spaces", "team-spaces"]} className="w-full">
+              <AccordionItem value="your-spaces" className="border-none">
+                <AccordionTrigger className="py-2 text-[11px] font-medium uppercase tracking-wider hover:text-foreground cursor-pointer hover:underline hover:text-primary">
+                  Your Spaces
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <div className="flex flex-col gap-0.5">
+                    {isLoading ? <SidebarSpacesSkeleton /> : yourSpaces.map((space) => <SpaceItem key={space.id} space={space} isActive={activeSpaceId === space.id} />)}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-            <SpaceGroup title="Team Spaces" expanded={spacesExpanded} onToggle={() => setSpacesExpanded(!spacesExpanded)}>
-              {isLoading ? <SidebarSpacesSkeleton /> : spaces.map((space) => <SpaceItem key={space.id} space={space} isActive={activeSpaceId === space.id} />)}
-              <div className="h-2.5" />
-            </SpaceGroup>
+              <AccordionItem value="team-spaces" className="border-none">
+                <AccordionTrigger className="py-2 text-[11px] font-medium uppercase tracking-wider hover:text-foreground cursor-pointer hover:underline hover:text-primary">
+                  Team Spaces
+                </AccordionTrigger>
+                <AccordionContent className="pb-4">
+                  <div className="flex flex-col gap-0.5">
+                    {isLoading ? <SidebarSpacesSkeleton /> : spaces.map((space) => <SpaceItem key={space.id} space={space} isActive={activeSpaceId === space.id} />)}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </TooltipProvider>
 
       {/* Create Space Dialog */}
       <Dialog open={isCreateSpaceDialogOpen} onOpenChange={setIsCreateSpaceDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create Space</DialogTitle>
-            <DialogDescription>Organize related boards into a single project area.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="space-name" className="text-sm font-medium">Space Name</label>
-              <Input id="space-name" type="text" placeholder="Enter space name..." value={newSpaceName} onChange={(e) => { setNewSpaceName(e.target.value); if (createSpaceError) setCreateSpaceError(""); }} onKeyDown={(e) => { if (e.key === "Enter") handleCreateSpace(); }} autoFocus />
-              {createSpaceError && <span className="text-destructive text-xs">{createSpaceError}</span>}
+        <DialogContent className="sm:max-w-[420px] p-0 gap-0 rounded-xl overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-4">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Hash size={20} className="text-primary" />
+              </div>
+              <div>
+                <DialogTitle className="text-lg font-semibold">Create Space</DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">Organize related boards into a single project area.</DialogDescription>
+              </div>
             </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => setIsCreateSpaceDialogOpen(false)} disabled={isCreatePending}>Cancel</Button>
-              <Button onClick={handleCreateSpace} disabled={isCreatePending}>
-                {isCreatePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating...</> : "Create"}
+          </DialogHeader>
+          <div className="px-6 pb-6 space-y-5">
+            <Field>
+              <FieldLabel htmlFor="space-name">Space Name</FieldLabel>
+              <Input 
+                id="space-name" 
+                type="text" 
+                placeholder="e.g., Marketing Campaign, Product Roadmap..." 
+                value={newSpaceName} 
+                onChange={(e) => { setNewSpaceName(e.target.value); if (createSpaceError) setCreateSpaceError(""); }} 
+                onKeyDown={(e) => { if (e.key === "Enter") handleCreateSpace(); }} 
+                className="h-11 px-4 border-gray-200 focus:border-primary focus:ring-primary/20"
+                autoFocus 
+              />
+              {createSpaceError && <FieldError>{createSpaceError}</FieldError>}
+            </Field>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setIsCreateSpaceDialogOpen(false)} disabled={isCreatePending} className="px-4 cursor-pointer">
+                Cancel
+              </Button>
+              <Button onClick={handleCreateSpace} disabled={isCreatePending || !newSpaceName.trim()} className="px-5 cursor-pointer">
+                {isCreatePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating...</> : "Create Space"}
               </Button>
             </div>
           </div>
