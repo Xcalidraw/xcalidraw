@@ -619,16 +619,21 @@ export const BoardsTable = ({
       
       {/* Delete Board Confirmation Dialog */}
       <Dialog open={!!boardToDelete} onOpenChange={(open) => !open && setBoardToDelete(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Board</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete "{boardToDelete?.name}"? This action cannot be undone.
-            </DialogDescription>
+        <DialogContent className="max-w-sm">
+          <DialogHeader className="flex-row gap-4 items-start">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+              <Trash2 className="h-5 w-5 text-destructive" />
+            </div>
+            <div className="space-y-1">
+              <DialogTitle>Delete Board</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete <span className="font-medium text-foreground">"{boardToDelete?.name}"</span>? This action cannot be undone.
+              </DialogDescription>
+            </div>
           </DialogHeader>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 pt-2">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => setBoardToDelete(null)}
               disabled={isDeleting}
             >
@@ -636,6 +641,7 @@ export const BoardsTable = ({
             </Button>
             <Button
               variant="destructive"
+              className="gap-1.5"
               onClick={async () => {
                 if (!boardToDelete) return;
                 try {
@@ -656,6 +662,7 @@ export const BoardsTable = ({
               }}
               disabled={isDeleting}
             >
+              <Trash2 size={14} />
               {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           </div>
