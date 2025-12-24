@@ -52,7 +52,7 @@ export const UserDropdown = () => {
         </div>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-[280px] p-2 rounded-2xl shadow-xl border-gray-300">
+      <DropdownMenuContent align="end" className="w-[280px]">
         <div className="flex items-center justify-between p-3 mb-1 border border-gray-100 rounded-xl">
           <div className="flex flex-col min-w-0 mr-2">
             <span className="font-semibold text-[15px] truncate text-foreground">{displayName}</span>
@@ -70,13 +70,13 @@ export const UserDropdown = () => {
         </div>
 
           {/* Profile */}
-          <DropdownMenuItem onClick={() => navigate("/profile")} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden">
+          <DropdownMenuItem onClick={() => navigate("/profile")} className="group">
             <IconUser className="!w-5 !h-5 text-muted-foreground group-focus:text-foreground group-hover:text-foreground shrink-0" />
             <span className="flex-1 text-sm text-foreground">Profile</span>
           </DropdownMenuItem>
           
           {/* Subscription */}
-          <DropdownMenuItem onClick={() => navigate("/subscription")} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden">
+          <DropdownMenuItem onClick={() => navigate("/subscription")} className="group">
             <IconCreditCard className="!w-5 !h-5 text-muted-foreground group-focus:text-foreground group-hover:text-foreground shrink-0" />
             <span className="flex-1 text-sm text-foreground">Subscription</span>
             <Badge variant="success" className="px-1 pr-2 gap-1 text-xs tracking-wide font-normal rounded-full shadow-none">
@@ -86,27 +86,27 @@ export const UserDropdown = () => {
           </DropdownMenuItem>
 
           {/* Settings */}
-          <DropdownMenuItem onClick={() => navigate("/settings")} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden">
+          <DropdownMenuItem onClick={() => navigate("/settings")} className="group">
             <IconSettings className="!w-5 !h-5 text-muted-foreground group-focus:text-foreground group-hover:text-foreground shrink-0" />
             <span className="flex-1 text-sm text-foreground">Settings</span>
           </DropdownMenuItem>
           
           {/* Admin Settings */}
-          <DropdownMenuItem onClick={() => navigate("/admin")} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden">
+          <DropdownMenuItem onClick={() => navigate("/admin")} className="group">
             <IconShieldLock className="!w-5 !h-5 text-muted-foreground group-focus:text-foreground group-hover:text-foreground shrink-0" />
             <span className="flex-1 text-sm text-foreground">Admin Settings</span>
           </DropdownMenuItem>
 
-        <DropdownMenuSeparator className="my-2 bg-gray-200" />
+        <DropdownMenuSeparator className="my-2" />
 
         {/* Help Center */}
-        <DropdownMenuItem onClick={() => {}} className="flex items-center gap-3 px-3 py-2.5 rounded-lg focus:bg-gray-100 hover:bg-gray-100 cursor-pointer group relative overflow-hidden">
+        <DropdownMenuItem onClick={() => {}} className="group">
           <IconHelp className="!w-5 !h-5 shrink-0" />
           <span className="flex-1 text-sm">Help Center</span>
         </DropdownMenuItem>
         
         {/* Logout */}
-        <DropdownMenuItem variant="destructive" onClick={handleLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:text-destructive focus:text-destructive hover:bg-destructive/10 focus:bg-destructive/10 cursor-pointer">
+        <DropdownMenuItem variant="destructive" onClick={handleLogout}>
           <IconLogout className="!w-5 !h-5 shrink-0" />
           <span className="flex-1 text-sm">Logout</span>
         </DropdownMenuItem>

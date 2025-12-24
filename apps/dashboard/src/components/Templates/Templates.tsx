@@ -51,14 +51,14 @@ export const Templates = () => {
       {/* Header */}
       <div className="flex items-center justify-between px-8 max-md:px-4">
         <Select value={selectedRole} onValueChange={setSelectedRole}>
-          <SelectTrigger className="w-auto h-9 px-3 bg-secondary hover:bg-secondary/80 border-none shadow-none rounded-lg text-foreground focus:ring-0 focus:ring-offset-0">
+          <SelectTrigger className="w-auto">
             <SelectValue>
               <span className="text-sm font-medium">Templates for {selectedRole}</span>
             </SelectValue>
           </SelectTrigger>
-          <SelectContent className="w-56 p-2 rounded-2xl border-border">
+          <SelectContent className="w-56">
             {roleOptions.map((role) => (
-              <SelectItem key={role} value={role} className="px-3 py-2.5 rounded-lg cursor-pointer">
+              <SelectItem key={role} value={role}>
                 {role}
               </SelectItem>
             ))}
