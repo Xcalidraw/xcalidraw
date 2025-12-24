@@ -119,11 +119,12 @@ export const boardsQueryAtom = atomWithInfiniteQuery((get) => {
   const pagination = get(boardsPaginationAtom);
   
   return {
-    queryKey: ['boards', context.spaceId, context.teamId, sortBy, search, pagination.limit],
-    queryFn: async ({ pageParam = 0 }: { pageParam?: number }) => {
+    queryKey: ['boards', context.spaceId, context.teamId, sortBy, search, pagination.limit] as const,
+    queryFn: async ({ pageParam }) => {
+      const offset = (pageParam as number) ?? 0;
       const params = {
         limit: pagination.limit,
-        offset: pageParam,
+        offset,
         sortBy,
         search
       };
@@ -152,7 +153,7 @@ export const boardsQueryAtom = atomWithInfiniteQuery((get) => {
       return nextOffset;
     },
     enabled: !!(context.spaceId || context.teamId),
-    keepPreviousData: true, 
+    staleTime: 5000,
   };
 });
 

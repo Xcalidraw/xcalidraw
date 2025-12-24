@@ -1,9 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
 import { useAtom } from "jotai";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Grid,
-  List,
   MoreHorizontal,
   Star,
   Layout,
@@ -92,6 +89,7 @@ import { filteredBoardsAtom, viewModeAtom, toggleStarAtom, boardsAtom, sortByAto
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,6 +110,7 @@ import {
   DialogDescription,
 } from "../ui/dialog";
 import { toast } from "sonner";
+import { IconPlus, IconTemplate, IconLayoutGrid, IconList } from "@tabler/icons-react";
 
 interface BoardsTableProps {
   title?: string;
@@ -217,26 +216,28 @@ export const BoardsTable = ({
         </div>
         <div className="flex gap-3 flex-wrap max-sm:w-full max-sm:gap-2">
           {!hideTemplatesBtn && (
-            <Button variant="secondary" size="default" className="max-sm:hidden">
-              Explore templates
+            <Button variant="secondary" size="default" className="max-sm:hidden cursor-pointer">
+              <IconTemplate className="!w-3 !h-3" />
+              <span>Explore templates</span>
             </Button>
           )}
-          <Button variant="outline" size="default" onClick={() => setIsCreateModalOpen(true)} className="max-sm:flex-1">
-            + Create new
+          <Button variant='default' size="default" onClick={() => setIsCreateModalOpen(true)} className="max-sm:flex-1 cursor-pointer">
+            <IconPlus className="!w-3 !h-3" />
+            <span>Create new</span>
           </Button>
         </div>
       </div>
 
       <div className="flex items-center justify-between mb-4 flex-wrap gap-4 max-md:gap-3 max-sm:mb-3">
         <div className="flex items-center gap-6 flex-wrap flex-1 max-md:gap-4 max-sm:gap-2 max-sm:min-w-0">
-          <div className="flex items-center gap-2 text-[13px] max-sm:flex-1">
+          <div className="flex items-center gap-2 text-[13px]">
             <span className="text-muted-foreground whitespace-nowrap max-sm:hidden">Filter by</span>
             <Select
               value={filterBy}
               onValueChange={setFilterBy}
               disabled={isFiltersDisabled}
             >
-              <SelectTrigger className="w-[140px] max-sm:w-full h-8 text-[13px]">
+              <SelectTrigger className="w-[140px] h-8 text-[13px] cursor-pointer">
                 <SelectValue placeholder="All boards" />
               </SelectTrigger>
               <SelectContent>
@@ -247,13 +248,13 @@ export const BoardsTable = ({
             </Select>
           </div>
 
-          <div className="flex items-center gap-2 text-[13px] max-sm:flex-1">
+          <div className="flex items-center gap-2 text-[13px]">
             <Select
               value={ownedBy}
               onValueChange={setOwnedBy}
               disabled={isFiltersDisabled}
             >
-              <SelectTrigger className="w-[160px] max-sm:w-full h-8 text-[13px]">
+              <SelectTrigger className="w-[160px] h-8 text-[13px] cursor-pointer">
                 <SelectValue placeholder="Owned by anyone" />
               </SelectTrigger>
               <SelectContent>
@@ -264,14 +265,14 @@ export const BoardsTable = ({
             </Select>
           </div>
 
-          <div className="flex items-center gap-2 text-[13px] max-sm:flex-1">
+          <div className="flex items-center gap-2 text-[13px]">
             <span className="text-muted-foreground whitespace-nowrap max-sm:hidden">Sort by</span>
             <Select 
               value={sortBy} 
               onValueChange={(val) => setSortBy(val as any)} 
               disabled={isFiltersDisabled}
             >
-              <SelectTrigger className="w-[140px] max-sm:w-full h-8 text-[13px]">
+              <SelectTrigger className="w-[140px] h-8 text-[13px] cursor-pointer">
                 <SelectValue placeholder="Last opened" />
               </SelectTrigger>
               <SelectContent>
@@ -283,20 +284,16 @@ export const BoardsTable = ({
           </div>
         </div>
 
-        <div className="flex bg-muted p-0.5 rounded-md shrink-0">
-          <button
-            className={clsx("flex items-center justify-center min-w-[36px] h-8 rounded px-2 bg-transparent text-muted-foreground transition-all hover:bg-background/50", { "bg-background text-foreground shadow-sm": viewMode === "grid" })}
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid size={18} />
-          </button>
-          <button
-            className={clsx("flex items-center justify-center min-w-[36px] h-8 rounded px-2 bg-transparent text-muted-foreground transition-all hover:bg-background/50", { "bg-background text-foreground shadow-sm": viewMode === "list" })}
-            onClick={() => setViewMode("list")}
-          >
-            <List size={18} />
-          </button>
-        </div>
+        <Tabs value={viewMode} onValueChange={(val) => setViewMode(val as "grid" | "list")} className="shrink-0">
+          <TabsList className="h-9 p-0.5">
+            <TabsTrigger value="grid" className="px-2 h-8 data-[state=active]:shadow-sm cursor-pointer">
+              <IconLayoutGrid size={18} />
+            </TabsTrigger>
+            <TabsTrigger value="list" className="px-2 h-8 data-[state=active]:shadow-sm cursor-pointer">
+              <IconList size={18} />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {!isLoading && boards.length === 0 ? (
@@ -425,7 +422,7 @@ export const BoardsTable = ({
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
-                                className="danger"
+                                variant="destructive"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setBoardToDelete({ id: board.id, name: board.name });
@@ -435,7 +432,7 @@ export const BoardsTable = ({
                                 Delete
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                className="warning"
+                                variant='warning'
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <LogOut size={14} />
@@ -541,7 +538,7 @@ export const BoardsTable = ({
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        className="danger"
+                        variant="destructive"
                         onClick={(e) => {
                           e.stopPropagation();
                           setBoardToDelete({ id: board.id, name: board.name });
@@ -551,7 +548,7 @@ export const BoardsTable = ({
                         Delete
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="warning"
+                        variant="destructive"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <LogOut size={14} />
