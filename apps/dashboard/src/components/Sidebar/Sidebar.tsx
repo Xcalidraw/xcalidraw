@@ -64,6 +64,8 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Field, FieldLabel, FieldError } from "../ui/field";
+import { Alert, AlertDescription } from "../ui/alert";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 export const Sidebar = () => {
   const [currentTeam] = useAtom(currentTeamAtom);
@@ -375,30 +377,50 @@ export const Sidebar = () => {
       
       {/* Delete Space Dialog */}
       <Dialog open={!!spaceToDelete} onOpenChange={(open) => !open && setSpaceToDelete(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Space</DialogTitle>
-            <DialogDescription className="space-y-2">
-              <p>Are you sure you want to delete "{spaceToDelete?.name}"?</p>
-              <p className="text-destructive font-medium">⚠️ This will permanently delete all boards within this space.</p>
-            </DialogDescription>
+        <DialogContent className="max-w-md">
+          <DialogHeader className="flex-row gap-4 items-start">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+              <Trash2 className="h-5 w-5 text-destructive" />
+            </div>
+            <div className="space-y-1">
+              <DialogTitle>Delete Space</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete <span className="font-medium text-foreground">"{spaceToDelete?.name}"</span>?
+              </DialogDescription>
+            </div>
           </DialogHeader>
-          <div className="flex justify-end gap-2 mt-4">
-            <Button variant="secondary" onClick={() => setSpaceToDelete(null)} disabled={isDeletePending}>Cancel</Button>
-            <Button variant="destructive" onClick={async () => {
-              if (!spaceToDelete) return;
-              try {
-                await deleteSpace(spaceToDelete.id);
-                await refetchWorkspaces();
-                toast.success("Space deleted successfully");
-                setSpaceToDelete(null);
-                navigate('/dashboard');
-              } catch (error: any) {
-                toast.error("Failed to delete space");
-                setSpaceToDelete(null);
-              }
-            }} disabled={isDeletePending}>
-              {isDeletePending ? "Deleting..." : "Delete Space"}
+          
+          <Alert variant="warning" className="mt-2">
+            <IconAlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              This will permanently delete all boards within this space. This action cannot be undone.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" onClick={() => setSpaceToDelete(null)} disabled={isDeletePending}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              className="gap-1.5"
+              onClick={async () => {
+                if (!spaceToDelete) return;
+                try {
+                  await deleteSpace(spaceToDelete.id);
+                  await refetchWorkspaces();
+                  toast.success("Space deleted successfully");
+                  setSpaceToDelete(null);
+                  navigate('/dashboard');
+                } catch (error: any) {
+                  toast.error("Failed to delete space");
+                  setSpaceToDelete(null);
+                }
+              }} 
+              disabled={isDeletePending}
+            >
+              <Trash2 size={14} />
+              {isDeletePending ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </DialogContent>
