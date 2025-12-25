@@ -1,24 +1,61 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import {
-  IconLayout, IconSquare, IconCircle, IconTriangle, IconHexagon, IconComponents, IconBox, IconStack2,
-  IconStar, IconHeart, IconBolt, IconFlame, IconSparkles, IconTarget, IconAward, IconBookmark,
-  IconPencil, IconUser, IconBulb, IconPlant, IconFile, IconMapPin, IconSearch, IconCalendar,
-  IconCoffee, IconMail, IconChartBar, IconShare, IconShield, IconClock, IconFolder, IconRocket,
-  IconFiles, IconCircleCheck, IconBook, IconCreditCard, IconCompass, IconFlask, IconConfetti,
-  IconMessage, IconSchool, IconWorld, IconCalculator, IconPointer, IconClipboardList, IconPlus
+  IconLayout,
+  IconSquare,
+  IconCircle,
+  IconTriangle,
+  IconHexagon,
+  IconComponents,
+  IconBox,
+  IconStack2,
+  IconStar,
+  IconHeart,
+  IconBolt,
+  IconFlame,
+  IconSparkles,
+  IconTarget,
+  IconAward,
+  IconBookmark,
+  IconPencil,
+  IconUser,
+  IconBulb,
+  IconPlant,
+  IconFile,
+  IconSearch,
+  IconCalendar,
+  IconMail,
+  IconChartBar,
+  IconShare,
+  IconShield,
+  IconClock,
+  IconFolder,
+  IconRocket,
+  IconFiles,
+  IconCircleCheck,
+  IconBook,
+  IconCompass,
+  IconFlask,
+  IconConfetti,
+  IconMessage,
+  IconSchool,
+  IconWorld,
+  IconClipboardList,
+  IconPlus,
 } from "@tabler/icons-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { cn } from "@/lib/utils";
-
-interface CreateBoardModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreate: (name: string, icon: string) => void;
-  isLoading?: boolean;
-}
+import { createModalOpenAtom } from "../boards-table.store";
+import { useBoardActions } from "../hooks";
 
 // Icon categories with tabler icons
 const ICON_CATEGORIES = [
@@ -33,7 +70,7 @@ const ICON_CATEGORIES = [
       { id: "red", icon: IconComponents, label: "Component", color: "#e74c3c" },
       { id: "cyan", icon: IconBox, label: "Box", color: "#1abc9c" },
       { id: "yellow", icon: IconStack2, label: "Layers", color: "#f39c12" },
-    ]
+    ],
   },
   {
     name: "Status",
@@ -46,7 +83,7 @@ const ICON_CATEGORIES = [
       { id: "amber", icon: IconTarget, label: "Target", color: "#f59e0b" },
       { id: "emerald", icon: IconAward, label: "Award", color: "#10b981" },
       { id: "sky", icon: IconBookmark, label: "Bookmark", color: "#0ea5e9" },
-    ]
+    ],
   },
   {
     name: "Tools",
@@ -58,21 +95,31 @@ const ICON_CATEGORIES = [
       { id: "folder", icon: IconFolder, label: "Folder", color: "#f59e0b" },
       { id: "file", icon: IconFile, label: "File", color: "#0ea5e9" },
       { id: "files", icon: IconFiles, label: "Files", color: "#64748b" },
-      { id: "clip", icon: IconClipboardList, label: "Clipboard", color: "#14b8a6" },
-    ]
+      {
+        id: "clip",
+        icon: IconClipboardList,
+        label: "Clipboard",
+        color: "#14b8a6",
+      },
+    ],
   },
   {
     name: "Work",
     icons: [
       { id: "chart", icon: IconChartBar, label: "Chart", color: "#10b981" },
-      { id: "calendar", icon: IconCalendar, label: "Calendar", color: "#10b981" },
+      {
+        id: "calendar",
+        icon: IconCalendar,
+        label: "Calendar",
+        color: "#10b981",
+      },
       { id: "clock", icon: IconClock, label: "Time", color: "#14b8a6" },
       { id: "mail", icon: IconMail, label: "Mail", color: "#22c55e" },
       { id: "message", icon: IconMessage, label: "Message", color: "#0ea5e9" },
       { id: "share", icon: IconShare, label: "Share", color: "#f97316" },
       { id: "check", icon: IconCircleCheck, label: "Done", color: "#22c55e" },
       { id: "party", icon: IconConfetti, label: "Party", color: "#8b5cf6" },
-    ]
+    ],
   },
   {
     name: "Learn",
@@ -85,21 +132,23 @@ const ICON_CATEGORIES = [
       { id: "rocket", icon: IconRocket, label: "Launch", color: "#0ea5e9" },
       { id: "shield", icon: IconShield, label: "Secure", color: "#8b5cf6" },
       { id: "compass", icon: IconCompass, label: "Nav", color: "#6366f1" },
-    ]
+    ],
   },
 ];
 
 // Flattened icons for easy lookup
-const ALL_ICONS = ICON_CATEGORIES.flatMap(cat => cat.icons);
+const ALL_ICONS = ICON_CATEGORIES.flatMap((cat) => cat.icons);
 
-export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: CreateBoardModalProps) => {
+export const CreateBoardModal = () => {
+  const [isOpen, setIsOpen] = useAtom(createModalOpenAtom);
+  const { handleCreateBoard, isCreating } = useBoardActions();
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<string>(ALL_ICONS[0].id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      await onCreate(name, selectedIcon);
+      await handleCreateBoard(name, selectedIcon);
       setName("");
       setSelectedIcon(ALL_ICONS[0].id);
     }
@@ -108,23 +157,23 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
   const handleClose = () => {
     setName("");
     setSelectedIcon(ALL_ICONS[0].id);
-    onClose();
+    setIsOpen(false);
   };
 
-  const selectedIconData = ALL_ICONS.find(i => i.id === selectedIcon);
+  const selectedIconData = ALL_ICONS.find((i) => i.id === selectedIcon);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader className="flex-row gap-4 items-start">
-          <div 
+          <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
             style={{ backgroundColor: `${selectedIconData?.color}15` }}
           >
             {selectedIconData && (
-              <selectedIconData.icon 
-                size={24} 
-                style={{ color: selectedIconData.color }} 
+              <selectedIconData.icon
+                size={24}
+                style={{ color: selectedIconData.color }}
               />
             )}
           </div>
@@ -139,7 +188,9 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-2">
           {/* Board Name Input */}
           <div className="flex flex-col gap-2">
-            <Label htmlFor="name" className="text-muted-foreground">Board Name</Label>
+            <Label htmlFor="name" className="text-muted-foreground">
+              Board Name
+            </Label>
             <Input
               id="name"
               value={name}
@@ -149,7 +200,7 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
               autoFocus
             />
           </div>
-          
+
           {/* Icon Selection */}
           <div className="flex flex-col gap-3">
             <Label className="text-muted-foreground">Choose Icon</Label>
@@ -166,13 +217,14 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
                     onClick={() => setSelectedIcon(item.id)}
                     className={cn(
                       "aspect-square rounded-lg cursor-pointer ",
-                      isSelected && "bg-background shadow-sm ring-2 ring-primary ring-offset-1"
+                      isSelected &&
+                        "bg-background shadow-sm ring-2 ring-primary ring-offset-1"
                     )}
                     title={item.label}
                   >
-                    <IconComponent 
+                    <IconComponent
                       className="!w-5 !h-5"
-                      style={{ color: item.color }} 
+                      style={{ color: item.color }}
                     />
                   </Button>
                 );
@@ -182,12 +234,17 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
 
           {/* Actions */}
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isCreating}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={!name.trim() || isLoading}>
+            <Button type="submit" disabled={!name.trim() || isCreating}>
               <IconPlus size={16} />
-              {isLoading ? "Creating..." : "Create Board"}
+              {isCreating ? "Creating..." : "Create Board"}
             </Button>
           </div>
         </form>
@@ -198,6 +255,6 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
 
 // Helper to get icon color for backward compatibility
 export function getIconColor(iconId: string): string {
-  const icon = ALL_ICONS.find(i => i.id === iconId);
-  return icon?.color || '#64748b';
+  const icon = ALL_ICONS.find((i) => i.id === iconId);
+  return icon?.color || "#64748b";
 }
