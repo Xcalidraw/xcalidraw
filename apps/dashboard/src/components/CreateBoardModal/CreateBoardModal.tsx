@@ -153,7 +153,7 @@ export const CreateBoardModal = ({ isOpen, onClose, onCreate, isLoading }: Creat
           {/* Icon Selection */}
           <div className="flex flex-col gap-3">
             <Label className="text-muted-foreground">Choose Icon</Label>
-            <div className="grid grid-cols-8 gap-1.5 p-3 bg-muted/30 rounded-xl max-h-[200px] overflow-y-auto max-sm:grid-cols-6">
+            <div className="grid grid-cols-8 gap-1.5 p-3 bg-muted/30 rounded-xl max-h-[200px] overflow-y-auto max-sm:grid-cols-6 scrollbar-hover">
               {ALL_ICONS.map((item) => {
                 const IconComponent = item.icon;
                 const isSelected = selectedIcon === item.id;
