@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { sortOptions } from "../boards-table.store";
 import { sortByAtom } from "../../../store";
-import { useFilterActions } from "../hooks";
+import { useFilterActions } from "./hooks";
 
 interface SortBySelectProps {
   disabled?: boolean;

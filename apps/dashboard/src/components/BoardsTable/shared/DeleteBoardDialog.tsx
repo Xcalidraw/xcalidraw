@@ -9,7 +9,7 @@ import {
 } from "../../ui/dialog";
 import { Button } from "../../ui/button";
 import { deleteDialogAtom } from "../boards-table.store";
-import { useBoardActions } from "../hooks";
+import { useBoardActions } from "../create-new-action/hooks";
 
 export const DeleteBoardDialog = () => {
   const [boardToDelete, setBoardToDelete] = useAtom(deleteDialogAtom);

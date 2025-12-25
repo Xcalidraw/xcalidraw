@@ -8,7 +8,7 @@ import {
   boardsTotalAtom,
 } from "../../store";
 import { deleteDialogAtom } from "./boards-table.store";
-import { useBoardActions } from "./hooks";
+import { useBoardActions } from "./create-new-action/hooks";
 import { TableView } from "./table-view";
 import { GalleryView } from "./gallery-view";
 import { BoardsEmptyState } from "./BoardsEmptyState";
