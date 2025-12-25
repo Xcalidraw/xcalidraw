@@ -304,7 +304,7 @@ export const BoardsTable = ({
             onAction={() => setIsCreateModalOpen(true)}
           />
       ) : viewMode === "list" ? (
-        <div className="rounded-md overflow-x-auto overflow-y-visible bg-card relative shrink-0 -mx-8 px-4 md:-mx-6 md:px-3 text-sm scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+        <div className="rounded-md overflow-x-auto overflow-y-visible bg-card relative shrink-0 -mx-8 px-4 md:-mx-6 md:px-3 text-sm scrollbar-hover">
           <table className="w-full min-w-[1100px] border-collapse max-lg:min-w-0">
             <thead>
               <tr className="border-b border-border">
@@ -337,7 +337,7 @@ export const BoardsTable = ({
                     <tr
                       key={board.id}
                       onClick={() => navigate(`/board/${board.id}`)}
-                      className="cursor-pointer transition-colors hover:bg-muted/50 border-b border-border last:border-0 group"
+                      className="cursor-pointer transition-colors hover:bg-muted/50 border-b border-gray-100 last:border-0 group"
                     >
                       <td className="p-4 max-lg:p-2.5 min-w-[300px] max-lg:min-w-0">
                         <div className="flex items-center gap-3 w-full">

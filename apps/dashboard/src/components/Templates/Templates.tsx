@@ -67,7 +67,7 @@ export const Templates = () => {
       </div>
 
       {/* Templates Track */}
-      <div className="overflow-x-auto overflow-y-hidden py-1 pb-4 overscroll-contain touch-pan-x" style={{ scrollPaddingLeft: '32px' }}>
+      <div className="overflow-x-auto py-1 pb-4 overscroll-contain touch-pan-x scrollbar-hover" style={{ scrollPaddingLeft: '32px' }}>
         <div className="flex gap-3 px-8 max-md:px-4 max-md:gap-2">
         
           {/* Blank Board Card */}
