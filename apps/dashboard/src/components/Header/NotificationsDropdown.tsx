@@ -143,7 +143,7 @@ const NotificationList = ({ items }: { items: typeof notifications }) => {
   }
 
   return (
-    <div className="max-h-[500px] overflow-y-auto">
+    <div className="max-h-[500px] overflow-y-auto scrollbar-hover">
       {items.map((item) => (
         <div key={item.id} className="flex gap-4 p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors relative group items-start">
           {/* Avatar + Icon Overlay */}

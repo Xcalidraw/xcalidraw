@@ -419,7 +419,6 @@ export const Sidebar = () => {
               }} 
               disabled={isDeletePending}
             >
-              <Trash2 size={14} />
               {isDeletePending ? "Deleting..." : "Delete"}
             </Button>
           </div>
