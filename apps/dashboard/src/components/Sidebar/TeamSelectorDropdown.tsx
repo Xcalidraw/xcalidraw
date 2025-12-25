@@ -128,7 +128,7 @@ export const TeamSelectorDropdown = () => {
         >
           {/* Header */}
           <div className="px-2 py-1.5">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <h2 className="text-xs text-gray-500 uppercase tracking-wider">
               Teams
             </h2>
           </div>
