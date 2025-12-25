@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { ownedByAtom, ownedByOptions, OwnedByType } from "../boards-table.store";
-import { useFilterActions } from "../hooks";
+import { useFilterActions } from "./hooks";
 
 interface OwnedBySelectProps {
   disabled?: boolean;

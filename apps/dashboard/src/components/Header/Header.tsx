@@ -1,10 +1,9 @@
-import { User } from "lucide-react";
-import { Button } from "../ui/button";
-import { IconSearch } from "@tabler/icons-react";
-
-import { UserDropdown } from "./UserDropdown";
-import { OrgSwitcher } from "./OrgSwitcher";
-import { NotificationsDropdown } from "./NotificationsDropdown";
+import { Logo } from "./Logo";
+import { InviteMembersButton } from "./InviteMembersButton";
+import { NotificationsDropdown } from "./notifications";
+import { OrgSwitcher } from "./org-switcher";
+import { UserDropdown } from "./user-dropdown";
+import { HeaderDivider } from "./shared";
 
 export const Header = () => {
   return (
@@ -12,22 +11,14 @@ export const Header = () => {
       <div className="w-full flex justify-between items-center">
         {/* Left Side */}
         <div className="flex items-center gap-3">
-          <span className="font-excalifont text-[26px] font-semibold text-primary select-none whitespace-nowrap tracking-tight md:text-[22px]">
-            Xcalidraw
-          </span>
+          <Logo />
         </div>
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
-          <Button variant='ghost' size="default" className="bg-gray-50 hover:bg-gray-100 shadow-none cursor-pointer ">
-            <User size={16} />
-            <span>Invite members</span>
-          </Button>
-
+          <InviteMembersButton />
           <NotificationsDropdown />
-
-          <div className="h-6 w-px bg-border mx-2" /> {/* Divider */}
-          
+          <HeaderDivider />
           <OrgSwitcher />
           <UserDropdown />
         </div>

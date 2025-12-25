@@ -55,7 +55,7 @@ import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { cn } from "@/lib/utils";
 import { createModalOpenAtom } from "../boards-table.store";
-import { useBoardActions } from "../hooks";
+import { useBoardActions } from "./hooks";
 
 // Icon categories with tabler icons
 const ICON_CATEGORIES = [

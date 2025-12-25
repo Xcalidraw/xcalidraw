@@ -4,13 +4,13 @@ import { toast } from "sonner";
 import {
   createModalOpenAtom,
   deleteDialogAtom,
-} from "../boards-table.store";
+} from "../../boards-table.store";
 import {
   toggleStarAtom,
   boardsQueryAtom,
   deleteBoardMutationAtom,
-} from "../../../store";
-import { useCreateBoardMutation, useSpaceQuery, useListTeamsQuery } from "../../../hooks/api.hooks";
+} from "../../../../store";
+import { useCreateBoardMutation, useSpaceQuery, useListTeamsQuery } from "../../../../hooks/api.hooks";
 
 export const useBoardActions = () => {
   const navigate = useNavigate();

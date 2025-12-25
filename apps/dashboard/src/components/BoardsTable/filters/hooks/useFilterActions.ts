@@ -4,8 +4,8 @@ import {
   ownedByAtom,
   FilterByType,
   OwnedByType,
-} from "../boards-table.store";
-import { sortByAtom } from "../../../store";
+} from "../../boards-table.store";
+import { sortByAtom } from "../../../../store";
 
 export const useFilterActions = () => {
   const [, setFilterBy] = useAtom(filterByAtom);
